@@ -20,15 +20,13 @@
   --color-kinetic: #ede8df;
   --color-selection-bg: #c4a47c;
   --color-selection-text: #0a0a08;
-  --grain-blend: overlay;
   --grain-opacity: 0.035;
   --hero-bg: #0a0a08;
-  --hero-vignette: transparent;
-  --name-shadow: none;
+  --hero-vignette: rgba(0, 0, 0, 0);
 }
 
 /* ==============================
-   LIGHT THEME — warm, textured, alive
+   LIGHT THEME
    ============================== */
 [data-theme="light"] {
   --color-bg: #eae2d3;
@@ -41,11 +39,9 @@
   --color-kinetic: #1c1814;
   --color-selection-bg: #8b6930;
   --color-selection-text: #eae2d3;
-  --grain-blend: soft-light;
-  --grain-opacity: 0.12;
+  --grain-opacity: 0.08;
   --hero-bg: #e6ddd0;
   --hero-vignette: rgba(60, 50, 35, 0.12);
-  --name-shadow: 0 2px 30px rgba(80, 60, 30, 0.12);
 }
 
 html {
@@ -54,7 +50,6 @@ html {
   font-family: 'DM Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 body {

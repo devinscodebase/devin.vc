@@ -1,16 +1,16 @@
 <section class="hero">
   <!-- kinetic typography field -->
   <div class="kinetic" aria-hidden="true">
-    <div class="kinetic-row r1"><span>MARKETING · OPERATIONS · DESIGN · GTM · MARKETING · OPERATIONS · DESIGN · GTM · MARKETING · OPERATIONS · DESIGN · GTM ·&nbsp;</span><span>MARKETING · OPERATIONS · DESIGN · GTM · MARKETING · OPERATIONS · DESIGN · GTM · MARKETING · OPERATIONS · DESIGN · GTM ·&nbsp;</span></div>
-    <div class="kinetic-row r2"><span>GTM · MARKETING · DESIGN · OPERATIONS · GTM · MARKETING · DESIGN · OPERATIONS · GTM · MARKETING · DESIGN · OPERATIONS ·&nbsp;</span><span>GTM · MARKETING · DESIGN · OPERATIONS · GTM · MARKETING · DESIGN · OPERATIONS · GTM · MARKETING · DESIGN · OPERATIONS ·&nbsp;</span></div>
-    <div class="kinetic-row r3"><span>DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING ·&nbsp;</span><span>DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING ·&nbsp;</span></div>
-    <div class="kinetic-row r4"><span>OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM ·&nbsp;</span><span>OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM ·&nbsp;</span></div>
-    <div class="kinetic-row r5"><span>MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS · DESIGN ·&nbsp;</span><span>MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS · DESIGN ·&nbsp;</span></div>
-    <div class="kinetic-row r6"><span>DESIGN · MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS ·&nbsp;</span><span>DESIGN · MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS ·&nbsp;</span></div>
-    <div class="kinetic-row r7"><span>GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN ·&nbsp;</span><span>GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN ·&nbsp;</span></div>
-    <div class="kinetic-row r8"><span>OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM ·&nbsp;</span><span>OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM ·&nbsp;</span></div>
-    <div class="kinetic-row r9"><span>MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS ·&nbsp;</span><span>MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS ·&nbsp;</span></div>
-    <div class="kinetic-row r10"><span>DESIGN · OPERATIONS · GTM · MARKETING · DESIGN · OPERATIONS · GTM · MARKETING · DESIGN · OPERATIONS · GTM · MARKETING ·&nbsp;</span><span>DESIGN · OPERATIONS · GTM · MARKETING · DESIGN · OPERATIONS · GTM · MARKETING · DESIGN · OPERATIONS · GTM · MARKETING ·&nbsp;</span></div>
+    <div class="kinetic-row r1 heavy"><span>MARKETING · OPERATIONS · DESIGN · GTM · MARKETING · OPERATIONS · DESIGN · GTM ·&nbsp;</span><span>MARKETING · OPERATIONS · DESIGN · GTM · MARKETING · OPERATIONS · DESIGN · GTM ·&nbsp;</span></div>
+    <div class="kinetic-row r2 serif glow"><span>DESIGN · OPERATIONS · MARKETING · GTM · DESIGN · OPERATIONS · MARKETING · GTM ·&nbsp;</span><span>DESIGN · OPERATIONS · MARKETING · GTM · DESIGN · OPERATIONS · MARKETING · GTM ·&nbsp;</span></div>
+    <div class="kinetic-row r3"><span>GTM · DESIGN · OPERATIONS · MARKETING · GTM · DESIGN · OPERATIONS · MARKETING ·&nbsp;</span><span>GTM · DESIGN · OPERATIONS · MARKETING · GTM · DESIGN · OPERATIONS · MARKETING ·&nbsp;</span></div>
+    <div class="kinetic-row r4 serif"><span>OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM ·&nbsp;</span><span>OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM ·&nbsp;</span></div>
+    <div class="kinetic-row r5 heavy"><span>MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS · DESIGN ·&nbsp;</span><span>MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS · DESIGN ·&nbsp;</span></div>
+    <div class="kinetic-row r6 serif glow"><span>DESIGN · MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS ·&nbsp;</span><span>DESIGN · MARKETING · GTM · OPERATIONS · DESIGN · MARKETING · GTM · OPERATIONS ·&nbsp;</span></div>
+    <div class="kinetic-row r7"><span>GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN ·&nbsp;</span><span>GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN ·&nbsp;</span></div>
+    <div class="kinetic-row r8 serif"><span>OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM ·&nbsp;</span><span>OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM ·&nbsp;</span></div>
+    <div class="kinetic-row r9 heavy"><span>MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS ·&nbsp;</span><span>MARKETING · DESIGN · GTM · OPERATIONS · MARKETING · DESIGN · GTM · OPERATIONS ·&nbsp;</span></div>
+    <div class="kinetic-row r10 serif glow"><span>DESIGN · OPERATIONS · GTM · MARKETING · DESIGN · OPERATIONS · GTM · MARKETING ·&nbsp;</span><span>DESIGN · OPERATIONS · GTM · MARKETING · DESIGN · OPERATIONS · GTM · MARKETING ·&nbsp;</span></div>
   </div>
 
   <!-- vignette (light mode depth) -->
@@ -54,7 +54,6 @@
     justify-content: center;
     overflow: hidden;
     background: var(--hero-bg);
-    transition: background-color 0.5s ease;
   }
 
   /* warm vignette — adds depth in light mode, invisible in dark */
@@ -67,7 +66,6 @@
       var(--hero-vignette) 100%
     );
     pointer-events: none;
-    transition: background 0.5s ease;
   }
 
   /* ---- kinetic typography ---- */
@@ -77,7 +75,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: clamp(2.5rem, 5vh, 4rem);
+    gap: clamp(2rem, 4.5vh, 3.5rem);
     transform: rotate(-12deg);
     pointer-events: none;
     user-select: none;
@@ -92,14 +90,32 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-kinetic);
-    opacity: 0.035;
+    opacity: 0.03;
     will-change: transform;
-    transition: color 0.5s ease;
   }
 
   .kinetic-row span {
     display: inline-block;
+    flex-shrink: 0;
     padding-right: 0.3em;
+  }
+
+  /* typographic variants */
+  .kinetic-row.serif {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(3rem, 5.5vw, 5rem);
+    letter-spacing: 0.04em;
+    opacity: 0.045;
+  }
+
+  .kinetic-row.heavy {
+    font-weight: 500;
+    opacity: 0.04;
+  }
+
+  .kinetic-row.glow {
+    opacity: 0.05;
   }
 
   .r1  { animation: drift-left  80s linear infinite; }
@@ -114,13 +130,13 @@
   .r10 { animation: drift-right 78s linear infinite; }
 
   @keyframes drift-left {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-50%, 0, 0); }
   }
 
   @keyframes drift-right {
-    from { transform: translateX(-50%); }
-    to   { transform: translateX(0); }
+    from { transform: translate3d(-50%, 0, 0); }
+    to   { transform: translate3d(0, 0, 0); }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -135,9 +151,8 @@
     inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     opacity: var(--grain-opacity);
-    mix-blend-mode: var(--grain-blend);
+    mix-blend-mode: overlay;
     pointer-events: none;
-    transition: opacity 0.5s ease;
   }
 
   /* ---- content ---- */
@@ -155,8 +170,7 @@
     flex-direction: column;
     align-items: center;
     gap: 0;
-    filter: drop-shadow(var(--name-shadow));
-    transition: filter 0.5s ease;
+    /* no filter — kept lightweight for instant theme switch */
   }
 
   .name-line {
@@ -198,7 +212,6 @@
     animation: reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     animation-delay: 0.65s;
     margin-bottom: clamp(1rem, 2vw, 1.5rem);
-    transition: color 0.5s ease;
   }
 
   .descriptors {
@@ -216,14 +229,12 @@
     opacity: 0;
     animation: reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     animation-delay: 0.75s;
-    transition: color 0.5s ease;
   }
 
   .dot {
     color: var(--color-accent);
     font-size: 1.1em;
     line-height: 1;
-    transition: color 0.5s ease;
   }
 
   .scroll-indicator {
