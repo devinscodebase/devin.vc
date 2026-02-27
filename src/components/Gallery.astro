@@ -1,29 +1,37 @@
 ---
+import { Image } from 'astro:assets';
+
+import headshot from '../assets/gallery/headshot.jpg';
+import speaking from '../assets/gallery/speaking.jpg';
+import family from '../assets/gallery/family.jpg';
+import portrait from '../assets/gallery/portrait.jpg';
+import workshop from '../assets/gallery/workshop.jpg';
+
 const images = [
-  { src: '/images/gallery/headshot.jpg', alt: 'Devin Alexander headshot' },
-  { src: '/images/gallery/speaking.jpg', alt: 'Devin speaking on PR & Marketing' },
-  { src: '/images/gallery/family.jpg', alt: 'Devin with his daughter' },
-  { src: '/images/gallery/portrait.jpg', alt: 'Devin portrait outdoors' },
-  { src: '/images/gallery/workshop.jpg', alt: 'Devin leading a workshop at Africa Week' },
+  { src: headshot, alt: 'Devin Alexander headshot', widths: [320, 640] },
+  { src: speaking, alt: 'Devin speaking on PR & Marketing', widths: [640, 1280] },
+  { src: family, alt: 'Devin with his daughter', widths: [320, 640] },
+  { src: portrait, alt: 'Devin portrait outdoors', widths: [320, 640] },
+  { src: workshop, alt: 'Devin leading a workshop at Africa Week', widths: [320, 640] },
 ];
 ---
 
 <section class="gallery">
   <div class="gallery-grid" id="gallery-grid">
     <div class="gallery-item item-1">
-      <img src={images[0].src} alt={images[0].alt} loading="lazy" />
+      <Image src={images[0].src} alt={images[0].alt} widths={images[0].widths} format="webp" quality={80} loading="lazy" />
     </div>
     <div class="gallery-item item-2">
-      <img src={images[1].src} alt={images[1].alt} loading="lazy" />
+      <Image src={images[1].src} alt={images[1].alt} widths={images[1].widths} format="webp" quality={80} loading="lazy" />
     </div>
     <div class="gallery-item item-3">
-      <img src={images[2].src} alt={images[2].alt} loading="lazy" />
+      <Image src={images[2].src} alt={images[2].alt} widths={images[2].widths} format="webp" quality={80} loading="lazy" />
     </div>
     <div class="gallery-item item-4">
-      <img src={images[3].src} alt={images[3].alt} loading="lazy" />
+      <Image src={images[3].src} alt={images[3].alt} widths={images[3].widths} format="webp" quality={80} loading="lazy" />
     </div>
     <div class="gallery-item item-5">
-      <img src={images[4].src} alt={images[4].alt} loading="lazy" />
+      <Image src={images[4].src} alt={images[4].alt} widths={images[4].widths} format="webp" quality={80} loading="lazy" />
     </div>
   </div>
 </section>

@@ -46,8 +46,8 @@
             <span class="project-status">Active</span>
           </div>
         </div>
-        <h3 class="project-name">GTM Advisory for Early-Stage Startups</h3>
-        <p class="project-desc">Helping two seed-stage founders build their go-to-market from scratch — positioning, first hires, channel strategy, and the systems to actually execute.</p>
+        <h3 class="project-name">COO, Andreou Enterprises</h3>
+        <p class="project-desc">Running marketing and operations across the Andreou brand portfolio and Bitmern Mining. Leading a team of 9 as second-in-command in the Web3 and crypto space.</p>
       </article>
 
       <article class="project" style="opacity: 0;">
@@ -58,8 +58,8 @@
             <span class="project-status">Building</span>
           </div>
         </div>
-        <h3 class="project-name">A Design & Operations Practice</h3>
-        <p class="project-desc">Designing the model for a solo consultancy that pairs brand design with operational infrastructure. The thesis: companies don't need more agencies, they need one person who sees the whole picture.</p>
+        <h3 class="project-name">Hustle</h3>
+        <p class="project-desc">A work management platform for small teams. Consolidates chats, tasks, CRM, marketing, G-Suite, and more into one place — delivering everything your team needs at a fraction of the cost of running them all separately.</p>
       </article>
 
       <article class="project" style="opacity: 0;">
@@ -70,8 +70,8 @@
             <span class="project-status">Exploring</span>
           </div>
         </div>
-        <h3 class="project-name">Writing on Craft & Leadership</h3>
-        <p class="project-desc">Putting ten years of pattern recognition into words. Essays on what actually works in marketing, operations, and building teams that ship.</p>
+        <h3 class="project-name">Send</h3>
+        <p class="project-desc">A cold email marketing platform built to outperform everything else on the market. Backed by firsthand experience sending over half a billion cold emails.</p>
       </article>
     </div>
 

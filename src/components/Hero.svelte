@@ -43,6 +43,7 @@
     const divider = hero.querySelector('.divider');
     const tagline = hero.querySelector('.tagline');
     const descriptors = hero.querySelector('.descriptors');
+    const heroCta = hero.querySelector('.hero-cta');
     const kineticEl = hero.querySelector('.kinetic');
     const scrollInd = hero.querySelector('.scroll-indicator');
 
@@ -80,6 +81,13 @@
     animate(descriptors, { opacity: [0, 1], y: [10, 0] }, {
       duration: 0.4,
       delay: 0.45,
+      easing: [0.25, 1, 0.5, 1],
+    });
+
+    // CTA
+    animate(heroCta, { opacity: [0, 1], y: [10, 0] }, {
+      duration: 0.4,
+      delay: 0.55,
       easing: [0.25, 1, 0.5, 1],
     });
 
@@ -133,6 +141,8 @@
       <span class="dot" aria-hidden="true">&middot;</span>
       <span>GTM</span>
     </p>
+
+    <a href="mailto:hello@devin.vc" class="hero-cta" style="opacity: 0;">Open to Consulting Projects</a>
   </div>
 
   <div class="scroll-fade" aria-hidden="true">
@@ -269,6 +279,9 @@
     padding: 2rem;
     opacity: calc(1 - var(--scroll, 0));
     translate: 0 calc(var(--scroll, 0) * -60px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .name {
@@ -302,7 +315,7 @@
     font-style: italic;
     font-size: clamp(1.1rem, 2vw, 1.5rem);
     color: var(--color-text);
-    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
   }
 
   .descriptors {
@@ -323,6 +336,27 @@
     color: var(--color-accent);
     font-size: 1.1em;
     line-height: 1;
+  }
+
+  .hero-cta {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.7rem, 1vw, 0.8rem);
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-bg);
+    background: var(--color-accent);
+    text-decoration: none;
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    padding: 0.85rem 2.5rem;
+    cursor: pointer;
+    transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .hero-cta:hover {
+    background: var(--color-text);
+    transform: translateY(-2px);
   }
 
   .scroll-fade {
