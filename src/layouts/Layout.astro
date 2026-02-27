@@ -1,27 +1,37 @@
 ---
-import '../styles/global.css';
-import '@fontsource-variable/hubot-sans';
-import '@fontsource-variable/climate-crisis/full.css';
-import { ClientRouter } from 'astro:transitions';
+import Nav from '../components/Nav.svelte';
 
 interface Props {
   title?: string;
+  description?: string;
 }
 
-const { title = 'Devin' } = Astro.props;
+const {
+  title = 'Devin Alexander',
+  description = 'Marketing, Operations, Design & Development, GTM — A decade of executive leadership.',
+} = Astro.props;
 ---
 
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
     <title>{title}</title>
-    <ClientRouter />
   </head>
   <body>
+    <Nav client:load />
     <slot />
-    <div class="grain-overlay" aria-hidden="true"></div>
   </body>
 </html>
+
+<style>
+  @import '../styles/global.css';
+</style>
