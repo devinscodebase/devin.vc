@@ -3,4 +3,15 @@
 @theme {
   --font-sans: 'Hubot Sans Variable', sans-serif;
   --font-display: 'Climate Crisis Variable', cursive;
+
+  --color-rich-black: #001219;
+  --color-dark-teal: #005f73;
+  --color-teal: #0a9396;
+  --color-mint: #94d2bd;
+  --color-sand: #e9d8a6;
+  --color-amber: #ee9b00;
+  --color-alloy: #ca6702;
+  --color-burnt: #bb3e03;
+  --color-rufous: #ae2012;
+  --color-deep-red: #9b2226;
 }
