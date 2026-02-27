@@ -4,14 +4,14 @@
   --font-sans: 'Hubot Sans Variable', sans-serif;
   --font-display: 'Climate Crisis Variable', cursive;
 
-  --color-rich-black: #001219;
-  --color-dark-teal: #005f73;
-  --color-teal: #0a9396;
-  --color-mint: #94d2bd;
-  --color-sand: #e9d8a6;
-  --color-amber: #ee9b00;
-  --color-alloy: #ca6702;
-  --color-burnt: #bb3e03;
-  --color-rufous: #ae2012;
-  --color-deep-red: #9b2226;
+  --color-rich-black: oklch(16.90% 0.0314 222.67);
+  --color-dark-teal: oklch(44.85% 0.0810 218.76);
+  --color-teal: oklch(60.24% 0.1010 197.43);
+  --color-mint: oklch(81.57% 0.0701 171.49);
+  --color-sand: oklch(88.40% 0.0677 91.52);
+  --color-amber: oklch(75.47% 0.1621 71.39);
+  --color-alloy: oklch(61.89% 0.1537 54.40);
+  --color-burnt: oklch(53.78% 0.1702 39.14);
+  --color-rufous: oklch(48.65% 0.1790 30.19);
+  --color-deep-red: oklch(45.44% 0.1567 24.58);
 }
