@@ -6,6 +6,7 @@
   let cx = 0, cy = 0;
   let tx = 0, ty = 0;
   let rafId;
+  let hasPointer = false;
 
   function onMove(e) {
     const rect = hero.getBoundingClientRect();
@@ -19,18 +20,22 @@
   }
 
   function tick() {
-    cx += (tx - cx) * 0.07;
-    cy += (ty - cy) * 0.07;
-    if (kinetic) {
+    if (hasPointer && kinetic) {
+      cx += (tx - cx) * 0.07;
+      cy += (ty - cy) * 0.07;
       kinetic.style.setProperty('--mx', cx.toFixed(4));
       kinetic.style.setProperty('--my', cy.toFixed(4));
+    }
+    if (hero) {
+      const p = Math.min(window.scrollY / (hero.offsetHeight * 0.65), 1);
+      hero.style.setProperty('--scroll', p.toFixed(4));
     }
     rafId = requestAnimationFrame(tick);
   }
 
   onMount(() => {
-    const isTouch = matchMedia('(pointer: coarse)').matches;
-    if (!isTouch) rafId = requestAnimationFrame(tick);
+    hasPointer = !matchMedia('(pointer: coarse)').matches;
+    rafId = requestAnimationFrame(tick);
     return () => { if (rafId) cancelAnimationFrame(rafId); };
   });
 </script>
@@ -76,8 +81,10 @@
     </p>
   </div>
 
-  <div class="scroll-indicator" aria-hidden="true">
-    <div class="scroll-line"></div>
+  <div class="scroll-fade" aria-hidden="true">
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+    </div>
   </div>
 </section>
 
@@ -196,11 +203,18 @@
     pointer-events: none;
   }
 
+  /* ---- scroll parallax exit ---- */
+  .kinetic {
+    opacity: calc(1 - var(--scroll, 0) * 0.6);
+  }
+
   /* ---- content ---- */
   .content {
     position: relative;
     text-align: center;
     padding: 2rem;
+    opacity: calc(1 - var(--scroll, 0));
+    translate: 0 calc(var(--scroll, 0) * -60px);
   }
 
   .name {
@@ -278,11 +292,15 @@
     line-height: 1;
   }
 
-  .scroll-indicator {
+  .scroll-fade {
     position: absolute;
     bottom: 2rem;
     left: 50%;
     translate: -50% 0;
+    opacity: calc(1 - var(--scroll, 0) * 5);
+  }
+
+  .scroll-indicator {
     opacity: 0;
     animation: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     animation-delay: 1.4s;
