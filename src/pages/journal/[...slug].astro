@@ -1,0 +1,50 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('journal');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout title={`${post.data.title} — Devin`}>
+  <main class="min-h-screen bg-mint/30 py-24 px-6 sm:px-12 md:px-24">
+    <article class="max-w-2xl mx-auto">
+      <time class="font-display text-sm text-dark-teal/60 tracking-wider">
+        {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+      </time>
+      <h1 class="font-sans text-3xl sm:text-4xl md:text-5xl text-rich-black mt-2 mb-8 font-bold leading-tight">
+        {post.data.title}
+      </h1>
+      <div class="font-sans text-rich-black/80 text-base sm:text-lg leading-relaxed
+        [&_h2]:font-sans [&_h2]:text-rich-black [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:mt-8 [&_h2]:mb-3
+        [&_h3]:font-sans [&_h3]:text-rich-black [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:mt-6 [&_h3]:mb-2
+        [&_a]:text-dark-teal [&_a]:underline [&_a]:underline-offset-4
+        [&_strong]:text-rich-black [&_code]:text-teal
+        [&_p]:mb-4">
+        <Content />
+      </div>
+      {post.data.tags && (
+        <div class="flex gap-2 mt-12 pt-8 border-t border-dark-teal/10">
+          {post.data.tags.map((tag) => (
+            <span class="font-sans text-xs text-dark-teal/50 bg-dark-teal/10 px-2 py-0.5 rounded-full">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+      <a href="/journal" class="inline-block mt-8 font-sans text-dark-teal hover:text-teal transition-colors underline underline-offset-4">
+        &larr; Back to journal
+      </a>
+    </article>
+  </main>
+  <Footer />
+</Layout>
