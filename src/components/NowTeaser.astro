@@ -1,0 +1,25 @@
+---
+import { getCollection, render } from 'astro:content';
+
+const nowEntries = await getCollection('now');
+const nowEntry = nowEntries[0];
+let Content = null;
+if (nowEntry) {
+  const rendered = await render(nowEntry);
+  Content = rendered.Content;
+}
+---
+
+<section class="py-24 px-6 sm:px-12 md:px-24 bg-sand">
+  <div class="max-w-2xl mx-auto">
+    <h2 class="font-display text-3xl sm:text-4xl text-rich-black mb-8">Now</h2>
+    {Content && (
+      <div class="font-sans text-rich-black/80 text-base sm:text-lg leading-relaxed [&_h2]:font-sans [&_h2]:text-rich-black [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:mt-8 [&_h2]:mb-3">
+        <Content />
+      </div>
+    )}
+    <a href="/now" class="inline-block mt-8 font-sans text-alloy hover:text-burnt transition-colors underline underline-offset-4">
+      See the full picture &rarr;
+    </a>
+  </div>
+</section>
