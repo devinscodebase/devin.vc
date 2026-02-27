@@ -1,0 +1,41 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('journal'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<Layout title="Journal — Devin">
+  <main class="min-h-screen bg-mint py-24 px-6 sm:px-12 md:px-24">
+    <div class="max-w-2xl mx-auto">
+      <h1 class="font-display text-4xl sm:text-5xl text-rich-black mb-16">Journal</h1>
+      <div class="space-y-12">
+        {posts.map((post) => (
+          <a href={`/journal/${post.id}`} class="block group">
+            <time class="font-display text-sm text-dark-teal/60 tracking-wider">
+              {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </time>
+            <h2 class="font-sans text-2xl sm:text-3xl text-rich-black mt-1 group-hover:text-dark-teal transition-colors">
+              {post.data.title}
+            </h2>
+            <p class="font-sans text-rich-black/60 mt-2 leading-relaxed">
+              {post.data.description}
+            </p>
+            {post.data.tags && (
+              <div class="flex gap-2 mt-3">
+                {post.data.tags.map((tag) => (
+                  <span class="font-sans text-xs text-dark-teal/50 bg-dark-teal/10 px-2 py-0.5 rounded-full">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>
