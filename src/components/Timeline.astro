@@ -1,0 +1,48 @@
+---
+import { getCollection, render } from 'astro:content';
+
+const timelineEntries = (await getCollection('timeline'))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<section class="relative py-24 px-6 sm:px-12 md:px-24 bg-dark-teal">
+  <div class="max-w-2xl mx-auto space-y-16">
+    {await Promise.all(timelineEntries.map(async (entry) => {
+      const { Content } = await render(entry);
+      return (
+        <article class="timeline-entry">
+          <span class="block font-sans text-sm text-sand/50 mb-2 tracking-widest uppercase">
+            {entry.data.dateRange}
+          </span>
+          <h3 class="font-display text-2xl sm:text-3xl text-amber mb-4">
+            {entry.data.company}
+          </h3>
+          <div class="font-sans text-base sm:text-lg text-sand/80 leading-relaxed">
+            <Content />
+          </div>
+        </article>
+      );
+    }))}
+  </div>
+</section>
+
+<style>
+  .timeline-entry {
+    opacity: 0;
+    transform: translateY(2rem);
+    animation: fadeInUp 0.6s ease forwards;
+    animation-timeline: view();
+    animation-range: entry 0% entry 30%;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(2rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
