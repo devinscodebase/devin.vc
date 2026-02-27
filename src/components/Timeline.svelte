@@ -1,0 +1,319 @@
+<script>
+  import { onMount } from 'svelte';
+  import { animate, inView, stagger } from 'motion';
+
+  let section;
+
+  onMount(() => {
+    const header = section.querySelector('.timeline-header');
+    const entries = section.querySelectorAll('.entry');
+
+    // Header reveal
+    inView(header, () => {
+      animate(header, { opacity: [0, 1], y: [25, 0] }, {
+        duration: 0.7,
+        easing: [0.25, 1, 0.5, 1],
+      });
+    }, { amount: 0.5 });
+
+    // Each entry reveals individually as it scrolls into view
+    entries.forEach((entry) => {
+      const yearBig = entry.querySelector('.year-big');
+      const content = entry.querySelector('.entry-content');
+      const dot = entry.querySelector('.line-dot');
+      const bar = entry.querySelector('.line-bar');
+
+      inView(entry, () => {
+        // Year number slides in from left
+        animate(yearBig, { opacity: [0, 1], x: [-30, 0] }, {
+          duration: 0.8,
+          easing: [0.25, 1, 0.5, 1],
+        });
+
+        // Content slides up
+        animate(content, { opacity: [0, 1], y: [30, 0] }, {
+          duration: 0.8,
+          delay: 0.15,
+          easing: [0.25, 1, 0.5, 1],
+        });
+
+        // Dot pops in with spring
+        if (dot) {
+          animate(dot, { scale: [0, 1.3, 1] }, {
+            duration: 0.5,
+            delay: 0.3,
+            easing: [0.34, 1.56, 0.64, 1],
+          });
+        }
+
+        // Bar grows down
+        if (bar) {
+          animate(bar, { scaleY: [0, 1] }, {
+            duration: 0.6,
+            delay: 0.5,
+            easing: [0.25, 1, 0.5, 1],
+          });
+        }
+      }, { amount: 0.2 });
+    });
+  });
+</script>
+
+<section class="timeline" bind:this={section}>
+  <div class="timeline-inner">
+    <div class="timeline-header" style="opacity: 0;">
+      <span class="label">02 / Career</span>
+      <div class="rule" aria-hidden="true"></div>
+    </div>
+
+    <ol class="entries">
+      <li class="entry">
+        <div class="entry-year">
+          <span class="year-big" style="opacity: 0;">2023</span>
+          <span class="year-range">Present</span>
+        </div>
+        <div class="entry-line" aria-hidden="true">
+          <span class="line-dot" style="transform: scale(0);"></span>
+          <span class="line-bar" style="transform: scaleY(0);"></span>
+        </div>
+        <div class="entry-content" style="opacity: 0;">
+          <h3 class="role">Independent Consultant</h3>
+          <p class="detail">Working directly with founders and executive teams on GTM strategy, brand systems, and operational design. Building what matters, on my own terms.</p>
+        </div>
+      </li>
+
+      <li class="entry">
+        <div class="entry-year">
+          <span class="year-big" style="opacity: 0;">2021</span>
+          <span class="year-range">2023</span>
+        </div>
+        <div class="entry-line" aria-hidden="true">
+          <span class="line-dot" style="transform: scale(0);"></span>
+          <span class="line-bar" style="transform: scaleY(0);"></span>
+        </div>
+        <div class="entry-content" style="opacity: 0;">
+          <h3 class="role">Head of GTM</h3>
+          <span class="company">Enterprise SaaS Co.</span>
+          <p class="detail">Launched three product lines from zero to revenue. Owned positioning, pricing, sales enablement, and the full go-to-market motion across segments.</p>
+        </div>
+      </li>
+
+      <li class="entry">
+        <div class="entry-year">
+          <span class="year-big" style="opacity: 0;">2019</span>
+          <span class="year-range">2021</span>
+        </div>
+        <div class="entry-line" aria-hidden="true">
+          <span class="line-dot" style="transform: scale(0);"></span>
+          <span class="line-bar" style="transform: scaleY(0);"></span>
+        </div>
+        <div class="entry-content" style="opacity: 0;">
+          <h3 class="role">VP Marketing & Design</h3>
+          <span class="company">GrowthCo</span>
+          <p class="detail">Unified marketing and product design under one roof. Built the brand system, led a team of twelve, and doubled pipeline in eighteen months.</p>
+        </div>
+      </li>
+
+      <li class="entry">
+        <div class="entry-year">
+          <span class="year-big" style="opacity: 0;">2017</span>
+          <span class="year-range">2019</span>
+        </div>
+        <div class="entry-line" aria-hidden="true">
+          <span class="line-dot" style="transform: scale(0);"></span>
+          <span class="line-bar" style="transform: scaleY(0);"></span>
+        </div>
+        <div class="entry-content" style="opacity: 0;">
+          <h3 class="role">Director of Operations</h3>
+          <span class="company">ScaleUp</span>
+          <p class="detail">Led operational transformation during hypergrowth. Designed systems and processes that scaled from 30 to 200 people without breaking.</p>
+        </div>
+      </li>
+
+      <li class="entry">
+        <div class="entry-year">
+          <span class="year-big" style="opacity: 0;">2015</span>
+          <span class="year-range">2017</span>
+        </div>
+        <div class="entry-line" aria-hidden="true">
+          <span class="line-dot" style="transform: scale(0);"></span>
+          <span class="line-bar" style="transform: scaleY(0);"></span>
+        </div>
+        <div class="entry-content" style="opacity: 0;">
+          <h3 class="role">Marketing Manager</h3>
+          <span class="company">First Venture</span>
+          <p class="detail">Built the marketing function from scratch. Content, demand gen, brand — all of it. The foundation for everything that followed.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<style>
+  .timeline {
+    position: relative;
+    padding: clamp(8rem, 20vh, 14rem) clamp(1.5rem, 5vw, 3.5rem);
+    background: var(--color-bg);
+  }
+
+  .timeline-inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .timeline-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: clamp(4rem, 8vw, 6rem);
+  }
+
+  .label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .rule {
+    flex: 1;
+    height: 1px;
+    background: var(--color-text-muted);
+    opacity: 0.2;
+  }
+
+  .entries {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .entry {
+    display: grid;
+    grid-template-columns: clamp(80px, 13vw, 140px) 20px 1fr;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    padding: clamp(2.5rem, 5vw, 3.5rem) 0;
+    align-items: start;
+  }
+
+  .entry + .entry {
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+  }
+
+  .entry-year {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    text-align: right;
+    padding-top: 0.1rem;
+  }
+
+  .year-big {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--color-text);
+  }
+
+  .year-range {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-top: 0.4rem;
+  }
+
+  .entry-line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 0.65rem;
+    height: 100%;
+  }
+
+  .line-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    flex-shrink: 0;
+  }
+
+  .line-bar {
+    width: 1px;
+    flex: 1;
+    background: color-mix(in oklab, var(--color-accent) 25%, transparent);
+    margin-top: 0.5rem;
+    transform-origin: top;
+  }
+
+  .entry:last-child .line-bar {
+    display: none;
+  }
+
+  .entry-content {
+    display: flex;
+    flex-direction: column;
+    padding-top: 0.3rem;
+  }
+
+  .role {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+    font-weight: 400;
+    line-height: 1.25;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .company {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-top: 0.5rem;
+  }
+
+  .detail {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    line-height: 1.65;
+    color: var(--color-text-muted);
+    max-width: 480px;
+    margin-top: 0.75rem;
+  }
+
+  @media (max-width: 600px) {
+    .entry {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .entry-year {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 0.75rem;
+      text-align: left;
+    }
+
+    .year-big {
+      font-size: 1.6rem;
+    }
+
+    .entry-line {
+      display: none;
+    }
+  }
+</style>

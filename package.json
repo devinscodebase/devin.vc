@@ -16,6 +16,7 @@
     "@fontsource-variable/hubot-sans": "^5.2.8",
     "@tailwindcss/vite": "^4.2.1",
     "astro": "^5.17.1",
+    "motion": "^12.34.3",
     "svelte": "^5.53.5",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3"

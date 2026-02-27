@@ -253,7 +253,7 @@
     position: fixed;
     inset: 0;
     z-index: 40;
-    background: var(--color-bg-overlay);
+    background: var(--color-bg);
     display: flex;
     flex-direction: column;
     align-items: center;

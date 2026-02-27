@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { animate, stagger } from 'motion';
 
   let kinetic;
   let hero;
@@ -36,13 +37,66 @@
   onMount(() => {
     hasPointer = !matchMedia('(pointer: coarse)').matches;
     rafId = requestAnimationFrame(tick);
+
+    // --- Motion entrance animations ---
+    const nameLines = hero.querySelectorAll('.name-line');
+    const divider = hero.querySelector('.divider');
+    const tagline = hero.querySelector('.tagline');
+    const descriptors = hero.querySelector('.descriptors');
+    const kineticEl = hero.querySelector('.kinetic');
+    const scrollInd = hero.querySelector('.scroll-indicator');
+
+    // Kinetic bg fades in
+    animate(kineticEl, { opacity: [0, 1] }, {
+      duration: 0.6,
+      easing: [0.25, 1, 0.5, 1],
+    });
+
+    // Name lines stagger in
+    animate(nameLines, {
+      opacity: [0, 1],
+      y: [30, 0],
+    }, {
+      duration: 0.5,
+      delay: stagger(0.1, { start: 0.05 }),
+      easing: [0.25, 1, 0.5, 1],
+    });
+
+    // Divider expands
+    animate(divider, { width: ['0px', '72px'] }, {
+      duration: 0.4,
+      delay: 0.25,
+      easing: [0.25, 1, 0.5, 1],
+    });
+
+    // Tagline
+    animate(tagline, { opacity: [0, 1], y: [12, 0] }, {
+      duration: 0.45,
+      delay: 0.35,
+      easing: [0.25, 1, 0.5, 1],
+    });
+
+    // Descriptors
+    animate(descriptors, { opacity: [0, 1], y: [10, 0] }, {
+      duration: 0.4,
+      delay: 0.45,
+      easing: [0.25, 1, 0.5, 1],
+    });
+
+    // Scroll indicator
+    animate(scrollInd, { opacity: [0, 1] }, {
+      duration: 0.4,
+      delay: 0.7,
+      easing: [0.25, 1, 0.5, 1],
+    });
+
     return () => { if (rafId) cancelAnimationFrame(rafId); };
   });
 </script>
 
 <section class="hero" bind:this={hero} onmousemove={onMove} onmouseleave={onLeave}>
   <!-- kinetic typography field -->
-  <div class="kinetic" bind:this={kinetic} aria-hidden="true">
+  <div class="kinetic" bind:this={kinetic} aria-hidden="true" style="opacity: 0;">
     <div class="kinetic-row r1 heavy"><span>MARKETING · OPERATIONS · DESIGN · GTM · MARKETING · OPERATIONS · DESIGN · GTM ·&nbsp;</span><span>MARKETING · OPERATIONS · DESIGN · GTM · MARKETING · OPERATIONS · DESIGN · GTM ·&nbsp;</span></div>
     <div class="kinetic-row r2 serif glow"><span>DESIGN · OPERATIONS · MARKETING · GTM · DESIGN · OPERATIONS · MARKETING · GTM ·&nbsp;</span><span>DESIGN · OPERATIONS · MARKETING · GTM · DESIGN · OPERATIONS · MARKETING · GTM ·&nbsp;</span></div>
     <div class="kinetic-row r3"><span>GTM · DESIGN · OPERATIONS · MARKETING · GTM · DESIGN · OPERATIONS · MARKETING ·&nbsp;</span><span>GTM · DESIGN · OPERATIONS · MARKETING · GTM · DESIGN · OPERATIONS · MARKETING ·&nbsp;</span></div>
@@ -62,15 +116,15 @@
 
   <div class="content">
     <h1 class="name">
-      <span class="name-line name-line-1">Devin</span>
-      <span class="name-line name-line-2">Alexander</span>
+      <span class="name-line" style="opacity: 0;">Devin</span>
+      <span class="name-line" style="opacity: 0;">Alexander</span>
     </h1>
 
-    <div class="divider" aria-hidden="true"></div>
+    <div class="divider" aria-hidden="true" style="width: 0;"></div>
 
-    <p class="tagline">Build your future with me</p>
+    <p class="tagline" style="opacity: 0;">Build your future with me</p>
 
-    <p class="descriptors">
+    <p class="descriptors" style="opacity: 0;">
       <span>Marketing</span>
       <span class="dot" aria-hidden="true">&middot;</span>
       <span>Operations</span>
@@ -82,7 +136,7 @@
   </div>
 
   <div class="scroll-fade" aria-hidden="true">
-    <div class="scroll-indicator">
+    <div class="scroll-indicator" style="opacity: 0;">
       <div class="scroll-line"></div>
     </div>
   </div>
@@ -225,37 +279,22 @@
     flex-direction: column;
     align-items: center;
     gap: 0;
-    /* no filter — kept lightweight for instant theme switch */
   }
 
   .name-line {
     display: block;
-    opacity: 0;
+    font-size: clamp(4rem, 12vw, 9rem);
     padding: 0.05em 0.15em;
-    animation: reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     background: linear-gradient(180deg, var(--color-name-start) 0%, var(--color-name-end) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
-  .name-line-1 {
-    font-size: clamp(4rem, 12vw, 9rem);
-    animation-delay: 0.15s;
-  }
-
-  .name-line-2 {
-    font-size: clamp(4rem, 12vw, 9rem);
-    animation-delay: 0.3s;
-  }
-
   .divider {
-    width: 0;
     height: 1px;
     margin: clamp(1.5rem, 3vw, 2.5rem) auto;
     background: var(--color-accent);
-    animation: expand 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: 0.55s;
   }
 
   .tagline {
@@ -263,9 +302,6 @@
     font-style: italic;
     font-size: clamp(1.1rem, 2vw, 1.5rem);
     color: var(--color-text);
-    opacity: 0;
-    animation: reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: 0.65s;
     margin-bottom: clamp(1rem, 2vw, 1.5rem);
   }
 
@@ -281,9 +317,6 @@
     justify-content: center;
     flex-wrap: wrap;
     gap: 0.6em;
-    opacity: 0;
-    animation: reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: 0.75s;
   }
 
   .dot {
@@ -300,28 +333,12 @@
     opacity: calc(1 - var(--scroll, 0) * 5);
   }
 
-  .scroll-indicator {
-    opacity: 0;
-    animation: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: 1.4s;
-  }
-
   .scroll-line {
     width: 1px;
     height: 40px;
     background: linear-gradient(180deg, var(--color-text-muted) 0%, transparent 100%);
     animation: pulse-height 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
     animation-delay: 2s;
-  }
-
-  @keyframes reveal {
-    from { opacity: 0; transform: translateY(18px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes expand {
-    from { width: 0; }
-    to { width: 72px; }
   }
 
   @keyframes pulse-height {

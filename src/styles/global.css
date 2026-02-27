@@ -11,9 +11,8 @@
 :root,
 [data-theme="dark"] {
   --color-bg: #0a0a08;
-  --color-bg-overlay: #0c0c0a;
   --color-text: #ede8df;
-  --color-text-muted: #8a8478;
+  --color-text-muted: #a09488;
   --color-accent: #c4a47c;
   --color-name-start: #f0ebe2;
   --color-name-end: #d6c9ae;
@@ -29,19 +28,18 @@
    LIGHT THEME
    ============================== */
 [data-theme="light"] {
-  --color-bg: #eae2d3;
-  --color-bg-overlay: #e2dacb;
-  --color-text: #1c1814;
-  --color-text-muted: #6b5f50;
-  --color-accent: #8b6930;
-  --color-name-start: #1c1814;
-  --color-name-end: #4a3f30;
-  --color-kinetic: #1c1814;
-  --color-selection-bg: #8b6930;
-  --color-selection-text: #eae2d3;
-  --grain-opacity: 0.08;
-  --hero-bg: #e6ddd0;
-  --hero-vignette: rgba(60, 50, 35, 0.12);
+  --color-bg: #f2e8d8;
+  --color-text: #2a2018;
+  --color-text-muted: #6d5c48;
+  --color-accent: #a07535;
+  --color-name-start: #2a2018;
+  --color-name-end: #5a4530;
+  --color-kinetic: #3a2e20;
+  --color-selection-bg: #a07535;
+  --color-selection-text: #f2e8d8;
+  --grain-opacity: 0.06;
+  --hero-bg: #efe4d2;
+  --hero-vignette: rgba(80, 60, 30, 0.1);
 }
 
 html {
@@ -54,6 +52,17 @@ html {
 
 body {
   min-height: 100dvh;
+}
+
+/* ==============================
+   HIDE NATIVE SCROLLBAR
+   ============================== */
+html {
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 ::selection {
