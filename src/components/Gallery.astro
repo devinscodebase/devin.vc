@@ -1,0 +1,143 @@
+---
+const images = [
+  { src: '/images/gallery/headshot.jpg', alt: 'Devin Alexander headshot' },
+  { src: '/images/gallery/speaking.jpg', alt: 'Devin speaking on PR & Marketing' },
+  { src: '/images/gallery/family.jpg', alt: 'Devin with his daughter' },
+  { src: '/images/gallery/portrait.jpg', alt: 'Devin portrait outdoors' },
+  { src: '/images/gallery/workshop.jpg', alt: 'Devin leading a workshop at Africa Week' },
+];
+---
+
+<section class="gallery">
+  <div class="gallery-grid" id="gallery-grid">
+    <div class="gallery-item item-1">
+      <img src={images[0].src} alt={images[0].alt} loading="lazy" />
+    </div>
+    <div class="gallery-item item-2">
+      <img src={images[1].src} alt={images[1].alt} loading="lazy" />
+    </div>
+    <div class="gallery-item item-3">
+      <img src={images[2].src} alt={images[2].alt} loading="lazy" />
+    </div>
+    <div class="gallery-item item-4">
+      <img src={images[3].src} alt={images[3].alt} loading="lazy" />
+    </div>
+    <div class="gallery-item item-5">
+      <img src={images[4].src} alt={images[4].alt} loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<script>
+  import { animate, inView, stagger } from 'motion';
+
+  const grid = document.getElementById('gallery-grid');
+  if (grid) {
+    const items = grid.querySelectorAll('.gallery-item');
+    items.forEach(item => { item.style.opacity = '0'; });
+
+    inView(grid, () => {
+      animate(items, {
+        opacity: [0, 1],
+        y: [30, 0],
+        scale: [0.97, 1],
+      }, {
+        duration: 0.7,
+        easing: [0.25, 1, 0.5, 1],
+        delay: stagger(0.12),
+      });
+    }, { amount: 0.2 });
+  }
+</script>
+
+<style>
+  .gallery {
+    background: var(--color-bg);
+    padding: 0 clamp(1.5rem, 5vw, 3.5rem);
+  }
+
+  .gallery-grid {
+    max-width: 960px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 280px 280px;
+    gap: clamp(0.5rem, 1vw, 0.75rem);
+  }
+
+  .gallery-item {
+    overflow: hidden;
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(0.6) sepia(0.25) brightness(0.9) contrast(1.05);
+    transition: filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .gallery-item:hover img {
+    filter: grayscale(0) sepia(0.05) brightness(1) contrast(1);
+  }
+
+  /* Row 1: headshot (1 col) + speaking (2 cols) */
+  .item-1 {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .item-2 {
+    grid-column: 2 / 4;
+    grid-row: 1;
+  }
+
+  /* Row 2: family + portrait + workshop */
+  .item-3 {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .item-4 {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .item-5 {
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  @media (max-width: 640px) {
+    .gallery-grid {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 200px 200px 200px;
+    }
+
+    .item-1 {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .item-2 {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .item-3 {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .item-4 {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    .item-5 {
+      grid-column: 1 / 3;
+      grid-row: 3;
+    }
+  }
+</style>

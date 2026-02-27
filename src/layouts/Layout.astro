@@ -1,6 +1,7 @@
 ---
 import Nav from '../components/Nav.svelte';
 import ScrollProgress from '../components/ScrollProgress.svelte';
+import Footer from '../components/Footer.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -39,5 +40,6 @@ const {
     <Nav client:load />
     <ScrollProgress client:load />
     <slot />
+    <Footer />
   </body>
 </html>

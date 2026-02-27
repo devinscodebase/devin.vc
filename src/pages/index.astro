@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.svelte';
 import About from '../components/About.svelte';
+import Gallery from '../components/Gallery.astro';
 import Timeline from '../components/Timeline.svelte';
 import Now from '../components/Now.svelte';
 import Journal from '../components/Journal.svelte';
@@ -12,6 +13,7 @@ import Contact from '../components/Contact.svelte';
   <main>
     <Hero client:load />
     <About client:load />
+    <Gallery />
     <Timeline client:load />
     <Now client:load />
     <Journal client:load />
