@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import '@fontsource-variable/hubot-sans';
 import '@fontsource-variable/climate-crisis';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title?: string;
@@ -17,6 +18,7 @@ const { title = 'Devin' } = Astro.props;
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
+    <ClientRouter />
   </head>
   <body>
     <slot />
