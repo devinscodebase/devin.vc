@@ -1,6 +1,43 @@
-<section class="hero">
+<script>
+  import { onMount } from 'svelte';
+
+  let kinetic;
+  let hero;
+  let cx = 0, cy = 0;
+  let tx = 0, ty = 0;
+  let rafId;
+
+  function onMove(e) {
+    const rect = hero.getBoundingClientRect();
+    tx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    ty = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+  }
+
+  function onLeave() {
+    tx = 0;
+    ty = 0;
+  }
+
+  function tick() {
+    cx += (tx - cx) * 0.07;
+    cy += (ty - cy) * 0.07;
+    if (kinetic) {
+      kinetic.style.setProperty('--mx', cx.toFixed(4));
+      kinetic.style.setProperty('--my', cy.toFixed(4));
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+
+  onMount(() => {
+    const isTouch = matchMedia('(pointer: coarse)').matches;
+    if (!isTouch) rafId = requestAnimationFrame(tick);
+    return () => { if (rafId) cancelAnimationFrame(rafId); };
+  });
+</script>
+
+<section class="hero" bind:this={hero} onmousemove={onMove} onmouseleave={onLeave}>
   <!-- kinetic typography field -->
-  <div class="kinetic" aria-hidden="true">
+  <div class="kinetic" bind:this={kinetic} aria-hidden="true">
     <div class="kinetic-row r1 heavy"><span>MARKETING · OPERATIONS · DESIGN · GTM · MARKETING · OPERATIONS · DESIGN · GTM ·&nbsp;</span><span>MARKETING · OPERATIONS · DESIGN · GTM · MARKETING · OPERATIONS · DESIGN · GTM ·&nbsp;</span></div>
     <div class="kinetic-row r2 serif glow"><span>DESIGN · OPERATIONS · MARKETING · GTM · DESIGN · OPERATIONS · MARKETING · GTM ·&nbsp;</span><span>DESIGN · OPERATIONS · MARKETING · GTM · DESIGN · OPERATIONS · MARKETING · GTM ·&nbsp;</span></div>
     <div class="kinetic-row r3"><span>GTM · DESIGN · OPERATIONS · MARKETING · GTM · DESIGN · OPERATIONS · MARKETING ·&nbsp;</span><span>GTM · DESIGN · OPERATIONS · MARKETING · GTM · DESIGN · OPERATIONS · MARKETING ·&nbsp;</span></div>
@@ -92,6 +129,7 @@
     color: var(--color-kinetic);
     opacity: 0.03;
     will-change: transform;
+    translate: calc(var(--mx, 0) * 8px) calc(var(--my, 0) * 8px);
   }
 
   .kinetic-row span {
@@ -107,15 +145,18 @@
     font-size: clamp(3rem, 5.5vw, 5rem);
     letter-spacing: 0.04em;
     opacity: 0.045;
+    translate: calc(var(--mx, 0) * 18px) calc(var(--my, 0) * 18px);
   }
 
   .kinetic-row.heavy {
     font-weight: 500;
     opacity: 0.04;
+    translate: calc(var(--mx, 0) * 12px) calc(var(--my, 0) * 12px);
   }
 
   .kinetic-row.glow {
     opacity: 0.05;
+    translate: calc(var(--mx, 0) * 25px) calc(var(--my, 0) * 25px);
   }
 
   .r1  { animation: drift-left  80s linear infinite; }
