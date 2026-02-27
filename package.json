@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/mdx": "^4.3.13",
     "@astrojs/svelte": "^7.2.5",
     "@astrojs/vercel": "^9.0.4",
     "@fontsource-variable/climate-crisis": "^5.2.11",
