@@ -1,5 +1,6 @@
 ---
 import Nav from '../components/Nav.svelte';
+import '../styles/global.css';
 
 interface Props {
   title?: string;
@@ -13,11 +14,18 @@ const {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <script is:inline>
+      (function() {
+        var stored = localStorage.getItem('theme');
+        var preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', stored || preferred);
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -31,7 +39,3 @@ const {
     <slot />
   </body>
 </html>
-
-<style>
-  @import '../styles/global.css';
-</style>

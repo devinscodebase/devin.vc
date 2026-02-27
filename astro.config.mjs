@@ -13,6 +13,13 @@ import mdx from '@astrojs/mdx';
 export default defineConfig({
   integrations: [svelte(), mdx()],
 
+  markdown: {
+    shikiConfig: {
+      theme: 'vitesse-dark',
+      wrap: true,
+    },
+  },
+
   vite: {
     plugins: [tailwindcss()]
   },

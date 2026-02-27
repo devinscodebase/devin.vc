@@ -1,8 +1,21 @@
 <script>
-  let open = $state(false);
+  import { onMount } from 'svelte';
 
-  function toggle() {
+  let open = $state(false);
+  let theme = $state('dark');
+
+  onMount(() => {
+    theme = document.documentElement.getAttribute('data-theme') || 'dark';
+  });
+
+  function toggleMenu() {
     open = !open;
+  }
+
+  function toggleTheme() {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
   }
 
   $effect(() => {
@@ -15,17 +28,42 @@
 <header class="navbar" class:open>
   <a href="/" class="logo">Devin</a>
 
-  <button
-    class="burger"
-    onclick={toggle}
-    aria-label={open ? 'Close menu' : 'Open menu'}
-    aria-expanded={open}
-  >
-    <div class="burger-lines" class:open>
-      <span></span>
-      <span></span>
-    </div>
-  </button>
+  <div class="nav-actions">
+    <button
+      class="theme-toggle"
+      onclick={toggleTheme}
+      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+    >
+      <!-- sun (shown in dark mode) -->
+      <svg class="icon icon-sun" class:active={theme === 'dark'} width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <circle cx="9" cy="9" r="3.5" />
+        <line x1="9" y1="1.5" x2="9" y2="3" />
+        <line x1="9" y1="15" x2="9" y2="16.5" />
+        <line x1="1.5" y1="9" x2="3" y2="9" />
+        <line x1="15" y1="9" x2="16.5" y2="9" />
+        <line x1="3.7" y1="3.7" x2="4.75" y2="4.75" />
+        <line x1="13.25" y1="13.25" x2="14.3" y2="14.3" />
+        <line x1="3.7" y1="14.3" x2="4.75" y2="13.25" />
+        <line x1="13.25" y1="4.75" x2="14.3" y2="3.7" />
+      </svg>
+      <!-- moon (shown in light mode) -->
+      <svg class="icon icon-moon" class:active={theme === 'light'} width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15.5 9.87A7 7 0 1 1 8.13 2.5 5.5 5.5 0 0 0 15.5 9.87Z" />
+      </svg>
+    </button>
+
+    <button
+      class="burger"
+      onclick={toggleMenu}
+      aria-label={open ? 'Close menu' : 'Open menu'}
+      aria-expanded={open}
+    >
+      <div class="burger-lines" class:open>
+        <span></span>
+        <span></span>
+      </div>
+    </button>
+  </div>
 </header>
 
 <div class="overlay" class:open>
@@ -71,7 +109,6 @@
     justify-content: space-between;
     padding: 1.75rem clamp(1.5rem, 5vw, 3.5rem);
     pointer-events: none;
-    /* fade in on load */
     opacity: 0;
     animation: nav-enter 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
   }
@@ -80,11 +117,17 @@
     pointer-events: auto;
   }
 
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
   /* ---- logo ---- */
   .logo {
     font-family: 'Instrument Serif', serif;
     font-size: 1.35rem;
-    color: #ede8df;
+    color: var(--color-text);
     text-decoration: none;
     letter-spacing: -0.02em;
     position: relative;
@@ -98,16 +141,52 @@
     left: 0;
     width: 0;
     height: 1px;
-    background: #c4a47c;
+    background: var(--color-accent);
     transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .logo:hover {
-    color: #c4a47c;
+    color: var(--color-accent);
   }
 
   .logo:hover::after {
     width: 100%;
+  }
+
+  /* ---- theme toggle ---- */
+  .theme-toggle {
+    appearance: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    margin: -8px;
+    position: relative;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    transition: color 0.3s;
+  }
+
+  .theme-toggle:hover {
+    color: var(--color-accent);
+  }
+
+  .icon {
+    position: absolute;
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.7);
+    transition:
+      opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .icon.active {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
   }
 
   /* ---- burger ---- */
@@ -132,12 +211,13 @@
   .burger-lines span {
     position: absolute;
     height: 1.5px;
-    background: #ede8df;
+    background: var(--color-text);
     right: 0;
     border-radius: 1px;
     transition:
       transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
       width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 0.5s ease,
       opacity 0.3s;
   }
 
@@ -151,12 +231,10 @@
     bottom: 0;
   }
 
-  /* burger hover — lines equalize */
   .burger:hover .burger-lines:not(.open) span:last-child {
     width: 28px;
   }
 
-  /* burger open — X */
   .burger-lines.open span:first-child {
     top: 50%;
     transform: translateY(-50%) rotate(45deg);
@@ -175,7 +253,7 @@
     position: fixed;
     inset: 0;
     z-index: 40;
-    background: #0c0c0a;
+    background: var(--color-bg-overlay);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -190,13 +268,12 @@
     pointer-events: auto;
   }
 
-  /* grain inside overlay */
   .overlay-grain {
     position: absolute;
     inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    opacity: 0.035;
-    mix-blend-mode: overlay;
+    opacity: var(--grain-opacity);
+    mix-blend-mode: var(--grain-blend);
     pointer-events: none;
   }
 
@@ -215,7 +292,6 @@
     gap: 1rem;
     text-decoration: none;
     position: relative;
-    /* close: vanish fast */
     opacity: 0;
     transform: translateY(24px);
     transition:
@@ -223,7 +299,6 @@
       transform 0.2s;
   }
 
-  /* open: staggered reveal */
   .overlay.open .nav-link {
     opacity: 1;
     transform: translateY(0);
@@ -241,7 +316,7 @@
     font-family: 'DM Sans', sans-serif;
     font-size: 0.7rem;
     letter-spacing: 0.15em;
-    color: #c4a47c;
+    color: var(--color-accent);
     opacity: 0.6;
     transition: opacity 0.3s;
     position: relative;
@@ -251,13 +326,12 @@
   .nav-label {
     font-family: 'Instrument Serif', serif;
     font-size: clamp(2.5rem, 7vw, 4.5rem);
-    color: #ede8df;
+    color: var(--color-text);
     letter-spacing: -0.02em;
     line-height: 1;
     transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  /* hover — gold shift + line reveal */
   .nav-link::after {
     content: '';
     position: absolute;
@@ -265,12 +339,12 @@
     left: 0;
     width: 0;
     height: 1px;
-    background: #c4a47c;
+    background: var(--color-accent);
     transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .nav-link:hover .nav-label {
-    color: #c4a47c;
+    color: var(--color-accent);
   }
 
   .nav-link:hover .nav-number {
@@ -306,7 +380,7 @@
     font-size: 0.75rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: #8a8478;
+    color: var(--color-text-muted);
   }
 
   .footer-tagline {
