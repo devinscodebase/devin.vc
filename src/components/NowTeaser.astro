@@ -10,16 +10,23 @@ if (nowEntry) {
 }
 ---
 
-<section class="py-24 px-6 sm:px-12 md:px-24 bg-sand">
-  <div class="max-w-2xl mx-auto">
-    <h2 class="font-display text-3xl sm:text-4xl text-rich-black mb-8">Now</h2>
-    {Content && (
-      <div class="font-sans text-rich-black/80 text-base sm:text-lg leading-relaxed [&_h2]:font-sans [&_h2]:text-rich-black [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:mt-8 [&_h2]:mb-3">
-        <Content />
-      </div>
-    )}
-    <a href="/now" class="inline-block mt-8 font-sans text-alloy hover:text-burnt transition-colors underline underline-offset-4">
-      See the full picture &rarr;
-    </a>
+<section class="py-28 sm:py-36 px-8 sm:px-16 md:px-24">
+  <div class="max-w-3xl mx-auto">
+    <div class="border-l-2 border-amber/60 pl-8 sm:pl-10">
+      <h2 class="font-sans text-xs font-medium tracking-[0.2em] uppercase text-alloy mb-6">
+        Right Now
+      </h2>
+      {Content && (
+        <div class="prose">
+          <Content />
+        </div>
+      )}
+      <a
+        href="/now"
+        class="inline-block mt-8 text-xs font-medium tracking-[0.15em] uppercase text-alloy hover:text-burnt transition-colors duration-200"
+      >
+        More about now &rarr;
+      </a>
+    </div>
   </div>
 </section>

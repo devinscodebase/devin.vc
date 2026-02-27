@@ -1,15 +1,28 @@
 ---
 ---
 
-<footer class="py-24 px-6 sm:px-12 md:px-24 bg-rich-black">
-  <div class="max-w-2xl mx-auto text-center">
-    <p class="font-sans text-sand/50 text-sm tracking-wide">
-      &copy; {new Date().getFullYear()} Devin
-    </p>
-    <div class="flex justify-center gap-6 mt-6">
-      <a href="https://github.com" class="font-sans text-sand/40 hover:text-sand transition-colors text-sm">GitHub</a>
-      <a href="https://twitter.com" class="font-sans text-sand/40 hover:text-sand transition-colors text-sm">Twitter</a>
-      <a href="mailto:hello@devin.vc" class="font-sans text-sand/40 hover:text-sand transition-colors text-sm">Email</a>
+<footer class="relative pt-32 pb-16 px-8 sm:px-16 md:px-24 bg-rich-black mt-12">
+  <!-- Gradient transition from sand to dark -->
+  <div class="absolute inset-x-0 -top-12 h-12 bg-gradient-to-b from-sand to-rich-black pointer-events-none"></div>
+
+  <div class="max-w-3xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-end gap-8">
+    <div>
+      <p class="font-display text-2xl text-sand/70 leading-none">DEVIN</p>
+      <p class="text-sand/25 text-xs tracking-wider mt-3">
+        &copy; {new Date().getFullYear()}
+      </p>
+    </div>
+
+    <div class="flex gap-8">
+      <a href="https://github.com" class="text-sand/30 hover:text-amber text-xs tracking-wider uppercase transition-colors duration-200">
+        GitHub
+      </a>
+      <a href="https://twitter.com" class="text-sand/30 hover:text-amber text-xs tracking-wider uppercase transition-colors duration-200">
+        Twitter
+      </a>
+      <a href="mailto:hello@devin.vc" class="text-sand/30 hover:text-amber text-xs tracking-wider uppercase transition-colors duration-200">
+        Email
+      </a>
     </div>
   </div>
 </footer>

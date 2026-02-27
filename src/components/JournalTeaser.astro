@@ -6,25 +6,41 @@ const posts = (await getCollection('journal'))
   .slice(0, 3);
 ---
 
-<section class="py-24 px-6 sm:px-12 md:px-24 bg-mint">
-  <div class="max-w-2xl mx-auto">
-    <h2 class="font-display text-3xl sm:text-4xl text-rich-black mb-12">From the Journal</h2>
-    <div class="space-y-10">
+<section class="py-28 sm:py-36 px-8 sm:px-16 md:px-24">
+  <div class="max-w-3xl mx-auto">
+    <h2 class="font-sans text-xs font-medium tracking-[0.2em] uppercase text-alloy mb-16">
+      From the Journal
+    </h2>
+
+    <div class="divide-y divide-rich-black/8">
       {posts.map((post) => (
-        <a href={`/journal/${post.id}`} class="block group">
-          <time class="font-display text-sm text-dark-teal/60 tracking-wider">
+        <a href={`/journal/${post.id}`} class="block py-8 first:pt-0 last:pb-0 group">
+          <time class="text-xs font-medium tracking-[0.1em] text-rich-black/30">
             {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
           </time>
-          <h3 class="font-sans text-xl sm:text-2xl text-rich-black mt-1 group-hover:text-dark-teal transition-colors">
+          <h3 class="text-xl sm:text-2xl font-semibold text-rich-black mt-1.5 leading-tight group-hover:text-alloy transition-colors duration-200">
             {post.data.title}
           </h3>
-          <p class="font-sans text-rich-black/60 mt-2 leading-relaxed">
+          <p class="text-rich-black/50 mt-2 leading-relaxed text-[0.9375rem]">
             {post.data.description}
           </p>
+          {post.data.tags && (
+            <div class="flex gap-2 mt-3">
+              {post.data.tags.map((tag) => (
+                <span class="text-[0.6875rem] font-medium tracking-wider uppercase text-rich-black/25">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </a>
       ))}
     </div>
-    <a href="/journal" class="inline-block mt-12 font-sans text-dark-teal hover:text-teal transition-colors underline underline-offset-4">
+
+    <a
+      href="/journal"
+      class="inline-block mt-14 text-xs font-medium tracking-[0.15em] uppercase text-alloy hover:text-burnt transition-colors duration-200"
+    >
       Read the journal &rarr;
     </a>
   </div>

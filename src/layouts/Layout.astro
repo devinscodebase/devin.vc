@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import '@fontsource-variable/hubot-sans';
-import '@fontsource-variable/climate-crisis';
+import '@fontsource-variable/climate-crisis/full.css';
 import { ClientRouter } from 'astro:transitions';
 
 interface Props {
@@ -22,5 +22,6 @@ const { title = 'Devin' } = Astro.props;
   </head>
   <body>
     <slot />
+    <div class="grain-overlay" aria-hidden="true"></div>
   </body>
 </html>

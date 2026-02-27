@@ -5,16 +5,14 @@ import Timeline from '../components/Timeline.astro';
 import NowTeaser from '../components/NowTeaser.astro';
 import JournalTeaser from '../components/JournalTeaser.astro';
 import Footer from '../components/Footer.astro';
-import ScrollBackground from '../components/ScrollBackground.svelte';
 ---
 
 <Layout title="Devin">
-  <ScrollBackground client:load />
-  <div class="relative z-10">
-    <Hero client:load />
+  <Hero client:load />
+  <main>
     <Timeline />
     <NowTeaser />
     <JournalTeaser />
-    <Footer />
-  </div>
+  </main>
+  <Footer />
 </Layout>

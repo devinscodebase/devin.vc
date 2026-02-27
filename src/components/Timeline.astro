@@ -5,40 +5,53 @@ const timelineEntries = (await getCollection('timeline'))
   .sort((a, b) => a.data.order - b.data.order);
 ---
 
-<section class="relative py-24 px-6 sm:px-12 md:px-24 bg-dark-teal">
-  <div class="max-w-2xl mx-auto space-y-16">
-    {await Promise.all(timelineEntries.map(async (entry) => {
-      const { Content } = await render(entry);
-      return (
-        <article class="timeline-entry">
-          <span class="block font-sans text-sm text-sand/50 mb-2 tracking-widest uppercase">
-            {entry.data.dateRange}
-          </span>
-          <h3 class="font-display text-2xl sm:text-3xl text-amber mb-4">
-            {entry.data.company}
-          </h3>
-          <div class="font-sans text-base sm:text-lg text-sand/80 leading-relaxed">
-            <Content />
-          </div>
-        </article>
-      );
-    }))}
+<section class="py-28 sm:py-36 px-8 sm:px-16 md:px-24">
+  <div class="max-w-3xl mx-auto">
+    <h2 class="font-sans text-xs font-medium tracking-[0.2em] uppercase text-alloy mb-20">
+      The Story So Far
+    </h2>
+
+    <div class="relative">
+      <!-- Vertical accent line -->
+      <div class="absolute left-0 top-1 bottom-0 w-px bg-rich-black/10"></div>
+
+      {await Promise.all(timelineEntries.map(async (entry) => {
+        const { Content } = await render(entry);
+        return (
+          <article class="relative pl-8 sm:pl-10 pb-16 last:pb-0 timeline-entry">
+            {/* Dot marker */}
+            <div class="absolute left-[-3px] top-[0.6rem] w-[7px] h-[7px] rounded-full bg-amber"></div>
+
+            <span class="block text-xs font-medium tracking-[0.15em] uppercase text-rich-black/35">
+              {entry.data.dateRange}
+            </span>
+            <h3 class="text-xl sm:text-2xl font-semibold text-rich-black mt-1 leading-tight">
+              {entry.data.company}
+            </h3>
+            <p class="text-sm text-alloy mt-0.5 italic">{entry.data.role}</p>
+            <div class="prose mt-3">
+              <Content />
+            </div>
+          </article>
+        );
+      }))}
+    </div>
   </div>
 </section>
 
 <style>
   .timeline-entry {
     opacity: 0;
-    transform: translateY(2rem);
+    transform: translateY(1.5rem);
     animation: fadeInUp 0.6s ease forwards;
     animation-timeline: view();
-    animation-range: entry 0% entry 30%;
+    animation-range: entry 0% entry 35%;
   }
 
   @keyframes fadeInUp {
     from {
       opacity: 0;
-      transform: translateY(2rem);
+      transform: translateY(1.5rem);
     }
     to {
       opacity: 1;

@@ -9,25 +9,30 @@ const { Content } = nowEntry ? await render(nowEntry) : { Content: null };
 ---
 
 <Layout title="Now — Devin">
-  <main class="min-h-screen bg-sand py-24 px-6 sm:px-12 md:px-24">
+  <main class="min-h-screen py-24 sm:py-32 px-8 sm:px-16 md:px-24">
     <div class="max-w-2xl mx-auto">
-      <h1 class="font-display text-4xl sm:text-5xl text-rich-black mb-12">Now</h1>
+      <a
+        href="/"
+        class="inline-block text-xs font-medium tracking-[0.15em] uppercase text-alloy hover:text-burnt transition-colors duration-200 mb-16"
+      >
+        &larr; Home
+      </a>
+
+      <h1 class="font-sans text-3xl sm:text-4xl font-light text-rich-black mb-12 leading-tight">
+        Now
+      </h1>
+
       {Content && (
-        <div class="font-sans text-rich-black/80 text-base sm:text-lg leading-relaxed
-          [&_h2]:font-sans [&_h2]:text-rich-black [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:mt-8 [&_h2]:mb-3
-          [&_a]:text-alloy [&_a]:underline [&_a]:underline-offset-4
-          [&_p]:mb-4">
+        <div class="prose">
           <Content />
         </div>
       )}
+
       {nowEntry?.data.updated && (
-        <p class="font-sans text-rich-black/30 text-sm mt-16">
+        <p class="text-rich-black/25 text-xs tracking-wider mt-20">
           Last updated {nowEntry.data.updated.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
         </p>
       )}
-      <a href="/" class="inline-block mt-8 font-sans text-alloy hover:text-burnt transition-colors underline underline-offset-4">
-        &larr; Back home
-      </a>
     </div>
   </main>
   <Footer />
