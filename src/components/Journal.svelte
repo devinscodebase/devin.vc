@@ -126,7 +126,7 @@
 
 <section class="journal" bind:this={section}>
   <div class="journal-inner">
-    <div class="section-tag" style="opacity: 0;"><span class="tag-number">05</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Journal</span></div>
+    <div class="section-tag" style="opacity: 0;"><span class="tag-number">06</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Journal</span></div>
     <div class="journal-header" style="opacity: 0;">
       <h2 class="section-heading">Latest Thinking</h2>
       <a href="/journal" class="view-all">

@@ -1,0 +1,435 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const projects = [
+  {
+    name: 'Revenx',
+    url: 'https://revenx.com',
+    category: 'B2B Marketing Platform',
+    description: 'Appointment-driven digital marketing for financial advisors and insurance agents. Generates qualified, booked virtual appointments with public-sector employees — 44,000+ appointments booked annually.',
+    contribution: 'Named and designed the full rebrand from B2B Business Experts to Revenx. Built the website, marketing funnels, and customer training platform. Helped scale from $30K/mo to $300K/mo.',
+    tags: ['Branding', 'Web Design', 'Marketing', 'GTM'],
+    accent: 'teal',
+  },
+  {
+    name: 'Equity & Help',
+    url: 'https://equityandhelp.com',
+    category: 'Real Estate Investment',
+    description: 'Investment platform enabling steady returns backed by residential properties while helping working-class families achieve affordable homeownership across 32 states.',
+    contribution: 'Designed and built the website and investor-facing digital presence for this socially conscious real estate platform.',
+    tags: ['Web Design', 'UI/UX'],
+    accent: 'amber',
+  },
+  {
+    name: 'Giannis Andreou',
+    url: 'https://giannisandreou.com',
+    category: 'Personal Brand & Education',
+    description: 'Personal brand and business hub for one of Greece & Cyprus\'s top crypto educators — 500K+ monthly views, 30+ courses, 4,000+ videos, and a portfolio of companies in the Bitcoin mining space.',
+    contribution: 'Built the brand platform, marketing systems, and digital strategy as part of the Andreou Enterprises executive team.',
+    tags: ['Branding', 'Web Design', 'Operations'],
+    accent: 'rust',
+  },
+  {
+    name: 'Bitmern Solo',
+    url: 'https://bitmernsolo.com',
+    category: 'Crypto Mining Infrastructure',
+    description: 'Solo mining pool built for everyone — miners keep entire block rewards with a flat 1% fee. Supports Bitcoin, Litecoin, Dogecoin, Bitcoin Cash, and DigiByte with real-time monitoring.',
+    contribution: 'Built the entire platform from the ground up — front-end interface, back-end infrastructure, and the actual mining pool systems powering each supported chain.',
+    tags: ['Full-Stack Dev', 'Infrastructure', 'Web App'],
+    accent: 'teal',
+  },
+  {
+    name: 'IMAPAC',
+    url: 'https://imapac.com',
+    category: 'Biopharma Networking & Events',
+    description: 'Life sciences marketing and networking platform connecting professionals across the biopharmaceutical industry — 217 events across 150 countries, 60,000+ specialists in their database.',
+    contribution: 'Designed the website and built internal systems for the team to manage their massive events database and website CMS at scale.',
+    tags: ['Web Design', 'Internal Tools', 'CMS'],
+    accent: 'amber',
+  },
+  {
+    name: 'Afrika National Granite',
+    url: 'https://ang.co.za',
+    category: 'Natural Stone Manufacturing',
+    description: 'International supplier of premium granite slabs — vertically integrated from quarry to export, serving 25+ countries with polished, honed, and custom-finished stone since 2000.',
+    contribution: 'Built the digital presence and marketing strategy for this South African granite manufacturer, positioning them for international reach.',
+    tags: ['Web Design', 'Branding', 'Strategy'],
+    accent: 'rust',
+  },
+];
+---
+
+<Layout title="Projects — Devin Alexander" description="A look at some of the platforms and brands I've helped build.">
+  <main>
+    <section class="projects-page">
+      <div class="projects-inner">
+        <header class="page-header">
+          <div class="section-tag"><span class="tag-number">01</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Projects</span></div>
+          <h1 class="page-title">Selected work</h1>
+          <p class="page-subtitle">A look at some of the <span class="sub-accent teal">platforms</span> and <span class="sub-accent amber">brands</span> I've helped build.</p>
+          <div class="title-rule" aria-hidden="true"></div>
+        </header>
+
+        <div class="project-list">
+          {projects.map((project, i) => (
+            <article class={`project project--${project.accent}`}>
+              <div class="project-index" aria-hidden="true">
+                <span class="index-number">{String(i + 1).padStart(2, '0')}</span>
+              </div>
+
+              <div class="project-content">
+                <div class="project-head">
+                  <span class="project-category">{project.category}</span>
+                  <h2 class="project-name">{project.name}</h2>
+                </div>
+
+                <p class="project-desc">{project.description}</p>
+                <p class="project-role">{project.contribution}</p>
+
+                <div class="project-footer">
+                  <div class="project-tags">
+                    {project.tags.map(tag => (
+                      <span class="tag">{tag}</span>
+                    ))}
+                  </div>
+                  <a href={project.url} target="_blank" rel="noopener" class="project-link">
+                    Visit
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3.5 8.5L8.5 3.5M8.5 3.5H4M8.5 3.5V8" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div class="page-footer">
+          <a href="/" class="back-link">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 7H1M6 2L1 7l5 5" />
+            </svg>
+            Back home
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  import { animate, inView, stagger } from 'motion';
+
+  const header = document.querySelector('.page-header');
+  const projects = document.querySelectorAll('.project');
+
+  if (header) {
+    header.style.opacity = '0';
+    inView(header, () => {
+      animate(header, { opacity: [0, 1], y: [12, 0] }, {
+        duration: 0.4,
+        easing: [0.25, 1, 0.5, 1],
+      });
+    }, { amount: 0.3 });
+  }
+
+  projects.forEach(p => { p.style.opacity = '0'; });
+  projects.forEach((project, i) => {
+    inView(project, () => {
+      animate(project, { opacity: [0, 1], y: [15, 0] }, {
+        duration: 0.4,
+        delay: 0.05,
+        easing: [0.25, 1, 0.5, 1],
+      });
+    }, { amount: 0.15 });
+  });
+
+  // Spring hover on project cards
+  projects.forEach(project => {
+    const link = project.querySelector('.project-link');
+    if (link) {
+      project.addEventListener('mouseenter', () => {
+        animate(link, { x: 3 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
+      });
+      project.addEventListener('mouseleave', () => {
+        animate(link, { x: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
+      });
+    }
+  });
+</script>
+
+<style>
+  .projects-page {
+    min-height: 100dvh;
+    padding: var(--space-page-top) var(--space-page-x) var(--space-page-bottom);
+    background: var(--color-bg);
+  }
+
+  .projects-inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ---- Section tag ---- */
+  .section-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .tag-number {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1;
+    color: var(--color-accent-teal);
+  }
+
+  .tag-dash {
+    width: 24px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-accent-teal), transparent);
+  }
+
+  .tag-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* ---- Header ---- */
+  .page-header {
+    margin-bottom: var(--space-block-lg);
+  }
+
+  .page-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(3rem, 7vw, 5rem);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+    margin: 0 0 1rem;
+  }
+
+  .page-subtitle {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    max-width: 520px;
+    margin: 0;
+  }
+
+  .sub-accent { font-style: normal; }
+  .sub-accent.teal { color: var(--color-accent-teal); }
+  .sub-accent.amber { color: var(--color-accent-amber); }
+
+  .title-rule {
+    width: 48px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-accent-teal), var(--color-accent-amber));
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  /* ---- Project list ---- */
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* ---- Project card ---- */
+  .project {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    padding: clamp(2rem, 4vw, 3rem) 0;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .project:last-child {
+    border-bottom: none;
+  }
+
+  .project:hover {
+    border-color: color-mix(in oklab, var(--color-text-muted) 25%, transparent);
+  }
+
+  /* ---- Index number ---- */
+  .project-index {
+    padding-top: 0.15em;
+  }
+
+  .index-number {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    line-height: 1;
+    color: var(--color-text-muted);
+    opacity: 0.2;
+  }
+
+  .project--teal .index-number { color: var(--color-accent-teal); opacity: 0.3; }
+  .project--amber .index-number { color: var(--color-accent-amber); opacity: 0.3; }
+  .project--rust .index-number { color: var(--color-accent-rust); opacity: 0.3; }
+
+  /* ---- Content ---- */
+  .project-content {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.75rem, 1.5vw, 1rem);
+  }
+
+  .project-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .project-category {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .project--teal .project-category { color: var(--color-accent-teal); }
+  .project--amber .project-category { color: var(--color-accent-amber); }
+  .project--rust .project-category { color: var(--color-accent-rust); }
+
+  .project-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .project-desc {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.88rem, 1.1vw, 0.95rem);
+    line-height: 1.65;
+    color: var(--color-text);
+    margin: 0;
+    max-width: 600px;
+  }
+
+  .project-role {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(0.88rem, 1.15vw, 0.98rem);
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    margin: 0;
+    max-width: 600px;
+  }
+
+  /* ---- Footer row: tags + link ---- */
+  .project-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: clamp(0.5rem, 1vw, 0.75rem);
+    flex-wrap: wrap;
+  }
+
+  .project-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+    padding: 0.3rem 0.65rem;
+  }
+
+  .project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    flex-shrink: 0;
+  }
+
+  .project-link:hover {
+    color: var(--color-accent);
+  }
+
+  .project-link svg {
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .project-link:hover svg {
+    transform: translate(2px, -2px);
+  }
+
+  /* ---- Page footer ---- */
+  .page-footer {
+    margin-top: var(--space-block);
+    padding-top: 2rem;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+
+  .back-link svg {
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .back-link:hover svg {
+    transform: translateX(-3px);
+  }
+
+  @media (max-width: 640px) {
+    .project {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .project-index {
+      margin-bottom: 0.5rem;
+    }
+  }
+</style>

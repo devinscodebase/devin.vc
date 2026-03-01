@@ -92,16 +92,20 @@
       <span class="nav-number">01</span>
       <span class="nav-label">Work</span>
     </a>
-    <a href="/about" class="nav-link" class:active={currentPath.startsWith('/about')} onclick={() => open = false}>
+    <a href="/projects" class="nav-link" class:active={currentPath.startsWith('/projects')} onclick={() => open = false}>
       <span class="nav-number">02</span>
+      <span class="nav-label">Projects</span>
+    </a>
+    <a href="/about" class="nav-link" class:active={currentPath.startsWith('/about')} onclick={() => open = false}>
+      <span class="nav-number">03</span>
       <span class="nav-label">About</span>
     </a>
     <a href="/journal" class="nav-link" class:active={currentPath.startsWith('/journal')} onclick={() => open = false}>
-      <span class="nav-number">03</span>
+      <span class="nav-number">04</span>
       <span class="nav-label">Journal</span>
     </a>
     <a href="/contact" class="nav-link" class:active={currentPath.startsWith('/contact')} onclick={() => open = false}>
-      <span class="nav-number">04</span>
+      <span class="nav-number">05</span>
       <span class="nav-label">Contact</span>
     </a>
   </nav>

@@ -5,13 +5,12 @@
   let section;
 
   onMount(() => {
-    const tag = section.querySelector('.section-tag');
+    const footer = section.querySelector('.about-footer');
     const quote = section.querySelector('.about-quote');
     const border = section.querySelector('.about-border');
-    const disciplines = section.querySelectorAll('.discipline');
 
     inView(section, () => {
-      animate(tag, { opacity: [0, 1], y: [10, 0] }, {
+      animate(footer, { opacity: [0, 1], y: [10, 0] }, {
         duration: 0.5,
         easing: [0.25, 1, 0.5, 1],
       });
@@ -42,10 +41,18 @@
       </div>
     </div>
 
-    <div class="section-tag" style="opacity: 0;">
-      <span class="tag-number">01</span>
-      <span class="tag-dash" aria-hidden="true"></span>
-      <span class="tag-label">About</span>
+    <div class="about-footer" style="opacity: 0;">
+      <div class="section-tag">
+        <span class="tag-number">01</span>
+        <span class="tag-dash" aria-hidden="true"></span>
+        <span class="tag-label">About</span>
+      </div>
+      <a href="/about" class="about-link">
+        Read my story
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 7H13M8 2L13 7l-5 5" />
+        </svg>
+      </a>
     </div>
   </div>
 </section>
@@ -103,11 +110,19 @@
   .discipline.rust { color: var(--color-accent-rust); }
   .discipline.gold { color: var(--color-accent); }
 
+  .about-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: clamp(3rem, 6vw, 5rem);
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
   .section-tag {
     display: flex;
     align-items: center;
     gap: 0.65rem;
-    margin-top: clamp(3rem, 6vw, 5rem);
   }
 
   .tag-number {
@@ -131,5 +146,31 @@
     letter-spacing: 0.25em;
     text-transform: uppercase;
     color: var(--color-text-muted);
+  }
+
+  .about-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .about-link:hover {
+    color: var(--color-accent);
+  }
+
+  .about-link svg {
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .about-link:hover svg {
+    transform: translateX(3px);
   }
 </style>

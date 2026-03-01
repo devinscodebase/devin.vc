@@ -5,6 +5,7 @@ import About from '../components/About.svelte';
 import Gallery from '../components/Gallery.astro';
 import Timeline from '../components/Timeline.svelte';
 import Now from '../components/Now.svelte';
+import Projects from '../components/Projects.svelte';
 import Proof from '../components/Proof.svelte';
 import Journal from '../components/Journal.svelte';
 import Contact from '../components/Contact.svelte';
@@ -35,6 +36,7 @@ const testimonials = await sanityClient.fetch(`
     <Gallery />
     <Timeline client:load />
     <Now client:load />
+    <Projects client:load />
     <Proof client:load testimonials={testimonials} />
     <Journal client:load posts={latestPosts} />
     <Contact client:load />
