@@ -58,7 +58,7 @@
             <span class="project-status">Building</span>
           </div>
         </div>
-        <h3 class="project-name">Hustle</h3>
+        <h3 class="project-name">Something Secret</h3>
         <p class="project-desc">A work management platform for small teams. Consolidates chats, tasks, CRM, marketing, G-Suite, and more into one place — delivering everything your team needs at a fraction of the cost of running them all separately.</p>
       </article>
 

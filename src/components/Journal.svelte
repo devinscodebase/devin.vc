@@ -2,44 +2,61 @@
   import { onMount } from 'svelte';
   import { animate, inView, stagger } from 'motion';
 
+  let { posts = [] } = $props();
+
   let section;
+
+  // Separate featured post and stack posts
+  const featuredPost = $derived(posts.find(p => p.featured) || posts[0]);
+  const stackPosts = $derived(posts.filter(p => p !== featuredPost));
+
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  }
+
+  function capitalizeTag(tag) {
+    if (!tag) return '';
+    return tag.charAt(0).toUpperCase() + tag.slice(1);
+  }
 
   onMount(() => {
     const header = section.querySelector('.journal-header');
     const featured = section.querySelector('.post.featured');
     const accentBar = section.querySelector('.post-accent');
-    const stackPosts = section.querySelectorAll('.post-stack .post');
+    const stackEls = section.querySelectorAll('.post-stack .post');
     const footer = section.querySelector('.journal-footer');
 
     inView(section, () => {
-      // Header slides in
       animate(header, { opacity: [0, 1], y: [25, 0] }, {
         duration: 0.8,
         easing: [0.25, 1, 0.5, 1],
       });
 
-      // Featured post
-      animate(featured, { opacity: [0, 1], y: [40, 0] }, {
-        duration: 0.8,
-        delay: 0.2,
-        easing: [0.25, 1, 0.5, 1],
-      });
+      if (featured) {
+        animate(featured, { opacity: [0, 1], y: [40, 0] }, {
+          duration: 0.8,
+          delay: 0.2,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }
 
-      // Accent bar sweeps in
-      animate(accentBar, { scaleX: [0, 1] }, {
-        duration: 0.6,
-        delay: 0.7,
-        easing: [0.25, 1, 0.5, 1],
-      });
+      if (accentBar) {
+        animate(accentBar, { scaleX: [0, 1] }, {
+          duration: 0.6,
+          delay: 0.7,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }
 
-      // Stack posts stagger
-      animate(stackPosts, { opacity: [0, 1], y: [35, 0] }, {
-        duration: 0.7,
-        delay: stagger(0.15, { start: 0.35 }),
-        easing: [0.25, 1, 0.5, 1],
-      });
+      if (stackEls.length) {
+        animate(stackEls, { opacity: [0, 1], y: [35, 0] }, {
+          duration: 0.7,
+          delay: stagger(0.15, { start: 0.35 }),
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }
 
-      // Footer
       animate(footer, { opacity: [0, 1], y: [15, 0] }, {
         duration: 0.6,
         delay: 0.8,
@@ -61,31 +78,32 @@
       </a>
     </div>
 
-    <div class="posts">
-      <a href="/journal/on-craft" class="post featured" style="opacity: 0;">
-        <div class="post-accent" aria-hidden="true" style="transform: scaleX(0); transform-origin: left;"></div>
-        <span class="post-tag">Essay</span>
-        <h3 class="post-title">On Craft</h3>
-        <p class="post-excerpt">Why the best marketing doesn't feel like marketing, and what that means for how we build brands today.</p>
-        <span class="post-date">Feb 2026</span>
-      </a>
+    {#if posts.length > 0}
+      <div class="posts">
+        {#if featuredPost}
+          <a href={`/journal/${featuredPost.slug}`} class="post featured" style="opacity: 0;">
+            <div class="post-accent" aria-hidden="true" style="transform: scaleX(0); transform-origin: left;"></div>
+            <span class="post-tag">{capitalizeTag(featuredPost.tag)}</span>
+            <h3 class="post-title">{featuredPost.title}</h3>
+            <p class="post-excerpt">{featuredPost.description}</p>
+            <span class="post-date">{formatDate(featuredPost.date)}</span>
+          </a>
+        {/if}
 
-      <div class="post-stack">
-        <a href="/journal/building-in-public" class="post" style="opacity: 0;">
-          <span class="post-tag">Process</span>
-          <h3 class="post-title">Building in Public</h3>
-          <p class="post-excerpt">Notes on designing a solo practice from scratch — the decisions, the trade-offs, and what I'd do differently.</p>
-          <span class="post-date">Jan 2026</span>
-        </a>
-
-        <a href="/journal/the-operator-mindset" class="post" style="opacity: 0;">
-          <span class="post-tag">Leadership</span>
-          <h3 class="post-title">The Operator Mindset</h3>
-          <p class="post-excerpt">Most companies hire for vision and hope execution follows. The best ones do it the other way around.</p>
-          <span class="post-date">Dec 2025</span>
-        </a>
+        {#if stackPosts.length > 0}
+          <div class="post-stack">
+            {#each stackPosts as post}
+              <a href={`/journal/${post.slug}`} class="post" style="opacity: 0;">
+                <span class="post-tag">{capitalizeTag(post.tag)}</span>
+                <h3 class="post-title">{post.title}</h3>
+                <p class="post-excerpt">{post.description}</p>
+                <span class="post-date">{formatDate(post.date)}</span>
+              </a>
+            {/each}
+          </div>
+        {/if}
       </div>
-    </div>
+    {/if}
 
     <div class="journal-footer" style="opacity: 0;">
       <span class="label">04 / Journal</span>

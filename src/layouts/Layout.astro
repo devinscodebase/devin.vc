@@ -7,12 +7,26 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  publishedDate?: string;
+  noIndex?: boolean;
 }
 
+const siteName = 'Devin Alexander';
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://devinalexander.com';
+
 const {
-  title = 'Devin Alexander',
+  title = siteName,
   description = 'Marketing, Operations, Design & Development, GTM — A decade of executive leadership.',
+  image,
+  type = 'website',
+  publishedDate,
+  noIndex = false,
 } = Astro.props;
+
+const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
+const ogImage = image ? `${siteUrl}${image.startsWith('/') ? image : `/${image}`}` : undefined;
 ---
 
 <!doctype html>
@@ -21,6 +35,27 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:type" content={type} />
+    <meta property="og:locale" content="en_US" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    {ogImage && <meta property="og:image:width" content="1200" />}
+    {ogImage && <meta property="og:image:height" content="630" />}
+    {publishedDate && <meta property="article:published_time" content={publishedDate} />}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
     <script is:inline>
       (function() {
         var stored = localStorage.getItem('theme');
