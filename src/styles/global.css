@@ -6,6 +6,19 @@
 }
 
 /* ==============================
+   THEME-INDEPENDENT TOKENS
+   ============================== */
+:root {
+  --border-subtle: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+  --border-accent: 1px solid color-mix(in oklab, var(--color-accent) 40%, transparent);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 200ms;
+  --duration-normal: 350ms;
+  --duration-slow: 500ms;
+}
+
+/* ==============================
    DARK THEME (default)
    ============================== */
 :root,
@@ -22,6 +35,11 @@
   --grain-opacity: 0.035;
   --hero-bg: #0a0a08;
   --hero-vignette: rgba(0, 0, 0, 0);
+  --shadow-sm: 0 1px 2px hsl(30 20% 4% / 0.3), 0 1px 3px hsl(30 20% 4% / 0.4);
+  --shadow-md: 0 2px 4px hsl(30 20% 4% / 0.25), 0 4px 12px hsl(30 20% 4% / 0.35);
+  --shadow-lg: 0 4px 8px hsl(30 20% 4% / 0.2), 0 8px 24px hsl(30 20% 4% / 0.3), 0 16px 48px hsl(30 20% 4% / 0.15);
+  --color-error: #c47c7c;
+  --color-success: #7cc49b;
 }
 
 /* ==============================
@@ -40,6 +58,11 @@
   --grain-opacity: 0.06;
   --hero-bg: #efe4d2;
   --hero-vignette: rgba(80, 60, 30, 0.1);
+  --shadow-sm: 0 1px 2px hsl(30 20% 20% / 0.04), 0 1px 3px hsl(30 20% 20% / 0.06);
+  --shadow-md: 0 2px 4px hsl(30 20% 20% / 0.04), 0 4px 12px hsl(30 20% 20% / 0.08);
+  --shadow-lg: 0 4px 8px hsl(30 20% 20% / 0.04), 0 8px 24px hsl(30 20% 20% / 0.08), 0 16px 48px hsl(30 20% 20% / 0.06);
+  --color-error: #a04040;
+  --color-success: #2d7a4f;
 }
 
 html {
@@ -76,4 +99,42 @@ html {
     animation-delay: 0ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ==============================
+   GLOBAL FOCUS & INTERACTION
+   ============================== */
+*:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+button:active:not(:disabled),
+[role="button"]:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* ==============================
+   VIEW TRANSITIONS
+   ============================== */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+::view-transition-old(root) {
+  animation: fade-out 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+::view-transition-new(root) {
+  animation: fade-in 300ms cubic-bezier(0.16, 1, 0.3, 1);
 }

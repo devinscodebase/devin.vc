@@ -152,9 +152,14 @@
             required
             class="newsletter-input"
             disabled={status === 'submitting'}
+            aria-label="Email address for newsletter"
           />
           <button type="submit" class="newsletter-btn" disabled={status === 'submitting'}>
-            {status === 'submitting' ? '...' : 'Subscribe'}
+            {#if status === 'submitting'}
+              <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+            {:else}
+              Subscribe
+            {/if}
           </button>
         </form>
         {#if status === 'error'}
@@ -243,13 +248,16 @@
     padding: clamp(1.5rem, 3vw, 2rem);
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
     text-decoration: none;
+    box-shadow: var(--shadow-sm);
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .post:hover {
     transform: translateY(-3px);
     border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+    box-shadow: var(--shadow-lg);
   }
 
   .post.featured {
@@ -271,7 +279,7 @@
     font-family: 'DM Sans', sans-serif;
     font-size: 0.58rem;
     font-weight: 500;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--color-accent);
     margin-bottom: auto;
@@ -384,6 +392,7 @@
 
   .newsletter-form:focus-within {
     border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 12%, transparent);
   }
 
   .newsletter-input {
@@ -433,10 +442,33 @@
     margin: 0;
   }
 
+  .loading-dots {
+    display: inline-flex;
+    gap: 2px;
+  }
+
+  .loading-dots span {
+    animation: dot-pulse 1.4s infinite;
+    opacity: 0;
+  }
+
+  .loading-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .loading-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes dot-pulse {
+    0%, 80%, 100% { opacity: 0; }
+    40% { opacity: 1; }
+  }
+
   .newsletter-error {
     font-family: 'DM Sans', sans-serif;
     font-size: 0.78rem;
-    color: #c47c7c;
+    color: var(--color-error);
     margin-top: 0.75rem;
   }
 

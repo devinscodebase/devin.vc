@@ -1,5 +1,6 @@
 ---
 const year = new Date().getFullYear();
+const currentPath = Astro.url.pathname;
 ---
 
 <footer class="site-footer">
@@ -12,10 +13,10 @@ const year = new Date().getFullYear();
 
     <div class="footer-meta">
       <nav class="footer-nav" aria-label="Footer navigation">
-        <a href="/work" class="footer-link">Work</a>
-        <a href="/about" class="footer-link">About</a>
-        <a href="/journal" class="footer-link">Journal</a>
-        <a href="/contact" class="footer-link">Contact</a>
+        <a href="/work" class:list={['footer-link', { active: currentPath.startsWith('/work') }]}>Work</a>
+        <a href="/about" class:list={['footer-link', { active: currentPath.startsWith('/about') }]}>About</a>
+        <a href="/journal" class:list={['footer-link', { active: currentPath.startsWith('/journal') }]}>Journal</a>
+        <a href="/contact" class:list={['footer-link', { active: currentPath.startsWith('/contact') }]}>Contact</a>
       </nav>
 
       <div class="footer-info">
@@ -98,7 +99,8 @@ const year = new Date().getFullYear();
     transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .footer-link:hover {
+  .footer-link:hover,
+  .footer-link.active {
     color: var(--color-accent);
   }
 

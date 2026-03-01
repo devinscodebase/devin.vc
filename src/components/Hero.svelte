@@ -322,7 +322,7 @@
     font-family: 'DM Sans', sans-serif;
     font-size: clamp(0.65rem, 1.1vw, 0.8rem);
     font-weight: 400;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--color-text-muted);
     display: flex;
@@ -351,12 +351,14 @@
     padding: 0.85rem 2.5rem;
     cursor: pointer;
     transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .hero-cta:hover {
     background: var(--color-text);
     transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
   }
 
   .scroll-fade {

@@ -3,9 +3,27 @@
 
   let open = $state(false);
   let theme = $state('dark');
+  let scrolled = $state(false);
+  let currentPath = $state('/');
 
   onMount(() => {
     theme = document.documentElement.getAttribute('data-theme') || 'dark';
+    currentPath = window.location.pathname;
+
+    function onScroll() {
+      scrolled = window.scrollY > 80;
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Listen for Astro page transitions
+    document.addEventListener('astro:after-swap', () => {
+      currentPath = window.location.pathname;
+    });
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
   });
 
   function toggleMenu() {
@@ -25,7 +43,7 @@
 
 <svelte:window onkeydown={(e) => { if (e.key === 'Escape' && open) open = false; }} />
 
-<header class="navbar" class:open>
+<header class="navbar" class:open class:scrolled>
   <a href="/" class="logo">Devin</a>
 
   <div class="nav-actions">
@@ -70,19 +88,19 @@
   <div class="overlay-grain" aria-hidden="true"></div>
 
   <nav class="overlay-nav">
-    <a href="/work" class="nav-link" onclick={() => open = false}>
+    <a href="/work" class="nav-link" class:active={currentPath.startsWith('/work')} onclick={() => open = false}>
       <span class="nav-number">01</span>
       <span class="nav-label">Work</span>
     </a>
-    <a href="/about" class="nav-link" onclick={() => open = false}>
+    <a href="/about" class="nav-link" class:active={currentPath.startsWith('/about')} onclick={() => open = false}>
       <span class="nav-number">02</span>
       <span class="nav-label">About</span>
     </a>
-    <a href="/journal" class="nav-link" onclick={() => open = false}>
+    <a href="/journal" class="nav-link" class:active={currentPath.startsWith('/journal')} onclick={() => open = false}>
       <span class="nav-number">03</span>
       <span class="nav-label">Journal</span>
     </a>
-    <a href="/contact" class="nav-link" onclick={() => open = false}>
+    <a href="/contact" class="nav-link" class:active={currentPath.startsWith('/contact')} onclick={() => open = false}>
       <span class="nav-number">04</span>
       <span class="nav-label">Contact</span>
     </a>
@@ -111,6 +129,17 @@
     pointer-events: none;
     opacity: 0;
     animation: nav-enter 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition: background 0.4s, border-color 0.4s, backdrop-filter 0.4s;
+  }
+
+  .navbar.scrolled {
+    background: color-mix(in oklab, var(--color-bg) 85%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 8%, transparent);
+    pointer-events: auto;
   }
 
   .navbar > * {
@@ -352,6 +381,18 @@
   }
 
   .nav-link:hover::after {
+    width: 100%;
+  }
+
+  .nav-link.active .nav-label {
+    color: var(--color-accent);
+  }
+
+  .nav-link.active .nav-number {
+    opacity: 1;
+  }
+
+  .nav-link.active::after {
     width: 100%;
   }
 

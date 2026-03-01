@@ -73,6 +73,13 @@
     margin: 0;
     display: flex;
     flex-direction: column;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .testimonial:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
   }
 
   .quote-mark {

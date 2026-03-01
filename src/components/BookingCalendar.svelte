@@ -248,11 +248,15 @@
       <p class="step-label">{formatDateLabel(selectedDate)} at {selectedSlot?.label}</p>
 
       <form class="confirm-form" onsubmit={confirmBooking}>
-        <input type="text" bind:value={name} placeholder="Name" required class="form-input" />
-        <input type="email" bind:value={email} placeholder="Email" required class="form-input" />
-        <textarea bind:value={notes} placeholder="Anything I should know? (optional)" class="form-input form-textarea" rows="3"></textarea>
+        <input type="text" bind:value={name} placeholder="Name" required class="form-input" aria-label="Your name" />
+        <input type="email" bind:value={email} placeholder="Email" required class="form-input" aria-label="Your email address" />
+        <textarea bind:value={notes} placeholder="Anything I should know? (optional)" class="form-input form-textarea" rows="3" aria-label="Additional notes"></textarea>
         <button type="submit" class="confirm-btn" disabled={bookingStatus === 'submitting'}>
-          {bookingStatus === 'submitting' ? '...' : 'Confirm booking'}
+          {#if bookingStatus === 'submitting'}
+            <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+          {:else}
+            Confirm booking
+          {/if}
         </button>
         {#if bookingStatus === 'error'}
           <p class="form-error">{errorMsg}</p>
@@ -371,7 +375,9 @@
     padding: 0.5rem;
     text-align: center;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     aspect-ratio: 1;
     display: flex;
     align-items: center;
@@ -443,7 +449,9 @@
     padding: 0.6rem 0.75rem;
     cursor: pointer;
     text-align: center;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .slot:hover {
@@ -477,6 +485,7 @@
 
   .form-input:focus {
     border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 12%, transparent);
   }
 
   .form-input::placeholder {
@@ -502,12 +511,16 @@
     border: none;
     padding: 0.85rem 1.5rem;
     cursor: pointer;
-    transition: filter 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: filter 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     margin-top: 0.5rem;
   }
 
   .confirm-btn:hover {
     filter: brightness(1.1);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
   }
 
   .confirm-btn:disabled {
@@ -515,10 +528,33 @@
     cursor: not-allowed;
   }
 
+  .loading-dots {
+    display: inline-flex;
+    gap: 2px;
+  }
+
+  .loading-dots span {
+    animation: dot-pulse 1.4s infinite;
+    opacity: 0;
+  }
+
+  .loading-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .loading-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes dot-pulse {
+    0%, 80%, 100% { opacity: 0; }
+    40% { opacity: 1; }
+  }
+
   .form-error {
     font-family: 'DM Sans', sans-serif;
     font-size: 0.78rem;
-    color: #c47c7c;
+    color: var(--color-error);
     margin: 0;
   }
 

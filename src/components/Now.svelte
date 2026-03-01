@@ -115,13 +115,16 @@
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
     display: flex;
     flex-direction: column;
+    box-shadow: var(--shadow-sm);
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .project:hover {
     transform: translateY(-4px);
     border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+    box-shadow: var(--shadow-lg);
   }
 
   .project-top {
@@ -167,7 +170,7 @@
     font-family: 'DM Sans', sans-serif;
     font-size: 0.6rem;
     font-weight: 500;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--color-text-muted);
   }
