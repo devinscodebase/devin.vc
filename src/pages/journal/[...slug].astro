@@ -36,11 +36,12 @@ const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
 });
 
 const seoTitle = post.seoTitle || `${post.title} — Devin Alexander`;
+const dynamicOgUrl = `/api/og.png?type=journal&title=${encodeURIComponent(post.title)}${post.tag ? `&tag=${encodeURIComponent(post.tag)}` : ''}${formattedDate ? `&date=${encodeURIComponent(formattedDate)}` : ''}`;
 const ogImage = post.ogImage
   ? urlFor(post.ogImage).width(1200).url()
   : post.heroImage
     ? urlFor(post.heroImage).width(1200).url()
-    : undefined;
+    : dynamicOgUrl;
 ---
 
 <Layout
