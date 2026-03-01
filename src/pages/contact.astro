@@ -8,42 +8,52 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     <section class="contact-page">
       <div class="contact-inner">
         <header class="page-header">
+          <div class="section-tag"><span class="tag-number">01</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Contact</span></div>
           <h1 class="page-title">Let's talk</h1>
-          <p class="page-subtitle">Whether it's consulting, collaboration, or an interesting problem worth solving — I'd love to hear from you.</p>
-          <div class="header-rule" aria-hidden="true"></div>
+          <p class="page-subtitle">Whether it's <span class="sub-accent teal">consulting</span>, <span class="sub-accent amber">collaboration</span>, or an interesting problem worth <span class="sub-accent rust">solving</span>.</p>
+          <div class="title-rule" aria-hidden="true"></div>
         </header>
 
-        <div class="contact-grid">
-          <div class="contact-form-wrap">
-            <h2 class="section-label">Send a message</h2>
+        <div class="contact-switcher">
+          <div class="tab-track">
+            <div class="tab-indicator" id="tab-indicator"></div>
+            <button class="tab-btn active" id="tab-message" type="button">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              Message
+            </button>
+            <button class="tab-btn" id="tab-booking" type="button">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Book a call
+            </button>
+          </div>
+        </div>
+
+        <div class="contact-card" id="contact-card">
+          <div class="card-accent teal" aria-hidden="true"></div>
+          <div class="card-accent amber" aria-hidden="true"></div>
+
+          <div class="panel active" id="panel-message">
+            <p class="panel-hint">I'll get back to you within a day or two.</p>
             <form class="contact-form" id="contact-form">
               <div class="form-field">
                 <input type="text" name="name" placeholder="Name" required class="form-input" aria-label="Your name" />
+                <div class="input-line"></div>
               </div>
               <div class="form-field">
                 <input type="email" name="email" placeholder="Email" required class="form-input" aria-label="Your email address" />
+                <div class="input-line"></div>
               </div>
               <div class="form-field">
-                <textarea name="message" placeholder="What's on your mind?" required class="form-input form-textarea" rows="5" aria-label="Your message"></textarea>
+                <textarea name="message" placeholder="What's on your mind?" required class="form-input form-textarea" rows="4" aria-label="Your message"></textarea>
               </div>
               <button type="submit" class="form-submit" id="form-submit">Send message</button>
               <p class="form-status" id="form-status" aria-live="polite"></p>
             </form>
           </div>
 
-          <div class="booking-wrap">
+          <div class="panel" id="panel-booking">
+            <p class="panel-hint">30 minutes, no commitment.</p>
             <BookingCalendar client:load />
-          </div>
-        </div>
-
-        <div class="alt-contact">
-          <p class="alt-text">Or reach out directly —</p>
-          <div class="alt-links">
-            <a href="mailto:hello@devin.vc" class="alt-link">hello@devin.vc</a>
-            <span class="alt-dot" aria-hidden="true">&middot;</span>
-            <a href="https://linkedin.com" target="_blank" rel="noopener" class="alt-link">LinkedIn</a>
-            <span class="alt-dot" aria-hidden="true">&middot;</span>
-            <a href="https://twitter.com" target="_blank" rel="noopener" class="alt-link">X / Twitter</a>
           </div>
         </div>
 
@@ -63,31 +73,68 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
 <script>
   import { animate, inView } from 'motion';
 
-  // Entrance animations
-  const grid = document.querySelector('.contact-grid');
-  const alt = document.querySelector('.alt-contact');
-  [grid, alt].forEach(el => { if (el) el.style.opacity = '0'; });
+  // ---- Tab switching ----
+  const tabMessage = document.getElementById('tab-message');
+  const tabBooking = document.getElementById('tab-booking');
+  const indicator = document.getElementById('tab-indicator');
+  const panelMessage = document.getElementById('panel-message');
+  const panelBooking = document.getElementById('panel-booking');
+  const card = document.getElementById('contact-card');
 
-  if (grid) {
-    inView(grid, () => {
-      animate(grid, { opacity: [0, 1], y: [12, 0] }, {
-        duration: 0.4,
-        easing: [0.25, 1, 0.5, 1],
-      });
-    }, { amount: 0.1 });
+  function switchTab(tab) {
+    const isBooking = tab === 'booking';
+
+    tabMessage.classList.toggle('active', !isBooking);
+    tabBooking.classList.toggle('active', isBooking);
+    indicator.classList.toggle('right', isBooking);
+    card.classList.toggle('booking', isBooking);
+
+    panelMessage.classList.toggle('active', !isBooking);
+    panelBooking.classList.toggle('active', isBooking);
   }
 
-  if (alt) {
-    inView(alt, () => {
-      animate(alt, { opacity: [0, 1], y: [10, 0] }, {
-        duration: 0.35,
-        delay: 0.15,
+  tabMessage?.addEventListener('click', () => switchTab('message'));
+  tabBooking?.addEventListener('click', () => switchTab('booking'));
+
+  // ---- Entrance animations ----
+  const header = document.querySelector('.page-header');
+  const switcher = document.querySelector('.contact-switcher');
+  const cardEl = document.querySelector('.contact-card');
+
+
+  if (header) {
+    header.style.opacity = '0';
+    inView(header, () => {
+      animate(header, { opacity: [0, 1], y: [12, 0] }, {
+        duration: 0.4,
         easing: [0.25, 1, 0.5, 1],
       });
     }, { amount: 0.3 });
   }
 
-  // Spring hover on submit button
+  if (switcher) {
+    switcher.style.opacity = '0';
+    inView(switcher, () => {
+      animate(switcher, { opacity: [0, 1], y: [10, 0] }, {
+        duration: 0.35,
+        delay: 0.05,
+        easing: [0.25, 1, 0.5, 1],
+      });
+    }, { amount: 0.3 });
+  }
+
+  if (cardEl) {
+    cardEl.style.opacity = '0';
+    inView(cardEl, () => {
+      animate(cardEl, { opacity: [0, 1], y: [15, 0] }, {
+        duration: 0.4,
+        delay: 0.1,
+        easing: [0.25, 1, 0.5, 1],
+      });
+    }, { amount: 0.1 });
+  }
+
+  // ---- Spring hover on submit button ----
   const submitBtnEl = document.querySelector('.form-submit');
   if (submitBtnEl) {
     submitBtnEl.addEventListener('mouseenter', () => {
@@ -98,7 +145,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     });
   }
 
-  // Contact form handling
+  // ---- Contact form handling ----
   const form = document.getElementById('contact-form');
   const submitBtn = document.getElementById('form-submit');
   const statusEl = document.getElementById('form-status');
@@ -164,54 +211,206 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     margin: 0 auto;
   }
 
+  /* ---- Section tag ---- */
+  .section-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .tag-number {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1;
+    color: var(--color-accent-teal);
+  }
+
+  .tag-dash {
+    width: 24px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-accent-teal), transparent);
+  }
+
+  .tag-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* ---- Header ---- */
   .page-header {
     margin-bottom: var(--space-block-lg);
   }
 
   .page-title {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-size: clamp(3rem, 7vw, 5rem);
     font-weight: 400;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
     color: var(--color-text);
     margin: 0 0 1rem;
   }
 
   .page-subtitle {
-    font-family: 'DM Sans', sans-serif;
-    font-size: clamp(0.95rem, 1.3vw, 1.1rem);
-    line-height: 1.6;
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+    line-height: 1.5;
     color: var(--color-text-muted);
     max-width: 520px;
     margin: 0;
   }
 
-  .header-rule {
+  .sub-accent { font-style: normal; }
+  .sub-accent.teal { color: var(--color-accent-teal); }
+  .sub-accent.amber { color: var(--color-accent-amber); }
+  .sub-accent.rust { color: var(--color-accent-rust); }
+
+  .title-rule {
     width: 48px;
-    height: 1px;
-    background: var(--color-accent-teal);
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-accent-teal), var(--color-accent-amber));
     margin-top: clamp(1.5rem, 3vw, 2rem);
   }
 
-  /* Two-column grid */
-  .contact-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(2.5rem, 5vw, 4rem);
-    align-items: start;
+  /* ---- Tab switcher ---- */
+  .contact-switcher {
+    max-width: 640px;
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
   }
 
-  .section-label {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(1.4rem, 2.8vw, 1.75rem);
-    font-weight: 400;
-    line-height: 1.2;
+  .tab-track {
+    position: relative;
+    display: inline-flex;
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+    border-radius: 999px;
+    padding: 3px;
+  }
+
+  .tab-indicator {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: calc(50% - 3px);
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--color-accent-teal) 10%, transparent);
+    transition: left 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .tab-indicator.right {
+    left: 50%;
+    background: color-mix(in oklab, var(--color-accent-amber) 10%, transparent);
+  }
+
+  .tab-btn {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    padding: 0.6rem 1.25rem;
+    cursor: pointer;
+    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .tab-btn.active {
     color: var(--color-text);
-    margin: 0 0 1.5rem;
   }
 
-  /* Contact form */
+  .tab-btn svg {
+    opacity: 0.5;
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .tab-btn.active svg {
+    opacity: 0.8;
+  }
+
+  /* ---- Contact card ---- */
+  .contact-card {
+    position: relative;
+    max-width: 640px;
+    overflow: hidden;
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .contact-card:hover {
+    border-color: color-mix(in oklab, var(--color-text-muted) 22%, transparent);
+  }
+
+  .card-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    z-index: 1;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .card-accent.teal {
+    background: linear-gradient(90deg, var(--color-accent-teal), color-mix(in oklab, var(--color-accent-teal) 30%, transparent));
+    opacity: 1;
+  }
+
+  .card-accent.amber {
+    background: linear-gradient(90deg, var(--color-accent-amber), color-mix(in oklab, var(--color-accent-amber) 30%, transparent));
+    opacity: 0;
+  }
+
+  .contact-card.booking .card-accent.teal {
+    opacity: 0;
+  }
+
+  .contact-card.booking .card-accent.amber {
+    opacity: 1;
+  }
+
+  /* ---- Panels ---- */
+  .panel {
+    display: none;
+  }
+
+  .panel.active {
+    display: block;
+    animation: panel-enter 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes panel-enter {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel-hint {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(0.92rem, 1.2vw, 1rem);
+    color: var(--color-text-muted);
+    margin: 0 0 clamp(1.25rem, 2.5vw, 1.75rem);
+  }
+
+  /* ---- Contact form ---- */
   .contact-form {
     display: flex;
     flex-direction: column;
@@ -219,7 +418,8 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   }
 
   .form-field {
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
+    position: relative;
   }
 
   .form-input {
@@ -232,17 +432,25 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 20%, transparent);
     padding: 0.75rem 0;
     outline: none;
-    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                border-width 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                background 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .input-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-accent-teal), var(--color-accent-amber));
+    transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .form-input:focus ~ .input-line {
+    width: 100%;
   }
 
   .form-input:focus {
     border-color: var(--color-accent);
-    border-bottom-width: 2px;
-    box-shadow: 0 2px 8px -2px color-mix(in oklab, var(--color-accent) 30%, transparent);
-    background: color-mix(in oklab, var(--color-accent) 3%, transparent);
   }
 
   .form-input::placeholder {
@@ -256,20 +464,19 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
 
   .form-textarea {
     resize: vertical;
-    min-height: 100px;
-    border: 1px solid color-mix(in oklab, var(--color-text-muted) 20%, transparent);
+    min-height: 80px;
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
     padding: 0.75rem;
   }
 
   .form-textarea:focus {
     border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 12%, transparent);
-    background: color-mix(in oklab, var(--color-accent) 3%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 8%, transparent);
   }
 
   .form-submit {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -279,11 +486,11 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     background-position: 100% 0;
     color: var(--color-bg);
     border: 1px solid var(--color-accent);
-    padding: 0.85rem 2rem;
+    padding: 0.8rem 1.75rem;
     cursor: pointer;
     transition: background-position 0.35s cubic-bezier(0.16, 1, 0.3, 1),
                 border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
     align-self: flex-start;
   }
 
@@ -312,46 +519,18 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     color: var(--color-error);
   }
 
-  /* Alt contact */
-  .alt-contact {
-    margin-top: var(--space-block-lg);
-    padding-top: clamp(2rem, 4vw, 3rem);
-    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
-    text-align: center;
+  /* ---- Booking panel overrides ---- */
+  #panel-booking :global(.booking) {
+    padding: 0;
+    border: none;
   }
 
-  .alt-text {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
-    margin: 0 0 0.75rem;
+  #panel-booking :global(.booking-heading),
+  #panel-booking :global(.booking-pitch) {
+    display: none;
   }
 
-  .alt-links {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-  }
-
-  .alt-link {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 400;
-    color: var(--color-text-muted);
-    text-decoration: none;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .alt-link:hover {
-    color: var(--color-accent);
-  }
-
-  .alt-dot {
-    color: color-mix(in oklab, var(--color-text-muted) 40%, transparent);
-  }
-
-  /* Footer */
+  /* ---- Footer ---- */
   .page-footer {
     margin-top: var(--space-block);
     padding-top: 2rem;
@@ -405,11 +584,5 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   @keyframes dot-pulse {
     0%, 80%, 100% { opacity: 0; }
     40% { opacity: 1; }
-  }
-
-  @media (max-width: 768px) {
-    .contact-grid {
-      grid-template-columns: 1fr;
-    }
   }
 </style>

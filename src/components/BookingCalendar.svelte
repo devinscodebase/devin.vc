@@ -94,6 +94,7 @@
     selectedDate = date;
     selectedSlot = null;
     loading = true;
+    step = 2;
 
     try {
       const dateStr = date.toISOString().split('T')[0];
@@ -110,10 +111,6 @@
       availableSlots = [];
     } finally {
       loading = false;
-    }
-
-    if (availableSlots.length > 0) {
-      step = 2;
     }
   }
 
@@ -164,7 +161,7 @@
 
   const days = $derived(getMonthDays(currentMonth));
   const monthLabel = $derived(`${MONTHS[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`);
-  const canGoPrev = $derived(() => {
+  const canGoPrev = $derived.by(() => {
     const now = new Date();
     return currentMonth.getFullYear() > now.getFullYear() ||
            (currentMonth.getFullYear() === now.getFullYear() && currentMonth.getMonth() > now.getMonth());
@@ -196,7 +193,7 @@
     {#if step === 1}
       <div class="calendar">
         <div class="cal-nav">
-          <button class="cal-arrow" onclick={prevMonth} disabled={!canGoPrev()} aria-label="Previous month">
+          <button class="cal-arrow" onclick={prevMonth} disabled={!canGoPrev} aria-label="Previous month">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2L4 7l5 5" /></svg>
           </button>
           <span class="cal-month">{monthLabel}</span>
@@ -206,10 +203,10 @@
         </div>
 
         <div class="cal-grid">
-          {#each DAYS as day}
+          {#each DAYS as day (day)}
             <span class="cal-day-header">{day}</span>
           {/each}
-          {#each days as date}
+          {#each days as date, i (date ? date.getTime() : `empty-${i}`)}
             {#if date}
               <button
                 class="cal-day"
@@ -241,7 +238,7 @@
         <p class="no-slots">No available times on this date. Try another day.</p>
       {:else}
         <div class="slots">
-          {#each availableSlots as slot}
+          {#each availableSlots as slot (slot.time)}
             <button
               class="slot"
               class:selected={selectedSlot?.time === slot.time}
