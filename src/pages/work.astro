@@ -20,7 +20,7 @@ const roles = [
     year: '2024',
     range: '2025',
     status: 'past',
-    statusLabel: 'Completed',
+    statusLabel: '2024 – 2025',
     role: 'Freelance Marketing Consultant',
     company: 'Independent',
     description: 'Relocated to South Africa and built bespoke growth systems across industries. Abandoned cookie-cutter funnels — started treating each client like a custom suit.',
@@ -34,7 +34,7 @@ const roles = [
     year: '2022',
     range: '2024',
     status: 'past',
-    statusLabel: 'Completed',
+    statusLabel: '2022 – 2024',
     role: 'Head of Marketing',
     company: 'B2B Business Experts → Revenx',
     description: 'Took a leap on a two-person startup and helped scale it from $30K/month to $300K/month in revenue. Named and designed the rebrand to Revenx as we pivoted to insurance marketing.',
@@ -48,7 +48,7 @@ const roles = [
     year: '2021',
     range: '2022',
     status: 'past',
-    statusLabel: 'Completed',
+    statusLabel: '2021 – 2022',
     role: 'VP Marketing & Operations',
     company: 'ContentOne (Richter)',
     description: 'Led promotion and production for a B2B SMB subsidiary. Transformed scattered processes into streamlined production systems using automation across Dropbox, DocuSign, Monday.com, and Zapier.',
@@ -62,7 +62,7 @@ const roles = [
     year: '2019',
     range: '2021',
     status: 'past',
-    statusLabel: 'Completed',
+    statusLabel: '2019 – 2021',
     role: 'VP of Marketing',
     company: 'Richter',
     description: 'Pitched myself for the role and got it. Richter had 40+ Fortune 500 clients on their roster. Launched thought leadership forums, podcasts, and more — touching nearly every part of the marketing lifecycle.',
@@ -76,7 +76,7 @@ const roles = [
     year: '2019',
     range: '2019',
     status: 'past',
-    statusLabel: 'Completed',
+    statusLabel: '2019',
     role: 'VP',
     company: 'The Customer Factory',
     description: 'Promoted to lead the company\'s own marketing to chiropractors. Built lead magnets attracting hundreds of doctors weekly and activated consulting partners.',
@@ -90,7 +90,7 @@ const roles = [
     year: '2018',
     range: '2019',
     status: 'past',
-    statusLabel: 'Completed',
+    statusLabel: '2018 – 2019',
     role: 'Creative Director',
     company: 'The Customer Factory',
     description: 'Chiropractic marketing for 100+ practices. Moved to Atlanta and learned that marketing isn\'t just "if this, then that" — there are far more variables in the equation.',
@@ -103,7 +103,7 @@ const roles = [
     year: '2016',
     range: '2018',
     status: 'past',
-    statusLabel: 'Completed',
+    statusLabel: '2016 – 2018',
     role: 'Junior Advertiser',
     company: 'Flood Media',
     description: 'Where it all began. Learned the fundamentals of Google Ads and digital advertising, then worked remotely from England. Discovered the systematic logic of advertising — a foundation that still guides my thinking.',
@@ -120,14 +120,16 @@ const roles = [
     <section class="work-page">
       <div class="work-inner">
         <header class="page-header">
+          <div class="section-tag"><span class="tag-number">01</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Career</span></div>
           <h1 class="page-title">Work</h1>
-          <p class="page-subtitle">A decade of building at the intersections of marketing, operations, and design.</p>
-          <div class="header-rule" aria-hidden="true"></div>
+          <p class="page-subtitle">A decade of building at the intersections of <span class="sub-accent teal">marketing</span>, <span class="sub-accent amber">operations</span>, and <span class="sub-accent rust">design</span>.</p>
         </header>
 
         <ol class="roles">
           {roles.map((r, i) => (
-            <li class="role-card" style={`--delay: ${i * 0.1}s`}>
+            <li class:list={['role-card', { featured: i === 0 }]} style={`--delay: ${i * 0.1}s`}>
+              <span class="card-index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+
               <div class="role-top">
                 <div class="role-year">
                   <span class="year-big" aria-hidden="true">{r.year}</span>
@@ -169,21 +171,31 @@ const roles = [
 </Layout>
 
 <script>
-  import { animate, inView, stagger } from 'motion';
+  import { animate, inView } from 'motion';
 
-  const cards = document.querySelectorAll('.role-card');
-  cards.forEach(card => { card.style.opacity = '0'; });
-
-  const section = document.querySelector('.work-page');
-  if (section) {
-    inView(section, () => {
-      animate(cards, { opacity: [0, 1], y: [30, 0] }, {
-        duration: 0.7,
-        delay: stagger(0.08),
+  // Header reveal
+  const header = document.querySelector('.page-header');
+  if (header) {
+    header.style.opacity = '0';
+    inView(header, () => {
+      animate(header, { opacity: [0, 1], y: [25, 0] }, {
+        duration: 0.8,
         easing: [0.25, 1, 0.5, 1],
       });
-    }, { amount: 0.05 });
+    }, { amount: 0.3 });
   }
+
+  // Each card reveals independently on scroll
+  const cards = document.querySelectorAll('.role-card');
+  cards.forEach(card => {
+    card.style.opacity = '0';
+    inView(card, () => {
+      animate(card, { opacity: [0, 1], y: [30, 0] }, {
+        duration: 0.7,
+        easing: [0.25, 1, 0.5, 1],
+      });
+    }, { amount: 0.15 });
+  });
 </script>
 
 <style>
@@ -198,36 +210,67 @@ const roles = [
     margin: 0 auto;
   }
 
+  /* ---- Section tag ---- */
+  .section-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .tag-number {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1;
+    color: var(--color-accent-teal);
+  }
+
+  .tag-dash {
+    width: 24px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-accent-teal), transparent);
+  }
+
+  .tag-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* ---- Header ---- */
   .page-header {
     margin-bottom: var(--space-block-lg);
   }
 
   .page-title {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-size: clamp(3rem, 7vw, 5rem);
     font-weight: 400;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
     color: var(--color-text);
     margin: 0 0 1rem;
   }
 
   .page-subtitle {
-    font-family: 'DM Sans', sans-serif;
-    font-size: clamp(0.95rem, 1.3vw, 1.1rem);
-    line-height: 1.6;
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+    line-height: 1.5;
     color: var(--color-text-muted);
     max-width: 520px;
     margin: 0;
   }
 
-  .header-rule {
-    width: 48px;
-    height: 1px;
-    background: var(--color-accent-teal);
-    margin-top: clamp(1.5rem, 3vw, 2rem);
-  }
+  .sub-accent.teal { color: var(--color-accent-teal); font-style: normal; }
+  .sub-accent.amber { color: var(--color-accent-amber); font-style: normal; }
+  .sub-accent.rust { color: var(--color-accent-rust); font-style: normal; }
 
+  /* ---- Roles list ---- */
   .roles {
     list-style: none;
     padding: 0;
@@ -237,13 +280,13 @@ const roles = [
     gap: 0;
   }
 
+  /* ---- Role card base ---- */
   .role-card {
+    position: relative;
     padding: clamp(2.5rem, 5vw, 3.5rem) 0;
     padding-left: clamp(1rem, 2vw, 1.5rem);
-    opacity: 0;
-    animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: var(--delay);
     border-left: 2px solid transparent;
+    overflow: hidden;
     transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
                 border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -262,14 +305,68 @@ const roles = [
   .role-card:nth-child(8):hover { border-left-color: var(--color-accent-amber); }
 
   .role-card + .role-card {
-    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
   }
 
+  /* ---- Featured card (first role) ---- */
+  .role-card.featured {
+    padding: clamp(2.5rem, 5vw, 3.5rem);
+    padding-left: clamp(2.5rem, 5vw, 3.5rem);
+    border-left: none;
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+    border-top: 2px solid var(--color-accent-teal);
+    margin-bottom: var(--space-block);
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .role-card.featured:hover {
+    box-shadow: var(--shadow-lg);
+    border-top-color: var(--color-accent-teal);
+    border-left-color: color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+  }
+
+  .role-card.featured + .role-card {
+    border-top: none;
+  }
+
+  .role-card.featured .role-title {
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  }
+
+  .role-card.featured .year-big {
+    font-size: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  /* ---- Ghost index number ---- */
+  .card-index {
+    position: absolute;
+    right: clamp(1rem, 3vw, 2rem);
+    bottom: clamp(1rem, 2vw, 1.5rem);
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(4rem, 8vw, 6rem);
+    line-height: 1;
+    opacity: 0.04;
+    pointer-events: none;
+    color: var(--color-text);
+  }
+
+  .role-card.featured .card-index {
+    font-size: clamp(6rem, 12vw, 9rem);
+    color: var(--color-accent-teal);
+    opacity: 0.06;
+  }
+
+  /* ---- Year + status ---- */
   .role-top {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     margin-bottom: var(--space-card);
+    position: relative;
+    z-index: 1;
   }
 
   .role-year {
@@ -333,6 +430,7 @@ const roles = [
     color: var(--color-text-muted);
   }
 
+  /* ---- Role content ---- */
   .role-title {
     font-family: 'Instrument Serif', serif;
     font-size: clamp(1.5rem, 3vw, 2rem);
@@ -341,6 +439,8 @@ const roles = [
     letter-spacing: -0.015em;
     color: var(--color-text);
     margin: 0 0 0.5rem;
+    position: relative;
+    z-index: 1;
   }
 
   .role-company {
@@ -350,6 +450,8 @@ const roles = [
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--color-accent);
+    position: relative;
+    z-index: 1;
   }
 
   .role-description {
@@ -359,10 +461,15 @@ const roles = [
     color: var(--color-text-muted);
     max-width: 600px;
     margin: 1rem 0 0;
+    position: relative;
+    z-index: 1;
   }
 
+  /* ---- Wins ---- */
   .role-wins {
     margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+    position: relative;
+    z-index: 1;
   }
 
   .wins-label {
@@ -412,6 +519,7 @@ const roles = [
   .role-card:nth-child(7) .wins-list li::before { background: var(--color-accent-teal); }
   .role-card:nth-child(8) .wins-list li::before { background: var(--color-accent-amber); }
 
+  /* ---- Footer ---- */
   .page-footer {
     margin-top: var(--space-block-lg);
     padding-top: 2rem;
@@ -442,10 +550,5 @@ const roles = [
 
   .back-link:hover svg {
     transform: translateX(-3px);
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(25px); }
-    to { opacity: 1; transform: translateY(0); }
   }
 </style>

@@ -11,46 +11,64 @@ import portrait from '../assets/gallery/portrait.jpg';
 
         <div class="about-hero">
           <div class="hero-image-wrap">
-            <Image src={portrait} alt="Devin Alexander" widths={[400, 800]} format="webp" quality={85} loading="eager" class="hero-portrait" />
+            <div class="hero-image-frame">
+              <Image src={portrait} alt="Devin Alexander" widths={[400, 800]} format="webp" quality={85} loading="eager" class="hero-portrait" />
+            </div>
           </div>
           <div class="hero-text">
+            <span class="hero-tag">About</span>
             <h1 class="hero-name">Devin Alexander</h1>
             <p class="hero-identity">Builder, operator, and design-obsessed generalist.</p>
+            <div class="hero-descriptors">
+              <span class="desc teal">Marketing</span>
+              <span class="desc-dot" aria-hidden="true">&middot;</span>
+              <span class="desc amber">Operations</span>
+              <span class="desc-dot" aria-hidden="true">&middot;</span>
+              <span class="desc rust">Design & Dev</span>
+              <span class="desc-dot" aria-hidden="true">&middot;</span>
+              <span class="desc gold">GTM</span>
+            </div>
           </div>
         </div>
 
         <div class="story">
-          <p class="story-text">
-            I didn't set out to be a generalist. It happened because I kept saying yes to problems that interested me — regardless of what department they lived in. Marketing led to operations. Operations led to design. Design led to product. And somewhere along the way, I realized the walls between disciplines were mostly imaginary.
+          <div class="story-tag"><span class="tag-number">01</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Story</span></div>
+          <p class="story-text story-lead">
+            <span class="drop-cap">I</span> didn't set out to be a generalist. It happened because I kept saying yes to problems that interested me — regardless of what department they lived in. Marketing led to operations. Operations led to design. Design led to product. And somewhere along the way, I realized <span class="story-accent">the walls between disciplines were mostly imaginary.</span>
           </p>
           <p class="story-text">
-            My career started in digital advertising at sixteen, running Google Ads from my bedroom in England. That systematic, "if this, then that" logic became my foundation. But over the next decade — across agencies, startups, and enterprises — I learned that the real world is messier than any framework. The best results come from people who can hold multiple disciplines in their head at once and find the leverage points between them.
+            My career started in digital advertising at sixteen, running Google Ads from my bedroom in England. That systematic, "if this, then that" logic became my foundation. But over the next decade — across agencies, startups, and enterprises — I learned that the real world is messier than any framework. <span class="story-accent">The best results come from people who can hold multiple disciplines in their head at once</span> and find the leverage points between them.
           </p>
           <p class="story-text">
-            I've scaled a startup from $30K to $300K a month. I've led marketing for a firm with 40+ Fortune 500 clients. I've built teams, rebranded companies, designed platforms, and shipped products. But the throughline isn't any single skill — it's the ability to see systems where others see silos, and to move between strategy and execution without losing altitude on either.
+            I've scaled a startup from <span class="story-stat">$30K to $300K</span> a month. I've led marketing for a firm with <span class="story-stat">40+ Fortune 500</span> clients. I've built teams, rebranded companies, designed platforms, and shipped products. But the throughline isn't any single skill — it's the ability to see systems where others see silos, and to move between strategy and execution without losing altitude on either.
           </p>
           <p class="story-text">
-            Today, I'm COO at Andreou Enterprises, operating across the portfolio and leading a team in the Web3 space. I'm also building tools on the side — because I believe the best operators are the ones who never stop building.
+            Today, I'm COO at Andreou Enterprises, operating across the portfolio and leading a team in the Web3 space. I'm also building tools on the side — because I believe <span class="story-accent">the best operators are the ones who never stop building.</span>
           </p>
         </div>
 
         <div class="convictions">
+          <div class="convictions-tag"><span class="tag-number">02</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Beliefs</span></div>
           <h2 class="convictions-heading">What I Believe</h2>
 
           <div class="conviction-grid">
             <article class="conviction">
+              <span class="conviction-number">01</span>
               <h3 class="conviction-title">The best work lives at the intersections</h3>
               <p class="conviction-text">Specialization is a trap for most people. The world rewards those who can connect dots across disciplines — marketing that understands product, design that understands business, operations that understands people.</p>
             </article>
             <article class="conviction">
+              <span class="conviction-number">02</span>
               <h3 class="conviction-title">Craft is a competitive advantage</h3>
               <p class="conviction-text">In a world of templates and shortcuts, caring about the details — the copy, the spacing, the user experience — is one of the few remaining moats. Taste compounds.</p>
             </article>
             <article class="conviction">
+              <span class="conviction-number">03</span>
               <h3 class="conviction-title">Systems over heroics</h3>
               <p class="conviction-text">The goal isn't to be the person who saves the day. It's to build systems so good that the day never needs saving. Repeatable processes beat one-time sprints every time.</p>
             </article>
             <article class="conviction">
+              <span class="conviction-number">04</span>
               <h3 class="conviction-title">Ship, then polish</h3>
               <p class="conviction-text">Perfectionism is procrastination in disguise. The fastest path to great work is shipping good work, learning what's missing, and iterating with real feedback.</p>
             </article>
@@ -58,6 +76,7 @@ import portrait from '../assets/gallery/portrait.jpg';
         </div>
 
         <div class="skills">
+          <div class="skills-tag"><span class="tag-number">03</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Focus</span></div>
           <h2 class="skills-heading">Areas of Focus</h2>
           <div class="skills-grid">
             <div class="skill-group">
@@ -121,7 +140,7 @@ import portrait from '../assets/gallery/portrait.jpg';
 </Layout>
 
 <script>
-  import { animate, inView } from 'motion';
+  import { animate, inView, stagger } from 'motion';
 
   const sections = document.querySelectorAll('.about-hero, .story, .convictions, .skills, .closing-cta');
   sections.forEach(s => { s.style.opacity = '0'; });
@@ -135,6 +154,34 @@ import portrait from '../assets/gallery/portrait.jpg';
       });
     }, { amount: 0.15 });
   });
+
+  // Stagger conviction cards
+  const convictions = document.querySelectorAll('.conviction');
+  convictions.forEach(c => { c.style.opacity = '0'; });
+  const convGrid = document.querySelector('.conviction-grid');
+  if (convGrid) {
+    inView(convGrid, () => {
+      animate(convictions, { opacity: [0, 1], y: [25, 0] }, {
+        duration: 0.6,
+        delay: stagger(0.1),
+        easing: [0.25, 1, 0.5, 1],
+      });
+    }, { amount: 0.2 });
+  }
+
+  // Stagger skill groups
+  const skillGroups = document.querySelectorAll('.skill-group');
+  skillGroups.forEach(g => { g.style.opacity = '0'; });
+  const skillsGrid = document.querySelector('.skills-grid');
+  if (skillsGrid) {
+    inView(skillsGrid, () => {
+      animate(skillGroups, { opacity: [0, 1], y: [20, 0] }, {
+        duration: 0.6,
+        delay: stagger(0.08),
+        easing: [0.25, 1, 0.5, 1],
+      });
+    }, { amount: 0.2 });
+  }
 </script>
 
 <style>
@@ -145,52 +192,126 @@ import portrait from '../assets/gallery/portrait.jpg';
   }
 
   .about-inner {
-    max-width: 720px;
+    max-width: 960px;
     margin: 0 auto;
   }
 
-  /* Hero */
+  /* ---- Section tags (reusable) ---- */
+  .story-tag, .convictions-tag, .skills-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
+  }
+
+  .tag-number {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1;
+    color: var(--color-accent-teal);
+  }
+
+  .convictions-tag .tag-number { color: var(--color-accent-amber); }
+  .skills-tag .tag-number { color: var(--color-accent-rust); }
+
+  .tag-dash {
+    width: 24px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-accent-teal), transparent);
+  }
+
+  .convictions-tag .tag-dash { background: linear-gradient(90deg, var(--color-accent-amber), transparent); }
+  .skills-tag .tag-dash { background: linear-gradient(90deg, var(--color-accent-rust), transparent); }
+
+  .tag-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* ---- Hero ---- */
   .about-hero {
     display: flex;
     align-items: flex-end;
-    gap: clamp(2rem, 4vw, 3rem);
+    gap: clamp(2.5rem, 5vw, 4rem);
     margin-bottom: var(--space-block-lg);
   }
 
   .hero-image-wrap {
     flex-shrink: 0;
-    width: clamp(120px, 20vw, 180px);
+    width: clamp(140px, 22vw, 220px);
   }
 
-  .hero-image-wrap :global(img) {
+  .hero-image-frame {
+    position: relative;
+    padding: 4px;
+    background: linear-gradient(160deg, var(--color-accent-teal), var(--color-accent), var(--color-accent-amber), var(--color-accent-rust));
+  }
+
+  .hero-image-frame :global(img) {
     width: 100%;
     height: auto;
     display: block;
-    filter: grayscale(0.4) sepia(0.15) brightness(0.95) contrast(1.05);
+    filter: grayscale(0.3) sepia(0.1) brightness(0.95) contrast(1.05);
     aspect-ratio: 3 / 4;
     object-fit: cover;
   }
 
+  .hero-tag {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-accent-teal);
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+
   .hero-name {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-size: clamp(2.5rem, 5.5vw, 4rem);
     font-weight: 400;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
     color: var(--color-text);
-    margin: 0 0 0.5rem;
+    margin: 0 0 0.65rem;
   }
 
   .hero-identity {
-    font-family: 'DM Sans', sans-serif;
-    font-size: clamp(0.92rem, 1.3vw, 1.02rem);
-    line-height: 1.5;
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    line-height: 1.4;
     color: var(--color-text-muted);
-    margin: 0;
+    margin: 0 0 1.25rem;
   }
 
-  /* Story */
+  .hero-descriptors {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .desc.teal { color: var(--color-accent-teal); }
+  .desc.amber { color: var(--color-accent-amber); }
+  .desc.rust { color: var(--color-accent-rust); }
+  .desc.gold { color: var(--color-accent); }
+  .desc-dot { color: var(--color-text-muted); opacity: 0.4; font-size: 1.1em; }
+
+  /* ---- Story ---- */
   .story {
+    max-width: 720px;
     margin-bottom: var(--space-block-lg);
   }
 
@@ -199,7 +320,7 @@ import portrait from '../assets/gallery/portrait.jpg';
     font-style: italic;
     font-size: clamp(1.1rem, 1.8vw, 1.3rem);
     line-height: 1.55;
-    color: var(--color-text);
+    color: var(--color-text-muted);
     margin: 0 0 1.5rem;
   }
 
@@ -207,7 +328,28 @@ import portrait from '../assets/gallery/portrait.jpg';
     margin-bottom: 0;
   }
 
-  /* Convictions */
+  .story-accent {
+    color: var(--color-text);
+  }
+
+  .story-stat {
+    color: var(--color-accent-amber);
+    font-style: normal;
+    font-weight: 400;
+  }
+
+  .drop-cap {
+    float: left;
+    font-family: 'Instrument Serif', serif;
+    font-style: normal;
+    font-size: 3.8em;
+    line-height: 0.75;
+    padding-right: 0.08em;
+    padding-top: 0.06em;
+    color: var(--color-accent-teal);
+  }
+
+  /* ---- Convictions ---- */
   .convictions {
     margin-bottom: var(--space-block-lg);
   }
@@ -225,29 +367,45 @@ import portrait from '../assets/gallery/portrait.jpg';
   .conviction-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: clamp(2rem, 4vw, 3rem);
+    gap: var(--space-element);
   }
 
   .conviction {
-    padding-left: clamp(1rem, 2vw, 1.5rem);
-    border-left: 3px solid color-mix(in oklab, var(--color-accent) 40%, transparent);
+    padding: var(--space-card);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+    border-top: 2px solid color-mix(in oklab, var(--color-accent-teal) 30%, transparent);
+    transition: border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .conviction:nth-child(1) {
-    border-color: color-mix(in oklab, var(--color-accent-teal) 60%, transparent);
+  .conviction:nth-child(2) { border-top-color: color-mix(in oklab, var(--color-accent-amber) 30%, transparent); }
+  .conviction:nth-child(3) { border-top-color: color-mix(in oklab, var(--color-accent-rust) 30%, transparent); }
+  .conviction:nth-child(4) { border-top-color: color-mix(in oklab, var(--color-accent) 30%, transparent); }
+
+  .conviction:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
   }
 
-  .conviction:nth-child(2) {
-    border-color: color-mix(in oklab, var(--color-accent-amber) 55%, transparent);
+  .conviction:nth-child(1):hover { border-top-color: var(--color-accent-teal); }
+  .conviction:nth-child(2):hover { border-top-color: var(--color-accent-amber); }
+  .conviction:nth-child(3):hover { border-top-color: var(--color-accent-rust); }
+  .conviction:nth-child(4):hover { border-top-color: var(--color-accent); }
+
+  .conviction-number {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.8rem, 3vw, 2.2rem);
+    line-height: 1;
+    opacity: 0.08;
+    display: block;
+    margin-bottom: 0.75rem;
   }
 
-  .conviction:nth-child(3) {
-    border-color: color-mix(in oklab, var(--color-accent-rust) 50%, transparent);
-  }
-
-  .conviction:nth-child(4) {
-    border-color: color-mix(in oklab, var(--color-accent-teal) 60%, transparent);
-  }
+  .conviction:nth-child(1) .conviction-number { color: var(--color-accent-teal); }
+  .conviction:nth-child(2) .conviction-number { color: var(--color-accent-amber); }
+  .conviction:nth-child(3) .conviction-number { color: var(--color-accent-rust); }
+  .conviction:nth-child(4) .conviction-number { color: var(--color-accent); }
 
   .conviction-title {
     font-family: 'Instrument Serif', serif;
@@ -260,17 +418,15 @@ import portrait from '../assets/gallery/portrait.jpg';
 
   .conviction-text {
     font-family: 'DM Sans', sans-serif;
-    font-size: clamp(0.92rem, 1.2vw, 1rem);
+    font-size: clamp(0.88rem, 1.1vw, 0.95rem);
     line-height: 1.6;
     color: var(--color-text-muted);
     margin: 0;
   }
 
-  /* Skills */
+  /* ---- Skills ---- */
   .skills {
     margin-bottom: var(--space-block-lg);
-    padding-top: var(--space-block);
-    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
   }
 
   .skills-heading {
@@ -288,6 +444,22 @@ import portrait from '../assets/gallery/portrait.jpg';
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: var(--space-element);
   }
+
+  .skill-group {
+    padding: var(--space-card);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    border-top: 2px solid color-mix(in oklab, var(--color-accent-teal) 25%, transparent);
+    transition: border-top-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .skill-group:nth-child(2) { border-top-color: color-mix(in oklab, var(--color-accent-amber) 25%, transparent); }
+  .skill-group:nth-child(3) { border-top-color: color-mix(in oklab, var(--color-accent-rust) 25%, transparent); }
+  .skill-group:nth-child(4) { border-top-color: color-mix(in oklab, var(--color-accent-teal) 25%, transparent); }
+
+  .skill-group:hover { border-top-color: var(--color-accent-teal); }
+  .skill-group:nth-child(2):hover { border-top-color: var(--color-accent-amber); }
+  .skill-group:nth-child(3):hover { border-top-color: var(--color-accent-rust); }
+  .skill-group:nth-child(4):hover { border-top-color: var(--color-accent-teal); }
 
   .group-label {
     font-family: 'DM Sans', sans-serif;
@@ -320,7 +492,7 @@ import portrait from '../assets/gallery/portrait.jpg';
     color: var(--color-text-muted);
   }
 
-  /* CTA */
+  /* ---- CTA ---- */
   .closing-cta {
     text-align: center;
     padding: var(--space-block) 0;
@@ -347,7 +519,7 @@ import portrait from '../assets/gallery/portrait.jpg';
     text-decoration-color: var(--color-accent);
   }
 
-  /* Footer */
+  /* ---- Footer ---- */
   .page-footer {
     margin-top: var(--space-block-lg);
     padding-top: 2rem;
@@ -398,7 +570,7 @@ import portrait from '../assets/gallery/portrait.jpg';
     }
 
     .hero-image-wrap {
-      width: 140px;
+      width: 160px;
     }
 
     .skills-grid {
