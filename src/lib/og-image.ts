@@ -1,8 +1,5 @@
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
-import { readFileSync } from 'node:fs';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import {
   DefaultTemplate,
   JournalTemplate,
@@ -10,23 +7,23 @@ import {
   PageTemplate,
 } from './og-templates';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const fontsDir = join(__dirname, '..', 'assets', 'fonts');
+const INSTRUMENT_SERIF_URL =
+  'https://github.com/google/fonts/raw/main/ofl/instrumentserif/InstrumentSerif-Regular.ttf';
+const DM_SANS_URL =
+  'https://fonts.gstatic.com/s/dmsans/v17/rP2tp2ywxg089UriI5-g4vlH9VoD8CmcqZG40F9JadbnoEwAopxhTg.ttf';
 
 // Module-scope font cache for warm serverless instances
 let instrumentSerifData: ArrayBuffer | null = null;
 let dmSansData: ArrayBuffer | null = null;
 
-function loadFonts() {
+async function loadFonts() {
   if (!instrumentSerifData) {
-    instrumentSerifData = readFileSync(
-      join(fontsDir, 'InstrumentSerif-Regular.ttf')
-    ).buffer as ArrayBuffer;
+    instrumentSerifData = await fetch(INSTRUMENT_SERIF_URL).then((r) =>
+      r.arrayBuffer()
+    );
   }
   if (!dmSansData) {
-    dmSansData = readFileSync(
-      join(fontsDir, 'DMSans-Regular.ttf')
-    ).buffer as ArrayBuffer;
+    dmSansData = await fetch(DM_SANS_URL).then((r) => r.arrayBuffer());
   }
   return [instrumentSerifData, dmSansData] as const;
 }
@@ -40,7 +37,7 @@ export interface OgImageParams {
 }
 
 export async function generateOgImage(params: OgImageParams): Promise<Buffer> {
-  const [instrumentSerif, dmSans] = loadFonts();
+  const [instrumentSerif, dmSans] = await loadFonts();
 
   // Build the React element based on type
   let element: React.ReactElement;
