@@ -16,6 +16,16 @@
   --duration-fast: 200ms;
   --duration-normal: 350ms;
   --duration-slow: 500ms;
+
+  /* — Spacing — */
+  --space-section:     clamp(8rem, 20vh, 14rem);
+  --space-page-top:    clamp(8rem, 18vh, 12rem);
+  --space-page-bottom: clamp(4rem, 10vh, 8rem);
+  --space-block:       clamp(3rem, 6vw, 5rem);
+  --space-block-lg:    clamp(4rem, 8vw, 6rem);
+  --space-element:     clamp(1.5rem, 3vw, 2.5rem);
+  --space-card:        clamp(1.5rem, 3vw, 2rem);
+  --space-page-x:      clamp(1.5rem, 5vw, 3.5rem);
 }
 
 /* ==============================
