@@ -1,32 +1,46 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import PostContent from '../../components/PostContent';
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../../keystatic.config';
+import { PortableText } from 'astro-portabletext';
+import { sanityClient, urlFor } from '../../lib/sanity';
 
-export async function getStaticPaths() {
-  const reader = createReader(process.cwd(), keystaticConfig);
-  const slugs = await reader.collections.journal.list();
-  return slugs.map((slug) => ({ params: { slug } }));
-}
+export const prerender = false;
 
 const { slug } = Astro.params;
-const reader = createReader(process.cwd(), keystaticConfig);
-const post = await reader.collections.journal.read(slug!);
+
+const post = await sanityClient.fetch(
+  `*[_type == "journal" && slug.current == $slug][0] {
+    title,
+    "slug": slug.current,
+    description,
+    tag,
+    date,
+    featured,
+    heroImage,
+    heroAlt,
+    ogImage,
+    seoTitle,
+    noIndex,
+    body
+  }`,
+  { slug }
+);
 
 if (!post) {
   return Astro.redirect('/journal');
 }
 
-const content = await post.body();
-const formattedDate = new Date(post.date!).toLocaleDateString('en-US', {
+const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
   month: 'long',
   day: 'numeric',
   year: 'numeric',
 });
 
 const seoTitle = post.seoTitle || `${post.title} — Devin Alexander`;
-const ogImage = post.ogImage || post.heroImage || undefined;
+const ogImage = post.ogImage
+  ? urlFor(post.ogImage).width(1200).url()
+  : post.heroImage
+    ? urlFor(post.heroImage).width(1200).url()
+    : undefined;
 ---
 
 <Layout
@@ -58,12 +72,12 @@ const ogImage = post.ogImage || post.heroImage || undefined;
 
         {post.heroImage && (
           <figure class="hero-image">
-            <img src={post.heroImage} alt={post.heroAlt || ''} loading="eager" />
+            <img src={urlFor(post.heroImage).width(1200).url()} alt={post.heroAlt || ''} loading="eager" />
           </figure>
         )}
 
         <div class="post-body prose">
-          <PostContent document={content} />
+          <PortableText value={post.body} />
         </div>
 
         <footer class="post-footer">

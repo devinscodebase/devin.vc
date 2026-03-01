@@ -1,6 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/astro/server';
 
-const isProtectedRoute = createRouteMatcher(['/keystatic(.*)']);
+const isProtectedRoute = createRouteMatcher(['/studio(.*)']);
 
 export const onRequest = clerkMiddleware((auth, context) => {
   const { isAuthenticated, redirectToSignIn } = auth();

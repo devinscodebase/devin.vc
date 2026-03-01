@@ -7,23 +7,18 @@ import Timeline from '../components/Timeline.svelte';
 import Now from '../components/Now.svelte';
 import Journal from '../components/Journal.svelte';
 import Contact from '../components/Contact.svelte';
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../keystatic.config';
+import { sanityClient } from '../lib/sanity';
 
-const reader = createReader(process.cwd(), keystaticConfig);
-const slugs = await reader.collections.journal.list();
-const allPosts = await Promise.all(
-  slugs.map(async (slug) => {
-    const entry = await reader.collections.journal.read(slug);
-    return { slug, ...entry! };
-  })
-);
-const latestPosts = allPosts
-  .sort((a, b) => new Date(b.date!).getTime() - new Date(a.date!).getTime())
-  .slice(0, 3)
-  .map(({ slug, title, description, tag, date, featured }) => ({
-    slug, title, description, tag, date, featured,
-  }));
+const latestPosts = await sanityClient.fetch(`
+  *[_type == "journal"] | order(date desc) [0...3] {
+    title,
+    "slug": slug.current,
+    description,
+    tag,
+    date,
+    featured
+  }
+`);
 ---
 
 <Layout>

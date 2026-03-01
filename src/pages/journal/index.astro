@@ -1,17 +1,19 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../../keystatic.config';
+import { sanityClient, urlFor } from '../../lib/sanity';
 
-const reader = createReader(process.cwd(), keystaticConfig);
-const slugs = await reader.collections.journal.list();
-const posts = await Promise.all(
-  slugs.map(async (slug) => {
-    const entry = await reader.collections.journal.read(slug);
-    return { slug, ...entry! };
-  })
-);
-posts.sort((a, b) => new Date(b.date!).getTime() - new Date(a.date!).getTime());
+const posts = await sanityClient.fetch(`
+  *[_type == "journal"] | order(date desc) {
+    title,
+    "slug": slug.current,
+    description,
+    tag,
+    date,
+    featured,
+    heroImage,
+    heroAlt
+  }
+`);
 ---
 
 <Layout title="Journal — Devin Alexander" description="Essays on marketing, leadership, and building things that matter.">
@@ -29,7 +31,7 @@ posts.sort((a, b) => new Date(b.date!).getTime() - new Date(a.date!).getTime());
             <a href={`/journal/${post.slug}`} class:list={['post-card', { featured: post.featured, 'has-image': !!post.heroImage }]} style={`--delay: ${i * 0.1}s`}>
               {post.featured && <div class="post-accent" aria-hidden="true"></div>}
               {post.heroImage && (
-                <img class="card-image" src={post.heroImage} alt={post.heroAlt || ''} loading="lazy" />
+                <img class="card-image" src={urlFor(post.heroImage).width(800).url()} alt={post.heroAlt || ''} loading="lazy" />
               )}
               <div class="card-content">
                 <span class="post-tag">{post.tag}</span>
