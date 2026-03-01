@@ -350,7 +350,7 @@
     font-family: 'DM Sans', sans-serif;
     font-size: 0.7rem;
     letter-spacing: 0.15em;
-    color: var(--color-accent);
+    color: var(--color-accent-teal);
     opacity: 0.8;
     transition: opacity 0.3s;
     position: relative;

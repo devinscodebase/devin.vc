@@ -294,14 +294,14 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--color-accent);
+    background: var(--color-accent-teal);
     flex-shrink: 0;
   }
 
   .line-bar {
     width: 1px;
     flex: 1;
-    background: color-mix(in oklab, var(--color-accent) 25%, transparent);
+    background: color-mix(in oklab, var(--color-accent-teal) 25%, transparent);
     margin-top: 0.5rem;
     transform-origin: top;
   }

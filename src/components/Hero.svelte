@@ -333,7 +333,7 @@
   }
 
   .dot {
-    color: var(--color-accent);
+    color: var(--color-accent-teal);
     font-size: 1.1em;
     line-height: 1;
   }

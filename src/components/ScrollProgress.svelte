@@ -98,7 +98,7 @@
     top: 0;
     bottom: 0;
     width: 1px;
-    background: var(--color-accent);
+    background: var(--color-accent-teal);
     transform-origin: top;
     opacity: 0.3;
     transition: opacity 0.3s;
@@ -121,7 +121,7 @@
     width: 7px;
     height: 24px;
     border-radius: 4px;
-    background: var(--color-accent);
+    background: var(--color-accent-teal);
     opacity: 0.85;
     transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
                 transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);

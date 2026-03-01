@@ -99,9 +99,12 @@ const currentPath = Astro.url.pathname;
     transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .footer-link:hover,
-  .footer-link.active {
+  .footer-link:hover {
     color: var(--color-accent);
+  }
+
+  .footer-link.active {
+    color: var(--color-accent-teal);
   }
 
   .footer-info {

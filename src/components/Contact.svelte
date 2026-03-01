@@ -106,16 +106,16 @@
     font-size: clamp(0.85rem, 1.5vw, 1.1rem);
     font-weight: 400;
     letter-spacing: 0.12em;
-    color: var(--color-accent);
+    color: var(--color-accent-amber);
     text-decoration: none;
     padding: 0.8rem 2rem;
-    border: 1px solid color-mix(in oklab, var(--color-accent) 40%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-accent-amber) 40%, transparent);
     transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
                 color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .email:hover {
-    background: var(--color-accent);
+    background: var(--color-accent-amber);
     color: var(--color-bg);
   }
 

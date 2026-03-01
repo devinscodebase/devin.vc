@@ -385,12 +385,12 @@
   }
 
   .cal-day:hover:not(:disabled) {
-    border-color: var(--color-accent);
-    background: color-mix(in oklab, var(--color-accent) 8%, transparent);
+    border-color: var(--color-accent-teal);
+    background: color-mix(in oklab, var(--color-accent-teal) 8%, transparent);
   }
 
   .cal-day.today {
-    color: var(--color-accent);
+    color: var(--color-accent-amber);
     font-weight: 500;
   }
 
@@ -401,9 +401,9 @@
   }
 
   .cal-day.selected {
-    background: var(--color-accent);
+    background: var(--color-accent-teal);
     color: var(--color-bg);
-    border-color: var(--color-accent);
+    border-color: var(--color-accent-teal);
   }
 
   .cal-day.empty {
@@ -455,14 +455,14 @@
   }
 
   .slot:hover {
-    border-color: var(--color-accent);
-    background: color-mix(in oklab, var(--color-accent) 8%, transparent);
+    border-color: var(--color-accent-teal);
+    background: color-mix(in oklab, var(--color-accent-teal) 8%, transparent);
   }
 
   .slot.selected {
-    background: var(--color-accent);
+    background: var(--color-accent-teal);
     color: var(--color-bg);
-    border-color: var(--color-accent);
+    border-color: var(--color-accent-teal);
   }
 
   /* Confirm form */
