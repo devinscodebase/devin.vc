@@ -340,7 +340,7 @@
 
   .hero-cta {
     font-family: 'DM Sans', sans-serif;
-    font-size: clamp(0.7rem, 1vw, 0.8rem);
+    font-size: clamp(0.78rem, 1.1vw, 0.88rem);
     font-weight: 500;
     letter-spacing: 0.18em;
     text-transform: uppercase;

@@ -275,7 +275,7 @@
 
   .booking-heading {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+    font-size: clamp(1.4rem, 2.8vw, 1.75rem);
     font-weight: 400;
     line-height: 1.2;
     color: var(--color-text);
@@ -284,7 +284,7 @@
 
   .booking-pitch {
     font-family: 'DM Sans', sans-serif;
-    font-size: clamp(0.8rem, 1.1vw, 0.88rem);
+    font-size: clamp(0.92rem, 1.2vw, 1rem);
     line-height: 1.6;
     color: var(--color-text-muted);
     margin: 0 0 1.5rem;
@@ -357,7 +357,7 @@
 
   .cal-day-header {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.58rem;
+    font-size: 0.63rem;
     font-weight: 500;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -502,7 +502,7 @@
 
   .confirm-btn {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.7rem;
+    font-size: 0.78rem;
     font-weight: 500;
     letter-spacing: 0.15em;
     text-transform: uppercase;

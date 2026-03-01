@@ -121,7 +121,7 @@
 
   .cta-body {
     font-family: 'DM Sans', sans-serif;
-    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    font-size: clamp(0.92rem, 1.3vw, 1.02rem);
     line-height: 1.65;
     color: var(--color-text-muted);
     max-width: 420px;
@@ -137,7 +137,7 @@
 
   .social-link {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 400;
     letter-spacing: 0.1em;
     color: var(--color-text-muted);
@@ -164,7 +164,7 @@
 
   .label {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 400;
     letter-spacing: 0.2em;
     text-transform: uppercase;

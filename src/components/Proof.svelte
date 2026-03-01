@@ -86,8 +86,8 @@
     font-family: 'Instrument Serif', serif;
     font-size: clamp(2.5rem, 4vw, 3.2rem);
     line-height: 1;
-    color: var(--color-accent);
-    opacity: 0.2;
+    color: var(--color-accent-teal);
+    opacity: 0.25;
     margin-bottom: 0.5rem;
     user-select: none;
   }
@@ -95,7 +95,7 @@
   .quote-text {
     font-family: 'Instrument Serif', serif;
     font-style: italic;
-    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    font-size: clamp(1.08rem, 1.5vw, 1.2rem);
     line-height: 1.55;
     color: var(--color-text);
     margin: 0 0 auto;
@@ -104,7 +104,7 @@
 
   .attribution {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 400;
     font-style: normal;
     letter-spacing: 0.15em;
@@ -121,7 +121,7 @@
 
   .label {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 400;
     letter-spacing: 0.2em;
     text-transform: uppercase;

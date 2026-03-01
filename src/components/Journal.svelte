@@ -209,7 +209,7 @@
     align-items: center;
     gap: 0.5rem;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 400;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -272,16 +272,16 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: var(--color-accent);
+    background: linear-gradient(90deg, var(--color-accent-teal), var(--color-accent-amber));
   }
 
   .post-tag {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.58rem;
+    font-size: 0.63rem;
     font-weight: 500;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--color-accent);
+    color: var(--color-accent-teal);
     margin-bottom: auto;
   }
 
@@ -295,21 +295,21 @@
   }
 
   .post:hover .post-title {
-    color: var(--color-accent);
+    color: var(--color-accent-amber);
   }
 
   .post.featured .post-title {
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-size: clamp(1.75rem, 3.2vw, 2.4rem);
     letter-spacing: -0.015em;
   }
 
   .post-stack .post-title {
-    font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+    font-size: clamp(1.2rem, 2vw, 1.4rem);
   }
 
   .post-excerpt {
     font-family: 'DM Sans', sans-serif;
-    font-size: clamp(0.82rem, 1.1vw, 0.9rem);
+    font-size: clamp(0.92rem, 1.2vw, 1rem);
     line-height: 1.6;
     color: var(--color-text-muted);
     margin-bottom: 0;
@@ -321,7 +321,7 @@
 
   .post-date {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 400;
     letter-spacing: 0.15em;
     text-transform: uppercase;
@@ -338,7 +338,7 @@
 
   .label {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 400;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -366,7 +366,7 @@
 
   .newsletter-heading {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    font-size: clamp(1.2rem, 2.2vw, 1.45rem);
     font-weight: 400;
     line-height: 1.2;
     color: var(--color-text);
@@ -375,7 +375,7 @@
 
   .newsletter-pitch {
     font-family: 'DM Sans', sans-serif;
-    font-size: clamp(0.8rem, 1.1vw, 0.88rem);
+    font-size: clamp(0.92rem, 1.2vw, 1rem);
     line-height: 1.6;
     color: var(--color-text-muted);
     margin: 0 0 1.5rem;
@@ -413,7 +413,7 @@
 
   .newsletter-btn {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.65rem;
+    font-size: 0.72rem;
     font-weight: 500;
     letter-spacing: 0.18em;
     text-transform: uppercase;

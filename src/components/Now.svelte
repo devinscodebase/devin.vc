@@ -153,12 +153,12 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--color-accent);
+    background: var(--color-accent-teal);
     flex-shrink: 0;
   }
 
   .status-dot.building {
-    background: var(--color-text-muted);
+    background: var(--color-accent-amber);
   }
 
   .status-dot.exploring {
@@ -168,7 +168,7 @@
 
   .project-status {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     font-weight: 500;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -177,7 +177,7 @@
 
   .project-name {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(1.15rem, 2vw, 1.35rem);
+    font-size: clamp(1.3rem, 2.2vw, 1.5rem);
     font-weight: 400;
     line-height: 1.3;
     color: var(--color-text);
@@ -186,7 +186,7 @@
 
   .project-desc {
     font-family: 'DM Sans', sans-serif;
-    font-size: clamp(0.8rem, 1.1vw, 0.88rem);
+    font-size: clamp(0.92rem, 1.2vw, 1rem);
     line-height: 1.65;
     color: var(--color-text-muted);
     margin-top: auto;
@@ -201,7 +201,7 @@
 
   .label {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 400;
     letter-spacing: 0.2em;
     text-transform: uppercase;
