@@ -178,7 +178,7 @@
 <style>
   .journal {
     position: relative;
-    padding: clamp(8rem, 20vh, 14rem) clamp(1.5rem, 5vw, 3.5rem);
+    padding: var(--space-section) var(--space-page-x);
     background: var(--color-bg);
   }
 
@@ -191,7 +191,7 @@
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    margin-bottom: clamp(3rem, 6vw, 5rem);
+    margin-bottom: var(--space-block);
   }
 
   .section-heading {
@@ -233,19 +233,19 @@
   .posts {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: clamp(1.5rem, 3vw, 2.5rem);
+    gap: var(--space-element);
   }
 
   .post-stack {
     display: flex;
     flex-direction: column;
-    gap: clamp(1.5rem, 3vw, 2.5rem);
+    gap: var(--space-element);
   }
 
   .post {
     display: flex;
     flex-direction: column;
-    padding: clamp(1.5rem, 3vw, 2rem);
+    padding: var(--space-card);
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
     text-decoration: none;
     box-shadow: var(--shadow-sm);
@@ -290,7 +290,7 @@
     font-weight: 400;
     line-height: 1.2;
     color: var(--color-text);
-    margin: 0 0 0.5rem;
+    margin: 0 0 0.75rem;
     transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
@@ -333,7 +333,7 @@
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    margin-top: clamp(4rem, 8vw, 6rem);
+    margin-top: var(--space-block-lg);
   }
 
   .label {
@@ -354,7 +354,7 @@
   }
 
   .newsletter {
-    margin-top: clamp(3rem, 6vw, 5rem);
+    margin-top: var(--space-block);
     text-align: center;
   }
 

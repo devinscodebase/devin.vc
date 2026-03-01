@@ -52,7 +52,7 @@
 <style>
   .proof {
     position: relative;
-    padding: clamp(8rem, 20vh, 14rem) clamp(1.5rem, 5vw, 3.5rem);
+    padding: var(--space-section) var(--space-page-x);
     background: var(--color-bg);
   }
 
@@ -64,11 +64,11 @@
   .testimonials {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: clamp(1.5rem, 3vw, 2.5rem);
+    gap: var(--space-element);
   }
 
   .testimonial {
-    padding: clamp(1.5rem, 3vw, 2rem);
+    padding: var(--space-card);
     border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
     margin: 0;
     display: flex;
@@ -88,7 +88,7 @@
     line-height: 1;
     color: var(--color-accent);
     opacity: 0.2;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
     user-select: none;
   }
 
@@ -116,7 +116,7 @@
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    margin-top: clamp(4rem, 8vw, 6rem);
+    margin-top: var(--space-block-lg);
   }
 
   .label {

@@ -85,7 +85,7 @@
 <style>
   .now {
     position: relative;
-    padding: clamp(8rem, 20vh, 14rem) clamp(1.5rem, 5vw, 3.5rem);
+    padding: var(--space-section) var(--space-page-x);
     background: var(--color-bg);
   }
 
@@ -101,17 +101,17 @@
     line-height: 1.1;
     color: var(--color-text);
     letter-spacing: -0.02em;
-    margin: 0 0 clamp(3rem, 6vw, 5rem);
+    margin: 0 0 var(--space-block);
   }
 
   .projects {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: clamp(1.5rem, 3vw, 2.5rem);
+    gap: var(--space-element);
   }
 
   .project {
-    padding: clamp(1.5rem, 3vw, 2rem);
+    padding: var(--space-card);
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
     display: flex;
     flex-direction: column;
@@ -131,7 +131,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+    margin-bottom: var(--space-element);
   }
 
   .project-number {
@@ -196,7 +196,7 @@
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    margin-top: clamp(4rem, 8vw, 6rem);
+    margin-top: var(--space-block-lg);
   }
 
   .label {
