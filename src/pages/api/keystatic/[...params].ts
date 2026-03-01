@@ -4,7 +4,12 @@ import keystaticConfig from '../../../../keystatic.config';
 
 export const prerender = false;
 
-const handler = makeHandler({ config: keystaticConfig });
+const handler = makeHandler({
+  config: keystaticConfig,
+  clientId: process.env.KEYSTATIC_GITHUB_CLIENT_ID,
+  clientSecret: process.env.KEYSTATIC_GITHUB_CLIENT_SECRET,
+  secret: process.env.KEYSTATIC_SECRET,
+});
 
 export const ALL = async (ctx: APIContext) => {
   // Vercel serverless functions can receive localhost as the host.
