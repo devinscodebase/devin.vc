@@ -92,6 +92,13 @@
     pointer-events: none !important;
   }
 
+  /* Hide on touch devices / small screens */
+  @media (pointer: coarse), (max-width: 768px) {
+    .scrollbar {
+      display: none;
+    }
+  }
+
   .fill-line {
     position: absolute;
     right: 0;

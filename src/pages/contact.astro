@@ -36,19 +36,26 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
             <p class="panel-hint">I'll get back to you within a day or two.</p>
             <form class="contact-form" id="contact-form">
               <div class="form-field">
-                <input type="text" name="name" placeholder="Name" required class="form-input" aria-label="Your name" />
+                <input type="text" name="name" placeholder="Name" required class="form-input" autocomplete="name" aria-label="Your name" />
                 <div class="input-line"></div>
               </div>
               <div class="form-field">
-                <input type="email" name="email" placeholder="Email" required class="form-input" aria-label="Your email address" />
+                <input type="email" name="email" placeholder="Email" required class="form-input" autocomplete="email" aria-label="Your email address" />
                 <div class="input-line"></div>
               </div>
               <div class="form-field">
                 <textarea name="message" placeholder="What's on your mind?" required class="form-input form-textarea" rows="4" aria-label="Your message"></textarea>
               </div>
-              <button type="submit" class="form-submit" id="form-submit">Send message</button>
+              <button type="submit" class="form-submit" id="form-submit">
+                <span class="btn-label">Send message</span>
+                <span class="btn-sending" hidden>Sending<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></span>
+              </button>
               <p class="form-status" id="form-status" aria-live="polite"></p>
             </form>
+            <div class="form-success" id="form-success" hidden>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              <p class="success-text">Message sent — I'll be in touch.</p>
+            </div>
           </div>
 
           <div class="panel" id="panel-booking">
@@ -149,20 +156,16 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   const form = document.getElementById('contact-form');
   const submitBtn = document.getElementById('form-submit');
   const statusEl = document.getElementById('form-status');
+  const successEl = document.getElementById('form-success');
+  const btnLabel = submitBtn?.querySelector('.btn-label');
+  const btnSending = submitBtn?.querySelector('.btn-sending');
 
-  if (form && submitBtn && statusEl) {
+  if (form && submitBtn && statusEl && successEl) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       submitBtn.disabled = true;
-      submitBtn.textContent = '';
-      const dots = document.createElement('span');
-      dots.className = 'loading-dots';
-      for (let i = 0; i < 3; i++) {
-        const dot = document.createElement('span');
-        dot.textContent = '.';
-        dots.appendChild(dot);
-      }
-      submitBtn.appendChild(dots);
+      btnLabel.hidden = true;
+      btnSending.hidden = false;
       statusEl.textContent = '';
       statusEl.className = 'form-status';
 
@@ -185,15 +188,15 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
           throw new Error(d.error || 'Something went wrong');
         }
 
-        statusEl.textContent = 'Message sent — I\'ll be in touch.';
-        statusEl.className = 'form-status success';
-        form.reset();
+        // Show success state — swap form for confirmation
+        form.hidden = true;
+        successEl.hidden = false;
       } catch (err) {
         statusEl.textContent = err.message;
         statusEl.className = 'form-status error';
-      } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Send message';
+        btnLabel.hidden = false;
+        btnSending.hidden = true;
       }
     });
   }
@@ -442,7 +445,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     width: 0;
     height: 1px;
     background: linear-gradient(90deg, var(--color-accent-teal), var(--color-accent-amber));
-    transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .form-input:focus ~ .input-line {
@@ -488,8 +491,8 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     border: 1px solid var(--color-accent);
     padding: 0.8rem 1.75rem;
     cursor: pointer;
-    transition: background-position 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-position 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
     margin-top: 0.25rem;
     align-self: flex-start;
   }
@@ -517,6 +520,33 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
 
   .form-status.error {
     color: var(--color-error);
+  }
+
+  .btn-sending {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .form-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: clamp(2rem, 4vw, 3rem) 0;
+    animation: panel-enter 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .form-success svg {
+    color: var(--color-accent-teal);
+  }
+
+  .success-text {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+    color: var(--color-text);
+    margin: 0;
   }
 
   /* ---- Booking panel overrides ---- */

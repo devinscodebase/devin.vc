@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { animate } from 'motion';
 
-  let step = $state(1); // 1 = date, 2 = time, 3 = confirm
+  let step = $state(1); // 1 = date, 2 = slots + form
   let selectedDate = $state(null);
   let selectedSlot = $state(null);
   let currentMonth = $state(new Date());
@@ -16,15 +16,18 @@
   let email = $state('');
   let notes = $state('');
 
+  // Prefetch cache: date string → slots array
+  const slotCache = new Map();
+  let prefetchController = null;
+
   const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-  // Spring hover on confirm button
   function btnEnter(e) {
-    animate(e.currentTarget, { scale: 1.04 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
+    animate(e.currentTarget, { scale: 1.04 }, { duration: 0.12, easing: [0.34, 1.56, 0.64, 1] });
   }
   function btnLeave(e) {
-    animate(e.currentTarget, { scale: 1 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
+    animate(e.currentTarget, { scale: 1 }, { duration: 0.18, easing: [0.16, 1, 0.3, 1] });
   }
 
   onMount(() => {
@@ -37,31 +40,19 @@
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
 
-    // Monday = 0, Sunday = 6
     let startOffset = firstDay.getDay() - 1;
     if (startOffset < 0) startOffset = 6;
 
     const days = [];
-
-    // Leading empty cells
-    for (let i = 0; i < startOffset; i++) {
-      days.push(null);
-    }
-
-    // Actual days
-    for (let d = 1; d <= lastDay.getDate(); d++) {
-      days.push(new Date(year, month, d));
-    }
-
+    for (let i = 0; i < startOffset; i++) days.push(null);
+    for (let d = 1; d <= lastDay.getDate(); d++) days.push(new Date(year, month, d));
     return days;
   }
 
   function isToday(date) {
     if (!date) return false;
     const now = new Date();
-    return date.getDate() === now.getDate() &&
-           date.getMonth() === now.getMonth() &&
-           date.getFullYear() === now.getFullYear();
+    return date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
   }
 
   function isPast(date) {
@@ -73,13 +64,15 @@
 
   function isSameDate(a, b) {
     if (!a || !b) return false;
-    return a.getDate() === b.getDate() &&
-           a.getMonth() === b.getMonth() &&
-           a.getFullYear() === b.getFullYear();
+    return a.getDate() === b.getDate() && a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear();
   }
 
   function formatDateLabel(date) {
     return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  }
+
+  function formatDateShort(date) {
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
 
   function prevMonth() {
@@ -90,6 +83,29 @@
     currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
   }
 
+  // Fetch slots for a date (with caching)
+  async function fetchSlots(date, signal) {
+    const dateStr = date.toISOString().split('T')[0];
+    if (slotCache.has(dateStr)) return slotCache.get(dateStr);
+
+    const res = await fetch(`/api/availability?date=${dateStr}&timezone=${encodeURIComponent(timezone)}`, { signal });
+    const data = await res.json();
+    const slots = res.ok ? (data.slots || []) : [];
+    slotCache.set(dateStr, slots);
+    return slots;
+  }
+
+  // Prefetch on hover — fire-and-forget
+  function prefetchDate(date) {
+    if (!date || isPast(date)) return;
+    const dateStr = date.toISOString().split('T')[0];
+    if (slotCache.has(dateStr)) return;
+
+    prefetchController?.abort();
+    prefetchController = new AbortController();
+    fetchSlots(date, prefetchController.signal).catch(() => {});
+  }
+
   async function selectDate(date) {
     selectedDate = date;
     selectedSlot = null;
@@ -97,16 +113,7 @@
     step = 2;
 
     try {
-      const dateStr = date.toISOString().split('T')[0];
-      const res = await fetch(`/api/availability?date=${dateStr}&timezone=${encodeURIComponent(timezone)}`);
-      const data = await res.json();
-
-      if (!res.ok) {
-        availableSlots = [];
-        return;
-      }
-
-      availableSlots = data.slots || [];
+      availableSlots = await fetchSlots(date);
     } catch {
       availableSlots = [];
     } finally {
@@ -116,35 +123,27 @@
 
   function selectSlot(slot) {
     selectedSlot = slot;
-    step = 3;
   }
 
   function goBack() {
-    if (step === 3) {
-      step = 2;
-      selectedSlot = null;
-    } else if (step === 2) {
-      step = 1;
-      selectedDate = null;
-      availableSlots = [];
-    }
+    step = 1;
+    selectedDate = null;
+    selectedSlot = null;
+    availableSlots = [];
+    bookingStatus = 'idle';
+    errorMsg = '';
   }
 
   async function confirmBooking(e) {
     e.preventDefault();
     bookingStatus = 'submitting';
+    errorMsg = '';
 
     try {
       const res = await fetch('/api/book', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          email,
-          notes,
-          slot: selectedSlot,
-          timezone,
-        }),
+        body: JSON.stringify({ name, email, notes, slot: selectedSlot, timezone }),
       });
 
       if (!res.ok) {
@@ -166,6 +165,7 @@
     return currentMonth.getFullYear() > now.getFullYear() ||
            (currentMonth.getFullYear() === now.getFullYear() && currentMonth.getMonth() > now.getMonth());
   });
+  const canConfirm = $derived(selectedSlot && name.trim() && email.trim());
 </script>
 
 <div class="booking">
@@ -174,10 +174,12 @@
 
   {#if bookingStatus === 'success'}
     <div class="booking-success">
-      <p class="success-msg">You're booked — check your email for confirmation.</p>
+      <svg class="success-check" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      <p class="success-msg">You're booked.</p>
       <p class="success-detail">
         {formatDateLabel(selectedDate)} at {selectedSlot?.label}
       </p>
+      <p class="success-hint">Check your email for confirmation.</p>
     </div>
   {:else}
 
@@ -215,6 +217,7 @@
                 class:selected={isSameDate(date, selectedDate)}
                 disabled={isPast(date)}
                 onclick={() => selectDate(date)}
+                onmouseenter={() => prefetchDate(date)}
               >
                 {date.getDate()}
               </button>
@@ -230,44 +233,57 @@
       {/if}
 
     {:else if step === 2}
-      <p class="step-label">{formatDateLabel(selectedDate)}</p>
+      <div class="step-2">
+        <p class="step-label">{formatDateLabel(selectedDate)}</p>
 
-      {#if loading}
-        <p class="loading-text">Loading times...</p>
-      {:else if availableSlots.length === 0}
-        <p class="no-slots">No available times on this date. Try another day.</p>
-      {:else}
-        <div class="slots">
-          {#each availableSlots as slot (slot.time)}
-            <button
-              class="slot"
-              class:selected={selectedSlot?.time === slot.time}
-              onclick={() => selectSlot(slot)}
-            >
-              {slot.label}
-            </button>
-          {/each}
-        </div>
-      {/if}
+        {#if loading}
+          <div class="slots skeleton">
+            {#each Array(6) as _}
+              <div class="slot-skeleton"></div>
+            {/each}
+          </div>
+        {:else if availableSlots.length === 0}
+          <p class="no-slots">No available times on this date. Try another day.</p>
+        {:else}
+          <div class="slots">
+            {#each availableSlots as slot (slot.time)}
+              <button
+                class="slot"
+                class:selected={selectedSlot?.time === slot.time}
+                onclick={() => selectSlot(slot)}
+              >
+                {slot.label}
+              </button>
+            {/each}
+          </div>
 
-    {:else if step === 3}
-      <p class="step-label">{formatDateLabel(selectedDate)} at {selectedSlot?.label}</p>
-
-      <form class="confirm-form" onsubmit={confirmBooking}>
-        <input type="text" bind:value={name} placeholder="Name" required class="form-input" aria-label="Your name" />
-        <input type="email" bind:value={email} placeholder="Email" required class="form-input" aria-label="Your email address" />
-        <textarea bind:value={notes} placeholder="Anything I should know? (optional)" class="form-input form-textarea" rows="3" aria-label="Additional notes"></textarea>
-        <button type="submit" class="confirm-btn" disabled={bookingStatus === 'submitting'} onmouseenter={btnEnter} onmouseleave={btnLeave}>
-          {#if bookingStatus === 'submitting'}
-            <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
-          {:else}
-            Confirm booking
+          <!-- Inline confirm form appears when a slot is selected -->
+          {#if selectedSlot}
+            <form class="confirm-form" onsubmit={confirmBooking}>
+              <p class="confirm-label">{formatDateShort(selectedDate)} at {selectedSlot.label}</p>
+              <input type="text" bind:value={name} placeholder="Name" required class="form-input" aria-label="Your name" />
+              <input type="email" bind:value={email} placeholder="Email" required class="form-input" aria-label="Your email address" />
+              <textarea bind:value={notes} placeholder="Anything I should know? (optional)" class="form-input form-textarea" rows="2" aria-label="Additional notes"></textarea>
+              <button
+                type="submit"
+                class="confirm-btn"
+                disabled={bookingStatus === 'submitting' || !canConfirm}
+                onmouseenter={btnEnter}
+                onmouseleave={btnLeave}
+              >
+                {#if bookingStatus === 'submitting'}
+                  <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+                {:else}
+                  Confirm booking
+                {/if}
+              </button>
+              {#if bookingStatus === 'error'}
+                <p class="form-error">{errorMsg}</p>
+              {/if}
+            </form>
           {/if}
-        </button>
-        {#if bookingStatus === 'error'}
-          <p class="form-error">{errorMsg}</p>
         {/if}
-      </form>
+      </div>
     {/if}
 
   {/if}
@@ -311,7 +327,7 @@
     cursor: pointer;
     padding: 0;
     margin-bottom: 1.25rem;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .back-btn:hover {
@@ -323,7 +339,7 @@
   }
 
   .back-btn svg {
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* Calendar */
@@ -351,7 +367,7 @@
     cursor: pointer;
     color: var(--color-text-muted);
     padding: 0.5rem;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .cal-arrow:hover {
@@ -389,9 +405,9 @@
     padding: 0.5rem;
     text-align: center;
     cursor: pointer;
-    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
     aspect-ratio: 1;
     display: flex;
     align-items: center;
@@ -431,13 +447,22 @@
     margin: 0;
   }
 
-  /* Time slots */
+  /* Step 2: slots + inline form */
+  .step-2 {
+    animation: step-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes step-enter {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   .step-label {
     font-family: 'DM Sans', sans-serif;
     font-size: 0.75rem;
     font-weight: 500;
     color: var(--color-text);
-    margin: 0 0 1.25rem;
+    margin: 0 0 1rem;
   }
 
   .loading-text, .no-slots {
@@ -453,6 +478,23 @@
     gap: 0.5rem;
   }
 
+  /* Skeleton loading for slots */
+  .slots.skeleton {
+    pointer-events: none;
+  }
+
+  .slot-skeleton {
+    height: 38px;
+    background: color-mix(in oklab, var(--color-text-muted) 8%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    animation: shimmer 1.2s ease-in-out infinite alternate;
+  }
+
+  @keyframes shimmer {
+    from { opacity: 0.5; }
+    to { opacity: 1; }
+  }
+
   .slot {
     font-family: 'DM Sans', sans-serif;
     font-size: 0.75rem;
@@ -463,9 +505,9 @@
     padding: 0.6rem 0.75rem;
     cursor: pointer;
     text-align: center;
-    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color 0.12s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.12s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.12s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .slot:hover {
@@ -479,11 +521,25 @@
     border-color: var(--color-accent-teal);
   }
 
-  /* Confirm form */
+  /* Confirm form — slides in below slots */
   .confirm-form {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+    animation: step-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .confirm-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-accent-teal);
+    margin: 0;
   }
 
   .form-input {
@@ -493,24 +549,20 @@
     background: transparent;
     border: none;
     border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 20%, transparent);
-    padding: 0.75rem 0;
+    padding: 0.65rem 0;
     outline: none;
-    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                border-width 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                background 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .form-input:focus {
     border-color: var(--color-accent);
-    border-bottom-width: 2px;
-    box-shadow: 0 2px 8px -2px color-mix(in oklab, var(--color-accent) 30%, transparent);
-    background: color-mix(in oklab, var(--color-accent) 3%, transparent);
+    box-shadow: 0 1px 0 0 var(--color-accent);
   }
 
   .form-input::placeholder {
     color: var(--color-text-muted);
-    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.15s;
   }
 
   .form-input:focus::placeholder {
@@ -519,15 +571,14 @@
 
   .form-textarea {
     resize: vertical;
-    min-height: 60px;
+    min-height: 48px;
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 20%, transparent);
-    padding: 0.75rem;
+    padding: 0.65rem;
   }
 
   .form-textarea:focus {
     border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 12%, transparent);
-    background: color-mix(in oklab, var(--color-accent) 3%, transparent);
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-accent) 10%, transparent);
   }
 
   .confirm-btn {
@@ -544,18 +595,19 @@
     border: 1px solid var(--color-accent);
     padding: 0.85rem 1.5rem;
     cursor: pointer;
-    transition: background-position 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    margin-top: 0.5rem;
+    transition: background-position 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.15s;
+    margin-top: 0.25rem;
   }
 
-  .confirm-btn:hover {
+  .confirm-btn:hover:not(:disabled) {
     background-position: 0% 0;
     border-color: var(--color-accent-teal);
   }
 
   .confirm-btn:disabled {
-    opacity: 0.6;
+    opacity: 0.4;
     cursor: not-allowed;
   }
 
@@ -565,17 +617,12 @@
   }
 
   .loading-dots span {
-    animation: dot-pulse 1.4s infinite;
+    animation: dot-pulse 1s infinite;
     opacity: 0;
   }
 
-  .loading-dots span:nth-child(2) {
-    animation-delay: 0.2s;
-  }
-
-  .loading-dots span:nth-child(3) {
-    animation-delay: 0.4s;
-  }
+  .loading-dots span:nth-child(2) { animation-delay: 0.15s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.3s; }
 
   @keyframes dot-pulse {
     0%, 80%, 100% { opacity: 0; }
@@ -592,19 +639,32 @@
   /* Success */
   .booking-success {
     text-align: center;
-    padding: clamp(1.5rem, 3vw, 2rem) 0;
+    padding: clamp(1.5rem, 3vw, 2.5rem) 0;
+    animation: step-enter 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .success-check {
+    color: var(--color-accent-teal);
+    margin-bottom: 0.75rem;
   }
 
   .success-msg {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    color: var(--color-accent);
-    margin: 0 0 0.5rem;
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    color: var(--color-text);
+    margin: 0 0 0.35rem;
   }
 
   .success-detail {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem;
+    font-size: 0.82rem;
+    color: var(--color-accent);
+    margin: 0 0 0.25rem;
+  }
+
+  .success-hint {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
     color: var(--color-text-muted);
     margin: 0;
   }

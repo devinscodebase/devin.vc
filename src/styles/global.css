@@ -94,19 +94,34 @@ body {
 }
 
 /* ==============================
-   HIDE NATIVE SCROLLBAR
+   HIDE NATIVE SCROLLBAR (desktop only — custom ScrollProgress replaces it)
    ============================== */
-html {
-  scrollbar-width: none;
-}
+@media (pointer: fine) and (min-width: 769px) {
+  html {
+    scrollbar-width: none;
+  }
 
-::-webkit-scrollbar {
-  display: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 ::selection {
   background-color: var(--color-selection-bg);
   color: var(--color-selection-text);
+}
+
+/* ==============================
+   MOBILE SPACING OVERRIDES
+   ============================== */
+@media (max-width: 640px) {
+  :root {
+    --space-section:     clamp(4.5rem, 12vh, 8rem);
+    --space-page-top:    clamp(5rem, 12vh, 8rem);
+    --space-page-bottom: clamp(2.5rem, 6vh, 4rem);
+    --space-block:       clamp(2rem, 5vw, 3rem);
+    --space-block-lg:    clamp(2.5rem, 6vw, 4rem);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

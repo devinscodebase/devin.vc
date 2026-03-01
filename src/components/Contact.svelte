@@ -65,7 +65,7 @@
     <div class="section-tag" style="opacity: 0;"><span class="tag-number">07</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Contact</span></div>
     <h2 class="cta-heading" style="opacity: 0;">Let's build<br />something together.</h2>
 
-    <a href="mailto:hello@devin.vc" class="email" style="opacity: 0;">Get in touch</a>
+    <a href="/contact" class="email" style="opacity: 0;">Get in touch</a>
 
     <p class="cta-body" style="opacity: 0;">I'm always open to conversations about GTM strategy, design, operations, or interesting problems worth solving.</p>
 

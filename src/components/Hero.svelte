@@ -150,7 +150,7 @@
       <span>GTM</span>
     </p>
 
-    <a href="mailto:hello@devin.vc" class="hero-cta" style="opacity: 0;">Open to Consulting Projects</a>
+    <a href="/contact" class="hero-cta" style="opacity: 0;">Open to Consulting Projects</a>
   </div>
 
   <div class="scroll-fade" aria-hidden="true">
