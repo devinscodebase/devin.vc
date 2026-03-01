@@ -12,33 +12,28 @@ const testimonials = [
   {
     _type: 'testimonial',
     quote:
-      'Devin doesn\'t just execute — he sees around corners. He identified gaps in our GTM motion that nobody else caught and built the systems to close them.',
-    name: 'Marcus Chen',
-    role: 'VP of Growth',
-    company: 'Andreou Enterprises',
+      'Devin brought a lot of depth and care to Richter related to our brand and marketing. He helped expand our reach and ensure that everything looked its best and presented us in the best way possible. I enjoyed working with him while here and would recommend his work to others.',
+    name: 'Robert Cornish',
+    role: 'CEO & Founder',
+    company: 'Richter/RGC',
     order: 1,
   },
   {
     _type: 'testimonial',
     quote:
-      'One of the rare operators who can move between strategy and execution without losing altitude on either. Working with Devin changed how our team thinks about shipping.',
-    name: 'Sarah Okafor',
-    role: 'Head of Product',
-    company: 'Bitmern Mining',
+      'Devin did an extraordinary job driving new people into our company. His area expanded and drove in new clients to help propel The Customer Factory to new heights of profitability. He has an eye for detail complemented by his aesthetic background as an artist, which leads to crisp and direct communications in marketing. He is great to work with and brought an exciting energy while remaining focused and productive.',
+    name: 'Spencer Marier',
+    role: 'Project Manager',
+    company: 'The Customer Factory',
     order: 2,
-  },
-  {
-    _type: 'testimonial',
-    quote:
-      'He brought an obsessive level of craft to everything — from our brand system to our internal dashboards. The kind of person who makes everyone around them better.',
-    name: 'James Whitfield',
-    role: 'CEO',
-    company: 'Meridian Studios',
-    order: 3,
   },
 ];
 
 async function seed() {
+  // Delete existing testimonials first
+  console.log('Deleting existing testimonials...');
+  await client.delete({ query: '*[_type == "testimonial"]' });
+
   console.log('Seeding testimonials...\n');
 
   for (const t of testimonials) {
@@ -46,7 +41,7 @@ async function seed() {
     console.log(`  ✓ Created "${t.name}" (${result._id})`);
   }
 
-  console.log('\nDone — 3 testimonials created.');
+  console.log('\nDone — 2 testimonials created.');
 }
 
 seed().catch((err) => {
