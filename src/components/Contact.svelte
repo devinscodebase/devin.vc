@@ -5,13 +5,19 @@
   let section;
 
   onMount(() => {
+    const tag = section.querySelector('.section-tag');
     const heading = section.querySelector('.cta-heading');
     const email = section.querySelector('.email');
     const body = section.querySelector('.cta-body');
     const links = section.querySelector('.links');
-    const footer = section.querySelector('.contact-footer');
 
     inView(section, () => {
+      // Section tag
+      animate(tag, { opacity: [0, 1], y: [10, 0] }, {
+        duration: 0.5,
+        easing: [0.25, 1, 0.5, 1],
+      });
+
       // Heading scales up and fades in
       animate(heading, {
         opacity: [0, 1],
@@ -42,19 +48,13 @@
         delay: 0.65,
         easing: [0.25, 1, 0.5, 1],
       });
-
-      // Footer
-      animate(footer, { opacity: [0, 1], y: [10, 0] }, {
-        duration: 0.6,
-        delay: 0.8,
-        easing: [0.25, 1, 0.5, 1],
-      });
     }, { amount: 0.25 });
   });
 </script>
 
 <section class="contact" bind:this={section}>
   <div class="contact-inner">
+    <div class="section-tag" style="opacity: 0;"><span class="tag-number">06</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Contact</span></div>
     <h2 class="cta-heading" style="opacity: 0;">Let's build<br />something together.</h2>
 
     <a href="mailto:hello@devin.vc" class="email" style="opacity: 0;">Get in touch</a>
@@ -67,11 +67,6 @@
       <a href="https://twitter.com" target="_blank" rel="noopener" class="social-link">X / Twitter</a>
     </div>
 
-    <div class="contact-footer" style="opacity: 0;">
-      <div class="rule" aria-hidden="true"></div>
-      <span class="label">06 / Contact</span>
-      <div class="rule" aria-hidden="true"></div>
-    </div>
   </div>
 </section>
 
@@ -103,20 +98,41 @@
 
   .email {
     font-family: 'DM Sans', sans-serif;
-    font-size: clamp(0.85rem, 1.5vw, 1.1rem);
-    font-weight: 400;
-    letter-spacing: 0.12em;
-    color: var(--color-accent-amber);
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-accent);
     text-decoration: none;
-    padding: 0.8rem 2rem;
-    border: 1px solid color-mix(in oklab, var(--color-accent-amber) 40%, transparent);
-    transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 0.85rem 2.25rem;
+    border: 1px solid color-mix(in oklab, var(--color-accent) 40%, transparent);
+    position: relative;
+    overflow: hidden;
+    z-index: 0;
+    transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .email::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-accent-teal);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: -1;
   }
 
   .email:hover {
-    background: var(--color-accent-amber);
     color: var(--color-bg);
+    border-color: var(--color-accent-teal);
+    transform: translateY(-1px);
+  }
+
+  .email:hover::after {
+    transform: scaleX(1);
   }
 
   .cta-body {
@@ -153,28 +169,34 @@
     color: color-mix(in oklab, var(--color-text-muted) 40%, transparent);
   }
 
-  .contact-footer {
+  .section-tag {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    margin-top: var(--space-block-lg);
-    width: 100%;
+    justify-content: center;
+    gap: 0.65rem;
+    margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
   }
 
-  .label {
+  .tag-number {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1;
+    color: var(--color-accent-rust);
+  }
+
+  .tag-dash {
+    width: 24px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-accent-rust), transparent);
+  }
+
+  .tag-label {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 400;
-    letter-spacing: 0.2em;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
     color: var(--color-text-muted);
-    white-space: nowrap;
-  }
-
-  .rule {
-    flex: 1;
-    height: 1px;
-    background: var(--color-text-muted);
-    opacity: 0.2;
   }
 </style>

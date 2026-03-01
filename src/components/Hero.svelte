@@ -307,7 +307,7 @@
   .divider {
     height: 1px;
     margin: clamp(1.5rem, 3vw, 2.5rem) auto;
-    background: var(--color-accent);
+    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-teal));
   }
 
   .tagline {
@@ -345,23 +345,24 @@
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--color-bg);
-    background: var(--color-accent);
+    background-color: var(--color-accent);
+    background-image: linear-gradient(90deg, var(--color-accent-teal) 50%, transparent 50%);
+    background-size: 200% 100%;
+    background-position: 100% 0;
     text-decoration: none;
     margin-top: clamp(2.5rem, 5vw, 3.5rem);
     padding: 0.85rem 2.5rem;
-    border: 1px solid color-mix(in oklab, var(--color-accent) 60%, transparent);
+    border: 1px solid var(--color-accent);
     cursor: pointer;
-    transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-position 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .hero-cta:hover {
-    background: var(--color-text);
-    border-color: var(--color-text);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    background-position: 0% 0;
+    border-color: var(--color-accent-teal);
+    transform: translateY(-1px);
   }
 
   .scroll-fade {

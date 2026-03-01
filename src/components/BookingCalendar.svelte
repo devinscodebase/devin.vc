@@ -293,11 +293,11 @@
   .back-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.5rem;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 400;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--color-text-muted);
     background: none;
@@ -310,6 +310,14 @@
 
   .back-btn:hover {
     color: var(--color-accent);
+  }
+
+  .back-btn:hover svg {
+    transform: translateX(-3px);
+  }
+
+  .back-btn svg {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* Calendar */
@@ -336,8 +344,8 @@
     border: none;
     cursor: pointer;
     color: var(--color-text-muted);
-    padding: 0.25rem;
-    transition: color 0.2s;
+    padding: 0.5rem;
+    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .cal-arrow:hover {
@@ -384,7 +392,7 @@
     justify-content: center;
   }
 
-  .cal-day:hover:not(:disabled) {
+  .cal-day:hover:not(:disabled):not(.empty) {
     border-color: var(--color-accent-teal);
     background: color-mix(in oklab, var(--color-accent-teal) 8%, transparent);
   }
@@ -474,51 +482,72 @@
 
   .form-input {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     color: var(--color-text);
     background: transparent;
     border: none;
     border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 20%, transparent);
-    padding: 0.65rem 0;
+    padding: 0.75rem 0;
     outline: none;
-    transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                border-width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .form-input:focus {
     border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 25%, transparent);
+    border-bottom-width: 2px;
+    box-shadow: 0 2px 8px -2px color-mix(in oklab, var(--color-accent) 30%, transparent);
+    background: color-mix(in oklab, var(--color-accent) 3%, transparent);
   }
 
   .form-input::placeholder {
     color: var(--color-text-muted);
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .form-input:focus::placeholder {
+    opacity: 0.4;
   }
 
   .form-textarea {
     resize: vertical;
     min-height: 60px;
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 20%, transparent);
-    padding: 0.65rem;
+    padding: 0.75rem;
+  }
+
+  .form-textarea:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 12%, transparent);
+    background: color-mix(in oklab, var(--color-accent) 3%, transparent);
   }
 
   .confirm-btn {
     font-family: 'DM Sans', sans-serif;
     font-size: 0.78rem;
     font-weight: 500;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    background: var(--color-accent);
+    background-color: var(--color-accent);
+    background-image: linear-gradient(90deg, var(--color-accent-teal) 50%, transparent 50%);
+    background-size: 200% 100%;
+    background-position: 100% 0;
     color: var(--color-bg);
-    border: none;
+    border: 1px solid var(--color-accent);
     padding: 0.85rem 1.5rem;
     cursor: pointer;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-position 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     margin-top: 0.5rem;
   }
 
   .confirm-btn:hover {
+    background-position: 0% 0;
+    border-color: var(--color-accent-teal);
     transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
   }
 
   .confirm-btn:disabled {

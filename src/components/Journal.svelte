@@ -44,15 +44,21 @@
   }
 
   onMount(() => {
+    const tag = section.querySelector('.section-tag');
     const header = section.querySelector('.journal-header');
     const featured = section.querySelector('.post.featured');
     const accentBar = section.querySelector('.post-accent');
     const stackEls = section.querySelectorAll('.post-stack .post');
-    const footer = section.querySelector('.journal-footer');
 
     inView(section, () => {
+      animate(tag, { opacity: [0, 1], y: [10, 0] }, {
+        duration: 0.5,
+        easing: [0.25, 1, 0.5, 1],
+      });
+
       animate(header, { opacity: [0, 1], y: [25, 0] }, {
         duration: 0.8,
+        delay: 0.1,
         easing: [0.25, 1, 0.5, 1],
       });
 
@@ -89,17 +95,23 @@
         });
       }
 
-      animate(footer, { opacity: [0, 1], y: [15, 0] }, {
-        duration: 0.6,
-        delay: 0.8,
-        easing: [0.25, 1, 0.5, 1],
-      });
     }, { amount: 0.15 });
+
+    // Cursor-following spotlight on post cards
+    const postCards = section.querySelectorAll('.post');
+    postCards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--glow-x', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--glow-y', `${e.clientY - rect.top}px`);
+      });
+    });
   });
 </script>
 
 <section class="journal" bind:this={section}>
   <div class="journal-inner">
+    <div class="section-tag" style="opacity: 0;"><span class="tag-number">05</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Journal</span></div>
     <div class="journal-header" style="opacity: 0;">
       <h2 class="section-heading">Latest Thinking</h2>
       <a href="/journal" class="view-all">
@@ -138,40 +150,48 @@
     {/if}
 
     <div class="newsletter" style="opacity: 0;">
-      <div class="newsletter-rule" aria-hidden="true"></div>
-      {#if status === 'success'}
-        <p class="newsletter-success">You're in — check your inbox.</p>
-      {:else}
-        <h3 class="newsletter-heading">Get essays like these in your inbox</h3>
-        <p class="newsletter-pitch">Occasional essays on building, leading, and craft. No spam.</p>
-        <form class="newsletter-form" onsubmit={subscribe}>
-          <input
-            type="email"
-            bind:value={email}
-            placeholder="your@email.com"
-            required
-            class="newsletter-input"
-            disabled={status === 'submitting'}
-            aria-label="Email address for newsletter"
-          />
-          <button type="submit" class="newsletter-btn" disabled={status === 'submitting'}>
-            {#if status === 'submitting'}
-              <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
-            {:else}
-              Subscribe
+      <div class="newsletter-card">
+        {#if status === 'success'}
+          <div class="newsletter-success-wrap">
+            <svg class="success-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            <p class="newsletter-success">You're in — check your inbox.</p>
+          </div>
+        {:else}
+          <div class="newsletter-content">
+            <span class="newsletter-tag">Newsletter</span>
+            <h3 class="newsletter-heading">Get essays like these in your inbox</h3>
+          </div>
+          <div class="newsletter-action">
+            <p class="newsletter-pitch">Occasional essays on building, leading, and craft. No spam, no noise — just honest writing about what I'm learning.</p>
+            <form class="newsletter-form" onsubmit={subscribe}>
+              <div class="newsletter-input-wrap">
+                <input
+                  type="email"
+                  bind:value={email}
+                  placeholder="your@email.com"
+                  required
+                  class="newsletter-input"
+                  disabled={status === 'submitting'}
+                  aria-label="Email address for newsletter"
+                />
+                <div class="input-line"></div>
+              </div>
+              <button type="submit" class="newsletter-btn" disabled={status === 'submitting'}>
+                {#if status === 'submitting'}
+                  <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+                {:else}
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 9h11M10 4.5L14.5 9 10 13.5"/></svg>
+                {/if}
+              </button>
+            </form>
+            {#if status === 'error'}
+              <p class="newsletter-error">{errorMsg}</p>
             {/if}
-          </button>
-        </form>
-        {#if status === 'error'}
-          <p class="newsletter-error">{errorMsg}</p>
+          </div>
         {/if}
-      {/if}
+      </div>
     </div>
 
-    <div class="journal-footer" style="opacity: 0;">
-      <span class="label">05 / Journal</span>
-      <div class="rule" aria-hidden="true"></div>
-    </div>
   </div>
 </section>
 
@@ -185,6 +205,36 @@
   .journal-inner {
     max-width: 960px;
     margin: 0 auto;
+  }
+
+  .section-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: clamp(0.75rem, 1.5vw, 1rem);
+  }
+
+  .tag-number {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1;
+    color: var(--color-accent-teal);
+  }
+
+  .tag-dash {
+    width: 24px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-accent-teal), transparent);
+  }
+
+  .tag-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
   }
 
   .journal-header {
@@ -247,16 +297,39 @@
     flex-direction: column;
     padding: var(--space-card);
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+    border-top: 2px solid color-mix(in oklab, var(--color-accent-teal) 20%, transparent);
     text-decoration: none;
     box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
                 border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
                 box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  /* Cursor-following spotlight */
+  .post::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      350px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+      color-mix(in oklab, var(--color-accent-teal) 6%, transparent),
+      transparent 40%
+    );
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
+
+  .post:hover::before {
+    opacity: 1;
+  }
+
   .post:hover {
     transform: translateY(-3px);
     border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+    border-top-color: var(--color-accent-teal);
     box-shadow: var(--shadow-lg);
   }
 
@@ -264,6 +337,7 @@
     justify-content: flex-end;
     position: relative;
     overflow: hidden;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
   }
 
   .post-accent {
@@ -273,6 +347,7 @@
     right: 0;
     height: 2px;
     background: linear-gradient(90deg, var(--color-accent-teal), var(--color-accent-amber));
+    z-index: 1;
   }
 
   .post-tag {
@@ -283,6 +358,8 @@
     text-transform: uppercase;
     color: var(--color-accent-teal);
     margin-bottom: auto;
+    position: relative;
+    z-index: 1;
   }
 
   .post-title {
@@ -292,6 +369,8 @@
     color: var(--color-text);
     margin: 0 0 0.75rem;
     transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    z-index: 1;
   }
 
   .post:hover .post-title,
@@ -314,6 +393,8 @@
     line-height: 1.6;
     color: var(--color-text-muted);
     margin-bottom: 0;
+    position: relative;
+    z-index: 1;
   }
 
   .post.featured .post-excerpt {
@@ -328,119 +409,162 @@
     text-transform: uppercase;
     color: var(--color-text-muted);
     margin-top: clamp(1rem, 2vw, 1.5rem);
+    position: relative;
+    z-index: 1;
   }
 
-  .journal-footer {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
+
+  /* ---- Newsletter card ---- */
+  .newsletter {
     margin-top: var(--space-block-lg);
   }
 
-  .label {
+  .newsletter-card {
+    display: grid;
+    grid-template-columns: 5fr 6fr;
+    gap: clamp(2rem, 4vw, 3rem);
+    align-items: center;
+    padding: clamp(2rem, 4vw, 3rem);
+    border-top: 2px solid transparent;
+    border-image: linear-gradient(90deg, var(--color-accent-teal), var(--color-accent-amber)) 1;
+    background: color-mix(in oklab, var(--color-text-muted) 3%, transparent);
+  }
+
+  .newsletter-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .newsletter-tag {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 400;
-    letter-spacing: 0.2em;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--color-text-muted);
-    white-space: nowrap;
-  }
-
-  .rule {
-    flex: 1;
-    height: 1px;
-    background: var(--color-text-muted);
-    opacity: 0.2;
-  }
-
-  .newsletter {
-    margin-top: var(--space-block);
-    text-align: center;
-  }
-
-  .newsletter-rule {
-    height: 1px;
-    background: color-mix(in oklab, var(--color-text-muted) 15%, transparent);
-    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    color: var(--color-accent-teal);
+    margin-bottom: 0.75rem;
   }
 
   .newsletter-heading {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(1.2rem, 2.2vw, 1.45rem);
+    font-size: clamp(1.5rem, 2.8vw, 2rem);
     font-weight: 400;
-    line-height: 1.2;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
     color: var(--color-text);
-    margin: 0 0 0.5rem;
+    margin: 0;
+  }
+
+  .newsletter-action {
+    display: flex;
+    flex-direction: column;
   }
 
   .newsletter-pitch {
     font-family: 'DM Sans', sans-serif;
-    font-size: clamp(0.92rem, 1.2vw, 1rem);
+    font-size: clamp(0.85rem, 1.1vw, 0.92rem);
     line-height: 1.6;
     color: var(--color-text-muted);
-    margin: 0 0 1.5rem;
+    margin: 0 0 1.25rem;
   }
 
   .newsletter-form {
     display: flex;
-    gap: 0;
-    max-width: 400px;
-    margin: 0 auto;
-    border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
-    transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    align-items: flex-end;
+    gap: 1rem;
   }
 
-  .newsletter-form:focus-within {
-    border-color: color-mix(in oklab, var(--color-accent) 60%, transparent);
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 25%, transparent);
+  .newsletter-input-wrap {
+    flex: 1;
+    position: relative;
   }
 
   .newsletter-input {
-    flex: 1;
+    width: 100%;
     background: transparent;
     border: none;
-    padding: 0.75rem 1rem;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 30%, transparent);
+    padding: 0.5rem 0;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     color: var(--color-text);
     outline: none;
+    transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .input-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-accent-teal), var(--color-accent-amber));
+    transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .newsletter-input:focus ~ .input-line {
+    width: 100%;
   }
 
   .newsletter-input::placeholder {
     color: var(--color-text-muted);
+    opacity: 0.5;
+    transition: opacity 0.3s;
+  }
+
+  .newsletter-input:focus::placeholder {
+    opacity: 0.3;
   }
 
   .newsletter-btn {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
     background: var(--color-accent);
-    color: var(--color-bg);
-    padding: 0.75rem 1.5rem;
     border: none;
+    border-radius: 50%;
+    color: var(--color-bg);
     cursor: pointer;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .newsletter-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
+    background: var(--color-accent-teal);
+    transform: translateX(3px);
   }
 
   .newsletter-btn:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
+  }
+
+  .newsletter-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .newsletter-success-wrap {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .success-icon {
+    color: var(--color-accent-teal);
+    flex-shrink: 0;
   }
 
   .newsletter-success {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.88rem;
-    color: var(--color-accent);
-    font-weight: 400;
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 1.6vw, 1.25rem);
+    color: var(--color-text);
     margin: 0;
   }
 
@@ -452,15 +576,11 @@
   .loading-dots span {
     animation: dot-pulse 1.4s infinite;
     opacity: 0;
+    font-size: 0.9rem;
   }
 
-  .loading-dots span:nth-child(2) {
-    animation-delay: 0.2s;
-  }
-
-  .loading-dots span:nth-child(3) {
-    animation-delay: 0.4s;
-  }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
 
   @keyframes dot-pulse {
     0%, 80%, 100% { opacity: 0; }
@@ -474,18 +594,10 @@
     margin-top: 0.75rem;
   }
 
-  @media (max-width: 480px) {
-    .newsletter-form {
-      flex-direction: column;
-      border: none;
-    }
-
-    .newsletter-input {
-      border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
-    }
-
-    .newsletter-btn {
-      padding: 0.85rem 1.5rem;
+  @media (max-width: 640px) {
+    .newsletter-card {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
     }
   }
 

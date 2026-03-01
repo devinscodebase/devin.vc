@@ -7,19 +7,18 @@
   let section;
 
   onMount(() => {
+    const tag = section.querySelector('.section-tag');
     const cards = section.querySelectorAll('.testimonial');
-    const footer = section.querySelector('.proof-footer');
 
     inView(section, () => {
-      animate(cards, { opacity: [0, 1], y: [35, 0] }, {
-        duration: 0.7,
-        delay: stagger(0.15, { start: 0.15 }),
+      animate(tag, { opacity: [0, 1], y: [10, 0] }, {
+        duration: 0.5,
         easing: [0.25, 1, 0.5, 1],
       });
 
-      animate(footer, { opacity: [0, 1], y: [15, 0] }, {
-        duration: 0.6,
-        delay: 0.7,
+      animate(cards, { opacity: [0, 1], y: [35, 0] }, {
+        duration: 0.7,
+        delay: stagger(0.15, { start: 0.15 }),
         easing: [0.25, 1, 0.5, 1],
       });
     }, { amount: 0.2 });
@@ -28,6 +27,7 @@
 
 <section class="proof" bind:this={section}>
   <div class="proof-inner">
+    <div class="section-tag" style="opacity: 0;"><span class="tag-number">04</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Proof</span></div>
     {#if testimonials.length > 0}
       <div class="testimonials">
         {#each testimonials as t}
@@ -42,10 +42,6 @@
       </div>
     {/if}
 
-    <div class="proof-footer" style="opacity: 0;">
-      <span class="label">04 / Proof</span>
-      <div class="rule" aria-hidden="true"></div>
-    </div>
   </div>
 </section>
 
@@ -61,25 +57,72 @@
     margin: 0 auto;
   }
 
+  .section-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .tag-number {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1;
+    color: var(--color-accent-amber);
+  }
+
+  .tag-dash {
+    width: 24px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-accent-amber), transparent);
+  }
+
+  .tag-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
   .testimonials {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--space-element);
+    align-items: start;
+  }
+
+  .testimonial:nth-child(2) {
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .testimonial:nth-child(3) {
+    margin-top: clamp(3rem, 6vw, 5rem);
   }
 
   .testimonial {
     padding: var(--space-card);
-    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+    border-top: 2px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
     margin: 0;
     display: flex;
     flex-direction: column;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    transition: border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
                 box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
+
+  .testimonial:nth-child(1) { border-color: color-mix(in oklab, var(--color-accent-teal) 25%, transparent); }
+  .testimonial:nth-child(2) { border-color: color-mix(in oklab, var(--color-accent-amber) 25%, transparent); }
+  .testimonial:nth-child(3) { border-color: color-mix(in oklab, var(--color-accent-rust) 25%, transparent); }
 
   .testimonial:hover {
     box-shadow: var(--shadow-sm);
   }
+
+  .testimonial:nth-child(1):hover { border-color: var(--color-accent-teal); }
+  .testimonial:nth-child(2):hover { border-color: var(--color-accent-amber); }
+  .testimonial:nth-child(3):hover { border-color: var(--color-accent-rust); }
 
   .quote-mark {
     font-family: 'Instrument Serif', serif;
@@ -111,29 +154,6 @@
     color: var(--color-text-muted);
   }
 
-  .proof-footer {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-top: var(--space-block-lg);
-  }
-
-  .label {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 400;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-    white-space: nowrap;
-  }
-
-  .rule {
-    flex: 1;
-    height: 1px;
-    background: var(--color-text-muted);
-    opacity: 0.2;
-  }
 
   @media (max-width: 768px) {
     .testimonials {

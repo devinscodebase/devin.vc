@@ -5,13 +5,13 @@
   let section;
 
   onMount(() => {
-    const header = section.querySelector('.timeline-header');
+    const tag = section.querySelector('.section-tag');
     const entries = section.querySelectorAll('.entry');
 
-    // Header reveal
-    inView(header, () => {
-      animate(header, { opacity: [0, 1], y: [25, 0] }, {
-        duration: 0.7,
+    // Section tag reveal
+    inView(tag, () => {
+      animate(tag, { opacity: [0, 1], y: [10, 0] }, {
+        duration: 0.5,
         easing: [0.25, 1, 0.5, 1],
       });
     }, { amount: 0.5 });
@@ -61,9 +61,10 @@
 
 <section class="timeline" bind:this={section}>
   <div class="timeline-inner">
-    <div class="timeline-header" style="opacity: 0;">
-      <span class="label">02 / Career</span>
-      <div class="rule" aria-hidden="true"></div>
+    <div class="section-tag" style="opacity: 0;">
+      <span class="tag-number">02</span>
+      <span class="tag-dash" aria-hidden="true"></span>
+      <span class="tag-label">Career</span>
     </div>
 
     <ol class="entries">
@@ -210,28 +211,34 @@
     margin: 0 auto;
   }
 
-  .timeline-header {
+  .section-tag {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 0.65rem;
     margin-bottom: clamp(4rem, 8vw, 6rem);
   }
 
-  .label {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 400;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-    white-space: nowrap;
+  .tag-number {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1;
+    color: var(--color-accent);
   }
 
-  .rule {
-    flex: 1;
+  .tag-dash {
+    width: 24px;
     height: 1px;
-    background: var(--color-text-muted);
-    opacity: 0.2;
+    background: linear-gradient(90deg, var(--color-accent), transparent);
+  }
+
+  .tag-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
   }
 
   .entries {

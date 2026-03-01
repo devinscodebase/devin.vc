@@ -239,15 +239,27 @@ const roles = [
 
   .role-card {
     padding: clamp(2.5rem, 5vw, 3.5rem) 0;
+    padding-left: clamp(1rem, 2vw, 1.5rem);
     opacity: 0;
     animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     animation-delay: var(--delay);
-    transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border-left: 2px solid transparent;
+    transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .role-card:hover {
     background-color: color-mix(in oklab, var(--color-text-muted) 3%, transparent);
   }
+
+  .role-card:nth-child(1):hover { border-left-color: var(--color-accent-teal); }
+  .role-card:nth-child(2):hover { border-left-color: var(--color-accent-amber); }
+  .role-card:nth-child(3):hover { border-left-color: var(--color-accent-rust); }
+  .role-card:nth-child(4):hover { border-left-color: var(--color-accent-teal); }
+  .role-card:nth-child(5):hover { border-left-color: var(--color-accent-amber); }
+  .role-card:nth-child(6):hover { border-left-color: var(--color-accent-rust); }
+  .role-card:nth-child(7):hover { border-left-color: var(--color-accent-teal); }
+  .role-card:nth-child(8):hover { border-left-color: var(--color-accent-amber); }
 
   .role-card + .role-card {
     border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
@@ -271,9 +283,17 @@ const roles = [
     font-weight: 400;
     line-height: 1;
     letter-spacing: -0.03em;
-    color: var(--color-text);
-    opacity: 0.15;
+    color: var(--color-accent-teal);
+    opacity: 0.25;
   }
+
+  .role-card:nth-child(2) .year-big { color: var(--color-accent-amber); }
+  .role-card:nth-child(3) .year-big { color: var(--color-accent-rust); }
+  .role-card:nth-child(4) .year-big { color: var(--color-accent-teal); }
+  .role-card:nth-child(5) .year-big { color: var(--color-accent-amber); }
+  .role-card:nth-child(6) .year-big { color: var(--color-accent-rust); }
+  .role-card:nth-child(7) .year-big { color: var(--color-accent-teal); }
+  .role-card:nth-child(8) .year-big { color: var(--color-accent-amber); }
 
   .year-range {
     font-family: 'DM Sans', sans-serif;
@@ -380,9 +400,17 @@ const roles = [
     width: 4px;
     height: 4px;
     border-radius: 50%;
-    background: var(--color-accent);
-    opacity: 0.6;
+    background: var(--color-accent-teal);
+    opacity: 0.7;
   }
+
+  .role-card:nth-child(2) .wins-list li::before { background: var(--color-accent-amber); }
+  .role-card:nth-child(3) .wins-list li::before { background: var(--color-accent-rust); }
+  .role-card:nth-child(4) .wins-list li::before { background: var(--color-accent-teal); }
+  .role-card:nth-child(5) .wins-list li::before { background: var(--color-accent-amber); }
+  .role-card:nth-child(6) .wins-list li::before { background: var(--color-accent-rust); }
+  .role-card:nth-child(7) .wins-list li::before { background: var(--color-accent-teal); }
+  .role-card:nth-child(8) .wins-list li::before { background: var(--color-accent-amber); }
 
   .page-footer {
     margin-top: var(--space-block-lg);

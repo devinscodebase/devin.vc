@@ -5,25 +5,26 @@
   let section;
 
   onMount(() => {
+    const tag = section.querySelector('.section-tag');
     const quote = section.querySelector('.about-quote');
     const border = section.querySelector('.about-border');
-    const footer = section.querySelector('.about-footer');
+    const disciplines = section.querySelectorAll('.discipline');
 
     inView(section, () => {
+      animate(tag, { opacity: [0, 1], y: [10, 0] }, {
+        duration: 0.5,
+        easing: [0.25, 1, 0.5, 1],
+      });
+
       animate(quote, { opacity: [0, 1], y: [50, 0] }, {
         duration: 1,
+        delay: 0.1,
         easing: [0.25, 1, 0.5, 1],
       });
 
       animate(border, { scaleY: [0, 1] }, {
         duration: 0.8,
         delay: 0.3,
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      animate(footer, { opacity: [0, 1], y: [20, 0] }, {
-        duration: 0.7,
-        delay: 0.6,
         easing: [0.25, 1, 0.5, 1],
       });
     }, { amount: 0.25 });
@@ -36,14 +37,15 @@
       <div class="about-border" aria-hidden="true"></div>
       <div class="about-quote" style="opacity: 0;">
         <p class="about-copy">
-          <span class="accent">A decade of building what matters.</span> Marketing that moves people. Operations that scale. Design that earns trust. GTM strategies that actually go to market. I work across disciplines because <span class="accent">the best results live at the intersections.</span>
+          <span class="accent">A decade of building what matters.</span> <span class="discipline teal">Marketing</span> that moves people. <span class="discipline amber">Operations</span> that scale. <span class="discipline rust">Design</span> that earns trust. <span class="discipline gold">GTM</span> strategies that actually go to market. I work across disciplines because <span class="accent">the best results live at the intersections.</span>
         </p>
       </div>
     </div>
 
-    <div class="about-footer" style="opacity: 0;">
-      <span class="label">01 / About</span>
-      <div class="rule" aria-hidden="true"></div>
+    <div class="section-tag" style="opacity: 0;">
+      <span class="tag-number">01</span>
+      <span class="tag-dash" aria-hidden="true"></span>
+      <span class="tag-label">About</span>
     </div>
   </div>
 </section>
@@ -76,7 +78,7 @@
     top: 0;
     bottom: 0;
     width: 2px;
-    background: var(--color-accent);
+    background: linear-gradient(180deg, var(--color-accent-teal), var(--color-accent), var(--color-accent-amber), var(--color-accent-rust));
     transform-origin: top;
   }
 
@@ -92,27 +94,42 @@
     color: var(--color-text);
   }
 
-  .about-footer {
+  .discipline {
+    transition: opacity 0.3s;
+  }
+
+  .discipline.teal { color: var(--color-accent-teal); }
+  .discipline.amber { color: var(--color-accent-amber); }
+  .discipline.rust { color: var(--color-accent-rust); }
+  .discipline.gold { color: var(--color-accent); }
+
+  .section-tag {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 0.65rem;
     margin-top: clamp(3rem, 6vw, 5rem);
   }
 
-  .label {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 400;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-    white-space: nowrap;
+  .tag-number {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1;
+    color: var(--color-accent-teal);
   }
 
-  .rule {
-    flex: 1;
+  .tag-dash {
+    width: 24px;
     height: 1px;
-    background: var(--color-text-muted);
-    opacity: 0.2;
+    background: linear-gradient(90deg, var(--color-accent-teal), transparent);
+  }
+
+  .tag-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
   }
 </style>

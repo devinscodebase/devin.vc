@@ -131,10 +131,12 @@
     animation: nav-enter 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
     background: transparent;
     border-bottom: 1px solid transparent;
-    transition: background 0.4s, border-color 0.4s, backdrop-filter 0.4s;
+    transition: background 0.4s, border-color 0.4s, backdrop-filter 0.4s, padding 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .navbar.scrolled {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
     background: color-mix(in oklab, var(--color-bg) 85%, transparent);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -356,6 +358,10 @@
     position: relative;
     top: -0.4em;
   }
+
+  .nav-link:nth-child(2) .nav-number { color: var(--color-accent-amber); }
+  .nav-link:nth-child(3) .nav-number { color: var(--color-accent-rust); }
+  .nav-link:nth-child(4) .nav-number { color: var(--color-accent-amber); }
 
   .nav-label {
     font-family: 'Instrument Serif', serif;
