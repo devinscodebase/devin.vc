@@ -140,7 +140,7 @@ import portrait from '../assets/gallery/portrait.jpg';
 <style>
   .about-page {
     min-height: 100dvh;
-    padding: clamp(8rem, 18vh, 12rem) clamp(1.5rem, 5vw, 3.5rem) clamp(4rem, 10vh, 8rem);
+    padding: var(--space-page-top) var(--space-page-x) var(--space-page-bottom);
     background: var(--color-bg);
   }
 
@@ -154,7 +154,7 @@ import portrait from '../assets/gallery/portrait.jpg';
     display: flex;
     align-items: flex-end;
     gap: clamp(2rem, 4vw, 3rem);
-    margin-bottom: clamp(4rem, 8vw, 6rem);
+    margin-bottom: var(--space-block-lg);
   }
 
   .hero-image-wrap {
@@ -191,7 +191,7 @@ import portrait from '../assets/gallery/portrait.jpg';
 
   /* Story */
   .story {
-    margin-bottom: clamp(4rem, 8vw, 6rem);
+    margin-bottom: var(--space-block-lg);
   }
 
   .story-text {
@@ -209,7 +209,7 @@ import portrait from '../assets/gallery/portrait.jpg';
 
   /* Convictions */
   .convictions {
-    margin-bottom: clamp(4rem, 8vw, 6rem);
+    margin-bottom: var(--space-block-lg);
   }
 
   .convictions-heading {
@@ -252,8 +252,8 @@ import portrait from '../assets/gallery/portrait.jpg';
 
   /* Skills */
   .skills {
-    margin-bottom: clamp(4rem, 8vw, 6rem);
-    padding-top: clamp(3rem, 6vw, 5rem);
+    margin-bottom: var(--space-block-lg);
+    padding-top: var(--space-block);
     border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
   }
 
@@ -270,7 +270,7 @@ import portrait from '../assets/gallery/portrait.jpg';
   .skills-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: clamp(1.5rem, 3vw, 2.5rem);
+    gap: var(--space-element);
   }
 
   .group-label {
@@ -302,7 +302,7 @@ import portrait from '../assets/gallery/portrait.jpg';
   /* CTA */
   .closing-cta {
     text-align: center;
-    padding: clamp(3rem, 6vw, 5rem) 0;
+    padding: var(--space-block) 0;
   }
 
   .cta-text {
@@ -328,7 +328,7 @@ import portrait from '../assets/gallery/portrait.jpg';
 
   /* Footer */
   .page-footer {
-    margin-top: clamp(2rem, 4vw, 3rem);
+    margin-top: var(--space-block-lg);
     padding-top: 2rem;
     border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
   }

@@ -189,7 +189,7 @@ const roles = [
 <style>
   .work-page {
     min-height: 100dvh;
-    padding: clamp(8rem, 18vh, 12rem) clamp(1.5rem, 5vw, 3.5rem) clamp(4rem, 10vh, 8rem);
+    padding: var(--space-page-top) var(--space-page-x) var(--space-page-bottom);
     background: var(--color-bg);
   }
 
@@ -199,7 +199,7 @@ const roles = [
   }
 
   .page-header {
-    margin-bottom: clamp(4rem, 8vw, 6rem);
+    margin-bottom: var(--space-block-lg);
   }
 
   .page-title {
@@ -225,7 +225,7 @@ const roles = [
     width: 48px;
     height: 1px;
     background: var(--color-accent);
-    margin-top: 2rem;
+    margin-top: clamp(1.5rem, 3vw, 2rem);
   }
 
   .roles {
@@ -257,7 +257,7 @@ const roles = [
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: clamp(1.5rem, 3vw, 2rem);
+    margin-bottom: var(--space-card);
   }
 
   .role-year {
@@ -386,7 +386,7 @@ const roles = [
   }
 
   .page-footer {
-    margin-top: clamp(4rem, 8vw, 6rem);
+    margin-top: var(--space-block-lg);
     padding-top: 2rem;
     border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
   }
