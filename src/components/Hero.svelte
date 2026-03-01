@@ -349,14 +349,17 @@
     text-decoration: none;
     margin-top: clamp(2.5rem, 5vw, 3.5rem);
     padding: 0.85rem 2.5rem;
+    border: 1px solid color-mix(in oklab, var(--color-accent) 60%, transparent);
     cursor: pointer;
     transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
                 transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .hero-cta:hover {
     background: var(--color-text);
+    border-color: var(--color-text);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
   }

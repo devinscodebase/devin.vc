@@ -130,7 +130,7 @@ const roles = [
             <li class="role-card" style={`--delay: ${i * 0.1}s`}>
               <div class="role-top">
                 <div class="role-year">
-                  <span class="year-big">{r.year}</span>
+                  <span class="year-big" aria-hidden="true">{r.year}</span>
                   <span class="year-range">{r.range}</span>
                 </div>
                 <div class="role-status">
@@ -352,7 +352,6 @@ const roles = [
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--color-text-muted);
-    opacity: 0.7;
   }
 
   .wins-list {

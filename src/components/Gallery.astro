@@ -18,19 +18,19 @@ const images = [
 
 <section class="gallery">
   <div class="gallery-grid" id="gallery-grid">
-    <div class="gallery-item item-1">
+    <div class="gallery-item item-1" role="button" tabindex="0" aria-label={images[0].alt}>
       <Image src={images[0].src} alt={images[0].alt} widths={images[0].widths} format="webp" quality={80} loading="lazy" />
     </div>
-    <div class="gallery-item item-2">
+    <div class="gallery-item item-2" role="button" tabindex="0" aria-label={images[1].alt}>
       <Image src={images[1].src} alt={images[1].alt} widths={images[1].widths} format="webp" quality={80} loading="lazy" />
     </div>
-    <div class="gallery-item item-3">
+    <div class="gallery-item item-3" role="button" tabindex="0" aria-label={images[2].alt}>
       <Image src={images[2].src} alt={images[2].alt} widths={images[2].widths} format="webp" quality={80} loading="lazy" />
     </div>
-    <div class="gallery-item item-4">
+    <div class="gallery-item item-4" role="button" tabindex="0" aria-label={images[3].alt}>
       <Image src={images[3].src} alt={images[3].alt} widths={images[3].widths} format="webp" quality={80} loading="lazy" />
     </div>
-    <div class="gallery-item item-5">
+    <div class="gallery-item item-5" role="button" tabindex="0" aria-label={images[4].alt}>
       <Image src={images[4].src} alt={images[4].alt} widths={images[4].widths} format="webp" quality={80} loading="lazy" />
     </div>
   </div>
@@ -58,6 +58,12 @@ const images = [
 
     // Lightbox
     items.forEach(item => {
+      item.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          item.click();
+        }
+      });
       item.addEventListener('click', () => {
         const img = item.querySelector('img');
         if (!img) return;
@@ -206,7 +212,7 @@ const images = [
     color: var(--color-text-muted);
     font-size: 2rem;
     cursor: pointer;
-    padding: 0.5rem;
+    padding: 1rem;
     line-height: 1;
     transition: color 0.2s;
   }

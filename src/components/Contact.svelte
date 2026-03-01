@@ -150,8 +150,7 @@
   }
 
   .link-dot {
-    color: var(--color-text-muted);
-    opacity: 0.3;
+    color: color-mix(in oklab, var(--color-text-muted) 40%, transparent);
   }
 
   .contact-footer {

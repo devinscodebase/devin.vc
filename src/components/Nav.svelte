@@ -138,7 +138,7 @@
     background: color-mix(in oklab, var(--color-bg) 85%, transparent);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 8%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
     pointer-events: auto;
   }
 
@@ -229,6 +229,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: opacity 0.3s;
+  }
+
+  .burger:hover {
+    opacity: 0.7;
   }
 
   .burger-lines {
@@ -346,7 +351,7 @@
     font-size: 0.7rem;
     letter-spacing: 0.15em;
     color: var(--color-accent);
-    opacity: 0.6;
+    opacity: 0.8;
     transition: opacity 0.3s;
     position: relative;
     top: -0.4em;

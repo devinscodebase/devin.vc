@@ -117,12 +117,10 @@ const currentPath = Astro.url.pathname;
     font-weight: 400;
     letter-spacing: 0.1em;
     color: var(--color-text-muted);
-    opacity: 0.5;
   }
 
   .footer-dot {
-    color: var(--color-text-muted);
-    opacity: 0.3;
+    color: color-mix(in oklab, var(--color-text-muted) 40%, transparent);
     font-size: 0.65rem;
   }
 
@@ -141,16 +139,13 @@ const currentPath = Astro.url.pathname;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.25rem 0;
+    padding: 0.75rem 0;
     color: var(--color-text-muted);
-    opacity: 0.5;
-    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .back-to-top:hover {
     color: var(--color-accent);
-    opacity: 1;
   }
 
   .top-label {

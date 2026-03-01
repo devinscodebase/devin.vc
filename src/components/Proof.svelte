@@ -78,8 +78,7 @@
   }
 
   .testimonial:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-sm);
   }
 
   .quote-mark {

@@ -226,12 +226,11 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
 
   .form-input:focus {
     border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 12%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 25%, transparent);
   }
 
   .form-input::placeholder {
     color: var(--color-text-muted);
-    opacity: 0.5;
   }
 
   .form-textarea {
@@ -256,15 +255,13 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     border: none;
     padding: 0.85rem 2rem;
     cursor: pointer;
-    transition: filter 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
                 box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     margin-top: 0.5rem;
     align-self: flex-start;
   }
 
   .form-submit:hover {
-    filter: brightness(1.1);
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
   }
@@ -325,8 +322,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   }
 
   .alt-dot {
-    color: var(--color-text-muted);
-    opacity: 0.3;
+    color: color-mix(in oklab, var(--color-text-muted) 40%, transparent);
   }
 
   /* Footer */

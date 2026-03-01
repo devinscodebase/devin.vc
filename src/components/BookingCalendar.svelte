@@ -385,7 +385,8 @@
   }
 
   .cal-day:hover:not(:disabled) {
-    border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+    border-color: var(--color-accent);
+    background: color-mix(in oklab, var(--color-accent) 8%, transparent);
   }
 
   .cal-day.today {
@@ -413,7 +414,6 @@
     font-family: 'DM Sans', sans-serif;
     font-size: 0.65rem;
     color: var(--color-text-muted);
-    opacity: 0.6;
     margin: 0;
   }
 
@@ -455,7 +455,8 @@
   }
 
   .slot:hover {
-    border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+    border-color: var(--color-accent);
+    background: color-mix(in oklab, var(--color-accent) 8%, transparent);
   }
 
   .slot.selected {
@@ -485,12 +486,11 @@
 
   .form-input:focus {
     border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 12%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 25%, transparent);
   }
 
   .form-input::placeholder {
     color: var(--color-text-muted);
-    opacity: 0.5;
   }
 
   .form-textarea {
@@ -511,14 +511,12 @@
     border: none;
     padding: 0.85rem 1.5rem;
     cursor: pointer;
-    transition: filter 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
                 box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     margin-top: 0.5rem;
   }
 
   .confirm-btn:hover {
-    filter: brightness(1.1);
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
   }

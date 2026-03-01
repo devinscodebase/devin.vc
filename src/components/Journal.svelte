@@ -294,7 +294,8 @@
     transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .post:hover .post-title {
+  .post:hover .post-title,
+  .post:focus-visible .post-title {
     color: var(--color-accent-amber);
   }
 
@@ -391,8 +392,8 @@
   }
 
   .newsletter-form:focus-within {
-    border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 12%, transparent);
+    border-color: color-mix(in oklab, var(--color-accent) 60%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 25%, transparent);
   }
 
   .newsletter-input {
@@ -408,7 +409,6 @@
 
   .newsletter-input::placeholder {
     color: var(--color-text-muted);
-    opacity: 0.5;
   }
 
   .newsletter-btn {
@@ -422,11 +422,13 @@
     padding: 0.75rem 1.5rem;
     border: none;
     cursor: pointer;
-    transition: filter 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .newsletter-btn:hover {
-    filter: brightness(1.1);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
   }
 
   .newsletter-btn:disabled {

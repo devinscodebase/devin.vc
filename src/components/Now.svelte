@@ -122,9 +122,8 @@
   }
 
   .project:hover {
-    transform: translateY(-4px);
     border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-md);
   }
 
   .project-top {
