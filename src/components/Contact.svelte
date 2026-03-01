@@ -13,40 +13,48 @@
 
     inView(section, () => {
       // Section tag
-      animate(tag, { opacity: [0, 1], y: [10, 0] }, {
-        duration: 0.5,
+      animate(tag, { opacity: [0, 1], y: [8, 0] }, {
+        duration: 0.35,
         easing: [0.25, 1, 0.5, 1],
       });
 
       // Heading scales up and fades in
       animate(heading, {
         opacity: [0, 1],
-        y: [25, 0],
-        scale: [0.96, 1],
+        y: [12, 0],
+        scale: [0.97, 1],
       }, {
-        duration: 1,
+        duration: 0.45,
         easing: [0.25, 1, 0.5, 1],
       });
 
       // Email button
-      animate(email, { opacity: [0, 1], y: [20, 0] }, {
-        duration: 0.7,
-        delay: 0.3,
+      animate(email, { opacity: [0, 1], y: [12, 0] }, {
+        duration: 0.4,
+        delay: 0.15,
         easing: [0.25, 1, 0.5, 1],
       });
 
       // Body text
-      animate(body, { opacity: [0, 1], y: [15, 0] }, {
-        duration: 0.7,
-        delay: 0.5,
+      animate(body, { opacity: [0, 1], y: [10, 0] }, {
+        duration: 0.4,
+        delay: 0.25,
         easing: [0.25, 1, 0.5, 1],
       });
 
       // Social links
       animate(links, { opacity: [0, 1] }, {
-        duration: 0.6,
-        delay: 0.65,
+        duration: 0.35,
+        delay: 0.32,
         easing: [0.25, 1, 0.5, 1],
+      });
+
+      // Spring hover on email CTA
+      email.addEventListener('mouseenter', () => {
+        animate(email, { scale: 1.04 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
+      });
+      email.addEventListener('mouseleave', () => {
+        animate(email, { scale: 1 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
       });
     }, { amount: 0.25 });
   });
@@ -109,9 +117,8 @@
     position: relative;
     overflow: hidden;
     z-index: 0;
-    transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .email::after {
@@ -121,14 +128,13 @@
     background: var(--color-accent-teal);
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: -1;
   }
 
   .email:hover {
     color: var(--color-bg);
     border-color: var(--color-accent-teal);
-    transform: translateY(-1px);
   }
 
   .email:hover::after {
@@ -158,7 +164,7 @@
     letter-spacing: 0.1em;
     color: var(--color-text-muted);
     text-decoration: none;
-    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .social-link:hover {

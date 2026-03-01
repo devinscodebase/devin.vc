@@ -63,11 +63,12 @@ const ogImage = post.ogImage
           </a>
           <div class="post-meta">
             <span class="post-tag">{post.tag}</span>
-            <span class="meta-sep" aria-hidden="true">/</span>
+            <span class="meta-sep" aria-hidden="true"></span>
             <time datetime={post.date!}>{formattedDate}</time>
           </div>
           <h1 class="post-title">{post.title}</h1>
           <p class="post-description">{post.description}</p>
+          <div class="title-rule" aria-hidden="true"></div>
         </header>
 
         {post.heroImage && (
@@ -93,10 +94,37 @@ const ogImage = post.ogImage
   </main>
 </Layout>
 
+<script>
+  import { animate, inView } from 'motion';
+
+  const header = document.querySelector('.post-header');
+  if (header) {
+    header.style.opacity = '0';
+    inView(header, () => {
+      animate(header, { opacity: [0, 1], y: [12, 0] }, {
+        duration: 0.4,
+        easing: [0.25, 1, 0.5, 1],
+      });
+    }, { amount: 0.3 });
+  }
+
+  const hero = document.querySelector('.hero-image');
+  if (hero) {
+    hero.style.opacity = '0';
+    inView(hero, () => {
+      animate(hero, { opacity: [0, 1] }, {
+        duration: 0.35,
+        delay: 0.1,
+        easing: [0.25, 1, 0.5, 1],
+      });
+    }, { amount: 0.2 });
+  }
+</script>
+
 <style>
   .post {
     min-height: 100dvh;
-    padding: clamp(8rem, 18vh, 12rem) clamp(1.5rem, 5vw, 3.5rem) clamp(4rem, 10vh, 8rem);
+    padding: var(--space-page-top) var(--space-page-x) var(--space-page-bottom);
     background: var(--color-bg);
   }
 
@@ -116,7 +144,7 @@ const ogImage = post.ogImage
     text-transform: uppercase;
     color: var(--color-text-muted);
     text-decoration: none;
-    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .back-link:hover {
@@ -124,7 +152,7 @@ const ogImage = post.ogImage
   }
 
   .back-link svg {
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .back-link:hover svg {
@@ -154,25 +182,35 @@ const ogImage = post.ogImage
   }
 
   .meta-sep {
-    opacity: 0.3;
+    width: 24px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-accent-teal), transparent);
   }
 
   .post-title {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-size: clamp(2.2rem, 5.5vw, 3.5rem);
     font-weight: 400;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
     color: var(--color-text);
     margin: 1rem 0 0.75rem;
   }
 
   .post-description {
-    font-family: 'DM Sans', sans-serif;
-    font-size: clamp(0.95rem, 1.3vw, 1.1rem);
-    line-height: 1.6;
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    line-height: 1.55;
     color: var(--color-text-muted);
     margin: 0;
+  }
+
+  .title-rule {
+    width: 48px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-accent-teal), var(--color-accent-amber));
+    margin-top: clamp(1.5rem, 3vw, 2rem);
   }
 
   .hero-image {
@@ -183,7 +221,6 @@ const ogImage = post.ogImage
     width: 100%;
     height: auto;
     display: block;
-    border-radius: 4px;
     aspect-ratio: 16 / 9;
     object-fit: cover;
   }
@@ -198,21 +235,21 @@ const ogImage = post.ogImage
 
   .prose :global(h2) {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+    font-size: clamp(1.5rem, 2.8vw, 2rem);
     font-weight: 400;
     line-height: 1.2;
     letter-spacing: -0.015em;
     color: var(--color-text);
-    margin: 2.5rem 0 1rem;
+    margin: 3rem 0 1rem;
   }
 
   .prose :global(h3) {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(1.15rem, 1.8vw, 1.35rem);
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
     font-weight: 400;
     line-height: 1.3;
     color: var(--color-text);
-    margin: 2rem 0 0.75rem;
+    margin: 2.5rem 0 0.75rem;
   }
 
   .prose :global(p) {
@@ -233,7 +270,7 @@ const ogImage = post.ogImage
     text-decoration: underline;
     text-underline-offset: 3px;
     text-decoration-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
-    transition: text-decoration-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: text-decoration-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .prose :global(a:hover) {
@@ -250,19 +287,26 @@ const ogImage = post.ogImage
     margin-bottom: 0.5rem;
   }
 
+  .prose :global(li::marker) {
+    color: var(--color-accent-teal);
+  }
+
   .prose :global(blockquote) {
     border-left: 2px solid var(--color-accent-teal);
     padding-left: 1.5rem;
     margin: 2rem 0;
     color: var(--color-text-muted);
+    font-family: 'Instrument Serif', serif;
     font-style: italic;
+    font-size: 1.1em;
+    line-height: 1.6;
   }
 
   .prose :global(hr) {
     border: none;
     height: 1px;
-    background: color-mix(in oklab, var(--color-text-muted) 20%, transparent);
-    margin: 2.5rem 0;
+    background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-text-muted) 20%, transparent) 20%, color-mix(in oklab, var(--color-text-muted) 20%, transparent) 80%, transparent);
+    margin: 3rem 0;
   }
 
   .prose :global(code) {
@@ -279,6 +323,7 @@ const ogImage = post.ogImage
     border-radius: 6px;
     overflow-x: auto;
     margin: 1.5rem 0;
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
   }
 
   .prose :global(pre code) {
@@ -289,7 +334,6 @@ const ogImage = post.ogImage
   .prose :global(img) {
     max-width: 100%;
     height: auto;
-    border-radius: 4px;
     margin: 2rem 0;
   }
 

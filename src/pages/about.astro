@@ -147,9 +147,9 @@ import portrait from '../assets/gallery/portrait.jpg';
 
   sections.forEach((el, i) => {
     inView(el, () => {
-      animate(el, { opacity: [0, 1], y: [30, 0] }, {
-        duration: 0.8,
-        delay: i === 0 ? 0 : 0.1,
+      animate(el, { opacity: [0, 1], y: [12, 0] }, {
+        duration: 0.4,
+        delay: i === 0 ? 0 : 0.05,
         easing: [0.25, 1, 0.5, 1],
       });
     }, { amount: 0.15 });
@@ -161,13 +161,27 @@ import portrait from '../assets/gallery/portrait.jpg';
   const convGrid = document.querySelector('.conviction-grid');
   if (convGrid) {
     inView(convGrid, () => {
-      animate(convictions, { opacity: [0, 1], y: [25, 0] }, {
-        duration: 0.6,
-        delay: stagger(0.1),
+      animate(convictions, { opacity: [0, 1], y: [12, 0] }, {
+        duration: 0.35,
+        delay: stagger(0.05),
         easing: [0.25, 1, 0.5, 1],
       });
     }, { amount: 0.2 });
   }
+
+  // Spring hover on conviction cards — lift + shift title
+  convictions.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      const title = card.querySelector('.conviction-title');
+      animate(card, { y: -4 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
+      if (title) animate(title, { x: 3 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
+    });
+    card.addEventListener('mouseleave', () => {
+      const title = card.querySelector('.conviction-title');
+      animate(card, { y: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
+      if (title) animate(title, { x: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
+    });
+  });
 
   // Stagger skill groups
   const skillGroups = document.querySelectorAll('.skill-group');
@@ -175,9 +189,9 @@ import portrait from '../assets/gallery/portrait.jpg';
   const skillsGrid = document.querySelector('.skills-grid');
   if (skillsGrid) {
     inView(skillsGrid, () => {
-      animate(skillGroups, { opacity: [0, 1], y: [20, 0] }, {
-        duration: 0.6,
-        delay: stagger(0.08),
+      animate(skillGroups, { opacity: [0, 1], y: [12, 0] }, {
+        duration: 0.35,
+        delay: stagger(0.05),
         easing: [0.25, 1, 0.5, 1],
       });
     }, { amount: 0.2 });
@@ -374,19 +388,12 @@ import portrait from '../assets/gallery/portrait.jpg';
     padding: var(--space-card);
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
     border-top: 2px solid color-mix(in oklab, var(--color-accent-teal) 30%, transparent);
-    transition: border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-top-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .conviction:nth-child(2) { border-top-color: color-mix(in oklab, var(--color-accent-amber) 30%, transparent); }
   .conviction:nth-child(3) { border-top-color: color-mix(in oklab, var(--color-accent-rust) 30%, transparent); }
   .conviction:nth-child(4) { border-top-color: color-mix(in oklab, var(--color-accent) 30%, transparent); }
-
-  .conviction:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
-  }
 
   .conviction:nth-child(1):hover { border-top-color: var(--color-accent-teal); }
   .conviction:nth-child(2):hover { border-top-color: var(--color-accent-amber); }
@@ -449,7 +456,7 @@ import portrait from '../assets/gallery/portrait.jpg';
     padding: var(--space-card);
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
     border-top: 2px solid color-mix(in oklab, var(--color-accent-teal) 25%, transparent);
-    transition: border-top-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-top-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .skill-group:nth-child(2) { border-top-color: color-mix(in oklab, var(--color-accent-amber) 25%, transparent); }
@@ -512,7 +519,7 @@ import portrait from '../assets/gallery/portrait.jpg';
     text-decoration: underline;
     text-underline-offset: 3px;
     text-decoration-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
-    transition: text-decoration-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: text-decoration-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .cta-link:hover {
@@ -537,7 +544,7 @@ import portrait from '../assets/gallery/portrait.jpg';
     text-transform: uppercase;
     color: var(--color-text-muted);
     text-decoration: none;
-    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .back-link:hover {
@@ -545,7 +552,7 @@ import portrait from '../assets/gallery/portrait.jpg';
   }
 
   .back-link svg {
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .back-link:hover svg {

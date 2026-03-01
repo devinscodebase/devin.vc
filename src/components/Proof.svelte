@@ -6,19 +6,34 @@
 
   let section;
 
+  // Spring hover — lift card + emphasize quote mark
+  function cardEnter(e) {
+    const card = e.currentTarget;
+    const mark = card.querySelector('.quote-mark');
+    animate(card, { y: -3 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
+    if (mark) animate(mark, { opacity: 0.5, scale: 1.08 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
+  }
+
+  function cardLeave(e) {
+    const card = e.currentTarget;
+    const mark = card.querySelector('.quote-mark');
+    animate(card, { y: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
+    if (mark) animate(mark, { opacity: 0.25, scale: 1 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
+  }
+
   onMount(() => {
     const tag = section.querySelector('.section-tag');
     const cards = section.querySelectorAll('.testimonial');
 
     inView(section, () => {
-      animate(tag, { opacity: [0, 1], y: [10, 0] }, {
-        duration: 0.5,
+      animate(tag, { opacity: [0, 1], y: [8, 0] }, {
+        duration: 0.35,
         easing: [0.25, 1, 0.5, 1],
       });
 
-      animate(cards, { opacity: [0, 1], y: [35, 0] }, {
-        duration: 0.7,
-        delay: stagger(0.15, { start: 0.15 }),
+      animate(cards, { opacity: [0, 1], y: [15, 0] }, {
+        duration: 0.4,
+        delay: stagger(0.06, { start: 0.08 }),
         easing: [0.25, 1, 0.5, 1],
       });
     }, { amount: 0.2 });
@@ -31,7 +46,7 @@
     {#if testimonials.length > 0}
       <div class="testimonials">
         {#each testimonials as t}
-          <blockquote class="testimonial" style="opacity: 0;">
+          <blockquote class="testimonial" style="opacity: 0;" onmouseenter={cardEnter} onmouseleave={cardLeave}>
             <span class="quote-mark" aria-hidden="true">&ldquo;</span>
             <p class="quote-text">{t.quote}</p>
             <cite class="attribution">
@@ -108,17 +123,12 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    transition: border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .testimonial:nth-child(1) { border-color: color-mix(in oklab, var(--color-accent-teal) 25%, transparent); }
   .testimonial:nth-child(2) { border-color: color-mix(in oklab, var(--color-accent-amber) 25%, transparent); }
   .testimonial:nth-child(3) { border-color: color-mix(in oklab, var(--color-accent-rust) 25%, transparent); }
-
-  .testimonial:hover {
-    box-shadow: var(--shadow-sm);
-  }
 
   .testimonial:nth-child(1):hover { border-color: var(--color-accent-teal); }
   .testimonial:nth-child(2):hover { border-color: var(--color-accent-amber); }

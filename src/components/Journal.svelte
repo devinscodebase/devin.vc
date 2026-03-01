@@ -43,6 +43,21 @@
     return tag.charAt(0).toUpperCase() + tag.slice(1);
   }
 
+  // Spring hover — lift card + shift title
+  function postEnter(e) {
+    const card = e.currentTarget;
+    const title = card.querySelector('.post-title');
+    animate(card, { y: -4 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
+    if (title) animate(title, { x: 4 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
+  }
+
+  function postLeave(e) {
+    const card = e.currentTarget;
+    const title = card.querySelector('.post-title');
+    animate(card, { y: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
+    if (title) animate(title, { x: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
+  }
+
   onMount(() => {
     const tag = section.querySelector('.section-tag');
     const header = section.querySelector('.journal-header');
@@ -51,46 +66,46 @@
     const stackEls = section.querySelectorAll('.post-stack .post');
 
     inView(section, () => {
-      animate(tag, { opacity: [0, 1], y: [10, 0] }, {
-        duration: 0.5,
+      animate(tag, { opacity: [0, 1], y: [8, 0] }, {
+        duration: 0.35,
         easing: [0.25, 1, 0.5, 1],
       });
 
-      animate(header, { opacity: [0, 1], y: [25, 0] }, {
-        duration: 0.8,
-        delay: 0.1,
+      animate(header, { opacity: [0, 1], y: [12, 0] }, {
+        duration: 0.4,
+        delay: 0.05,
         easing: [0.25, 1, 0.5, 1],
       });
 
       if (featured) {
-        animate(featured, { opacity: [0, 1], y: [40, 0] }, {
-          duration: 0.8,
-          delay: 0.2,
+        animate(featured, { opacity: [0, 1], y: [15, 0] }, {
+          duration: 0.4,
+          delay: 0.1,
           easing: [0.25, 1, 0.5, 1],
         });
       }
 
       if (accentBar) {
         animate(accentBar, { scaleX: [0, 1] }, {
-          duration: 0.6,
-          delay: 0.7,
+          duration: 0.35,
+          delay: 0.35,
           easing: [0.25, 1, 0.5, 1],
         });
       }
 
       if (stackEls.length) {
-        animate(stackEls, { opacity: [0, 1], y: [35, 0] }, {
-          duration: 0.7,
-          delay: stagger(0.15, { start: 0.35 }),
+        animate(stackEls, { opacity: [0, 1], y: [15, 0] }, {
+          duration: 0.4,
+          delay: stagger(0.06, { start: 0.15 }),
           easing: [0.25, 1, 0.5, 1],
         });
       }
 
       const newsletter = section.querySelector('.newsletter');
       if (newsletter) {
-        animate(newsletter, { opacity: [0, 1], y: [20, 0] }, {
-          duration: 0.7,
-          delay: 0.6,
+        animate(newsletter, { opacity: [0, 1], y: [12, 0] }, {
+          duration: 0.4,
+          delay: 0.3,
           easing: [0.25, 1, 0.5, 1],
         });
       }
@@ -125,7 +140,7 @@
     {#if posts.length > 0}
       <div class="posts">
         {#if featuredPost}
-          <a href={`/journal/${featuredPost.slug}`} class="post featured" style="opacity: 0;">
+          <a href={`/journal/${featuredPost.slug}`} class="post featured" style="opacity: 0;" onmouseenter={postEnter} onmouseleave={postLeave}>
             <div class="post-accent" aria-hidden="true" style="transform: scaleX(0); transform-origin: left;"></div>
             <span class="post-tag">{capitalizeTag(featuredPost.tag)}</span>
             <h3 class="post-title">{featuredPost.title}</h3>
@@ -137,7 +152,7 @@
         {#if stackPosts.length > 0}
           <div class="post-stack">
             {#each stackPosts as post}
-              <a href={`/journal/${post.slug}`} class="post" style="opacity: 0;">
+              <a href={`/journal/${post.slug}`} class="post" style="opacity: 0;" onmouseenter={postEnter} onmouseleave={postLeave}>
                 <span class="post-tag">{capitalizeTag(post.tag)}</span>
                 <h3 class="post-title">{post.title}</h3>
                 <p class="post-excerpt">{post.description}</p>
@@ -265,7 +280,7 @@
     text-transform: uppercase;
     color: var(--color-text-muted);
     text-decoration: none;
-    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .view-all:hover {
@@ -273,7 +288,7 @@
   }
 
   .view-all svg {
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .view-all:hover svg {
@@ -299,12 +314,9 @@
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
     border-top: 2px solid color-mix(in oklab, var(--color-accent-teal) 20%, transparent);
     text-decoration: none;
-    box-shadow: var(--shadow-sm);
     position: relative;
     overflow: hidden;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* Cursor-following spotlight */
@@ -318,7 +330,7 @@
       transparent 40%
     );
     opacity: 0;
-    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none;
   }
 
@@ -327,10 +339,8 @@
   }
 
   .post:hover {
-    transform: translateY(-3px);
     border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
     border-top-color: var(--color-accent-teal);
-    box-shadow: var(--shadow-lg);
   }
 
   .post.featured {
@@ -368,7 +378,7 @@
     line-height: 1.2;
     color: var(--color-text);
     margin: 0 0 0.75rem;
-    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     z-index: 1;
   }
@@ -489,7 +499,7 @@
     font-size: 0.88rem;
     color: var(--color-text);
     outline: none;
-    transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .input-line {
@@ -509,7 +519,7 @@
   .newsletter-input::placeholder {
     color: var(--color-text-muted);
     opacity: 0.5;
-    transition: opacity 0.3s;
+    transition: opacity 0.2s;
   }
 
   .newsletter-input:focus::placeholder {
@@ -528,8 +538,8 @@
     border-radius: 50%;
     color: var(--color-bg);
     cursor: pointer;
-    transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .newsletter-btn:hover {

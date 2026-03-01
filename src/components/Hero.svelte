@@ -49,53 +49,61 @@
 
     // Kinetic bg fades in
     animate(kineticEl, { opacity: [0, 1] }, {
-      duration: 0.6,
+      duration: 0.4,
       easing: [0.25, 1, 0.5, 1],
     });
 
     // Name lines stagger in
     animate(nameLines, {
       opacity: [0, 1],
-      y: [30, 0],
+      y: [15, 0],
     }, {
-      duration: 0.5,
-      delay: stagger(0.1, { start: 0.05 }),
+      duration: 0.35,
+      delay: stagger(0.05, { start: 0.03 }),
       easing: [0.25, 1, 0.5, 1],
     });
 
     // Divider expands
     animate(divider, { width: ['0px', '72px'] }, {
-      duration: 0.4,
-      delay: 0.25,
+      duration: 0.3,
+      delay: 0.12,
       easing: [0.25, 1, 0.5, 1],
     });
 
     // Tagline
-    animate(tagline, { opacity: [0, 1], y: [12, 0] }, {
-      duration: 0.45,
-      delay: 0.35,
+    animate(tagline, { opacity: [0, 1], y: [10, 0] }, {
+      duration: 0.35,
+      delay: 0.18,
       easing: [0.25, 1, 0.5, 1],
     });
 
     // Descriptors
-    animate(descriptors, { opacity: [0, 1], y: [10, 0] }, {
-      duration: 0.4,
-      delay: 0.45,
+    animate(descriptors, { opacity: [0, 1], y: [8, 0] }, {
+      duration: 0.3,
+      delay: 0.25,
       easing: [0.25, 1, 0.5, 1],
     });
 
     // CTA
-    animate(heroCta, { opacity: [0, 1], y: [10, 0] }, {
-      duration: 0.4,
-      delay: 0.55,
+    animate(heroCta, { opacity: [0, 1], y: [8, 0] }, {
+      duration: 0.3,
+      delay: 0.32,
       easing: [0.25, 1, 0.5, 1],
     });
 
     // Scroll indicator
     animate(scrollInd, { opacity: [0, 1] }, {
-      duration: 0.4,
-      delay: 0.7,
+      duration: 0.3,
+      delay: 0.4,
       easing: [0.25, 1, 0.5, 1],
+    });
+
+    // Spring hover on CTA
+    heroCta.addEventListener('mouseenter', () => {
+      animate(heroCta, { scale: 1.04 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
+    });
+    heroCta.addEventListener('mouseleave', () => {
+      animate(heroCta, { scale: 1 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
     });
 
     return () => { if (rafId) cancelAnimationFrame(rafId); };
@@ -354,15 +362,13 @@
     padding: 0.85rem 2.5rem;
     border: 1px solid var(--color-accent);
     cursor: pointer;
-    transition: background-position 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-position 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .hero-cta:hover {
     background-position: 0% 0;
     border-color: var(--color-accent-teal);
-    transform: translateY(-1px);
   }
 
   .scroll-fade {

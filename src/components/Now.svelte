@@ -4,6 +4,21 @@
 
   let section;
 
+  // Spring hover — lift card + shift title
+  function cardEnter(e) {
+    const card = e.currentTarget;
+    const name = card.querySelector('.project-name');
+    animate(card, { y: -4 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
+    if (name) animate(name, { x: 4 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
+  }
+
+  function cardLeave(e) {
+    const card = e.currentTarget;
+    const name = card.querySelector('.project-name');
+    animate(card, { y: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
+    if (name) animate(name, { x: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
+  }
+
   onMount(() => {
     const tag = section.querySelector('.section-tag');
     const heading = section.querySelector('.section-heading');
@@ -11,22 +26,22 @@
 
     inView(section, () => {
       // Section tag
-      animate(tag, { opacity: [0, 1], y: [10, 0] }, {
-        duration: 0.5,
+      animate(tag, { opacity: [0, 1], y: [8, 0] }, {
+        duration: 0.35,
         easing: [0.25, 1, 0.5, 1],
       });
 
       // Heading
-      animate(heading, { opacity: [0, 1], y: [30, 0] }, {
-        duration: 0.8,
-        delay: 0.1,
+      animate(heading, { opacity: [0, 1], y: [12, 0] }, {
+        duration: 0.4,
+        delay: 0.05,
         easing: [0.25, 1, 0.5, 1],
       });
 
       // Cards stagger in
-      animate(cards, { opacity: [0, 1], y: [45, 0] }, {
-        duration: 0.8,
-        delay: stagger(0.15, { start: 0.25 }),
+      animate(cards, { opacity: [0, 1], y: [15, 0] }, {
+        duration: 0.4,
+        delay: stagger(0.06, { start: 0.1 }),
         easing: [0.25, 1, 0.5, 1],
       });
     }, { amount: 0.2 });
@@ -48,7 +63,7 @@
     <h2 class="section-heading" style="opacity: 0;">What I'm Working On</h2>
 
     <div class="projects">
-      <article class="project" style="opacity: 0;">
+      <article class="project" style="opacity: 0;" onmouseenter={cardEnter} onmouseleave={cardLeave}>
         <div class="project-top">
           <span class="project-number">01</span>
           <div class="project-header">
@@ -60,7 +75,7 @@
         <p class="project-desc">Running marketing and operations across the Andreou brand portfolio and Bitmern Mining. Leading a team of 9 as second-in-command in the Web3 and crypto space.</p>
       </article>
 
-      <article class="project" style="opacity: 0;">
+      <article class="project" style="opacity: 0;" onmouseenter={cardEnter} onmouseleave={cardLeave}>
         <div class="project-top">
           <span class="project-number">02</span>
           <div class="project-header">
@@ -72,7 +87,7 @@
         <p class="project-desc">A work management platform for small teams. Consolidates chats, tasks, CRM, marketing, G-Suite, and more into one place — delivering everything your team needs at a fraction of the cost of running them all separately.</p>
       </article>
 
-      <article class="project" style="opacity: 0;">
+      <article class="project" style="opacity: 0;" onmouseenter={cardEnter} onmouseleave={cardLeave}>
         <div class="project-top">
           <span class="project-number">03</span>
           <div class="project-header">
@@ -158,11 +173,9 @@
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
     display: flex;
     flex-direction: column;
-    box-shadow: var(--shadow-sm);
     position: relative;
     overflow: hidden;
-    transition: border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* Cursor-following spotlight */
@@ -176,7 +189,7 @@
       transparent 40%
     );
     opacity: 0;
-    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none;
   }
 
@@ -202,7 +215,6 @@
 
   .project:hover {
     border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
-    box-shadow: var(--shadow-md);
   }
 
   /* Status + number row */

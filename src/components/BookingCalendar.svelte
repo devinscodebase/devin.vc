@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { animate } from 'motion';
 
   let step = $state(1); // 1 = date, 2 = time, 3 = confirm
   let selectedDate = $state(null);
@@ -17,6 +18,14 @@
 
   const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+  // Spring hover on confirm button
+  function btnEnter(e) {
+    animate(e.currentTarget, { scale: 1.04 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
+  }
+  function btnLeave(e) {
+    animate(e.currentTarget, { scale: 1 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
+  }
 
   onMount(() => {
     timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -251,7 +260,7 @@
         <input type="text" bind:value={name} placeholder="Name" required class="form-input" aria-label="Your name" />
         <input type="email" bind:value={email} placeholder="Email" required class="form-input" aria-label="Your email address" />
         <textarea bind:value={notes} placeholder="Anything I should know? (optional)" class="form-input form-textarea" rows="3" aria-label="Additional notes"></textarea>
-        <button type="submit" class="confirm-btn" disabled={bookingStatus === 'submitting'}>
+        <button type="submit" class="confirm-btn" disabled={bookingStatus === 'submitting'} onmouseenter={btnEnter} onmouseleave={btnLeave}>
           {#if bookingStatus === 'submitting'}
             <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
           {:else}
@@ -305,7 +314,7 @@
     cursor: pointer;
     padding: 0;
     margin-bottom: 1.25rem;
-    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .back-btn:hover {
@@ -317,7 +326,7 @@
   }
 
   .back-btn svg {
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* Calendar */
@@ -489,10 +498,10 @@
     border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 20%, transparent);
     padding: 0.75rem 0;
     outline: none;
-    transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                border-width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                background 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                border-width 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .form-input:focus {
@@ -504,7 +513,7 @@
 
   .form-input::placeholder {
     color: var(--color-text-muted);
-    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .form-input:focus::placeholder {
@@ -538,16 +547,14 @@
     border: 1px solid var(--color-accent);
     padding: 0.85rem 1.5rem;
     cursor: pointer;
-    transition: background-position 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-position 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     margin-top: 0.5rem;
   }
 
   .confirm-btn:hover {
     background-position: 0% 0;
     border-color: var(--color-accent-teal);
-    transform: translateY(-1px);
   }
 
   .confirm-btn:disabled {
