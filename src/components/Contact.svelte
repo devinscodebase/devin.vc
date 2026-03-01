@@ -69,7 +69,7 @@
 
     <div class="contact-footer" style="opacity: 0;">
       <div class="rule" aria-hidden="true"></div>
-      <span class="label">05 / Contact</span>
+      <span class="label">06 / Contact</span>
       <div class="rule" aria-hidden="true"></div>
     </div>
   </div>

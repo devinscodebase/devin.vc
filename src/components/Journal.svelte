@@ -5,6 +5,29 @@
   let { posts = [] } = $props();
 
   let section;
+  let email = $state('');
+  let status = $state('idle');
+  let errorMsg = $state('');
+
+  async function subscribe(e) {
+    e.preventDefault();
+    status = 'submitting';
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Something went wrong');
+      }
+      status = 'success';
+    } catch (err) {
+      errorMsg = err.message;
+      status = 'error';
+    }
+  }
 
   // Separate featured post and stack posts
   const featuredPost = $derived(posts.find(p => p.featured) || posts[0]);
@@ -57,6 +80,15 @@
         });
       }
 
+      const newsletter = section.querySelector('.newsletter');
+      if (newsletter) {
+        animate(newsletter, { opacity: [0, 1], y: [20, 0] }, {
+          duration: 0.7,
+          delay: 0.6,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }
+
       animate(footer, { opacity: [0, 1], y: [15, 0] }, {
         duration: 0.6,
         delay: 0.8,
@@ -105,8 +137,34 @@
       </div>
     {/if}
 
+    <div class="newsletter" style="opacity: 0;">
+      <div class="newsletter-rule" aria-hidden="true"></div>
+      {#if status === 'success'}
+        <p class="newsletter-success">You're in — check your inbox.</p>
+      {:else}
+        <h3 class="newsletter-heading">Get essays like these in your inbox</h3>
+        <p class="newsletter-pitch">Occasional essays on building, leading, and craft. No spam.</p>
+        <form class="newsletter-form" onsubmit={subscribe}>
+          <input
+            type="email"
+            bind:value={email}
+            placeholder="your@email.com"
+            required
+            class="newsletter-input"
+            disabled={status === 'submitting'}
+          />
+          <button type="submit" class="newsletter-btn" disabled={status === 'submitting'}>
+            {status === 'submitting' ? '...' : 'Subscribe'}
+          </button>
+        </form>
+        {#if status === 'error'}
+          <p class="newsletter-error">{errorMsg}</p>
+        {/if}
+      {/if}
+    </div>
+
     <div class="journal-footer" style="opacity: 0;">
-      <span class="label">04 / Journal</span>
+      <span class="label">05 / Journal</span>
       <div class="rule" aria-hidden="true"></div>
     </div>
   </div>
@@ -285,6 +343,116 @@
     height: 1px;
     background: var(--color-text-muted);
     opacity: 0.2;
+  }
+
+  .newsletter {
+    margin-top: clamp(3rem, 6vw, 5rem);
+    text-align: center;
+  }
+
+  .newsletter-rule {
+    height: 1px;
+    background: color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .newsletter-heading {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--color-text);
+    margin: 0 0 0.5rem;
+  }
+
+  .newsletter-pitch {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.8rem, 1.1vw, 0.88rem);
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    margin: 0 0 1.5rem;
+  }
+
+  .newsletter-form {
+    display: flex;
+    gap: 0;
+    max-width: 400px;
+    margin: 0 auto;
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+    transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .newsletter-form:focus-within {
+    border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+  }
+
+  .newsletter-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 0.75rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--color-text);
+    outline: none;
+  }
+
+  .newsletter-input::placeholder {
+    color: var(--color-text-muted);
+    opacity: 0.5;
+  }
+
+  .newsletter-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    background: var(--color-accent);
+    color: var(--color-bg);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    cursor: pointer;
+    transition: filter 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .newsletter-btn:hover {
+    filter: brightness(1.1);
+  }
+
+  .newsletter-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .newsletter-success {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--color-accent);
+    font-weight: 400;
+    margin: 0;
+  }
+
+  .newsletter-error {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    color: #c47c7c;
+    margin-top: 0.75rem;
+  }
+
+  @media (max-width: 480px) {
+    .newsletter-form {
+      flex-direction: column;
+      border: none;
+    }
+
+    .newsletter-input {
+      border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+    }
+
+    .newsletter-btn {
+      padding: 0.85rem 1.5rem;
+    }
   }
 
   @media (max-width: 640px) {
