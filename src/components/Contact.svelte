@@ -78,7 +78,7 @@
 <style>
   .contact {
     position: relative;
-    padding: clamp(10rem, 24vh, 18rem) clamp(1.5rem, 5vw, 3.5rem);
+    padding: var(--space-section) var(--space-page-x);
     background: var(--color-bg);
     text-align: center;
   }
@@ -98,7 +98,7 @@
     line-height: 1.05;
     letter-spacing: -0.03em;
     color: var(--color-text);
-    margin: 0 0 clamp(1.5rem, 3vw, 2.5rem);
+    margin: 0 0 var(--space-element);
   }
 
   .email {
@@ -132,7 +132,7 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-top: clamp(1.5rem, 3vw, 2rem);
+    margin-top: var(--space-card);
   }
 
   .social-link {
@@ -158,7 +158,7 @@
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    margin-top: clamp(5rem, 10vw, 8rem);
+    margin-top: var(--space-block-lg);
     width: 100%;
   }
 
