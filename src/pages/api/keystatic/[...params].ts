@@ -5,14 +5,16 @@ import keystaticConfig from '../../../../keystatic.config';
 export const prerender = false;
 
 export const ALL = async (ctx: APIContext) => {
-  // Debug: test the token exchange directly (hit /api/keystatic/debug?code=XXX)
+  // Debug: test the token exchange directly
+  // Step 1: visit /api/keystatic/debug — redirects to GitHub using the app's default callback
+  // Step 2: after GitHub redirects back to the registered callback, grab the ?code= from the URL
+  // Step 3: visit /api/keystatic/debug?code=THE_CODE to test the token exchange
   if (ctx.url.pathname.endsWith('/debug')) {
     const code = ctx.url.searchParams.get('code');
     if (!code) {
-      // Redirect to GitHub to get a fresh code
+      // Redirect to GitHub — no redirect_uri so GitHub uses the app's registered callback
       const loginUrl = new URL('https://github.com/login/oauth/authorize');
       loginUrl.searchParams.set('client_id', process.env.KEYSTATIC_GITHUB_CLIENT_ID!);
-      loginUrl.searchParams.set('redirect_uri', 'https://www.devin.vc/api/keystatic/debug');
       return Response.redirect(loginUrl.toString());
     }
     // Try the token exchange
