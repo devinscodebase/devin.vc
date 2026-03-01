@@ -1,0 +1,357 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BookingCalendar from '../components/BookingCalendar.svelte';
+---
+
+<Layout title="Contact — Devin Alexander" description="Get in touch about consulting, collaboration, or interesting problems worth solving.">
+  <main>
+    <section class="contact-page">
+      <div class="contact-inner">
+        <header class="page-header">
+          <h1 class="page-title">Let's talk</h1>
+          <p class="page-subtitle">Whether it's consulting, collaboration, or an interesting problem worth solving — I'd love to hear from you.</p>
+          <div class="header-rule" aria-hidden="true"></div>
+        </header>
+
+        <div class="contact-grid">
+          <div class="contact-form-wrap">
+            <h2 class="section-label">Send a message</h2>
+            <form class="contact-form" id="contact-form">
+              <div class="form-field">
+                <input type="text" name="name" placeholder="Name" required class="form-input" />
+              </div>
+              <div class="form-field">
+                <input type="email" name="email" placeholder="Email" required class="form-input" />
+              </div>
+              <div class="form-field">
+                <textarea name="message" placeholder="What's on your mind?" required class="form-input form-textarea" rows="5"></textarea>
+              </div>
+              <button type="submit" class="form-submit" id="form-submit">Send message</button>
+              <p class="form-status" id="form-status" aria-live="polite"></p>
+            </form>
+          </div>
+
+          <div class="booking-wrap">
+            <BookingCalendar client:load />
+          </div>
+        </div>
+
+        <div class="alt-contact">
+          <p class="alt-text">Or reach out directly —</p>
+          <div class="alt-links">
+            <a href="mailto:hello@devin.vc" class="alt-link">hello@devin.vc</a>
+            <span class="alt-dot" aria-hidden="true">&middot;</span>
+            <a href="https://linkedin.com" target="_blank" rel="noopener" class="alt-link">LinkedIn</a>
+            <span class="alt-dot" aria-hidden="true">&middot;</span>
+            <a href="https://twitter.com" target="_blank" rel="noopener" class="alt-link">X / Twitter</a>
+          </div>
+        </div>
+
+        <div class="page-footer">
+          <a href="/" class="back-link">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 7H1M6 2L1 7l5 5" />
+            </svg>
+            Back home
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  import { animate, inView } from 'motion';
+
+  // Entrance animations
+  const grid = document.querySelector('.contact-grid');
+  const alt = document.querySelector('.alt-contact');
+  [grid, alt].forEach(el => { if (el) el.style.opacity = '0'; });
+
+  if (grid) {
+    inView(grid, () => {
+      animate(grid, { opacity: [0, 1], y: [25, 0] }, {
+        duration: 0.8,
+        easing: [0.25, 1, 0.5, 1],
+      });
+    }, { amount: 0.1 });
+  }
+
+  if (alt) {
+    inView(alt, () => {
+      animate(alt, { opacity: [0, 1], y: [15, 0] }, {
+        duration: 0.6,
+        delay: 0.3,
+        easing: [0.25, 1, 0.5, 1],
+      });
+    }, { amount: 0.3 });
+  }
+
+  // Contact form handling
+  const form = document.getElementById('contact-form');
+  const submitBtn = document.getElementById('form-submit');
+  const statusEl = document.getElementById('form-status');
+
+  if (form && submitBtn && statusEl) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = '...';
+      statusEl.textContent = '';
+      statusEl.className = 'form-status';
+
+      const data = new FormData(form);
+      const body = {
+        name: data.get('name'),
+        email: data.get('email'),
+        message: data.get('message'),
+      };
+
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+          const d = await res.json();
+          throw new Error(d.error || 'Something went wrong');
+        }
+
+        statusEl.textContent = 'Message sent — I\'ll be in touch.';
+        statusEl.className = 'form-status success';
+        form.reset();
+      } catch (err) {
+        statusEl.textContent = err.message;
+        statusEl.className = 'form-status error';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send message';
+      }
+    });
+  }
+</script>
+
+<style>
+  .contact-page {
+    min-height: 100dvh;
+    padding: clamp(8rem, 18vh, 12rem) clamp(1.5rem, 5vw, 3.5rem) clamp(4rem, 10vh, 8rem);
+    background: var(--color-bg);
+  }
+
+  .contact-inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .page-header {
+    margin-bottom: clamp(4rem, 8vw, 6rem);
+  }
+
+  .page-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    margin: 0 0 1rem;
+  }
+
+  .page-subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    max-width: 520px;
+    margin: 0;
+  }
+
+  .header-rule {
+    width: 48px;
+    height: 1px;
+    background: var(--color-accent);
+    margin-top: 2rem;
+  }
+
+  /* Two-column grid */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2.5rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .section-label {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--color-text);
+    margin: 0 0 1.5rem;
+  }
+
+  /* Contact form */
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .form-field {
+    margin-bottom: 1rem;
+  }
+
+  .form-input {
+    width: 100%;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--color-text);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 20%, transparent);
+    padding: 0.75rem 0;
+    outline: none;
+    transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .form-input:focus {
+    border-color: var(--color-accent);
+  }
+
+  .form-input::placeholder {
+    color: var(--color-text-muted);
+    opacity: 0.5;
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 100px;
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 20%, transparent);
+    padding: 0.75rem;
+  }
+
+  .form-textarea:focus {
+    border-color: var(--color-accent);
+  }
+
+  .form-submit {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    background: var(--color-accent);
+    color: var(--color-bg);
+    border: none;
+    padding: 0.85rem 2rem;
+    cursor: pointer;
+    transition: filter 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    margin-top: 0.5rem;
+    align-self: flex-start;
+  }
+
+  .form-submit:hover {
+    filter: brightness(1.1);
+  }
+
+  .form-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .form-status {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    margin: 0.75rem 0 0;
+    min-height: 1.2em;
+  }
+
+  .form-status.success {
+    color: var(--color-accent);
+  }
+
+  .form-status.error {
+    color: #c47c7c;
+  }
+
+  /* Alt contact */
+  .alt-contact {
+    margin-top: clamp(4rem, 8vw, 6rem);
+    padding-top: clamp(2rem, 4vw, 3rem);
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+    text-align: center;
+  }
+
+  .alt-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    margin: 0 0 0.75rem;
+  }
+
+  .alt-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .alt-link {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .alt-link:hover {
+    color: var(--color-accent);
+  }
+
+  .alt-dot {
+    color: var(--color-text-muted);
+    opacity: 0.3;
+  }
+
+  /* Footer */
+  .page-footer {
+    margin-top: clamp(3rem, 6vw, 5rem);
+    padding-top: 2rem;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+
+  .back-link svg {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .back-link:hover svg {
+    transform: translateX(-3px);
+  }
+
+  @media (max-width: 768px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

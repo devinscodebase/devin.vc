@@ -1,0 +1,419 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const roles = [
+  {
+    year: '2025',
+    range: 'Present',
+    status: 'active',
+    statusLabel: 'Current',
+    role: 'Chief Operating Officer',
+    company: 'Andreou Enterprises',
+    description: 'Joined as CMO of Bitmern Mining, promoted within a month to COO. Leading a team of 9, running marketing across the brand portfolio, and serving as second-in-command in the Web3 and crypto space.',
+    wins: [
+      'Promoted from CMO to COO within 30 days of starting',
+      'Built and leading a cross-functional team of 9',
+      'Running marketing operations across the full Andreou brand portfolio',
+    ],
+  },
+  {
+    year: '2024',
+    range: '2025',
+    status: 'past',
+    statusLabel: 'Completed',
+    role: 'Freelance Marketing Consultant',
+    company: 'Independent',
+    description: 'Relocated to South Africa and built bespoke growth systems across industries. Abandoned cookie-cutter funnels — started treating each client like a custom suit.',
+    wins: [
+      'Built growth systems across 5+ industries simultaneously',
+      'Designed full-stack GTM strategies tailored per client',
+      'Developed a repeatable discovery process that cut onboarding time in half',
+    ],
+  },
+  {
+    year: '2022',
+    range: '2024',
+    status: 'past',
+    statusLabel: 'Completed',
+    role: 'Head of Marketing',
+    company: 'B2B Business Experts → Revenx',
+    description: 'Took a leap on a two-person startup and helped scale it from $30K/month to $300K/month in revenue. Named and designed the rebrand to Revenx as we pivoted to insurance marketing.',
+    wins: [
+      'Scaled revenue from $30K/mo to $300K/mo — a 10× increase',
+      'Led full company rebrand: naming, identity, and website rebuild',
+      'Built a customer training platform and grew the team from 2 to 8',
+    ],
+  },
+  {
+    year: '2021',
+    range: '2022',
+    status: 'past',
+    statusLabel: 'Completed',
+    role: 'VP Marketing & Operations',
+    company: 'ContentOne (Richter)',
+    description: 'Led promotion and production for a B2B SMB subsidiary. Transformed scattered processes into streamlined production systems using automation across Dropbox, DocuSign, Monday.com, and Zapier.',
+    wins: [
+      'Built automation workflows that eliminated 20+ hours of manual work weekly',
+      'Streamlined production pipeline across 4 major platforms',
+      'Drove measurable efficiency gains across the marketing operation',
+    ],
+  },
+  {
+    year: '2019',
+    range: '2021',
+    status: 'past',
+    statusLabel: 'Completed',
+    role: 'VP of Marketing',
+    company: 'Richter',
+    description: 'Pitched myself for the role and got it. Richter had 40+ Fortune 500 clients on their roster. Launched thought leadership forums, podcasts, and more — touching nearly every part of the marketing lifecycle.',
+    wins: [
+      'Marketing lead for a firm serving 40+ Fortune 500 clients',
+      'Launched thought leadership forums and podcast series',
+      'Orchestrated campaigns spanning the full marketing lifecycle',
+    ],
+  },
+  {
+    year: '2019',
+    range: '2019',
+    status: 'past',
+    statusLabel: 'Completed',
+    role: 'VP',
+    company: 'The Customer Factory',
+    description: 'Promoted to lead the company\'s own marketing to chiropractors. Built lead magnets attracting hundreds of doctors weekly and activated consulting partners.',
+    wins: [
+      'Drove the highest new business and growth in company history',
+      'Built lead magnets attracting hundreds of doctors weekly',
+      'Cultivated referral relationships that became a revenue engine',
+    ],
+  },
+  {
+    year: '2018',
+    range: '2019',
+    status: 'past',
+    statusLabel: 'Completed',
+    role: 'Creative Director',
+    company: 'The Customer Factory',
+    description: 'Chiropractic marketing for 100+ practices. Moved to Atlanta and learned that marketing isn\'t just "if this, then that" — there are far more variables in the equation.',
+    wins: [
+      'Managed marketing for 100+ chiropractic practices simultaneously',
+      'Developed strategic customer acquisition frameworks beyond template funnels',
+    ],
+  },
+  {
+    year: '2016',
+    range: '2018',
+    status: 'past',
+    statusLabel: 'Completed',
+    role: 'Junior Advertiser',
+    company: 'Flood Media',
+    description: 'Where it all began. Learned the fundamentals of Google Ads and digital advertising, then worked remotely from England. Discovered the systematic logic of advertising — a foundation that still guides my thinking.',
+    wins: [
+      'Mastered Google Ads fundamentals and digital campaign management',
+      'Transitioned to remote work across international time zones',
+    ],
+  },
+];
+---
+
+<Layout title="Work — Devin Alexander" description="A decade of building at the intersections of marketing, operations, and design.">
+  <main>
+    <section class="work-page">
+      <div class="work-inner">
+        <header class="page-header">
+          <h1 class="page-title">Work</h1>
+          <p class="page-subtitle">A decade of building at the intersections of marketing, operations, and design.</p>
+          <div class="header-rule" aria-hidden="true"></div>
+        </header>
+
+        <ol class="roles">
+          {roles.map((r, i) => (
+            <li class="role-card" style={`--delay: ${i * 0.1}s`}>
+              <div class="role-top">
+                <div class="role-year">
+                  <span class="year-big">{r.year}</span>
+                  <span class="year-range">{r.range}</span>
+                </div>
+                <div class="role-status">
+                  <span class:list={['status-dot', r.status]} aria-hidden="true" />
+                  <span class="status-label">{r.statusLabel}</span>
+                </div>
+              </div>
+
+              <h2 class="role-title">{r.role}</h2>
+              <span class="role-company">{r.company}</span>
+              <p class="role-description">{r.description}</p>
+
+              <div class="role-wins">
+                <span class="wins-label">Key wins</span>
+                <ul class="wins-list">
+                  {r.wins.map((w) => (
+                    <li>{w}</li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <div class="page-footer">
+          <a href="/" class="back-link">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 7H1M6 2L1 7l5 5" />
+            </svg>
+            Back home
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  import { animate, inView, stagger } from 'motion';
+
+  const cards = document.querySelectorAll('.role-card');
+  cards.forEach(card => { card.style.opacity = '0'; });
+
+  const section = document.querySelector('.work-page');
+  if (section) {
+    inView(section, () => {
+      animate(cards, { opacity: [0, 1], y: [30, 0] }, {
+        duration: 0.7,
+        delay: stagger(0.08),
+        easing: [0.25, 1, 0.5, 1],
+      });
+    }, { amount: 0.05 });
+  }
+</script>
+
+<style>
+  .work-page {
+    min-height: 100dvh;
+    padding: clamp(8rem, 18vh, 12rem) clamp(1.5rem, 5vw, 3.5rem) clamp(4rem, 10vh, 8rem);
+    background: var(--color-bg);
+  }
+
+  .work-inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .page-header {
+    margin-bottom: clamp(4rem, 8vw, 6rem);
+  }
+
+  .page-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    margin: 0 0 1rem;
+  }
+
+  .page-subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    max-width: 520px;
+    margin: 0;
+  }
+
+  .header-rule {
+    width: 48px;
+    height: 1px;
+    background: var(--color-accent);
+    margin-top: 2rem;
+  }
+
+  .roles {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .role-card {
+    padding: clamp(2.5rem, 5vw, 3.5rem) 0;
+    opacity: 0;
+    animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--delay);
+  }
+
+  .role-card + .role-card {
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+  }
+
+  .role-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .role-year {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .year-big {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--color-text);
+    opacity: 0.15;
+  }
+
+  .year-range {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-top: 0.35rem;
+  }
+
+  .role-status {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-text-muted);
+    opacity: 0.4;
+  }
+
+  .status-dot.active {
+    background: var(--color-accent);
+    opacity: 1;
+  }
+
+  .status-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .role-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+    margin: 0 0 0.5rem;
+  }
+
+  .role-company {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .role-description {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.88rem, 1.2vw, 0.98rem);
+    line-height: 1.65;
+    color: var(--color-text-muted);
+    max-width: 600px;
+    margin: 1rem 0 0;
+  }
+
+  .role-wins {
+    margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+  }
+
+  .wins-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    opacity: 0.7;
+  }
+
+  .wins-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.75rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .wins-list li {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.82rem, 1.1vw, 0.9rem);
+    line-height: 1.5;
+    color: var(--color-text);
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .wins-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    opacity: 0.6;
+  }
+
+  .page-footer {
+    margin-top: clamp(4rem, 8vw, 6rem);
+    padding-top: 2rem;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+
+  .back-link svg {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .back-link:hover svg {
+    transform: translateX(-3px);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(25px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>

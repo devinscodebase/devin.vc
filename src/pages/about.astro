@@ -1,0 +1,387 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import portrait from '../assets/gallery/portrait.jpg';
+---
+
+<Layout title="About — Devin Alexander" description="The full story — where I started, what shaped my perspective, and what I believe about building things that matter.">
+  <main>
+    <section class="about-page">
+      <div class="about-inner">
+
+        <div class="about-hero">
+          <div class="hero-image-wrap">
+            <Image src={portrait} alt="Devin Alexander" widths={[400, 800]} format="webp" quality={85} loading="eager" class="hero-portrait" />
+          </div>
+          <div class="hero-text">
+            <h1 class="hero-name">Devin Alexander</h1>
+            <p class="hero-identity">Builder, operator, and design-obsessed generalist.</p>
+          </div>
+        </div>
+
+        <div class="story">
+          <p class="story-text">
+            I didn't set out to be a generalist. It happened because I kept saying yes to problems that interested me — regardless of what department they lived in. Marketing led to operations. Operations led to design. Design led to product. And somewhere along the way, I realized the walls between disciplines were mostly imaginary.
+          </p>
+          <p class="story-text">
+            My career started in digital advertising at sixteen, running Google Ads from my bedroom in England. That systematic, "if this, then that" logic became my foundation. But over the next decade — across agencies, startups, and enterprises — I learned that the real world is messier than any framework. The best results come from people who can hold multiple disciplines in their head at once and find the leverage points between them.
+          </p>
+          <p class="story-text">
+            I've scaled a startup from $30K to $300K a month. I've led marketing for a firm with 40+ Fortune 500 clients. I've built teams, rebranded companies, designed platforms, and shipped products. But the throughline isn't any single skill — it's the ability to see systems where others see silos, and to move between strategy and execution without losing altitude on either.
+          </p>
+          <p class="story-text">
+            Today, I'm COO at Andreou Enterprises, operating across the portfolio and leading a team in the Web3 space. I'm also building tools on the side — because I believe the best operators are the ones who never stop building.
+          </p>
+        </div>
+
+        <div class="convictions">
+          <h2 class="convictions-heading">What I Believe</h2>
+
+          <div class="conviction-grid">
+            <article class="conviction">
+              <h3 class="conviction-title">The best work lives at the intersections</h3>
+              <p class="conviction-text">Specialization is a trap for most people. The world rewards those who can connect dots across disciplines — marketing that understands product, design that understands business, operations that understands people.</p>
+            </article>
+            <article class="conviction">
+              <h3 class="conviction-title">Craft is a competitive advantage</h3>
+              <p class="conviction-text">In a world of templates and shortcuts, caring about the details — the copy, the spacing, the user experience — is one of the few remaining moats. Taste compounds.</p>
+            </article>
+            <article class="conviction">
+              <h3 class="conviction-title">Systems over heroics</h3>
+              <p class="conviction-text">The goal isn't to be the person who saves the day. It's to build systems so good that the day never needs saving. Repeatable processes beat one-time sprints every time.</p>
+            </article>
+            <article class="conviction">
+              <h3 class="conviction-title">Ship, then polish</h3>
+              <p class="conviction-text">Perfectionism is procrastination in disguise. The fastest path to great work is shipping good work, learning what's missing, and iterating with real feedback.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="skills">
+          <h2 class="skills-heading">Areas of Focus</h2>
+          <div class="skills-grid">
+            <div class="skill-group">
+              <h3 class="group-label">Marketing</h3>
+              <ul class="skill-list">
+                <li>GTM Strategy</li>
+                <li>Brand & Positioning</li>
+                <li>Content & Thought Leadership</li>
+                <li>Email & Cold Outreach</li>
+                <li>Paid Acquisition</li>
+              </ul>
+            </div>
+            <div class="skill-group">
+              <h3 class="group-label">Operations</h3>
+              <ul class="skill-list">
+                <li>Team Leadership</li>
+                <li>Process Design</li>
+                <li>Automation & Workflows</li>
+                <li>Data Analysis</li>
+                <li>Vendor Management</li>
+              </ul>
+            </div>
+            <div class="skill-group">
+              <h3 class="group-label">Design</h3>
+              <ul class="skill-list">
+                <li>UI/UX Design</li>
+                <li>Brand Identity</li>
+                <li>Web Design</li>
+                <li>Design Systems</li>
+                <li>Typography</li>
+              </ul>
+            </div>
+            <div class="skill-group">
+              <h3 class="group-label">Technical</h3>
+              <ul class="skill-list">
+                <li>Front-End Development</li>
+                <li>CMS Architecture</li>
+                <li>API Integrations</li>
+                <li>Analytics & Tracking</li>
+                <li>No-Code Platforms</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="closing-cta">
+          <p class="cta-text">If any of this resonates, <a href="/contact" class="cta-link">let's talk</a>.</p>
+        </div>
+
+        <div class="page-footer">
+          <a href="/" class="back-link">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 7H1M6 2L1 7l5 5" />
+            </svg>
+            Back home
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  import { animate, inView } from 'motion';
+
+  const sections = document.querySelectorAll('.about-hero, .story, .convictions, .skills, .closing-cta');
+  sections.forEach(s => { s.style.opacity = '0'; });
+
+  sections.forEach((el, i) => {
+    inView(el, () => {
+      animate(el, { opacity: [0, 1], y: [30, 0] }, {
+        duration: 0.8,
+        delay: i === 0 ? 0 : 0.1,
+        easing: [0.25, 1, 0.5, 1],
+      });
+    }, { amount: 0.15 });
+  });
+</script>
+
+<style>
+  .about-page {
+    min-height: 100dvh;
+    padding: clamp(8rem, 18vh, 12rem) clamp(1.5rem, 5vw, 3.5rem) clamp(4rem, 10vh, 8rem);
+    background: var(--color-bg);
+  }
+
+  .about-inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Hero */
+  .about-hero {
+    display: flex;
+    align-items: flex-end;
+    gap: clamp(2rem, 4vw, 3rem);
+    margin-bottom: clamp(4rem, 8vw, 6rem);
+  }
+
+  .hero-image-wrap {
+    flex-shrink: 0;
+    width: clamp(120px, 20vw, 180px);
+  }
+
+  .hero-image-wrap :global(img) {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: grayscale(0.4) sepia(0.15) brightness(0.95) contrast(1.05);
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+  }
+
+  .hero-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    margin: 0 0 0.5rem;
+  }
+
+  .hero-identity {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  /* Story */
+  .story {
+    margin-bottom: clamp(4rem, 8vw, 6rem);
+  }
+
+  .story-text {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+    line-height: 1.55;
+    color: var(--color-text-muted);
+    margin: 0 0 1.5rem;
+  }
+
+  .story-text:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Convictions */
+  .convictions {
+    margin-bottom: clamp(4rem, 8vw, 6rem);
+  }
+
+  .convictions-heading {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+    margin: 0 0 clamp(2rem, 4vw, 3rem);
+  }
+
+  .conviction-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 4vw, 3rem);
+  }
+
+  .conviction {
+    padding-left: clamp(1rem, 2vw, 1.5rem);
+    border-left: 2px solid color-mix(in oklab, var(--color-accent) 40%, transparent);
+  }
+
+  .conviction-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--color-text);
+    margin: 0 0 0.5rem;
+  }
+
+  .conviction-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.8rem, 1.1vw, 0.88rem);
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  /* Skills */
+  .skills {
+    margin-bottom: clamp(4rem, 8vw, 6rem);
+    padding-top: clamp(3rem, 6vw, 5rem);
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+  }
+
+  .skills-heading {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+    margin: 0 0 clamp(2rem, 4vw, 3rem);
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .group-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin: 0 0 1rem;
+  }
+
+  .skill-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .skill-list li {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.75rem, 1vw, 0.82rem);
+    line-height: 1.4;
+    color: var(--color-text-muted);
+  }
+
+  /* CTA */
+  .closing-cta {
+    text-align: center;
+    padding: clamp(3rem, 6vw, 5rem) 0;
+  }
+
+  .cta-text {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .cta-link {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+    transition: text-decoration-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .cta-link:hover {
+    text-decoration-color: var(--color-accent);
+  }
+
+  /* Footer */
+  .page-footer {
+    margin-top: clamp(2rem, 4vw, 3rem);
+    padding-top: 2rem;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+
+  .back-link svg {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .back-link:hover svg {
+    transform: translateX(-3px);
+  }
+
+  @media (max-width: 768px) {
+    .conviction-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .skills-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .about-hero {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .hero-image-wrap {
+      width: 140px;
+    }
+
+    .skills-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
