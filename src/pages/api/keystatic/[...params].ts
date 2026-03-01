@@ -5,18 +5,31 @@ import keystaticConfig from '../../../../keystatic.config';
 export const prerender = false;
 
 export const ALL = async (ctx: APIContext) => {
-  // Debug: check if env vars reach the function (hit /api/keystatic/debug)
+  // Debug: test the token exchange directly (hit /api/keystatic/debug?code=XXX)
   if (ctx.url.pathname.endsWith('/debug')) {
-    const id = process.env.KEYSTATIC_GITHUB_CLIENT_ID;
-    const secret = process.env.KEYSTATIC_GITHUB_CLIENT_SECRET;
-    const ksSecret = process.env.KEYSTATIC_SECRET;
+    const code = ctx.url.searchParams.get('code');
+    if (!code) {
+      // Redirect to GitHub to get a fresh code
+      const loginUrl = new URL('https://github.com/login/oauth/authorize');
+      loginUrl.searchParams.set('client_id', process.env.KEYSTATIC_GITHUB_CLIENT_ID!);
+      loginUrl.searchParams.set('redirect_uri', 'https://www.devin.vc/api/keystatic/debug');
+      return Response.redirect(loginUrl.toString());
+    }
+    // Try the token exchange
+    const tokenUrl = new URL('https://github.com/login/oauth/access_token');
+    tokenUrl.searchParams.set('client_id', process.env.KEYSTATIC_GITHUB_CLIENT_ID!);
+    tokenUrl.searchParams.set('client_secret', process.env.KEYSTATIC_GITHUB_CLIENT_SECRET!);
+    tokenUrl.searchParams.set('code', code);
+    const res = await fetch(tokenUrl, {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+    });
+    const body = await res.json();
     return new Response(JSON.stringify({
-      hasClientId: !!id,
-      clientIdPrefix: id?.slice(0, 6),
-      hasClientSecret: !!secret,
-      secretLength: secret?.length,
-      hasKsSecret: !!ksSecret,
-    }), { headers: { 'Content-Type': 'application/json' } });
+      status: res.status,
+      ok: res.ok,
+      body,
+    }, null, 2), { headers: { 'Content-Type': 'application/json' } });
   }
 
   // Read env vars at request time to avoid build-time bundling issues
