@@ -103,42 +103,44 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   tabMessage?.addEventListener('click', () => switchTab('message'));
   tabBooking?.addEventListener('click', () => switchTab('booking'));
 
-  // ---- Entrance animations ----
+  // ---- Entrance animations (skip on view transition nav) ----
+  const isVtNav = window.__vtNav;
   const header = document.querySelector('.page-header');
   const switcher = document.querySelector('.contact-switcher');
   const cardEl = document.querySelector('.contact-card');
 
+  if (!isVtNav) {
+    if (header) {
+      header.style.opacity = '0';
+      inView(header, () => {
+        animate(header, { opacity: [0, 1], y: [12, 0] }, {
+          duration: 0.4,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }, { amount: 0.3 });
+    }
 
-  if (header) {
-    header.style.opacity = '0';
-    inView(header, () => {
-      animate(header, { opacity: [0, 1], y: [12, 0] }, {
-        duration: 0.4,
-        easing: [0.25, 1, 0.5, 1],
-      });
-    }, { amount: 0.3 });
-  }
+    if (switcher) {
+      switcher.style.opacity = '0';
+      inView(switcher, () => {
+        animate(switcher, { opacity: [0, 1], y: [10, 0] }, {
+          duration: 0.35,
+          delay: 0.05,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }, { amount: 0.3 });
+    }
 
-  if (switcher) {
-    switcher.style.opacity = '0';
-    inView(switcher, () => {
-      animate(switcher, { opacity: [0, 1], y: [10, 0] }, {
-        duration: 0.35,
-        delay: 0.05,
-        easing: [0.25, 1, 0.5, 1],
-      });
-    }, { amount: 0.3 });
-  }
-
-  if (cardEl) {
-    cardEl.style.opacity = '0';
-    inView(cardEl, () => {
-      animate(cardEl, { opacity: [0, 1], y: [15, 0] }, {
-        duration: 0.4,
-        delay: 0.1,
-        easing: [0.25, 1, 0.5, 1],
-      });
-    }, { amount: 0.1 });
+    if (cardEl) {
+      cardEl.style.opacity = '0';
+      inView(cardEl, () => {
+        animate(cardEl, { opacity: [0, 1], y: [15, 0] }, {
+          duration: 0.4,
+          delay: 0.1,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }, { amount: 0.1 });
+    }
   }
 
   // ---- Spring hover on submit button ----

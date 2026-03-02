@@ -92,27 +92,31 @@ const accentColors = ['teal', 'amber', 'rust', 'teal', 'amber', 'rust'];
 <script>
   import { animate, inView } from 'motion';
 
+  const isVtNav = window.__vtNav;
   const header = document.querySelector('.page-header');
-  if (header) {
-    header.style.opacity = '0';
-    inView(header, () => {
-      animate(header, { opacity: [0, 1], y: [12, 0] }, {
-        duration: 0.4,
-        easing: [0.25, 1, 0.5, 1],
-      });
-    }, { amount: 0.3 });
-  }
-
   const featured = document.querySelector('.featured-card');
-  if (featured) {
-    featured.style.opacity = '0';
-    inView(featured, () => {
-      animate(featured, { opacity: [0, 1], y: [15, 0] }, {
-        duration: 0.4,
-        delay: 0.08,
-        easing: [0.25, 1, 0.5, 1],
-      });
-    }, { amount: 0.15 });
+
+  if (!isVtNav) {
+    if (header) {
+      header.style.opacity = '0';
+      inView(header, () => {
+        animate(header, { opacity: [0, 1], y: [12, 0] }, {
+          duration: 0.4,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }, { amount: 0.3 });
+    }
+
+    if (featured) {
+      featured.style.opacity = '0';
+      inView(featured, () => {
+        animate(featured, { opacity: [0, 1], y: [15, 0] }, {
+          duration: 0.4,
+          delay: 0.08,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }, { amount: 0.15 });
+    }
   }
 
   const featuredEl = document.querySelector('.featured-card');
@@ -130,15 +134,19 @@ const accentColors = ['teal', 'amber', 'rust', 'teal', 'amber', 'rust'];
   }
 
   const cards = document.querySelectorAll('.post-card');
-  cards.forEach(card => {
-    card.style.opacity = '0';
-    inView(card, () => {
-      animate(card, { opacity: [0, 1], y: [15, 0] }, {
-        duration: 0.4,
-        easing: [0.25, 1, 0.5, 1],
-      });
-    }, { amount: 0.15 });
+  if (!isVtNav) {
+    cards.forEach(card => {
+      card.style.opacity = '0';
+      inView(card, () => {
+        animate(card, { opacity: [0, 1], y: [15, 0] }, {
+          duration: 0.4,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }, { amount: 0.15 });
+    });
+  }
 
+  cards.forEach(card => {
     // Spring hover — lift card + shift title
     card.addEventListener('mouseenter', () => {
       const title = card.querySelector('.post-title');

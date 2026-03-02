@@ -98,27 +98,31 @@ const ogImage = post.ogImage
 <script>
   import { animate, inView } from 'motion';
 
-  const header = document.querySelector('.post-header');
-  if (header) {
-    header.style.opacity = '0';
-    inView(header, () => {
-      animate(header, { opacity: [0, 1], y: [12, 0] }, {
-        duration: 0.4,
-        easing: [0.25, 1, 0.5, 1],
-      });
-    }, { amount: 0.3 });
-  }
+  const isVtNav = window.__vtNav;
 
-  const hero = document.querySelector('.hero-image');
-  if (hero) {
-    hero.style.opacity = '0';
-    inView(hero, () => {
-      animate(hero, { opacity: [0, 1] }, {
-        duration: 0.35,
-        delay: 0.1,
-        easing: [0.25, 1, 0.5, 1],
-      });
-    }, { amount: 0.2 });
+  if (!isVtNav) {
+    const header = document.querySelector('.post-header');
+    if (header) {
+      header.style.opacity = '0';
+      inView(header, () => {
+        animate(header, { opacity: [0, 1], y: [12, 0] }, {
+          duration: 0.4,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }, { amount: 0.3 });
+    }
+
+    const hero = document.querySelector('.hero-image');
+    if (hero) {
+      hero.style.opacity = '0';
+      inView(hero, () => {
+        animate(hero, { opacity: [0, 1] }, {
+          duration: 0.35,
+          delay: 0.1,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }, { amount: 0.2 });
+    }
   }
 </script>
 

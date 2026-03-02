@@ -39,22 +39,26 @@ const images = [
 <script>
   import { animate, inView, stagger } from 'motion';
 
+  const isVtNav = window.__vtNav;
   const grid = document.getElementById('gallery-grid');
   if (grid) {
     const items = grid.querySelectorAll('.gallery-item');
-    items.forEach(item => { item.style.opacity = '0'; });
 
-    inView(grid, () => {
-      animate(items, {
-        opacity: [0, 1],
-        y: [30, 0],
-        scale: [0.97, 1],
-      }, {
-        duration: 0.7,
-        easing: [0.25, 1, 0.5, 1],
-        delay: stagger(0.12),
-      });
-    }, { amount: 0.2 });
+    if (!isVtNav) {
+      items.forEach(item => { item.style.opacity = '0'; });
+
+      inView(grid, () => {
+        animate(items, {
+          opacity: [0, 1],
+          y: [30, 0],
+          scale: [0.97, 1],
+        }, {
+          duration: 0.7,
+          easing: [0.25, 1, 0.5, 1],
+          delay: stagger(0.12),
+        });
+      }, { amount: 0.2 });
+    }
 
     // Lightbox
     items.forEach(item => {

@@ -120,29 +120,32 @@ const projects = [
 <script>
   import { animate, inView, stagger } from 'motion';
 
+  const isVtNav = window.__vtNav;
   const header = document.querySelector('.page-header');
   const projects = document.querySelectorAll('.project');
 
-  if (header) {
-    header.style.opacity = '0';
-    inView(header, () => {
-      animate(header, { opacity: [0, 1], y: [12, 0] }, {
-        duration: 0.4,
-        easing: [0.25, 1, 0.5, 1],
-      });
-    }, { amount: 0.3 });
-  }
+  if (!isVtNav) {
+    if (header) {
+      header.style.opacity = '0';
+      inView(header, () => {
+        animate(header, { opacity: [0, 1], y: [12, 0] }, {
+          duration: 0.4,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }, { amount: 0.3 });
+    }
 
-  projects.forEach(p => { p.style.opacity = '0'; });
-  projects.forEach((project, i) => {
-    inView(project, () => {
-      animate(project, { opacity: [0, 1], y: [15, 0] }, {
-        duration: 0.4,
-        delay: 0.05,
-        easing: [0.25, 1, 0.5, 1],
-      });
-    }, { amount: 0.15 });
-  });
+    projects.forEach(p => { p.style.opacity = '0'; });
+    projects.forEach((project, i) => {
+      inView(project, () => {
+        animate(project, { opacity: [0, 1], y: [15, 0] }, {
+          duration: 0.4,
+          delay: 0.05,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }, { amount: 0.15 });
+    });
+  }
 
   // Spring hover on project cards
   projects.forEach(project => {
