@@ -4,6 +4,8 @@
 
   let { testimonials = [] } = $props();
 
+  const accents = ['teal', 'amber', 'teal', 'amber'];
+
   let section;
 
   onMount(() => {
@@ -30,15 +32,15 @@
     <div class="section-tag" style="opacity: 0;"><span class="tag-number">05</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Kind Words</span></div>
 
     <div class="grid">
-      {#each testimonials as t, i}
-        <blockquote class="card testimonial" class:second={i === 1} style="opacity: 0;">
-          <div class="accent-bar" class:amber={i === 1} aria-hidden="true"></div>
-          <span class="quote-mark" class:amber={i === 1} aria-hidden="true">&ldquo;</span>
+      {#each testimonials.slice(0, 4) as t, i}
+        <blockquote class="card testimonial" class:accent-amber={accents[i] === 'amber'} style="opacity: 0;">
+          <div class="accent-bar" class:amber={accents[i] === 'amber'} aria-hidden="true"></div>
+          <span class="quote-mark" class:amber={accents[i] === 'amber'} aria-hidden="true">&ldquo;</span>
           <p class="quote-text">{t.quote}</p>
           <footer class="attribution">
             <span class="attr-name">{t.name}</span>
             {#if t.role || t.company}
-              <span class="attr-rule" class:amber={i === 1} aria-hidden="true"></span>
+              <span class="attr-rule" class:amber={accents[i] === 'amber'} aria-hidden="true"></span>
               <span class="attr-detail">{t.role}{#if t.role && t.company}, {/if}{t.company}</span>
             {/if}
           </footer>
@@ -104,7 +106,7 @@
     color: var(--color-text-muted);
   }
 
-  /* ---- Grid: 2 testimonials on top, CTA below ---- */
+  /* ---- Grid: 2×2 testimonials + full-span CTA ---- */
   .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -162,7 +164,7 @@
   .quote-text {
     font-family: 'Instrument Serif', serif;
     font-style: italic;
-    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    font-size: clamp(0.92rem, 1.2vw, 1.05rem);
     line-height: 1.6;
     color: var(--color-text);
     margin: 0 0 auto;
