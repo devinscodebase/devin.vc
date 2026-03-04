@@ -42,9 +42,6 @@ const ogImage = post.ogImage
   : post.heroImage
     ? urlFor(post.heroImage).width(1200).url()
     : dynamicOgUrl;
-const heroSrc = post.heroImage
-  ? urlFor(post.heroImage).width(1200).url()
-  : dynamicOgUrl;
 ---
 
 <Layout
@@ -75,15 +72,30 @@ const heroSrc = post.heroImage
           <div class="title-rule" aria-hidden="true"></div>
         </header>
 
-        <figure class="hero-image">
-          <img src={heroSrc} alt={post.heroAlt || ''} loading="eager" />
-        </figure>
+        {post.heroImage && (
+          <figure class="hero-image">
+            <img src={urlFor(post.heroImage).width(1200).url()} alt={post.heroAlt || ''} loading="eager" />
+          </figure>
+        )}
 
         <div class="post-body prose">
           <PortableText value={post.body} />
         </div>
 
         <footer class="post-footer">
+          <div class="author-card">
+            <span class="author-name">Devin Alexander</span>
+            <div class="author-links">
+              <a href="https://x.com/devinmarkets" target="_blank" rel="noopener" class="author-social">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                @devinmarkets
+              </a>
+              <a href="https://www.linkedin.com/in/devalexander/" target="_blank" rel="noopener" class="author-social">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                LinkedIn
+              </a>
+            </div>
+          </div>
           <a href="/journal" class="back-link">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M13 7H1M6 2L1 7l5 5" />
@@ -347,5 +359,63 @@ const heroSrc = post.heroImage
     margin-top: clamp(4rem, 8vw, 6rem);
     padding-top: 2rem;
     border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .author-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .author-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.1rem, 1.5vw, 1.25rem);
+    color: var(--color-text);
+    line-height: 1;
+  }
+
+  .author-links {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .author-social {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .author-social:hover {
+    color: var(--color-accent);
+  }
+
+  .author-social svg {
+    opacity: 0.6;
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .author-social:hover svg {
+    opacity: 1;
+  }
+
+  @media (max-width: 480px) {
+    .author-card {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
   }
 </style>

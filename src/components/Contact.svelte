@@ -79,9 +79,9 @@
     <p class="cta-body" style="opacity: 0;">I'm always open to conversations about GTM strategy, design, operations, or interesting problems worth solving.</p>
 
     <div class="links" style="opacity: 0;">
-      <a href="https://linkedin.com" target="_blank" rel="noopener" class="social-link">LinkedIn</a>
+      <a href="https://www.linkedin.com/in/devalexander/" target="_blank" rel="noopener" class="social-link">LinkedIn</a>
       <span class="link-dot" aria-hidden="true">&middot;</span>
-      <a href="https://twitter.com" target="_blank" rel="noopener" class="social-link">X / Twitter</a>
+      <a href="https://x.com/devinmarkets" target="_blank" rel="noopener" class="social-link">X / Twitter</a>
     </div>
 
   </div>
