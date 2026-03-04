@@ -26,6 +26,17 @@
     activeTool = tool;
   }
 
+  function onChipTap(tool) {
+    clearTimeout(hideTimeout);
+    if (activeTool?.name === tool.name) {
+      activeTool = null;
+      isHovering = false;
+    } else {
+      activeTool = tool;
+      isHovering = true;
+    }
+  }
+
   function onMarqueeEnter() {
     clearTimeout(hideTimeout);
     isHovering = true;
@@ -134,6 +145,7 @@
                   class="chip"
                   class:is-active={activeTool?.name === tool.name}
                   onmouseenter={() => onChipEnter(tool)}
+                  onclick={() => onChipTap(tool)}
                 >
                   {#if tool.logoUrl}
                     <img
@@ -466,10 +478,10 @@
     }
   }
 
-  /* Hide detail on touch devices */
+  /* On touch devices, reduce reserved height since it's tap-to-show */
   @media (hover: none) {
     .detail-panel {
-      display: none;
+      min-height: 0;
     }
   }
 </style>
