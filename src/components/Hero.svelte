@@ -38,6 +38,12 @@
     hasPointer = !matchMedia('(pointer: coarse)').matches;
     rafId = requestAnimationFrame(tick);
 
+    // On view transitions, reveal everything without entrance animations
+    if (window.__vtNav) {
+      hero.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
+      return () => { if (rafId) cancelAnimationFrame(rafId); };
+    }
+
     // --- Motion entrance animations ---
     const nameLines = hero.querySelectorAll('.name-line');
     const divider = hero.querySelector('.divider');

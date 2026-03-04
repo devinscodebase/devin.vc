@@ -2,39 +2,35 @@
   import { onMount } from 'svelte';
   import { animate, inView, stagger } from 'motion';
 
+  let { projects = [] } = $props();
   let section;
 
-  const projects = [
-    {
-      name: 'Giannis Andreou',
-      url: 'https://giannisandreou.com',
-      category: 'Personal Brand & Education',
-      tags: ['Branding', 'Web Design', 'Operations'],
-      accent: 'teal',
-    },
-    {
-      name: 'Bitmern Solo',
-      url: 'https://bitmernsolo.com',
-      category: 'Crypto Mining Infrastructure',
-      tags: ['Full-Stack Dev', 'Infrastructure', 'Web App'],
-      accent: 'amber',
-    },
-    {
-      name: 'IMAPAC',
-      url: 'https://imapac.com',
-      category: 'Biopharma Networking & Events',
-      tags: ['Web Design', 'Internal Tools', 'CMS'],
-      accent: 'rust',
-    },
-  ];
-
   onMount(() => {
+    const rows = section.querySelectorAll('.project-row');
+
+    // Spring hover on rows (always active)
+    rows.forEach(row => {
+      const arrow = row.querySelector('.row-arrow');
+      if (arrow) {
+        row.addEventListener('mouseenter', () => {
+          animate(arrow, { x: 3, opacity: 1 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
+        });
+        row.addEventListener('mouseleave', () => {
+          animate(arrow, { x: 0, opacity: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
+        });
+      }
+    });
+
+    if (window.__vtNav) {
+      section.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
+      return;
+    }
+
     const tag = section.querySelector('.section-tag');
     const heading = section.querySelector('.section-heading');
-    const rows = section.querySelectorAll('.project-row');
     const footer = section.querySelector('.section-footer');
 
-    inView(section, () => {
+    const stop = inView(section, () => {
       animate(tag, { opacity: [0, 1], y: [8, 0] }, {
         duration: 0.35,
         easing: [0.25, 1, 0.5, 1],
@@ -59,20 +55,11 @@
           easing: [0.25, 1, 0.5, 1],
         });
       }
+
+      stop();
     }, { amount: 0.15 });
 
-    // Spring hover on rows
-    rows.forEach(row => {
-      const arrow = row.querySelector('.row-arrow');
-      if (arrow) {
-        row.addEventListener('mouseenter', () => {
-          animate(arrow, { x: 3, opacity: 1 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
-        });
-        row.addEventListener('mouseleave', () => {
-          animate(arrow, { x: 0, opacity: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
-        });
-      }
-    });
+    return () => stop();
   });
 </script>
 
@@ -92,6 +79,18 @@
             </div>
           </div>
           <div class="row-right">
+            {#if project.screenshotUrl}
+              <div class="row-thumb">
+                <img
+                  src="{project.screenshotUrl}?w=120&h=75&fit=crop&crop=top&auto=format"
+                  alt="{project.name}"
+                  width="120"
+                  height="75"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            {/if}
             <div class="row-tags">
               {#each project.tags as tag (tag)}
                 <span class="row-tag">{tag}</span>
@@ -251,12 +250,35 @@
   .project-row--amber:hover .row-category { color: var(--color-accent-amber); }
   .project-row--rust:hover .row-category { color: var(--color-accent-rust); }
 
-  /* ---- Right side: tags + arrow ---- */
+  /* ---- Right side: thumb + tags + arrow ---- */
   .row-right {
     display: flex;
     align-items: center;
     gap: 1rem;
     flex-shrink: 0;
+  }
+
+  .row-thumb {
+    width: 80px;
+    height: 50px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+    opacity: 0.7;
+    transition: opacity var(--duration-fast) var(--ease-out-expo);
+    flex-shrink: 0;
+  }
+
+  .project-row:hover .row-thumb {
+    opacity: 1;
+  }
+
+  .row-thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
   }
 
   .row-tags {
@@ -333,6 +355,10 @@
 
     .row-tags {
       flex-wrap: wrap;
+    }
+
+    .row-thumb {
+      display: none;
     }
   }
 

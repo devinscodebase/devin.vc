@@ -5,16 +5,24 @@
   let section;
 
   onMount(() => {
+    if (window.__vtNav) {
+      section.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
+      return;
+    }
+
     const tag = section.querySelector('.section-tag');
     const entries = section.querySelectorAll('.entry');
+    const stops = [];
 
     // Section tag reveal
-    inView(tag, () => {
+    const stopTag = inView(tag, () => {
       animate(tag, { opacity: [0, 1], y: [10, 0] }, {
         duration: 0.5,
         easing: [0.25, 1, 0.5, 1],
       });
+      stopTag();
     }, { amount: 0.5 });
+    stops.push(stopTag);
 
     // Each entry reveals individually as it scrolls into view
     entries.forEach((entry) => {
@@ -23,7 +31,7 @@
       const dot = entry.querySelector('.line-dot');
       const bar = entry.querySelector('.line-bar');
 
-      inView(entry, () => {
+      const stopEntry = inView(entry, () => {
         // Year number slides in from left
         animate(yearBig, { opacity: [0, 1], x: [-30, 0] }, {
           duration: 0.8,
@@ -54,8 +62,13 @@
             easing: [0.25, 1, 0.5, 1],
           });
         }
+
+        stopEntry();
       }, { amount: 0.2 });
+      stops.push(stopEntry);
     });
+
+    return () => stops.forEach(s => s());
   });
 </script>
 

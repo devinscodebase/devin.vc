@@ -20,11 +20,26 @@
   }
 
   onMount(() => {
-    const tag = section.querySelector('.section-tag');
-    const heading = section.querySelector('.section-heading');
     const cards = section.querySelectorAll('.project');
 
-    inView(section, () => {
+    // Cursor-following spotlight (always active, not an entrance animation)
+    cards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--glow-x', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--glow-y', `${e.clientY - rect.top}px`);
+      });
+    });
+
+    if (window.__vtNav) {
+      section.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
+      return;
+    }
+
+    const tag = section.querySelector('.section-tag');
+    const heading = section.querySelector('.section-heading');
+
+    const stop = inView(section, () => {
       // Section tag
       animate(tag, { opacity: [0, 1], y: [8, 0] }, {
         duration: 0.35,
@@ -44,16 +59,11 @@
         delay: stagger(0.06, { start: 0.1 }),
         easing: [0.25, 1, 0.5, 1],
       });
+
+      stop();
     }, { amount: 0.2 });
 
-    // Cursor-following spotlight on cards
-    cards.forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        card.style.setProperty('--glow-x', `${e.clientX - rect.left}px`);
-        card.style.setProperty('--glow-y', `${e.clientY - rect.top}px`);
-      });
-    });
+    return () => stop();
   });
 </script>
 

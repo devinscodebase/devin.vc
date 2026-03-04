@@ -9,10 +9,15 @@
   let section;
 
   onMount(() => {
+    if (window.__vtNav) {
+      section.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
+      return;
+    }
+
     const tag = section.querySelector('.section-tag');
     const cards = section.querySelectorAll('.card');
 
-    inView(section, () => {
+    const stop = inView(section, () => {
       animate(tag, { opacity: [0, 1], y: [8, 0] }, {
         duration: 0.35,
         easing: [0.25, 1, 0.5, 1],
@@ -23,7 +28,11 @@
         delay: stagger(0.1, { start: 0.08 }),
         easing: [0.25, 1, 0.5, 1],
       });
+
+      stop();
     }, { amount: 0.15 });
+
+    return () => stop();
   });
 </script>
 

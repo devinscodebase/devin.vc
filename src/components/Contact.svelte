@@ -5,13 +5,18 @@
   let section;
 
   onMount(() => {
+    if (window.__vtNav) {
+      section.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
+      return;
+    }
+
     const tag = section.querySelector('.section-tag');
     const heading = section.querySelector('.cta-heading');
     const email = section.querySelector('.email');
     const body = section.querySelector('.cta-body');
     const links = section.querySelector('.links');
 
-    inView(section, () => {
+    const stop = inView(section, () => {
       // Section tag
       animate(tag, { opacity: [0, 1], y: [8, 0] }, {
         duration: 0.35,
@@ -56,7 +61,11 @@
       email.addEventListener('mouseleave', () => {
         animate(email, { scale: 1 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
       });
+
+      stop();
     }, { amount: 0.25 });
+
+    return () => stop();
   });
 </script>
 

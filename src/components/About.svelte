@@ -5,11 +5,16 @@
   let section;
 
   onMount(() => {
+    if (window.__vtNav) {
+      section.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
+      return;
+    }
+
     const footer = section.querySelector('.about-footer');
     const quote = section.querySelector('.about-quote');
     const border = section.querySelector('.about-border');
 
-    inView(section, () => {
+    const stop = inView(section, () => {
       animate(footer, { opacity: [0, 1], y: [10, 0] }, {
         duration: 0.5,
         easing: [0.25, 1, 0.5, 1],
@@ -26,7 +31,11 @@
         delay: 0.3,
         easing: [0.25, 1, 0.5, 1],
       });
+
+      stop();
     }, { amount: 0.25 });
+
+    return () => stop();
   });
 </script>
 

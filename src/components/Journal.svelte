@@ -35,13 +35,28 @@
   }
 
   onMount(() => {
+    // Cursor-following spotlight (always active)
+    const postCards = section.querySelectorAll('.post');
+    postCards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--glow-x', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--glow-y', `${e.clientY - rect.top}px`);
+      });
+    });
+
+    if (window.__vtNav) {
+      section.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
+      return;
+    }
+
     const tag = section.querySelector('.section-tag');
     const header = section.querySelector('.journal-header');
     const featured = section.querySelector('.post.featured');
     const accentBar = section.querySelector('.post-accent');
     const stackEls = section.querySelectorAll('.post-stack .post');
 
-    inView(section, () => {
+    const stop = inView(section, () => {
       animate(tag, { opacity: [0, 1], y: [8, 0] }, {
         duration: 0.35,
         easing: [0.25, 1, 0.5, 1],
@@ -77,17 +92,10 @@
         });
       }
 
+      stop();
     }, { amount: 0.15 });
 
-    // Cursor-following spotlight on post cards
-    const postCards = section.querySelectorAll('.post');
-    postCards.forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        card.style.setProperty('--glow-x', `${e.clientX - rect.left}px`);
-        card.style.setProperty('--glow-y', `${e.clientY - rect.top}px`);
-      });
-    });
+    return () => stop();
   });
 </script>
 

@@ -61,8 +61,7 @@ const ogImage = `${siteUrl}${ogImagePath.startsWith('/') ? ogImagePath : `/${ogI
     <script is:inline>
       (function() {
         var stored = localStorage.getItem('theme');
-        var preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', stored || preferred);
+        document.documentElement.setAttribute('data-theme', stored || 'dark');
       })();
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -81,16 +80,16 @@ const ogImage = `${siteUrl}${ogImagePath.startsWith('/') ? ogImagePath : `/${ogI
         window.__vtNav = true;
       });
       document.addEventListener('astro:after-swap', function() {
-        // Reveal all inline opacity:0 elements immediately
-        document.querySelectorAll('[style*="opacity: 0"]').forEach(function(el) {
-          el.style.opacity = '1';
+        // Reveal all elements with animation starting states immediately
+        document.querySelectorAll('[style*="opacity: 0"], [style*="transform: scale"], [style*="width: 0"]').forEach(function(el) {
+          el.removeAttribute('style');
         });
       });
       // After everything (scripts, hydration), clean up any stragglers
       document.addEventListener('astro:page-load', function() {
         if (!window.__vtNav) return;
-        document.querySelectorAll('[style*="opacity: 0"]').forEach(function(el) {
-          el.style.opacity = '1';
+        document.querySelectorAll('[style*="opacity: 0"], [style*="transform: scale"], [style*="width: 0"]').forEach(function(el) {
+          el.removeAttribute('style');
         });
         window.__vtNav = false;
       });
