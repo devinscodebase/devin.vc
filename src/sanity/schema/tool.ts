@@ -27,6 +27,7 @@ export const tool = defineType({
           { title: 'Design & Frontend', value: 'design-frontend' },
           { title: 'Backend & Data', value: 'backend-data' },
           { title: 'Infrastructure & Ops', value: 'infra-ops' },
+          { title: 'Marketing & Growth', value: 'marketing' },
         ],
       },
       validation: (rule) => rule.required(),

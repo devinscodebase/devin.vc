@@ -9,9 +9,10 @@
   let hideTimeout;
 
   const categories = [
-    { key: 'design-frontend', label: 'Design & Frontend', speed: '35s', direction: 'normal' },
-    { key: 'backend-data', label: 'Backend & Data', speed: '45s', direction: 'reverse' },
-    { key: 'infra-ops', label: 'Infrastructure & Ops', speed: '40s', direction: 'normal' },
+    { key: 'design-frontend', label: 'Design & Frontend', speed: '60s', direction: 'normal' },
+    { key: 'backend-data', label: 'Backend & Data', speed: '75s', direction: 'reverse' },
+    { key: 'infra-ops', label: 'Infrastructure & Ops', speed: '65s', direction: 'normal' },
+    { key: 'marketing', label: 'Marketing & Growth', speed: '70s', direction: 'reverse' },
   ];
 
   const COPIES = 4;
