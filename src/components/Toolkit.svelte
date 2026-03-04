@@ -82,7 +82,6 @@
     <div class="toolkit-header" style="opacity: 0;">
       <h2 class="section-heading">Tools I Work With</h2>
 
-      <!-- Detail panel: right side of heading row -->
       <div class="detail-panel" class:is-visible={activeTool}>
         {#if activeTool}
           {#key activeTool.name}
@@ -92,8 +91,8 @@
                   class="detail-logo"
                   src="{activeTool.logoUrl}"
                   alt=""
-                  width="22"
-                  height="22"
+                  width="28"
+                  height="28"
                 />
               {/if}
               <div class="detail-text">
@@ -205,8 +204,9 @@
   /* ---- Header row: heading left, detail right ---- */
   .toolkit-header {
     display: flex;
-    align-items: baseline;
-    gap: clamp(2.5rem, 5vw, 4rem);
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: clamp(2rem, 4vw, 3rem);
     margin-bottom: var(--space-block);
   }
 
@@ -221,39 +221,38 @@
     flex-shrink: 0;
   }
 
-  /* ---- Detail panel (right of heading) ---- */
+  /* ---- Detail panel (right of heading, capped width) ---- */
   .detail-panel {
-    flex: 1;
+    max-width: 420px;
     min-width: 0;
+    min-height: 4.5rem;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-end;
-    min-height: 28px;
-    overflow: hidden;
   }
 
   .detail-content {
     display: flex;
-    align-items: center;
-    gap: 0.65rem;
-    animation: detail-enter 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    align-items: flex-start;
+    gap: 0.75rem;
     max-width: 100%;
+    animation: detail-enter 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   @keyframes detail-enter {
     from {
       opacity: 0;
-      transform: translateY(3px);
+      transform: translateY(5px) scale(0.98);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
   }
 
   .detail-logo {
-    width: 22px;
-    height: 22px;
+    width: 28px;
+    height: 28px;
     object-fit: contain;
     flex-shrink: 0;
   }
@@ -264,14 +263,14 @@
 
   .detail-text {
     display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
+    flex-direction: column;
+    gap: 0.3rem;
     min-width: 0;
   }
 
   .detail-name {
     font-family: 'Instrument Serif', serif;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 400;
     color: var(--color-text);
     line-height: 1;
@@ -279,21 +278,15 @@
   }
 
   .detail-sep {
-    width: 16px;
-    height: 1px;
-    background: color-mix(in oklab, var(--color-text-muted) 30%, transparent);
-    flex-shrink: 0;
+    display: none;
   }
 
   .detail-desc {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.72rem;
+    font-size: 0.85rem;
     font-weight: 400;
-    line-height: 1.4;
+    line-height: 1.45;
     color: var(--color-text-muted);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   /* ---- Marquee layout ---- */
@@ -436,11 +429,7 @@
 
     .detail-panel {
       justify-content: flex-start;
-      min-height: 36px;
-    }
-
-    .detail-text {
-      text-align: left;
+      max-width: 100%;
     }
 
     .chip {
@@ -468,11 +457,11 @@
     }
 
     .detail-name {
-      font-size: 0.85rem;
+      font-size: 0.95rem;
     }
 
     .detail-desc {
-      font-size: 0.7rem;
+      font-size: 0.75rem;
     }
   }
 
