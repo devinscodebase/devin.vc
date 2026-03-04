@@ -194,11 +194,11 @@
     background: none;
     border: none;
     cursor: pointer;
-    padding: 8px;
-    margin: -8px;
+    padding: 12px;
+    margin: -12px;
     position: relative;
-    width: 34px;
-    height: 34px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;

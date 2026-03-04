@@ -173,4 +173,14 @@
   .about-link:hover svg {
     transform: translateX(3px);
   }
+
+  @media (max-width: 640px) {
+    .about {
+      min-height: auto;
+    }
+
+    .about-copy {
+      font-size: clamp(1.4rem, 5vw, 1.8rem);
+    }
+  }
 </style>

@@ -175,6 +175,12 @@
     color: color-mix(in oklab, var(--color-text-muted) 40%, transparent);
   }
 
+  @media (max-width: 640px) {
+    .links {
+      gap: 0.5rem;
+    }
+  }
+
   .section-tag {
     display: flex;
     align-items: center;

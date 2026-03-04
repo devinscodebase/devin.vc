@@ -351,7 +351,7 @@
     margin-top: 0.75rem;
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 640px) {
     .entry {
       grid-template-columns: 1fr;
       gap: 0.5rem;

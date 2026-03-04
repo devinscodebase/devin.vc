@@ -391,4 +391,24 @@
     0%, 100% { opacity: 0.4; transform: scaleY(1); }
     50% { opacity: 1; transform: scaleY(1.2); }
   }
+
+  @media (max-width: 640px) {
+    .content {
+      padding: 1rem;
+    }
+
+    .descriptors {
+      font-size: clamp(0.72rem, 2.5vw, 0.8rem);
+    }
+
+    .kinetic {
+      gap: clamp(1.25rem, 3vh, 2.5rem);
+    }
+  }
+
+  @media (max-height: 600px) {
+    .scroll-fade {
+      display: none;
+    }
+  }
 </style>
