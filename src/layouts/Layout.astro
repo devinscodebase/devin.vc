@@ -3,8 +3,7 @@ import { ClientRouter } from 'astro:transitions';
 import Nav from '../components/Nav.svelte';
 import ScrollProgress from '../components/ScrollProgress.svelte';
 import Footer from '../components/Footer.astro';
-import SpeedInsights from '@vercel/speed-insights/astro';
-import Analytics from '@vercel/analytics/astro';
+import CookieConsent from '../components/CookieConsent.svelte';
 import '../styles/global.css';
 
 interface Props {
@@ -108,7 +107,6 @@ const ogImage = `${siteUrl}${ogImagePath.startsWith('/') ? ogImagePath : `/${ogI
     {!hideScrollProgress && <ScrollProgress client:load />}
     <slot />
     <Footer />
-    <Analytics />
-    <SpeedInsights />
+    <CookieConsent client:load />
   </body>
 </html>
