@@ -2,6 +2,18 @@
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import portrait from '../assets/gallery/portrait.jpg';
+import wedding from '../assets/story/wedding.jpg';
+import plane from '../assets/story/plane.jpg';
+import skylarBorn from '../assets/story/skylar-born.jpg';
+import podcast from '../assets/story/podcast.jpg';
+import richterEra from '../assets/story/richter-era.jpg';
+import havenBorn from '../assets/story/haven-born.jpg';
+import clearwater from '../assets/story/clearwater.jpg';
+import bootcamp from '../assets/story/10x-bootcamp.jpg';
+import southAfrica from '../assets/story/south-africa.jpg';
+import seminar from '../assets/story/seminar.jpg';
+import g20Summit from '../assets/story/g20-summit.jpg';
+import presentDay from '../assets/story/present-day.jpg';
 ---
 
 <Layout title="About — Devin Alexander" description="The full story — where I started, what shaped my perspective, and what I believe about building things that matter." image="/api/og.png?type=page&title=About&subtitle=The%20full%20story">
@@ -9,44 +21,206 @@ import portrait from '../assets/gallery/portrait.jpg';
     <section class="about-page">
       <div class="about-inner">
 
+        <!-- ═══════════ HERO ═══════════ -->
         <div class="about-hero">
           <div class="hero-image-wrap">
             <div class="hero-image-frame">
               <Image src={portrait} alt="Devin Alexander" widths={[400, 800]} format="webp" quality={85} loading="eager" class="hero-portrait" />
             </div>
           </div>
-          <div class="hero-text">
-            <span class="hero-tag">About</span>
-            <h1 class="hero-name">Devin Alexander</h1>
-            <p class="hero-identity">Builder, operator, and design-obsessed generalist.</p>
-            <div class="hero-descriptors">
-              <span class="desc teal">Marketing</span>
-              <span class="desc-dot" aria-hidden="true">&middot;</span>
-              <span class="desc amber">Operations</span>
-              <span class="desc-dot" aria-hidden="true">&middot;</span>
-              <span class="desc rust">Design & Dev</span>
-              <span class="desc-dot" aria-hidden="true">&middot;</span>
-              <span class="desc gold">GTM</span>
-            </div>
+          <span class="hero-tag">About</span>
+          <h1 class="hero-name">Devin Alexander</h1>
+          <p class="hero-identity">A decade of building, breaking, moving, and becoming.</p>
+          <div class="hero-descriptors">
+            <span class="desc teal">Marketing</span>
+            <span class="desc-dot" aria-hidden="true">&middot;</span>
+            <span class="desc amber">Operations</span>
+            <span class="desc-dot" aria-hidden="true">&middot;</span>
+            <span class="desc rust">Design & Dev</span>
+            <span class="desc-dot" aria-hidden="true">&middot;</span>
+            <span class="desc gold">GTM</span>
           </div>
         </div>
 
+        <!-- ═══════════ STORY — PHOTO ESSAY ═══════════ -->
         <div class="story">
           <div class="story-tag"><span class="tag-number">01</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Story</span></div>
-          <p class="story-text story-lead">
-            <span class="drop-cap">I</span> didn't set out to be a generalist. It happened because I kept saying yes to problems that interested me — regardless of what department they lived in. Marketing led to operations. Operations led to design. Design led to product. And somewhere along the way, I realized <span class="story-accent">the walls between disciplines were mostly imaginary.</span>
-          </p>
-          <p class="story-text">
-            My career started in digital advertising at sixteen, running Google Ads from my bedroom in England. That systematic, "if this, then that" logic became my foundation. But over the next decade — across agencies, startups, and enterprises — I learned that the real world is messier than any framework. <span class="story-accent">The best results come from people who can hold multiple disciplines in their head at once</span> and find the leverage points between them.
-          </p>
-          <p class="story-text">
-            I've scaled a startup from <span class="story-stat">$30K to $300K</span> a month. I've led marketing for a firm with <span class="story-stat">40+ Fortune 500</span> clients. I've built teams, rebranded companies, designed platforms, and shipped products. But the throughline isn't any single skill — it's the ability to see systems where others see silos, and to move between strategy and execution without losing altitude on either.
-          </p>
-          <p class="story-text">
-            Today, I'm COO at Andreou Enterprises, operating across the portfolio and leading a team in the Web3 space. I'm also building tools on the side — because I believe <span class="story-accent">the best operators are the ones who never stop building.</span>
-          </p>
+
+          <!-- ──── Chapter 1: Where It Started ──── -->
+          <div class="chapter">
+            <div class="chapter-marker"><span class="marker-year">2016–2017</span><span class="marker-dash" aria-hidden="true"></span><span class="marker-label">Where It Started</span></div>
+
+            <figure class="photo-full">
+              <Image src={wedding} alt="Devin and Georgia's wedding, 2017" widths={[600, 960, 1200]} format="webp" quality={82} loading="lazy" class="story-img" />
+              <figcaption>Georgia and I, 2017. Twenty years old and certain about exactly one thing.</figcaption>
+            </figure>
+
+            <p class="story-text story-lead">
+              <span class="drop-cap">M</span>y career in marketing started in July of 2016. I was a junior advertiser at Flood Media. Allen, one of their Google Ads specialists, taught me the fundamentals and sent me on my way. That systematic, "if this, then that" logic became the foundation I'd build everything else on top of. Input, output, measure, repeat. <span class="story-accent">I didn't know it yet, but I was teaching myself how to think in leverage.</span> Small inputs, outsized outputs.
+            </p>
+            <p class="story-text">
+              Then Georgia. We'd been together since we were teenagers, and we married in 2017. Twenty years old and certain about exactly one thing. Shortly after the wedding, I got on a plane to England to be with her. No safety net. No five-year plan. Just the conviction that <span class="story-accent">the next version of my life was somewhere I hadn't been yet.</span>
+            </p>
+
+            <figure class="photo-inline-small">
+              <Image src={plane} alt="View from a plane window above the clouds" widths={[280, 500]} format="webp" quality={80} loading="lazy" class="story-img" />
+              <figcaption>Somewhere over the Atlantic.</figcaption>
+            </figure>
+          </div>
+
+          <hr class="chapter-divider" aria-hidden="true" />
+
+          <!-- ──── Chapter 2: Atlanta ──── -->
+          <div class="chapter">
+            <div class="chapter-marker"><span class="marker-year">2018–2019</span><span class="marker-dash" aria-hidden="true"></span><span class="marker-label">Atlanta</span></div>
+
+            <div class="photo-pair">
+              <figure>
+                <Image src={skylarBorn} alt="Skylar as a newborn, July 2018" widths={[400, 700]} format="webp" quality={82} loading="lazy" class="story-img" />
+                <figcaption>Skylar, July 2018.</figcaption>
+              </figure>
+              <figure>
+                <Image src={podcast} alt="Devin recording The Essentials podcast" widths={[400, 700]} format="webp" quality={82} loading="lazy" class="story-img" />
+                <figcaption>The version of me trying to figure it all out.</figcaption>
+              </figure>
+            </div>
+
+            <p class="story-text">
+              In September 2018, I became Creative Director at The Customer Factory, a chiropractic marketing company serving over a hundred practices. We'd moved to Atlanta, and I was learning fast. Marketing isn't just "if this, then that." There are far more variables in strategic customer acquisition than any textbook prepares you for.
+            </p>
+            <p class="story-text">
+              Skylar was born that July. <span class="story-accent">Suddenly the stakes weren't abstract anymore. Every decision had weight.</span>
+            </p>
+            <p class="story-text">
+              By January 2019, they promoted me to VP. I was responsible for marketing The Customer Factory itself, to chiropractors. I built lead magnets that attracted hundreds of doctors a week to our email lists, cultivated referral relationships with clients who sent new business our way, and activated referral sources like chiropractic consultants. We hit the highest new-business numbers the company had ever seen. I also launched "The Essentials," a podcast where I broke down marketing fundamentals. Not to build an audience. To force myself to articulate what I was learning.
+            </p>
+
+            <blockquote class="pull-quote">Marketing isn't formulas. It's people. The data tells you what happened. The people tell you why.</blockquote>
+          </div>
+
+          <hr class="chapter-divider" aria-hidden="true" />
+
+          <!-- ──── Chapter 3: Fortune 500s ──── -->
+          <div class="chapter">
+            <div class="chapter-marker"><span class="marker-year">2019–2021</span><span class="marker-dash" aria-hidden="true"></span><span class="marker-label">Fortune 500s</span></div>
+
+            <figure class="photo-feature">
+              <Image src={richterEra} alt="Devin during the Richter years" widths={[400, 600]} format="webp" quality={82} loading="lazy" class="story-img" />
+              <figcaption>The Richter years. Learning that ambition and humility aren't opposites.</figcaption>
+            </figure>
+
+            <p class="story-text">
+              In August 2019, I had a phone call with Robert Cornish, CEO and Founder of Richter. A media company that produced videos and sales strategies for some of the largest companies in the world. Over <span class="story-stat">40 of the Fortune 500</span> on their client roster. I pitched myself for the VP of Marketing role. He accepted.
+            </p>
+            <p class="story-text">
+              It was some of the most challenging, exciting work I'd ever done. We launched thought leadership forums, podcasts, enterprise positioning campaigns. I was touching almost every part of the marketing lifecycle. The jump from scrappy startup to enterprise was disorienting at first. Bigger budgets, longer timelines, thicker politics. <span class="story-accent">But the fundamentals were the same: find the leverage, tell the story, move the number.</span>
+            </p>
+
+            <blockquote class="pull-quote">Credibility isn't given. It's demonstrated, one decision at a time.</blockquote>
+
+            <p class="story-text">
+              Robert then launched ContentOne, a subsidiary targeting B2B SMBs. I was tapped as VP of Marketing & Operations. Running our own promotion, managing the production team for client projects. This is where automation became a core part of my workflow. Dropbox, DocuSign, Monday.com, everything scattered everywhere. So we streamlined. Automated. Built our own production monitoring systems, added Zapier, and increased efficiency dramatically.
+            </p>
+          </div>
+
+          <hr class="chapter-divider" aria-hidden="true" />
+
+          <!-- ──── Chapter 4: Two Daughters, One Startup ──── -->
+          <div class="chapter">
+            <div class="chapter-marker"><span class="marker-year">2022</span><span class="marker-dash" aria-hidden="true"></span><span class="marker-label">Two Daughters, One Startup</span></div>
+
+            <figure class="photo-feature">
+              <Image src={havenBorn} alt="Haven as a newborn, March 2022" widths={[400, 600]} format="webp" quality={82} loading="lazy" class="story-img" />
+              <figcaption>Haven, March 2022.</figcaption>
+            </figure>
+
+            <p class="story-text">
+              Haven arrived in March 2022. Two daughters under four. And I decided that was the perfect time to take a leap.
+            </p>
+            <p class="story-text">
+              Jeremy, the CEO of B2B Business Experts, reached out. He had one employee, a salesperson, and was handling delivery himself. He specialized in B2B marketing and appointment setting for insurance agents. At first I hesitated. Startup life. "What if it crashes and burns?" I'd just had a baby. That was a lot to think about. But I went with my gut and took the job as his head of marketing.
+            </p>
+            <p class="story-text">
+              This role taught me more about data analysis, process documentation, and process optimization than anything else I'd done. It was all about streamlining systems to the absolute limit so we could be wildly profitable while still delivering services worth paying for. We went from <span class="story-stat">$30,000 a month</span> in revenue when I started to <span class="story-stat">$300,000 a month</span> by the time I departed.
+            </p>
+
+            <blockquote class="pull-quote">Comfort makes me restless. Pressure makes me precise.</blockquote>
+
+            <figure class="photo-feature">
+              <Image src={clearwater} alt="Devin and daughter at sunset in Clearwater, Florida" widths={[400, 600]} format="webp" quality={82} loading="lazy" class="story-img" />
+              <figcaption>Clearwater, Florida. The rare pause.</figcaption>
+            </figure>
+          </div>
+
+          <hr class="chapter-divider" aria-hidden="true" />
+
+          <!-- ──── Chapter 5: Never Stop ──── -->
+          <div class="chapter">
+            <div class="chapter-marker"><span class="marker-year">2023</span><span class="marker-dash" aria-hidden="true"></span><span class="marker-label">Never Stop</span></div>
+
+            <figure class="photo-wide">
+              <Image src={bootcamp} alt="10x Bootcamp event in Miami" widths={[500, 800]} format="webp" quality={82} loading="lazy" class="story-img" />
+              <figcaption>10x Bootcamp, Miami. Still a student.</figcaption>
+            </figure>
+
+            <p class="story-text">
+              2023 was depth over breadth. The insurance marketing pivot continued. A training platform built from scratch. The team grew to six. I was deep in data, in optimization, in the mechanics of turning attention into action. But the real growth that year wasn't the metrics. It was the discipline. <span class="story-accent">I stopped chasing novelty and started mastering repetition.</span>
+            </p>
+
+            <blockquote class="pull-quote">The day you stop being a student is the day you start becoming irrelevant.</blockquote>
+          </div>
+
+          <hr class="chapter-divider" aria-hidden="true" />
+
+          <!-- ──── Chapter 6: Home ──── -->
+          <div class="chapter">
+            <div class="chapter-marker"><span class="marker-year">2024 – Present</span><span class="marker-dash" aria-hidden="true"></span><span class="marker-label">Home</span></div>
+
+            <figure class="photo-full">
+              <Image src={southAfrica} alt="Devin hugging both daughters in South Africa" widths={[600, 960, 1200]} format="webp" quality={85} loading="lazy" class="story-img" />
+              <figcaption>South Africa, 2024. The three of us.</figcaption>
+            </figure>
+
+            <p class="story-text">
+              In May 2024, I started freelance consulting. We moved to South Africa, Georgia's home and now ours. I developed systems and processes for growing client revenue, experimenting across niches and revenue levels. The one major takeaway: all businesses are fundamentally different. There really isn't a one-size-fits-all program. So I abandoned the classic "build a funnel, advertise" model and <span class="story-accent">started approaching every client like a bespoke suit.</span>
+            </p>
+
+            <div class="photo-pair">
+              <figure>
+                <Image src={seminar} alt="Devin speaking at a seminar" widths={[400, 700]} format="webp" quality={82} loading="lazy" class="story-img" />
+                <figcaption>Teaching what took a decade to learn.</figcaption>
+              </figure>
+              <figure>
+                <Image src={g20Summit} alt="Devin at the IF20 forum at the G20" widths={[400, 700]} format="webp" quality={82} loading="lazy" class="story-img" />
+                <figcaption>IF20 at the G20.</figcaption>
+              </figure>
+            </div>
+
+            <p class="story-text">
+              In November 2025, I was offered the role of CMO at Bitmern Mining, owned by Giannis Andreou. Within a month, Giannis promoted me to COO of Andreou Enterprises. I'm now his second-in-command, running marketing for his brand, his sub-brands, and Bitmern Mining. This role is heavy on Web3 and crypto, which I knew almost nothing about. Yet the things we've built have been remarkably successful. The strategies work because of one thing: <span class="story-accent">work hard, be customer-focused, ask them what they want instead of assuming, and never pretend to know it all.</span>
+            </p>
+            <p class="story-text">
+              Five years ago I also picked up software development. Mostly front-end. TypeScript, Ruby, Tailwind, Bun, Node. All in service of being able to build bespoke systems to match whatever the strategy demands, or lead a team who can because I understand the systems too.
+            </p>
+            <p class="story-text">
+              I'm preparing to return to Clearwater soon. Still actively working in marketing, still building on the side, still being a dad and a husband. <span class="story-accent">That last part is the whole point.</span>
+            </p>
+
+            <figure class="photo-feature photo-closer">
+              <Image src={presentDay} alt="Devin with daughter, black and white" widths={[400, 600]} format="webp" quality={85} loading="lazy" class="story-img" />
+              <figcaption>The whole point.</figcaption>
+            </figure>
+          </div>
         </div>
 
+        <!-- ═══════════ SECTION BREAK ═══════════ -->
+        <div class="section-break" aria-hidden="true">
+          <span class="break-dot"></span>
+          <span class="break-dot"></span>
+          <span class="break-dot"></span>
+        </div>
+
+        <!-- ═══════════ CONVICTIONS ═══════════ -->
         <div class="convictions">
           <div class="convictions-tag"><span class="tag-number">02</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Beliefs</span></div>
           <h2 class="convictions-heading">What I Believe</h2>
@@ -75,6 +249,7 @@ import portrait from '../assets/gallery/portrait.jpg';
           </div>
         </div>
 
+        <!-- ═══════════ SKILLS ═══════════ -->
         <div class="skills">
           <div class="skills-tag"><span class="tag-number">03</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Focus</span></div>
           <h2 class="skills-heading">Areas of Focus</h2>
@@ -143,7 +318,10 @@ import portrait from '../assets/gallery/portrait.jpg';
   import { animate, inView, stagger } from 'motion';
 
   const isVtNav = window.__vtNav;
-  const sections = document.querySelectorAll('.about-hero, .story, .convictions, .skills, .closing-cta');
+  const sections = document.querySelectorAll('.about-hero, .convictions, .skills, .closing-cta');
+  const chapters = document.querySelectorAll('.chapter');
+  const storyPhotos = document.querySelectorAll('.chapter figure');
+  const pullQuotes = document.querySelectorAll('.pull-quote');
   const convictions = document.querySelectorAll('.conviction');
   const convGrid = document.querySelector('.conviction-grid');
 
@@ -159,6 +337,47 @@ import portrait from '../assets/gallery/portrait.jpg';
       }, { amount: 0.15 });
     });
 
+    const storyTag = document.querySelector('.story-tag');
+    if (storyTag) {
+      storyTag.style.opacity = '0';
+      inView(storyTag, () => {
+        animate(storyTag, { opacity: [0, 1], y: [12, 0] }, {
+          duration: 0.4,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }, { amount: 0.15 });
+    }
+
+    chapters.forEach(ch => {
+      ch.style.opacity = '0';
+      inView(ch, () => {
+        animate(ch, { opacity: [0, 1], y: [12, 0] }, {
+          duration: 0.45,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }, { amount: 0.08 });
+    });
+
+    storyPhotos.forEach(fig => {
+      fig.style.opacity = '0';
+      inView(fig, () => {
+        animate(fig, { opacity: [0, 1], scale: [1.02, 1] }, {
+          duration: 0.5,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }, { amount: 0.1 });
+    });
+
+    pullQuotes.forEach(pq => {
+      pq.style.opacity = '0';
+      inView(pq, () => {
+        animate(pq, { opacity: [0, 1], y: [8, 0] }, {
+          duration: 0.5,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }, { amount: 0.3 });
+    });
+
     convictions.forEach(c => { c.style.opacity = '0'; });
     if (convGrid) {
       inView(convGrid, () => {
@@ -171,7 +390,6 @@ import portrait from '../assets/gallery/portrait.jpg';
     }
   }
 
-  // Spring hover on conviction cards — lift + shift title
   convictions.forEach(card => {
     card.addEventListener('mouseenter', () => {
       const title = card.querySelector('.conviction-title');
@@ -185,7 +403,6 @@ import portrait from '../assets/gallery/portrait.jpg';
     });
   });
 
-  // Stagger skill groups
   const skillGroups = document.querySelectorAll('.skill-group');
   const skillsGrid = document.querySelector('.skills-grid');
   if (!isVtNav) {
@@ -210,14 +427,15 @@ import portrait from '../assets/gallery/portrait.jpg';
   }
 
   .about-inner {
-    max-width: 960px;
+    max-width: 720px;
     margin: 0 auto;
   }
 
-  /* ---- Section tags (reusable) ---- */
+  /* ---- Section tags (reusable, centered) ---- */
   .story-tag, .convictions-tag, .skills-tag {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.65rem;
     margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
   }
@@ -251,17 +469,18 @@ import portrait from '../assets/gallery/portrait.jpg';
     color: var(--color-text-muted);
   }
 
-  /* ---- Hero ---- */
+  /* ---- Hero (centered) ---- */
   .about-hero {
     display: flex;
-    align-items: flex-end;
-    gap: clamp(2.5rem, 5vw, 4rem);
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
     margin-bottom: var(--space-block-lg);
   }
 
   .hero-image-wrap {
-    flex-shrink: 0;
-    width: clamp(140px, 22vw, 220px);
+    width: clamp(140px, 22vw, 200px);
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
   }
 
   .hero-image-frame {
@@ -307,12 +526,14 @@ import portrait from '../assets/gallery/portrait.jpg';
     line-height: 1.4;
     color: var(--color-text-muted);
     margin: 0 0 1.25rem;
+    max-width: 28em;
   }
 
   .hero-descriptors {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 0.5em;
     font-family: 'DM Sans', sans-serif;
     font-size: 0.65rem;
@@ -329,10 +550,10 @@ import portrait from '../assets/gallery/portrait.jpg';
 
   /* ---- Story ---- */
   .story {
-    max-width: 720px;
     margin-bottom: var(--space-block-lg);
   }
 
+  /* Prose: LEFT-aligned for readability, centered container gives centered feel */
   .story-text {
     font-family: 'Instrument Serif', serif;
     font-style: italic;
@@ -367,7 +588,175 @@ import portrait from '../assets/gallery/portrait.jpg';
     color: var(--color-accent-teal);
   }
 
-  /* ---- Convictions ---- */
+  /* ---- Pull Quotes (centered, visually distinct) ---- */
+  .pull-quote {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1.35rem, 2.4vw, 1.65rem);
+    line-height: 1.35;
+    color: var(--color-text);
+    text-align: center;
+    margin: clamp(2rem, 4vw, 3rem) 0;
+    padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 3vw, 2rem);
+    border-top: 1px solid color-mix(in oklab, var(--color-accent) 25%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-accent) 25%, transparent);
+    position: relative;
+  }
+
+  /* ---- Chapter Dividers ---- */
+  .chapter-divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-text-muted) 20%, transparent), transparent);
+    margin: clamp(2.5rem, 5vw, 4rem) 0;
+  }
+
+  /* ---- Section Break (story → convictions) ---- */
+  .section-break {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    padding: clamp(2rem, 5vw, 4rem) 0;
+  }
+
+  .break-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--color-accent) 40%, transparent);
+  }
+
+  /* ---- Chapters ---- */
+  .chapter {
+    margin-bottom: 0;
+  }
+
+  .chapter-marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
+  }
+
+  .marker-year {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1;
+    color: var(--color-accent);
+  }
+
+  .marker-dash {
+    width: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-accent), transparent);
+  }
+
+  .marker-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* ---- Photo treatments ---- */
+  .story-img {
+    filter: grayscale(0.15) contrast(1.02);
+    transition: filter 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  figure:hover .story-img {
+    filter: grayscale(0) contrast(1);
+  }
+
+  figure {
+    margin: 0;
+  }
+
+  figcaption {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    font-style: italic;
+    color: var(--color-text-muted);
+    margin-top: 0.5rem;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  /* Full-width photo */
+  .photo-full {
+    margin-bottom: 1.75rem;
+  }
+
+  .photo-full :global(img) {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Paired photos side-by-side */
+  .photo-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .photo-pair :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    aspect-ratio: 4 / 3;
+  }
+
+  /* Feature photo: centered, generous width */
+  .photo-feature {
+    max-width: 65%;
+    margin: 0 auto 1.75rem;
+  }
+
+  .photo-feature :global(img) {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Closer: the final photo, slightly smaller for intimacy */
+  .photo-closer {
+    max-width: 50%;
+    margin-top: 1rem;
+  }
+
+  /* Wide photo: centered, large */
+  .photo-wide {
+    max-width: 85%;
+    margin: 0 auto 1.75rem;
+  }
+
+  .photo-wide :global(img) {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Small inline photo: centered */
+  .photo-inline-small {
+    max-width: 280px;
+    margin: 0 auto 1.75rem;
+  }
+
+  .photo-inline-small :global(img) {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* ---- Convictions (centered headings, left body) ---- */
   .convictions {
     margin-bottom: var(--space-block-lg);
   }
@@ -380,6 +769,7 @@ import portrait from '../assets/gallery/portrait.jpg';
     letter-spacing: -0.015em;
     color: var(--color-text);
     margin: 0 0 clamp(2rem, 4vw, 3rem);
+    text-align: center;
   }
 
   .conviction-grid {
@@ -435,7 +825,7 @@ import portrait from '../assets/gallery/portrait.jpg';
     margin: 0;
   }
 
-  /* ---- Skills ---- */
+  /* ---- Skills (centered heading, 2x2 grid) ---- */
   .skills {
     margin-bottom: var(--space-block-lg);
   }
@@ -448,11 +838,12 @@ import portrait from '../assets/gallery/portrait.jpg';
     letter-spacing: -0.015em;
     color: var(--color-text);
     margin: 0 0 clamp(2rem, 4vw, 3rem);
+    text-align: center;
   }
 
   .skills-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: var(--space-element);
   }
 
@@ -535,6 +926,7 @@ import portrait from '../assets/gallery/portrait.jpg';
     margin-top: var(--space-block-lg);
     padding-top: 2rem;
     border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+    text-align: center;
   }
 
   .back-link {
@@ -563,29 +955,44 @@ import portrait from '../assets/gallery/portrait.jpg';
     transform: translateX(-3px);
   }
 
+  /* ---- Responsive ---- */
   @media (max-width: 768px) {
     .conviction-grid {
       grid-template-columns: 1fr;
     }
 
-    .skills-grid {
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+    .photo-feature {
+      max-width: 100%;
+    }
+
+    .photo-closer {
+      max-width: 70%;
+    }
+
+    .photo-wide {
+      max-width: 100%;
+    }
+
+    .photo-inline-small {
+      max-width: 60%;
+    }
+
+    .photo-pair {
+      grid-template-columns: 1fr;
     }
   }
 
   @media (max-width: 480px) {
-    .about-hero {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .hero-image-wrap {
-      width: 160px;
-    }
-
     .skills-grid {
       grid-template-columns: 1fr;
+    }
+
+    .photo-inline-small {
+      max-width: 70%;
+    }
+
+    .photo-closer {
+      max-width: 80%;
     }
   }
 </style>
