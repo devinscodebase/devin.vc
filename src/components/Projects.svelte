@@ -65,7 +65,7 @@
 
 <section class="projects-section" bind:this={section}>
   <div class="projects-inner">
-    <div class="section-tag" style="opacity: 0;"><span class="tag-number">04</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Projects</span></div>
+    <div class="section-tag" style="opacity: 0;"><span class="tag-number">05</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Projects</span></div>
     <h2 class="section-heading" style="opacity: 0;">Selected Work</h2>
 
     <div class="project-list">

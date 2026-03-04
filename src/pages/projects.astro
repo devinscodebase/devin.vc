@@ -1,62 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { sanityClient, urlFor } from '../lib/sanity';
 
-const projects = [
-  {
-    name: 'Revenx',
-    url: 'https://revenx.com',
-    category: 'B2B Marketing Platform',
-    description: 'Appointment-driven digital marketing for financial advisors and insurance agents. Generates qualified, booked virtual appointments with public-sector employees — 44,000+ appointments booked annually.',
-    contribution: 'Named and designed the full rebrand from B2B Business Experts to Revenx. Built the website, marketing funnels, and customer training platform. Helped scale from $30K/mo to $300K/mo.',
-    tags: ['Branding', 'Web Design', 'Marketing', 'GTM'],
-    accent: 'teal',
-  },
-  {
-    name: 'Equity & Help',
-    url: 'https://equityandhelp.com',
-    category: 'Real Estate Investment',
-    description: 'Investment platform enabling steady returns backed by residential properties while helping working-class families achieve affordable homeownership across 32 states.',
-    contribution: 'Designed and built the website and investor-facing digital presence for this socially conscious real estate platform.',
-    tags: ['Web Design', 'UI/UX'],
-    accent: 'amber',
-  },
-  {
-    name: 'Giannis Andreou',
-    url: 'https://giannisandreou.com',
-    category: 'Personal Brand & Education',
-    description: 'Personal brand and business hub for one of Greece & Cyprus\'s top crypto educators — 500K+ monthly views, 30+ courses, 4,000+ videos, and a portfolio of companies in the Bitcoin mining space.',
-    contribution: 'Built the brand platform, marketing systems, and digital strategy as part of the Andreou Enterprises executive team.',
-    tags: ['Branding', 'Web Design', 'Operations'],
-    accent: 'rust',
-  },
-  {
-    name: 'Bitmern Solo',
-    url: 'https://bitmernsolo.com',
-    category: 'Crypto Mining Infrastructure',
-    description: 'Solo mining pool built for everyone — miners keep entire block rewards with a flat 1% fee. Supports Bitcoin, Litecoin, Dogecoin, Bitcoin Cash, and DigiByte with real-time monitoring.',
-    contribution: 'Built the entire platform from the ground up — front-end interface, back-end infrastructure, and the actual mining pool systems powering each supported chain.',
-    tags: ['Full-Stack Dev', 'Infrastructure', 'Web App'],
-    accent: 'teal',
-  },
-  {
-    name: 'IMAPAC',
-    url: 'https://imapac.com',
-    category: 'Biopharma Networking & Events',
-    description: 'Life sciences marketing and networking platform connecting professionals across the biopharmaceutical industry — 217 events across 150 countries, 60,000+ specialists in their database.',
-    contribution: 'Designed the website and built internal systems for the team to manage their massive events database and website CMS at scale.',
-    tags: ['Web Design', 'Internal Tools', 'CMS'],
-    accent: 'amber',
-  },
-  {
-    name: 'Afrika National Granite',
-    url: 'https://ang.co.za',
-    category: 'Natural Stone Manufacturing',
-    description: 'International supplier of premium granite slabs — vertically integrated from quarry to export, serving 25+ countries with polished, honed, and custom-finished stone since 2000.',
-    contribution: 'Built the digital presence and marketing strategy for this South African granite manufacturer, positioning them for international reach.',
-    tags: ['Web Design', 'Branding', 'Strategy'],
-    accent: 'rust',
-  },
-];
+const projects = await sanityClient.fetch(`
+  *[_type == "project"] | order(order asc) {
+    name, url, category, description, contribution, tags, accent, screenshot, order
+  }
+`);
 ---
 
 <Layout title="Projects — Devin Alexander" description="A look at some of the platforms and brands I've helped build." image="/api/og.png?type=projects">
@@ -71,11 +21,27 @@ const projects = [
         </header>
 
         <div class="project-list">
-          {projects.map((project, i) => (
+          {projects.map((project: any, i: number) => (
             <article class={`project project--${project.accent}`}>
-              <div class="project-index" aria-hidden="true">
-                <span class="index-number">{String(i + 1).padStart(2, '0')}</span>
-              </div>
+              {project.screenshot ? (
+                <a href={project.url} target="_blank" rel="noopener" class="project-screenshot-link">
+                  <div class={`project-screenshot project-screenshot--${project.accent}`}>
+                    <img
+                      src={urlFor(project.screenshot).width(960).height(600).fit('crop').crop('top').quality(90).auto('format').url()}
+                      srcset={`${urlFor(project.screenshot).width(640).height(400).fit('crop').crop('top').quality(85).auto('format').url()} 640w, ${urlFor(project.screenshot).width(960).height(600).fit('crop').crop('top').quality(90).auto('format').url()} 960w`}
+                      sizes="(max-width: 640px) 280px, 320px"
+                      alt={`${project.name} website screenshot`}
+                      width="960"
+                      height="600"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div class="screenshot-overlay"></div>
+                  </div>
+                </a>
+              ) : (
+                <div class="project-screenshot-placeholder"></div>
+              )}
 
               <div class="project-content">
                 <div class="project-head">
@@ -88,7 +54,7 @@ const projects = [
 
                 <div class="project-footer">
                   <div class="project-tags">
-                    {project.tags.map(tag => (
+                    {project.tags.map((tag: string) => (
                       <span class="tag">{tag}</span>
                     ))}
                   </div>
@@ -250,8 +216,9 @@ const projects = [
   /* ---- Project card ---- */
   .project {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: clamp(200px, 30%, 320px) 1fr;
     gap: clamp(1.5rem, 3vw, 2.5rem);
+    align-items: start;
     padding: clamp(2rem, 4vw, 3rem) 0;
     border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
     transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -264,24 +231,6 @@ const projects = [
   .project:hover {
     border-color: color-mix(in oklab, var(--color-text-muted) 25%, transparent);
   }
-
-  /* ---- Index number ---- */
-  .project-index {
-    padding-top: 0.15em;
-  }
-
-  .index-number {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    font-size: clamp(1.5rem, 2.5vw, 2rem);
-    line-height: 1;
-    color: var(--color-text-muted);
-    opacity: 0.2;
-  }
-
-  .project--teal .index-number { color: var(--color-accent-teal); opacity: 0.3; }
-  .project--amber .index-number { color: var(--color-accent-amber); opacity: 0.3; }
-  .project--rust .index-number { color: var(--color-accent-rust); opacity: 0.3; }
 
   /* ---- Content ---- */
   .project-content {
@@ -317,6 +266,66 @@ const projects = [
     letter-spacing: -0.02em;
     color: var(--color-text);
     margin: 0;
+  }
+
+  /* ---- Screenshot ---- */
+  .project-screenshot-link {
+    display: block;
+    text-decoration: none;
+  }
+
+  .project-screenshot {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    transition: transform var(--duration-normal) var(--ease-out-expo),
+                box-shadow var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .project-screenshot-link:hover .project-screenshot {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .project-screenshot--teal {
+    box-shadow: var(--shadow-md), 0 0 0 1px color-mix(in oklab, var(--color-accent-teal) 8%, transparent);
+  }
+
+  .project-screenshot--amber {
+    box-shadow: var(--shadow-md), 0 0 0 1px color-mix(in oklab, var(--color-accent-amber) 8%, transparent);
+  }
+
+  .project-screenshot--rust {
+    box-shadow: var(--shadow-md), 0 0 0 1px color-mix(in oklab, var(--color-accent-rust) 8%, transparent);
+  }
+
+  .project-screenshot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .screenshot-overlay {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in oklab, var(--color-bg) 40%, transparent);
+    transition: opacity var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .project-screenshot-link:hover .screenshot-overlay {
+    opacity: 0;
+  }
+
+  .project-screenshot-placeholder {
+    aspect-ratio: 16 / 10;
+    border-radius: 6px;
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    background: color-mix(in oklab, var(--color-text-muted) 5%, transparent);
   }
 
   .project-desc {
@@ -428,11 +437,12 @@ const projects = [
   @media (max-width: 640px) {
     .project {
       grid-template-columns: 1fr;
-      gap: 0;
+      gap: clamp(1rem, 2vw, 1.25rem);
     }
 
-    .project-index {
-      margin-bottom: 0.5rem;
+    .project-screenshot-link,
+    .project-screenshot-placeholder {
+      max-width: 280px;
     }
   }
 </style>

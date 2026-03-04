@@ -5,6 +5,7 @@ import About from '../components/About.svelte';
 import Gallery from '../components/Gallery.astro';
 import Timeline from '../components/Timeline.svelte';
 import Now from '../components/Now.svelte';
+import Toolkit from '../components/Toolkit.svelte';
 import Projects from '../components/Projects.svelte';
 import Proof from '../components/Proof.svelte';
 import Journal from '../components/Journal.svelte';
@@ -27,6 +28,20 @@ const testimonials = await sanityClient.fetch(`
     quote, name, role, company
   }
 `);
+
+const featuredProjects = await sanityClient.fetch(`
+  *[_type == "project" && featured == true] | order(order asc) {
+    name, url, category, tags, accent,
+    "screenshotUrl": screenshot.asset->url
+  }
+`);
+
+const tools = await sanityClient.fetch(`
+  *[_type == "tool"] | order(order asc) {
+    name, category, order, description,
+    "logoUrl": logo.asset->url
+  }
+`);
 ---
 
 <Layout>
@@ -36,7 +51,8 @@ const testimonials = await sanityClient.fetch(`
     <Gallery />
     <Timeline client:load />
     <Now client:load />
-    <Projects client:load />
+    <Toolkit client:load tools={tools} />
+    <Projects client:load projects={featuredProjects} />
     <Proof client:load testimonials={testimonials} />
     <Journal client:load posts={latestPosts} />
     <Contact client:load />

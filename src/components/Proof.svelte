@@ -38,7 +38,7 @@
 
 <section class="proof" bind:this={section}>
   <div class="proof-inner">
-    <div class="section-tag" style="opacity: 0;"><span class="tag-number">05</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Kind Words</span></div>
+    <div class="section-tag" style="opacity: 0;"><span class="tag-number">06</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Kind Words</span></div>
 
     <div class="grid">
       {#each testimonials.slice(0, 4) as t, i}

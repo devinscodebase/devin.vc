@@ -1,7 +1,9 @@
 import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
 import { journal } from './src/sanity/schema/journal';
+import { project } from './src/sanity/schema/project';
 import { testimonial } from './src/sanity/schema/testimonial';
+import { tool } from './src/sanity/schema/tool';
 
 export default defineConfig({
   name: 'devin',
@@ -10,6 +12,6 @@ export default defineConfig({
   dataset: 'production',
   plugins: [structureTool()],
   schema: {
-    types: [journal, testimonial],
+    types: [journal, project, testimonial, tool],
   },
 });
