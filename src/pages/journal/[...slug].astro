@@ -36,12 +36,15 @@ const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
 });
 
 const seoTitle = post.seoTitle || `${post.title} — Devin Alexander`;
-const dynamicOgUrl = `/api/og.png?type=journal&title=${encodeURIComponent(post.title)}${post.tag ? `&tag=${encodeURIComponent(post.tag)}` : ''}${formattedDate ? `&date=${encodeURIComponent(formattedDate)}` : ''}`;
+const dynamicOgUrl = `/api/og.png?type=journal&title=${encodeURIComponent(post.title)}${post.description ? `&subtitle=${encodeURIComponent(post.description)}` : ''}${post.tag ? `&tag=${encodeURIComponent(post.tag)}` : ''}${formattedDate ? `&date=${encodeURIComponent(formattedDate)}` : ''}`;
 const ogImage = post.ogImage
   ? urlFor(post.ogImage).width(1200).url()
   : post.heroImage
     ? urlFor(post.heroImage).width(1200).url()
     : dynamicOgUrl;
+const heroSrc = post.heroImage
+  ? urlFor(post.heroImage).width(1200).url()
+  : dynamicOgUrl;
 ---
 
 <Layout
@@ -72,11 +75,9 @@ const ogImage = post.ogImage
           <div class="title-rule" aria-hidden="true"></div>
         </header>
 
-        {post.heroImage && (
-          <figure class="hero-image">
-            <img src={urlFor(post.heroImage).width(1200).url()} alt={post.heroAlt || ''} loading="eager" />
-          </figure>
-        )}
+        <figure class="hero-image">
+          <img src={heroSrc} alt={post.heroAlt || ''} loading="eager" />
+        </figure>
 
         <div class="post-body prose">
           <PortableText value={post.body} />

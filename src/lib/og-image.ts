@@ -45,6 +45,7 @@ export async function generateOgImage(params: OgImageParams): Promise<Buffer> {
     case 'journal':
       element = JournalTemplate({
         title: params.title || 'Untitled',
+        subtitle: params.subtitle,
         tag: params.tag,
         date: params.date,
       });
