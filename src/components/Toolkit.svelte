@@ -6,6 +6,7 @@
   let section;
   let activeTool = $state(null);
   let isHovering = $state(false);
+  let isTouch = $state(false);
   let hideTimeout;
 
   const categories = [
@@ -22,6 +23,7 @@
   }
 
   function onChipEnter(tool) {
+    if (isTouch) return;
     clearTimeout(hideTimeout);
     activeTool = tool;
   }
@@ -38,11 +40,13 @@
   }
 
   function onMarqueeEnter() {
+    if (isTouch) return;
     clearTimeout(hideTimeout);
     isHovering = true;
   }
 
   function onMarqueeLeave() {
+    if (isTouch) return;
     isHovering = false;
     hideTimeout = setTimeout(() => {
       activeTool = null;
@@ -50,9 +54,12 @@
   }
 
   onMount(() => {
+    const detectTouch = () => { isTouch = true; };
+    window.addEventListener('touchstart', detectTouch, { once: true, passive: true });
+
     if (window.__vtNav) {
       section.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
-      return;
+      return () => window.removeEventListener('touchstart', detectTouch);
     }
 
     const tag = section.querySelector('.section-tag');
@@ -83,6 +90,7 @@
     return () => {
       stop();
       clearTimeout(hideTimeout);
+      window.removeEventListener('touchstart', detectTouch);
     };
   });
 </script>
@@ -101,7 +109,7 @@
               {#if activeTool.logoUrl}
                 <img
                   class="detail-logo"
-                  src="{activeTool.logoUrl}"
+                  src={activeTool.logoUrl}
                   alt=""
                   width="28"
                   height="28"
@@ -110,7 +118,6 @@
               <div class="detail-text">
                 <span class="detail-name">{activeTool.name}</span>
                 {#if activeTool.description}
-                  <span class="detail-sep" aria-hidden="true"></span>
                   <span class="detail-desc">{activeTool.description}</span>
                 {/if}
               </div>
@@ -242,6 +249,16 @@
     display: flex;
     align-items: flex-start;
     justify-content: flex-end;
+    opacity: 0;
+    transform: translateY(4px);
+    transition:
+      opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .detail-panel.is-visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .detail-content {
@@ -249,17 +266,17 @@
     align-items: flex-start;
     gap: 0.75rem;
     max-width: 100%;
-    animation: detail-enter 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: detail-swap 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  @keyframes detail-enter {
+  @keyframes detail-swap {
     from {
       opacity: 0;
-      transform: translateY(5px) scale(0.98);
+      transform: translateY(3px);
     }
     to {
       opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: translateY(0);
     }
   }
 
