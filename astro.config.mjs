@@ -3,8 +3,6 @@ import { defineConfig } from 'astro/config';
 
 import svelte from '@astrojs/svelte';
 import react from '@astrojs/react';
-import clerk from '@clerk/astro';
-
 import tailwindcss from '@tailwindcss/vite';
 
 import vercel from '@astrojs/vercel';
@@ -20,7 +18,6 @@ export default defineConfig({
     svelte(),
     react(),
     mdx(),
-    clerk(),
     sanity({
       projectId: 'ka7dwvnq',
       dataset: 'production',
