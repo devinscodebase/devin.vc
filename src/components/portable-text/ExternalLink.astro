@@ -1,0 +1,20 @@
+---
+import type { MarkProps } from 'astro-portabletext/types';
+
+type Props = MarkProps<{ href: string }>;
+
+const { node } = Astro.props;
+const href = node.markDef?.href || '#';
+const isExternal = href.startsWith('http') && !href.includes('devinalexander.com') && !href.includes('devin.vc');
+---
+
+{isExternal ? (
+  <a href={href} target="_blank" rel="noopener noreferrer" class="external-link">
+    <slot />
+    <svg class="ext-icon" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M3.5 1.5h7v7" /><path d="M10.5 1.5 1.5 10.5" />
+    </svg>
+  </a>
+) : (
+  <a href={href}><slot /></a>
+)}

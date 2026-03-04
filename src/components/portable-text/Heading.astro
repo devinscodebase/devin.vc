@@ -1,0 +1,19 @@
+---
+import type { Props as BlockProps } from 'astro-portabletext/types';
+
+type Props = BlockProps;
+
+const { node } = Astro.props;
+const style = node.style || 'h2';
+const Tag = style === 'h3' ? 'h3' : 'h2';
+
+const text = node.children?.map((c: any) => c.text || '').join('') || '';
+const id = text
+  .toLowerCase()
+  .replace(/[^a-z0-9\s-]/g, '')
+  .replace(/\s+/g, '-')
+  .replace(/-+/g, '-')
+  .replace(/^-|-$/g, '');
+---
+
+<Tag id={id}><slot /></Tag>
