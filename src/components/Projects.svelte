@@ -346,24 +346,37 @@
     .project-row {
       flex-direction: column;
       align-items: flex-start;
-      gap: 0.65rem;
+      gap: 0.5rem;
+    }
+
+    .row-left {
+      width: 100%;
+    }
+
+    .row-info {
+      flex-direction: column;
+      gap: 0.25rem;
     }
 
     .row-right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
       padding-left: calc(clamp(1rem, 2vw, 1.5rem) + 1.15rem);
+      width: 100%;
     }
 
     .row-tags {
       flex-wrap: wrap;
     }
 
-    .row-thumb {
-      display: none;
+    .row-arrow {
+      opacity: 0.4;
+      margin-left: auto;
+      flex-shrink: 0;
     }
-  }
 
-  @media (max-width: 480px) {
-    .row-tags {
+    .row-thumb {
       display: none;
     }
   }
