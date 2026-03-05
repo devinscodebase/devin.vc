@@ -264,7 +264,7 @@
               <p class="confirm-label">{formatDateShort(selectedDate)} at {selectedSlot.label}</p>
               <input type="text" bind:value={name} placeholder="Name" required class="form-input" aria-label="Your name" />
               <input type="email" bind:value={email} placeholder="Email" required class="form-input" aria-label="Your email address" />
-              <input type="tel" bind:value={phone} placeholder="Phone (optional)" class="form-input" aria-label="Your phone number" />
+              <input type="text" inputmode="tel" bind:value={phone} placeholder="Phone (optional)" class="form-input" aria-label="Your phone number" />
               <textarea bind:value={notes} placeholder="Anything I should know? (optional)" class="form-input form-textarea" rows="2" aria-label="Additional notes"></textarea>
               <button
                 type="submit"
