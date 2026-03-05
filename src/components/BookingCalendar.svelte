@@ -654,8 +654,9 @@
   }
 
   .success-check {
+    display: block;
+    margin: 0 auto 0.75rem;
     color: var(--color-accent-teal);
-    margin-bottom: 0.75rem;
   }
 
   .success-msg {

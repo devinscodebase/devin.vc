@@ -198,6 +198,8 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
         }
 
         // Show success state — swap form for confirmation
+        const hint = form.parentElement?.querySelector('.panel-hint');
+        if (hint) hint.hidden = true;
         form.hidden = true;
         successEl.hidden = false;
       } catch (err) {
@@ -430,7 +432,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   }
 
   .form-field {
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.75rem;
     position: relative;
   }
 
@@ -569,6 +571,12 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     display: none;
   }
 
+  /* Hide hints on success states */
+  #panel-booking:has(:global(.booking-success)) .panel-hint,
+  #panel-message:has(.form-success:not([hidden])) .panel-hint {
+    display: none;
+  }
+
   /* ---- Footer ---- */
   .page-footer {
     margin-top: var(--space-block);
@@ -608,7 +616,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     align-items: flex-start;
     gap: 0.6rem;
     cursor: pointer;
-    margin: 0.5rem 0 0.25rem;
+    margin: 0.25rem 0 0.75rem;
     user-select: none;
   }
 

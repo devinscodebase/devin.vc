@@ -10,7 +10,7 @@ export default function ContactConfirmation({
   name,
 }: ContactConfirmationProps) {
   return (
-    <Layout preview="Thanks for reaching out">
+    <Layout preview={`I've received your message and will get back to you within a day or two.`}>
       <Text style={heading}>
         Thanks for reaching out, {name}.
       </Text>
@@ -23,25 +23,23 @@ export default function ContactConfirmation({
         through the journal:
       </Text>
 
-      <Section style={linkRow}>
-        <table cellPadding="0" cellSpacing="0" style={{ width: '100%' }}>
-          <tr>
-            <td style={linkCard}>
-              <Link href="https://www.devin.vc/work" style={linkTitle}>
-                Work &rarr;
-              </Link>
-              <Text style={linkDesc}>Case studies & leadership</Text>
-            </td>
-            <td style={{ width: '12px' }} />
-            <td style={linkCard}>
-              <Link href="https://www.devin.vc/journal" style={linkTitle}>
-                Journal &rarr;
-              </Link>
-              <Text style={linkDesc}>Writing & reflections</Text>
-            </td>
-          </tr>
-        </table>
-      </Section>
+      <table cellPadding="0" cellSpacing="0" style={{ width: '100%', marginBottom: '24px' }}>
+        <tr>
+          <td style={linkCard}>
+            <Link href="https://www.devin.vc/work" style={linkTitle}>
+              Work &rarr;
+            </Link>
+            <Text style={linkDesc}>Case studies & leadership</Text>
+          </td>
+          <td style={{ width: '10px' }} />
+          <td style={linkCard}>
+            <Link href="https://www.devin.vc/journal" style={linkTitle}>
+              Journal &rarr;
+            </Link>
+            <Text style={linkDesc}>Writing & reflections</Text>
+          </td>
+        </tr>
+      </table>
 
       <Text style={signoff}>— Devin</Text>
     </Layout>
@@ -53,25 +51,21 @@ const heading: React.CSSProperties = {
   fontWeight: 400,
   color: '#ede8df',
   lineHeight: '1.4',
-  margin: '0 0 16px 0',
+  margin: '0 0 14px 0',
 };
 
 const body: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '1.7',
   color: '#a09488',
-  margin: '0 0 16px 0',
-};
-
-const linkRow: React.CSSProperties = {
-  margin: '8px 0 28px 0',
+  margin: '0 0 14px 0',
 };
 
 const linkCard: React.CSSProperties = {
   backgroundColor: '#141210',
   border: '1px solid #1e1a14',
   borderRadius: '8px',
-  padding: '16px',
+  padding: '14px 16px',
   verticalAlign: 'top',
   width: '50%',
 };

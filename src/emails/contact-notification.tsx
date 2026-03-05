@@ -21,7 +21,7 @@ export default function ContactNotification({
     .slice(0, 2);
 
   return (
-    <Layout preview={`New message from ${name}`}>
+    <Layout preview={`${name} (${email}): "${message.slice(0, 80)}${message.length > 80 ? '...' : ''}"`}>
       <Text style={badge}>NEW MESSAGE</Text>
       <Text style={heading}>
         Someone reached out via the contact form.
@@ -63,7 +63,7 @@ const badge: React.CSSProperties = {
   backgroundColor: 'rgba(91, 163, 163, 0.1)',
   padding: '4px 10px',
   borderRadius: '4px',
-  margin: '0 0 16px 0',
+  margin: '0 0 14px 0',
 };
 
 const heading: React.CSSProperties = {
@@ -71,31 +71,31 @@ const heading: React.CSSProperties = {
   fontWeight: 400,
   color: '#ede8df',
   lineHeight: '1.4',
-  margin: '0 0 24px 0',
+  margin: '0 0 20px 0',
 };
 
 const card: React.CSSProperties = {
   backgroundColor: '#141210',
   borderRadius: '10px',
-  padding: '24px',
+  padding: '20px',
   border: '1px solid #1e1a14',
 };
 
 const avatarCell: React.CSSProperties = {
-  width: '44px',
+  width: '40px',
   verticalAlign: 'top',
-  paddingRight: '14px',
+  paddingRight: '12px',
 };
 
 const avatar: React.CSSProperties = {
-  width: '44px',
-  height: '44px',
-  borderRadius: '22px',
+  width: '40px',
+  height: '40px',
+  borderRadius: '20px',
   backgroundColor: '#c4a47c',
   color: '#0a0a08',
-  fontSize: '14px',
+  fontSize: '13px',
   fontWeight: 500,
-  lineHeight: '44px',
+  lineHeight: '40px',
   textAlign: 'center' as const,
 };
 
@@ -104,7 +104,7 @@ const senderInfo: React.CSSProperties = {
 };
 
 const senderName: React.CSSProperties = {
-  fontSize: '15px',
+  fontSize: '14px',
   fontWeight: 500,
   color: '#ede8df',
   margin: '0',
@@ -112,7 +112,7 @@ const senderName: React.CSSProperties = {
 };
 
 const senderEmail: React.CSSProperties = {
-  fontSize: '13px',
+  fontSize: '12px',
   color: '#a09488',
   margin: '2px 0 0 0',
 };
@@ -120,7 +120,7 @@ const senderEmail: React.CSSProperties = {
 const cardDivider: React.CSSProperties = {
   borderColor: '#1e1a14',
   borderWidth: '1px 0 0 0',
-  margin: '18px 0',
+  margin: '16px 0',
 };
 
 const messageLabel: React.CSSProperties = {
@@ -143,5 +143,5 @@ const hint: React.CSSProperties = {
   fontSize: '12px',
   color: '#6d5c48',
   fontStyle: 'italic',
-  margin: '20px 0 0 0',
+  margin: '18px 0 0 0',
 };

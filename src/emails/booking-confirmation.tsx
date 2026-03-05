@@ -16,7 +16,7 @@ export default function BookingConfirmation({
   phone,
 }: BookingConfirmationProps) {
   return (
-    <Layout preview={`You're booked — ${slot}`}>
+    <Layout preview={`${slot} (${timezone}) — check your email for the calendar invite.`}>
       <Text style={heading}>You're booked, {name}.</Text>
       <Text style={body}>
         Looking forward to our conversation. Here are the details:
@@ -49,26 +49,26 @@ const heading: React.CSSProperties = {
   fontWeight: 400,
   color: '#ede8df',
   lineHeight: '1.4',
-  margin: '0 0 16px 0',
+  margin: '0 0 14px 0',
 };
 
 const body: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '1.7',
   color: '#a09488',
-  margin: '0 0 20px 0',
+  margin: '0 0 16px 0',
 };
 
 const card: React.CSSProperties = {
   backgroundColor: '#141210',
   borderRadius: '10px',
-  padding: '20px 24px',
+  padding: '18px 20px',
   border: '1px solid #1e1a14',
-  margin: '0 0 20px 0',
+  margin: '0 0 16px 0',
 };
 
 const slotText: React.CSSProperties = {
-  fontSize: '16px',
+  fontSize: '15px',
   fontWeight: 500,
   color: '#ede8df',
   margin: '0',
@@ -82,7 +82,7 @@ const tzText: React.CSSProperties = {
 };
 
 const ctaSection: React.CSSProperties = {
-  margin: '0 0 28px 0',
+  margin: '0 0 24px 0',
 };
 
 const ctaButton: React.CSSProperties = {

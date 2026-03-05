@@ -8,9 +8,6 @@ import {
   Hr,
   Text,
   Link,
-  Img,
-  Row,
-  Column,
 } from '@react-email/components';
 import * as React from 'react';
 
@@ -24,61 +21,71 @@ export function Layout({ preview, children, unsubscribeUrl }: LayoutProps) {
   return (
     <Html>
       <Head>
+        <meta name="color-scheme" content="dark" />
+        <meta name="supported-color-schemes" content="dark" />
         <style>{`
           @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+          @media only screen and (max-width: 600px) {
+            .email-container { padding: 0 !important; }
+            .email-content { padding: 24px 20px 8px !important; }
+            .email-header { padding: 28px 20px 18px !important; }
+            .email-accent { margin: 0 20px !important; }
+            .email-hr { margin: 20px 20px !important; }
+            .email-footer { padding: 0 20px 32px !important; }
+          }
         `}</style>
       </Head>
       <Preview>{preview}</Preview>
       <Body style={body}>
-        <Container style={container}>
+        <Container style={container} className="email-container">
           {/* Header */}
-          <Section style={header}>
-            <Row>
-              <Column>
-                <Text style={logoText}>Devin Alexander</Text>
-              </Column>
-              <Column align="right">
-                <Link href="https://www.devin.vc" style={headerLink}>
-                  devin.vc
-                </Link>
-              </Column>
-            </Row>
+          <Section style={header} className="email-header">
+            <table cellPadding="0" cellSpacing="0" style={{ width: '100%' }}>
+              <tr>
+                <td>
+                  <Text style={logoText}>Devin Alexander</Text>
+                </td>
+                <td align="right">
+                  <Link href="https://www.devin.vc" style={headerLink}>
+                    devin.vc
+                  </Link>
+                </td>
+              </tr>
+            </table>
           </Section>
 
           {/* Accent line */}
-          <Section style={accentLine} />
+          <div style={accentLine} className="email-accent" />
 
           {/* Content */}
-          <Section style={content}>{children}</Section>
+          <Section style={content} className="email-content">{children}</Section>
 
           {/* Divider */}
-          <Hr style={hr} />
+          <Hr style={hr} className="email-hr" />
 
           {/* Footer */}
-          <Section style={footer}>
-            {/* Social links */}
+          <Section style={footer} className="email-footer">
             <Text style={socialRow}>
               <Link href="https://x.com/devinmarkets" style={socialLink}>
                 X / Twitter
               </Link>
-              <span style={socialDot}>&nbsp;&nbsp;&middot;&nbsp;&nbsp;</span>
+              <span style={dot}>&nbsp;&middot;&nbsp;</span>
               <Link href="https://www.linkedin.com/in/devalexander/" style={socialLink}>
                 LinkedIn
               </Link>
-              <span style={socialDot}>&nbsp;&nbsp;&middot;&nbsp;&nbsp;</span>
+              <span style={dot}>&nbsp;&middot;&nbsp;</span>
               <Link href="https://www.devin.vc" style={socialLink}>
                 Website
               </Link>
             </Text>
 
-            {/* Nav links */}
             <Text style={navRow}>
               <Link href="https://www.devin.vc/work" style={navLink}>Work</Link>
-              <span style={navDot}>&nbsp;&nbsp;&middot;&nbsp;&nbsp;</span>
+              <span style={dot}>&nbsp;&middot;&nbsp;</span>
               <Link href="https://www.devin.vc/projects" style={navLink}>Projects</Link>
-              <span style={navDot}>&nbsp;&nbsp;&middot;&nbsp;&nbsp;</span>
+              <span style={dot}>&nbsp;&middot;&nbsp;</span>
               <Link href="https://www.devin.vc/journal" style={navLink}>Journal</Link>
-              <span style={navDot}>&nbsp;&nbsp;&middot;&nbsp;&nbsp;</span>
+              <span style={dot}>&nbsp;&middot;&nbsp;</span>
               <Link href="https://www.devin.vc/contact" style={navLink}>Contact</Link>
             </Text>
 
@@ -113,7 +120,6 @@ const colors = {
   borderSubtle: '#1e1a14',
 };
 
-// ── Styles ──
 const body: React.CSSProperties = {
   backgroundColor: colors.bg,
   fontFamily: "'DM Sans', 'Segoe UI', sans-serif",
@@ -128,16 +134,17 @@ const container: React.CSSProperties = {
 };
 
 const header: React.CSSProperties = {
-  padding: '40px 32px 24px',
+  padding: '32px 32px 20px',
 };
 
 const logoText: React.CSSProperties = {
   fontFamily: "Georgia, 'Times New Roman', serif",
   fontStyle: 'italic',
-  fontSize: '20px',
+  fontSize: '18px',
   color: colors.text,
   letterSpacing: '-0.02em',
   margin: '0',
+  lineHeight: '1',
 };
 
 const headerLink: React.CSSProperties = {
@@ -158,23 +165,24 @@ const accentLine: React.CSSProperties = {
 };
 
 const content: React.CSSProperties = {
-  padding: '32px 32px 8px',
+  padding: '28px 32px 8px',
 };
 
 const hr: React.CSSProperties = {
   borderColor: colors.borderSubtle,
   borderWidth: '1px 0 0 0',
-  margin: '24px 32px',
+  margin: '20px 32px',
 };
 
 const footer: React.CSSProperties = {
-  padding: '0 32px 40px',
+  padding: '0 32px 32px',
   textAlign: 'center' as const,
 };
 
 const socialRow: React.CSSProperties = {
-  margin: '0 0 16px 0',
+  margin: '0 0 14px 0',
   fontSize: '12px',
+  lineHeight: '1',
 };
 
 const socialLink: React.CSSProperties = {
@@ -184,13 +192,15 @@ const socialLink: React.CSSProperties = {
   fontWeight: 500,
 };
 
-const socialDot: React.CSSProperties = {
+const dot: React.CSSProperties = {
   color: colors.textDim,
+  fontSize: '11px',
 };
 
 const navRow: React.CSSProperties = {
-  margin: '0 0 20px 0',
+  margin: '0 0 16px 0',
   fontSize: '11px',
+  lineHeight: '1',
 };
 
 const navLink: React.CSSProperties = {
@@ -199,11 +209,6 @@ const navLink: React.CSSProperties = {
   fontSize: '11px',
   letterSpacing: '0.08em',
   textTransform: 'uppercase' as const,
-};
-
-const navDot: React.CSSProperties = {
-  color: colors.border,
-  fontSize: '11px',
 };
 
 const copyright: React.CSSProperties = {

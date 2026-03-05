@@ -20,14 +20,13 @@ export default function BookingNotification({
   notes,
 }: BookingNotificationProps) {
   return (
-    <Layout preview={`New booking from ${name}`}>
+    <Layout preview={`${name} (${email}) booked ${slot} (${timezone})`}>
       <Text style={badge}>NEW BOOKING</Text>
       <Text style={heading}>
         A call has been booked.
       </Text>
 
       <Section style={card}>
-        {/* Detail rows */}
         <table cellPadding="0" cellSpacing="0" style={{ width: '100%' }}>
           <tr>
             <td>
@@ -82,7 +81,7 @@ const badge: React.CSSProperties = {
   backgroundColor: 'rgba(196, 164, 124, 0.1)',
   padding: '4px 10px',
   borderRadius: '4px',
-  margin: '0 0 16px 0',
+  margin: '0 0 14px 0',
 };
 
 const heading: React.CSSProperties = {
@@ -90,13 +89,13 @@ const heading: React.CSSProperties = {
   fontWeight: 400,
   color: '#ede8df',
   lineHeight: '1.4',
-  margin: '0 0 24px 0',
+  margin: '0 0 20px 0',
 };
 
 const card: React.CSSProperties = {
   backgroundColor: '#141210',
   borderRadius: '10px',
-  padding: '24px',
+  padding: '20px',
   border: '1px solid #1e1a14',
 };
 
@@ -132,5 +131,5 @@ const hint: React.CSSProperties = {
   fontSize: '12px',
   color: '#6d5c48',
   fontStyle: 'italic',
-  margin: '20px 0 0 0',
+  margin: '18px 0 0 0',
 };

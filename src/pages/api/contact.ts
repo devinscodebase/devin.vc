@@ -48,7 +48,7 @@ export const POST: APIRoute = async ({ request }) => {
       resend.emails.send({
         from: SENDER,
         to: email,
-        subject: 'Thanks for reaching out',
+        subject: `Thanks for reaching out, ${name.split(' ')[0]}`,
         html: confirmationHtml,
       }),
     ]);

@@ -14,7 +14,7 @@ export default function NewsletterWelcome({
   const greeting = firstName ? `Hey ${firstName}` : 'Hey there';
 
   return (
-    <Layout preview="Confirm your subscription">
+    <Layout preview="Click to confirm and you'll start receiving updates when there's something worth sharing.">
       <Text style={heading}>{greeting} — one quick step.</Text>
       <Text style={body}>
         Thanks for signing up. I write about marketing, operations, design, and
@@ -78,18 +78,18 @@ const heading: React.CSSProperties = {
   fontWeight: 400,
   color: '#ede8df',
   lineHeight: '1.4',
-  margin: '0 0 16px 0',
+  margin: '0 0 14px 0',
 };
 
 const body: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '1.7',
   color: '#a09488',
-  margin: '0 0 16px 0',
+  margin: '0 0 14px 0',
 };
 
 const btnContainer: React.CSSProperties = {
-  margin: '8px 0 28px 0',
+  margin: '8px 0 24px 0',
 };
 
 const button: React.CSSProperties = {
@@ -106,7 +106,7 @@ const button: React.CSSProperties = {
 const divider: React.CSSProperties = {
   borderColor: '#1e1a14',
   borderWidth: '1px 0 0 0',
-  margin: '0 0 24px 0',
+  margin: '0 0 20px 0',
 };
 
 const whatToExpect: React.CSSProperties = {
@@ -141,6 +141,6 @@ const bulletText: React.CSSProperties = {
 const muted: React.CSSProperties = {
   fontSize: '12px',
   color: '#6d5c48',
-  margin: '20px 0 0 0',
+  margin: '18px 0 0 0',
   fontStyle: 'italic',
 };
