@@ -15,7 +15,7 @@ const json = (body: object, status = 200) =>
   });
 
 export const POST: APIRoute = async ({ request }) => {
-  const { name, email, notes, slot, timezone } = await request.json();
+  const { name, email, phone, notes, slot, timezone } = await request.json();
 
   if (!name || !email || !slot?.time) {
     return json({ error: 'Name, email, and time slot are required' }, 400);
@@ -58,8 +58,8 @@ export const POST: APIRoute = async ({ request }) => {
   // Log notification + send emails (non-blocking to Cal.com response)
   try {
     const [notificationHtml, confirmationHtml] = await Promise.all([
-      render(BookingNotification({ name, email, slot: slotLabel, timezone: tz, notes })),
-      render(BookingConfirmation({ name, slot: slotLabel, timezone: tz })),
+      render(BookingNotification({ name, email, phone, slot: slotLabel, timezone: tz, notes })),
+      render(BookingConfirmation({ name, slot: slotLabel, timezone: tz, phone })),
     ]);
 
     await Promise.all([
@@ -69,7 +69,7 @@ export const POST: APIRoute = async ({ request }) => {
         fromEmail: email,
         subject: `New booking from ${name}`,
         message: notes || null,
-        metadata: JSON.stringify({ slot: slotLabel, time: slot.time, timezone: tz }),
+        metadata: JSON.stringify({ slot: slotLabel, time: slot.time, timezone: tz, phone: phone || undefined }),
         status: 'new',
         createdAt: new Date().toISOString(),
       }),
