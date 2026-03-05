@@ -1,0 +1,237 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Terms of Use — Devin Alexander" description="Terms governing use of devin.vc." noIndex>
+  <main>
+    <section class="legal-page">
+      <div class="legal-inner">
+        <header class="page-header">
+          <div class="section-tag"><span class="tag-number">ii</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Legal</span></div>
+          <h1 class="page-title">Terms of Use</h1>
+          <p class="page-subtitle">Last updated March 5, 2026</p>
+          <div class="title-rule" aria-hidden="true"></div>
+        </header>
+
+        <article class="legal-body">
+          <section class="legal-section">
+            <h2>Agreement</h2>
+            <p>By accessing and using this website (<strong>devin.vc</strong>), you agree to be bound by these terms. If you do not agree, please do not use the site.</p>
+          </section>
+
+          <section class="legal-section">
+            <h2>Use of the site</h2>
+            <p>This site is provided for informational and professional purposes. You may browse, read, and use the contact and booking features for their intended purpose. You agree not to:</p>
+            <ul>
+              <li>Use the site for any unlawful purpose</li>
+              <li>Submit false or misleading information through any form</li>
+              <li>Attempt to gain unauthorized access to any part of the site</li>
+              <li>Interfere with or disrupt the site's operation</li>
+              <li>Scrape, crawl, or harvest data from the site in an automated manner without permission</li>
+            </ul>
+          </section>
+
+          <section class="legal-section">
+            <h2>Intellectual property</h2>
+            <p>All content on this site, including text, design, layout, graphics, and code, is the property of Devin Alexander unless otherwise stated. You may not reproduce, distribute, or create derivative works from this content without explicit written permission.</p>
+          </section>
+
+          <section class="legal-section">
+            <h2>Booking and consultations</h2>
+            <p>Booking a call through this site does not constitute a contractual obligation for services. Consultations are offered at the discretion of Devin Alexander. Any service agreements will be established separately in writing.</p>
+          </section>
+
+          <section class="legal-section">
+            <h2>Third-party links</h2>
+            <p>This site may contain links to external websites. These are provided for convenience and do not imply endorsement. Devin Alexander is not responsible for the content or privacy practices of external sites.</p>
+          </section>
+
+          <section class="legal-section">
+            <h2>Disclaimer</h2>
+            <p>This site and its content are provided "as is" without warranties of any kind, express or implied. While every effort is made to keep the site accurate and up to date, no guarantees are made about the completeness or reliability of any information presented.</p>
+          </section>
+
+          <section class="legal-section">
+            <h2>Limitation of liability</h2>
+            <p>Devin Alexander shall not be liable for any indirect, incidental, or consequential damages arising from your use of this site or any information obtained through it.</p>
+          </section>
+
+          <section class="legal-section">
+            <h2>Changes to these terms</h2>
+            <p>These terms may be updated at any time. Continued use of the site after changes constitutes acceptance of the revised terms. Material changes will be reflected by updating the date at the top of this page.</p>
+          </section>
+
+          <section class="legal-section">
+            <h2>Contact</h2>
+            <p>Questions about these terms can be directed to <a href="mailto:hello@devin.vc">hello@devin.vc</a>.</p>
+          </section>
+        </article>
+
+        <div class="page-footer">
+          <a href="/" class="back-link">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 7H1M6 2L1 7l5 5" />
+            </svg>
+            Back home
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .legal-page {
+    min-height: 100dvh;
+    padding: var(--space-page-top) var(--space-page-x) var(--space-page-bottom);
+    background: var(--color-bg);
+  }
+
+  .legal-inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .section-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .tag-number {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1;
+    color: var(--color-accent);
+  }
+
+  .tag-dash {
+    width: 24px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-accent), transparent);
+  }
+
+  .tag-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .page-header {
+    margin-bottom: var(--space-block-lg);
+  }
+
+  .page-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+    margin: 0 0 0.75rem;
+  }
+
+  .page-subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .title-rule {
+    width: 48px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-accent), color-mix(in oklab, var(--color-accent) 30%, transparent));
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .legal-body {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.88rem, 1.1vw, 0.95rem);
+    line-height: 1.75;
+    color: var(--color-text-muted);
+  }
+
+  .legal-section {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  .legal-section h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--color-text);
+    margin: 0 0 0.75rem;
+  }
+
+  .legal-section p {
+    margin: 0 0 0.75rem;
+  }
+
+  .legal-section ul {
+    margin: 0 0 0.75rem;
+    padding-left: 1.25rem;
+  }
+
+  .legal-section li {
+    margin-bottom: 0.35rem;
+  }
+
+  .legal-section li::marker {
+    color: color-mix(in oklab, var(--color-accent) 50%, transparent);
+  }
+
+  .legal-section a {
+    color: var(--color-accent);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-accent) 30%, transparent);
+    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .legal-section a:hover {
+    border-color: var(--color-accent);
+  }
+
+  .legal-section strong {
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  .page-footer {
+    margin-top: var(--space-block);
+    padding-top: 2rem;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+
+  .back-link svg {
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .back-link:hover svg {
+    transform: translateX(-3px);
+  }
+</style>

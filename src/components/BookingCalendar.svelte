@@ -16,6 +16,7 @@
   let email = $state('');
   let phone = $state('');
   let notes = $state('');
+  let consent = $state(false);
 
   // Prefetch cache: date string → slots array
   const slotCache = new Map();
@@ -166,7 +167,7 @@
     return currentMonth.getFullYear() > now.getFullYear() ||
            (currentMonth.getFullYear() === now.getFullYear() && currentMonth.getMonth() > now.getMonth());
   });
-  const canConfirm = $derived(selectedSlot && name.trim() && email.trim());
+  const canConfirm = $derived(selectedSlot && name.trim() && email.trim() && consent);
 </script>
 
 <div class="booking">
@@ -266,6 +267,13 @@
               <input type="email" bind:value={email} placeholder="Email" required class="form-input" aria-label="Your email address" />
               <input type="text" inputmode="tel" bind:value={phone} placeholder="Phone (optional)" class="form-input" aria-label="Your phone number" />
               <textarea bind:value={notes} placeholder="Anything I should know? (optional)" class="form-input form-textarea" rows="2" aria-label="Additional notes"></textarea>
+              <label class="consent-label">
+                <input type="checkbox" bind:checked={consent} class="consent-checkbox" />
+                <span class="consent-check" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3L4.5 8.5 2 6"/></svg>
+                </span>
+                <span class="consent-text">I agree to the <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a> and <a href="/terms" target="_blank" rel="noopener">Terms of Use</a>.</span>
+              </label>
               <button
                 type="submit"
                 class="confirm-btn"
@@ -669,6 +677,76 @@
     font-size: 0.72rem;
     color: var(--color-text-muted);
     margin: 0;
+  }
+
+  /* ---- Consent checkbox ---- */
+  .consent-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .consent-checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .consent-check {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 30%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .consent-check svg {
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .consent-checkbox:checked + .consent-check {
+    border-color: var(--color-accent);
+    background: color-mix(in oklab, var(--color-accent) 12%, transparent);
+  }
+
+  .consent-checkbox:checked + .consent-check svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .consent-checkbox:focus-visible + .consent-check {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .consent-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+
+  .consent-text a {
+    color: var(--color-accent);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-accent) 30%, transparent);
+    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .consent-text a:hover {
+    border-color: var(--color-accent);
   }
 
   @media (max-width: 480px) {

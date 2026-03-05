@@ -24,6 +24,10 @@ const currentPath = Astro.url.pathname;
         <span class="footer-copyright">&copy; {year}</span>
         <span class="footer-dot" aria-hidden="true">&middot;</span>
         <span class="footer-domain">devin.vc</span>
+        <span class="footer-dot" aria-hidden="true">&middot;</span>
+        <a href="/privacy" class="footer-legal">Privacy</a>
+        <span class="footer-dot" aria-hidden="true">&middot;</span>
+        <a href="/terms" class="footer-legal">Terms</a>
       </div>
 
       <button class="back-to-top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" aria-label="Back to top">
@@ -133,6 +137,20 @@ const currentPath = Astro.url.pathname;
     font-style: italic;
     letter-spacing: 0;
     font-size: 0.8rem;
+  }
+
+  .footer-legal {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .footer-legal:hover {
+    color: var(--color-accent);
   }
 
   .back-to-top {
