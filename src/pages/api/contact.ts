@@ -1,46 +1,60 @@
 import type { APIRoute } from 'astro';
-import { Resend } from 'resend';
+import { db } from '../../lib/db';
+import { notifications } from '../../db/schema';
+import { resend, SENDER } from '../../lib/resend';
+import { render } from '@react-email/components';
+import ContactNotification from '../../emails/contact-notification';
+import ContactConfirmation from '../../emails/contact-confirmation';
 
 export const prerender = false;
+
+const json = (body: object, status = 200) =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
 
 export const POST: APIRoute = async ({ request }) => {
   const { name, email, message } = await request.json();
 
   if (!name || !email || !message) {
-    return new Response(JSON.stringify({ error: 'All fields are required' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return json({ error: 'All fields are required' }, 400);
   }
-
-  const apiKey = import.meta.env.RESEND_API_KEY;
-
-  if (!apiKey) {
-    return new Response(JSON.stringify({ error: 'Contact form not configured' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-
-  const resend = new Resend(apiKey);
 
   try {
-    await resend.emails.send({
-      from: 'Contact Form <onboarding@resend.dev>',
-      to: 'hello@devin.vc',
-      replyTo: email,
-      subject: `New message from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
-    });
+    const [notificationHtml, confirmationHtml] = await Promise.all([
+      render(ContactNotification({ name, email, message })),
+      render(ContactConfirmation({ name })),
+    ]);
 
-    return new Response(JSON.stringify({ ok: true }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    // Log notification, email you, and confirm to sender — all in parallel
+    await Promise.all([
+      db.insert(notifications).values({
+        type: 'contact',
+        fromName: name,
+        fromEmail: email,
+        subject: `New message from ${name}`,
+        message,
+        status: 'new',
+        createdAt: new Date().toISOString(),
+      }),
+      resend.emails.send({
+        from: SENDER,
+        to: 'hello@devin.vc',
+        replyTo: email,
+        subject: `New message from ${name}`,
+        html: notificationHtml,
+      }),
+      resend.emails.send({
+        from: SENDER,
+        to: email,
+        subject: 'Thanks for reaching out',
+        html: confirmationHtml,
+      }),
+    ]);
+
+    return json({ ok: true });
   } catch {
-    return new Response(JSON.stringify({ error: 'Failed to send message' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return json({ error: 'Failed to send message' }, 500);
   }
 };

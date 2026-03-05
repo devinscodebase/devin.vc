@@ -11,6 +11,8 @@ import mdx from '@astrojs/mdx';
 
 import sanity from '@sanity/astro';
 
+import clerk from '@clerk/astro';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://www.devin.vc',
@@ -24,6 +26,7 @@ export default defineConfig({
       useCdn: false,
       studioBasePath: '/studio',
     }),
+    clerk(),
   ],
 
   markdown: {

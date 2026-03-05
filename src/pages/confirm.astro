@@ -1,0 +1,156 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { db } from '../lib/db';
+import { subscribers } from '../db/schema';
+import { eq } from 'drizzle-orm';
+import { resend } from '../lib/resend';
+
+export const prerender = false;
+
+const token = Astro.url.searchParams.get('token');
+let status: 'success' | 'already' | 'invalid' = 'invalid';
+
+if (token) {
+  const subscriber = await db
+    .select()
+    .from(subscribers)
+    .where(eq(subscribers.token, token))
+    .get();
+
+  if (subscriber) {
+    if (subscriber.status === 'confirmed') {
+      status = 'already';
+    } else {
+      // Confirm the subscriber
+      await db
+        .update(subscribers)
+        .set({
+          status: 'confirmed',
+          confirmedAt: new Date().toISOString(),
+        })
+        .where(eq(subscribers.id, subscriber.id));
+
+      // Sync to Resend Audience
+      try {
+        const { data } = await resend.contacts.create({
+          email: subscriber.email,
+          firstName: subscriber.firstName || undefined,
+          unsubscribed: false,
+          audienceId: import.meta.env.RESEND_AUDIENCE_ID || '',
+        });
+
+        if (data?.id) {
+          await db
+            .update(subscribers)
+            .set({ resendContactId: data.id })
+            .where(eq(subscribers.id, subscriber.id));
+        }
+      } catch {
+        // Non-critical — subscriber is confirmed locally even if Resend sync fails
+      }
+
+      status = 'success';
+    }
+  }
+}
+
+const titles = {
+  success: "You're subscribed",
+  already: 'Already confirmed',
+  invalid: 'Invalid link',
+};
+
+const messages = {
+  success: "Thanks for confirming — you're all set to receive updates.",
+  already: "You've already confirmed your subscription. Nothing more to do.",
+  invalid: "This confirmation link isn't valid. It may have expired or already been used.",
+};
+---
+
+<Layout title={`${titles[status]} — Devin Alexander`} noIndex>
+  <main>
+    <section class="confirm-page">
+      <div class="confirm-inner">
+        <div class="status-icon" data-status={status}>
+          {status === 'invalid' ? (
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <circle cx="12" cy="12" r="10" />
+              <path d="m15 9-6 6M9 9l6 6" />
+            </svg>
+          ) : (
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <circle cx="12" cy="12" r="10" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+          )}
+        </div>
+        <h1 class="confirm-title">{titles[status]}</h1>
+        <p class="confirm-message">{messages[status]}</p>
+        <a href="/" class="back-link">Back to site</a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .confirm-page {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-page-x);
+  }
+
+  .confirm-inner {
+    text-align: center;
+    max-width: 28rem;
+  }
+
+  .status-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    margin-bottom: 1.5rem;
+    background: color-mix(in oklab, var(--color-accent) 12%, transparent);
+    color: var(--color-accent);
+  }
+
+  .status-icon[data-status="invalid"] {
+    background: color-mix(in oklab, var(--color-error) 12%, transparent);
+    color: var(--color-error);
+  }
+
+  .confirm-title {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    color: var(--color-text);
+    margin: 0 0 0.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .confirm-message {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--color-text-muted);
+    margin: 0 0 2rem;
+  }
+
+  .back-link {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: opacity 0.2s;
+  }
+
+  .back-link:hover {
+    opacity: 0.8;
+  }
+</style>

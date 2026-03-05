@@ -1,49 +1,81 @@
 import type { APIRoute } from 'astro';
+import { db } from '../../lib/db';
+import { subscribers } from '../../db/schema';
+import { resend, SENDER } from '../../lib/resend';
+import { generateToken } from '../../lib/tokens';
+import { eq } from 'drizzle-orm';
+import { render } from '@react-email/components';
+import NewsletterWelcome from '../../emails/newsletter-welcome';
 
 export const prerender = false;
 
-export const POST: APIRoute = async ({ request }) => {
-  const { email } = await request.json();
-
-  if (!email || !email.includes('@')) {
-    return new Response(JSON.stringify({ error: 'Valid email required' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-
-  const apiKey = import.meta.env.BUTTONDOWN_API_KEY;
-
-  if (!apiKey) {
-    return new Response(JSON.stringify({ error: 'Newsletter not configured' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-
-  const res = await fetch('https://api.buttondown.com/v1/subscribers', {
-    method: 'POST',
-    headers: {
-      Authorization: `Token ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ email_address: email }),
-  });
-
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({}));
-    const msg =
-      res.status === 409
-        ? "You're already subscribed!"
-        : data?.detail || 'Something went wrong';
-    return new Response(JSON.stringify({ error: msg }), {
-      status: res.status,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-
-  return new Response(JSON.stringify({ ok: true }), {
-    status: 200,
+const json = (body: object, status = 200) =>
+  new Response(JSON.stringify(body), {
+    status,
     headers: { 'Content-Type': 'application/json' },
   });
+
+export const POST: APIRoute = async ({ request, url }) => {
+  const { email, firstName } = await request.json();
+
+  if (!email || !email.includes('@')) {
+    return json({ error: 'Valid email required' }, 400);
+  }
+
+  const token = generateToken(email);
+  const siteUrl = url.origin;
+
+  // Check for existing subscriber
+  const existing = await db
+    .select()
+    .from(subscribers)
+    .where(eq(subscribers.email, email.toLowerCase()))
+    .get();
+
+  if (existing?.status === 'confirmed') {
+    return json({ error: "You're already subscribed!" }, 409);
+  }
+
+  const confirmUrl = `${siteUrl}/confirm?token=${token}`;
+
+  // Send double opt-in email
+  const html = await render(
+    NewsletterWelcome({ confirmUrl, firstName })
+  );
+
+  const { error: emailError } = await resend.emails.send({
+    from: SENDER,
+    to: email,
+    subject: 'Confirm your subscription',
+    html,
+  });
+
+  if (emailError) {
+    return json({ error: 'Failed to send confirmation email' }, 500);
+  }
+
+  if (existing) {
+    // Re-subscribing or resending confirmation
+    await db
+      .update(subscribers)
+      .set({
+        status: 'pending',
+        firstName: firstName || existing.firstName,
+        token,
+        subscribedAt: new Date().toISOString(),
+        confirmedAt: null,
+        unsubscribedAt: null,
+      })
+      .where(eq(subscribers.email, email.toLowerCase()));
+  } else {
+    await db.insert(subscribers).values({
+      email: email.toLowerCase(),
+      firstName: firstName || null,
+      status: 'pending',
+      token,
+      subscribedAt: new Date().toISOString(),
+    });
+  }
+
+  return json({ ok: true });
 };
