@@ -61,7 +61,7 @@ function OgWrapper({
           width: '700px',
           height: '700px',
           borderRadius: '50%',
-          background: `radial-gradient(circle, ${accentColor}08 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${accentColor}18 0%, transparent 70%)`,
         }}
       />
       <div
@@ -73,7 +73,7 @@ function OgWrapper({
           width: '800px',
           height: '800px',
           borderRadius: '50%',
-          background: `radial-gradient(circle, ${colors.accent}06 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${colors.accent}12 0%, transparent 70%)`,
         }}
       />
 
@@ -212,27 +212,29 @@ export function JournalTemplate({
   date?: string;
 }) {
   const len = title.length;
-  const fontSize = len > 80 ? 42 : len > 60 ? 48 : len > 40 ? 56 : 64;
+  const fontSize = len > 60 ? 64 : len > 40 ? 76 : 88;
   const accentColor = getTagColor(tag);
+
+  // Truncate subtitle for OG display
+  const truncatedSubtitle = subtitle && subtitle.length > 90
+    ? subtitle.slice(0, 87).replace(/\s+\S*$/, '') + '...'
+    : subtitle;
 
   return (
     <OgWrapper accentColor={accentColor}>
       <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
-        {/* Large faded background number */}
-        <span
+        {/* Accent side stripe */}
+        <div
           style={{
+            display: 'flex',
             position: 'absolute',
-            top: '-80px',
-            right: '-20px',
-            fontFamily: fonts.serif,
-            fontSize: 280,
-            color: `${colors.muted}08`,
-            lineHeight: 1,
-            letterSpacing: '-0.04em',
+            left: '-72px',
+            top: '0',
+            width: '4px',
+            height: '100%',
+            background: `linear-gradient(to bottom, ${accentColor}, ${colors.accent}, transparent)`,
           }}
-        >
-          J
-        </span>
+        />
 
         {/* Tag + date row */}
         {(tag || date) && (
@@ -240,40 +242,33 @@ export function JournalTemplate({
             style={{
               display: 'flex',
               alignItems: 'center',
-              marginBottom: '20px',
+              marginBottom: '24px',
               gap: '16px',
             }}
           >
             {tag && (
               <span
                 style={{
-                  fontFamily: fonts.serif,
-                  fontSize: 22,
-                  fontStyle: 'italic',
-                  color: accentColor,
-                  letterSpacing: '0.02em',
+                  fontFamily: fonts.sans,
+                  fontSize: 18,
+                  color: colors.bg,
+                  backgroundColor: accentColor,
+                  padding: '4px 14px',
+                  borderRadius: '4px',
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
                 }}
               >
                 {tag.charAt(0).toUpperCase() + tag.slice(1)}
               </span>
             )}
-            {tag && date && (
-              <div
-                style={{
-                  display: 'flex',
-                  width: '24px',
-                  height: '1px',
-                  background: `linear-gradient(to right, ${accentColor}, transparent)`,
-                }}
-              />
-            )}
             {date && (
               <span
                 style={{
                   fontFamily: fonts.sans,
-                  fontSize: 16,
+                  fontSize: 18,
                   color: colors.muted,
-                  letterSpacing: '0.06em',
+                  letterSpacing: '0.04em',
                   textTransform: 'uppercase',
                 }}
               >
@@ -289,7 +284,7 @@ export function JournalTemplate({
             fontFamily: fonts.serif,
             fontSize,
             color: colors.text,
-            lineHeight: 1.15,
+            lineHeight: 1.1,
             letterSpacing: '-0.02em',
           }}
         >
@@ -297,18 +292,18 @@ export function JournalTemplate({
         </span>
 
         {/* Description / subtitle */}
-        {subtitle && (
+        {truncatedSubtitle && (
           <span
             style={{
               fontFamily: fonts.sans,
-              fontSize: 22,
+              fontSize: 26,
               color: colors.muted,
-              marginTop: '16px',
-              lineHeight: 1.45,
+              marginTop: '24px',
+              lineHeight: 1.4,
               maxWidth: '900px',
             }}
           >
-            {subtitle}
+            {truncatedSubtitle}
           </span>
         )}
 
