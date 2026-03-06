@@ -27,17 +27,19 @@ export const POST: APIRoute = async ({ request }) => {
       render(ContactConfirmation({ name })),
     ]);
 
-    // Log notification, email you, and confirm to sender — all in parallel
-    await Promise.all([
-      db.insert(notifications).values({
-        type: 'contact',
-        fromName: name,
-        fromEmail: email,
-        subject: `New message from ${name}`,
-        message,
-        status: 'new',
-        createdAt: new Date().toISOString(),
-      }),
+    // Log to DB first (independent of email delivery)
+    await db.insert(notifications).values({
+      type: 'contact',
+      fromName: name,
+      fromEmail: email,
+      subject: `New message from ${name}`,
+      message,
+      status: 'new',
+      createdAt: new Date().toISOString(),
+    });
+
+    // Send emails in parallel, capture results
+    const [notify, confirm] = await Promise.allSettled([
       resend.emails.send({
         from: SENDER,
         to: 'hello@devin.vc',
@@ -53,8 +55,16 @@ export const POST: APIRoute = async ({ request }) => {
       }),
     ]);
 
+    if (notify.status === 'rejected') {
+      console.error('[contact] notification email failed:', notify.reason);
+    }
+    if (confirm.status === 'rejected') {
+      console.error('[contact] confirmation email failed:', confirm.reason);
+    }
+
     return json({ ok: true });
-  } catch {
+  } catch (err) {
+    console.error('[contact] error:', err);
     return json({ error: 'Failed to send message' }, 500);
   }
 };

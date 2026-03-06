@@ -62,17 +62,20 @@ export const POST: APIRoute = async ({ request }) => {
       render(BookingConfirmation({ name, slot: slotLabel, timezone: tz, phone })),
     ]);
 
-    await Promise.all([
-      db.insert(notifications).values({
-        type: 'booking',
-        fromName: name,
-        fromEmail: email,
-        subject: `New booking from ${name}`,
-        message: notes || null,
-        metadata: JSON.stringify({ slot: slotLabel, time: slot.time, timezone: tz, phone: phone || undefined }),
-        status: 'new',
-        createdAt: new Date().toISOString(),
-      }),
+    // Log to DB first
+    await db.insert(notifications).values({
+      type: 'booking',
+      fromName: name,
+      fromEmail: email,
+      subject: `New booking from ${name}`,
+      message: notes || null,
+      metadata: JSON.stringify({ slot: slotLabel, time: slot.time, timezone: tz, phone: phone || undefined }),
+      status: 'new',
+      createdAt: new Date().toISOString(),
+    });
+
+    // Send emails in parallel, log failures
+    const [notify, confirm] = await Promise.allSettled([
       resend.emails.send({
         from: SENDER,
         to: 'hello@devin.vc',
@@ -83,11 +86,19 @@ export const POST: APIRoute = async ({ request }) => {
       resend.emails.send({
         from: SENDER,
         to: email,
-        subject: `You're booked — ${slotLabel}`,
+        subject: `You're booked - ${slotLabel}`,
         html: confirmationHtml,
       }),
     ]);
-  } catch {
+
+    if (notify.status === 'rejected') {
+      console.error('[booking] notification email failed:', notify.reason);
+    }
+    if (confirm.status === 'rejected') {
+      console.error('[booking] confirmation email failed:', confirm.reason);
+    }
+  } catch (err) {
+    console.error('[booking] notification/email error:', err);
     // Notification/email failure shouldn't block booking success
   }
 
