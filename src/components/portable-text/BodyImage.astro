@@ -7,6 +7,8 @@ const src = urlFor(node).width(1200).auto('format').quality(85).url();
 ---
 
 <figure class="body-image">
-  <img src={src} alt={alt} loading="lazy" decoding="async" />
+  <div class="body-image-border">
+    <img src={src} alt={alt} loading="lazy" decoding="async" />
+  </div>
   {alt && <figcaption>{alt}</figcaption>}
 </figure>

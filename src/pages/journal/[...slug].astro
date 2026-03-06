@@ -628,8 +628,21 @@ const ogImage = post.ogImage
     margin: 2.5rem 0;
   }
 
+  .prose :global(.body-image-border) {
+    padding: 1px;
+    border-radius: 10px;
+    background: linear-gradient(
+      135deg,
+      var(--color-accent) 0%,
+      var(--color-accent-amber) 40%,
+      var(--color-accent-rust) 70%,
+      var(--color-accent-teal) 100%
+    );
+  }
+
   .prose :global(.body-image img) {
-    border-radius: 8px;
+    display: block;
+    border-radius: 9px;
     margin: 0;
   }
 
