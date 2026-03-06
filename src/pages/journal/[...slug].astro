@@ -4,6 +4,7 @@ import { PortableText, toPlainText } from 'astro-portabletext';
 import { sanityClient, urlFor } from '../../lib/sanity';
 import ExternalLink from '../../components/portable-text/ExternalLink.astro';
 import Heading from '../../components/portable-text/Heading.astro';
+import BodyImage from '../../components/portable-text/BodyImage.astro';
 
 export const prerender = false;
 
@@ -138,6 +139,7 @@ const ogImage = post.ogImage
             components={{
               mark: { link: ExternalLink },
               block: { h2: Heading, h3: Heading },
+              type: { image: BodyImage },
             }}
           />
         </div>
@@ -620,6 +622,22 @@ const ogImage = post.ogImage
     max-width: 100%;
     height: auto;
     margin: 2rem 0;
+  }
+
+  .prose :global(.body-image) {
+    margin: 2.5rem 0;
+  }
+
+  .prose :global(.body-image img) {
+    border-radius: 8px;
+    margin: 0;
+  }
+
+  .prose :global(.body-image figcaption) {
+    margin-top: 0.75rem;
+    font-size: var(--text-sm, 0.875rem);
+    color: var(--color-text-muted, #888);
+    text-align: center;
   }
 
   .post-footer {
