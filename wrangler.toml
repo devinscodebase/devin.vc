@@ -1,5 +1,5 @@
 # Cloudflare Pages configuration
-# pages_build_output_dir required for CF Pages to read this file
+name = "devin-vc"
 pages_build_output_dir = "dist"
 
 # nodejs_compat required for node:crypto, MessageChannel (React DOM), etc.
