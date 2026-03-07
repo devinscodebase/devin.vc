@@ -307,8 +307,8 @@
 
   .booking-heading {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(1.4rem, 2.8vw, 1.75rem);
-    font-weight: 400;
+    font-size: var(--text-xl);
+    font-weight: var(--weight-regular);
     line-height: 1.2;
     color: var(--color-text);
     margin: 0 0 0.35rem;
@@ -316,7 +316,7 @@
 
   .booking-pitch {
     font-family: 'DM Sans', sans-serif;
-    font-size: clamp(0.92rem, 1.2vw, 1rem);
+    font-size: var(--text-md);
     line-height: 1.6;
     color: var(--color-text-muted);
     margin: 0 0 1.5rem;
@@ -327,9 +327,9 @@
     align-items: center;
     gap: 0.5rem;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 400;
-    letter-spacing: 0.18em;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-regular);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
     background: none;
@@ -366,8 +366,8 @@
 
   .cal-month {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: var(--text-base);
+    font-weight: var(--weight-medium);
     color: var(--color-text);
   }
 
@@ -397,9 +397,9 @@
 
   .cal-day-header {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.63rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
     text-align: center;
@@ -408,7 +408,7 @@
 
   .cal-day {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.78rem;
+    font-size: var(--text-sm);
     color: var(--color-text);
     background: none;
     border: 1px solid transparent;
@@ -431,7 +431,7 @@
 
   .cal-day.today {
     color: var(--color-accent-amber);
-    font-weight: 500;
+    font-weight: var(--weight-medium);
   }
 
   .cal-day.past {
@@ -452,7 +452,7 @@
 
   .tz-label {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.65rem;
+    font-size: var(--text-xs);
     color: var(--color-text-muted);
     margin: 0;
   }
@@ -469,15 +469,15 @@
 
   .step-label {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 500;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
     color: var(--color-text);
     margin: 0 0 1rem;
   }
 
   .loading-text, .no-slots {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem;
+    font-size: var(--text-base);
     color: var(--color-text-muted);
     margin: 0;
   }
@@ -507,8 +507,8 @@
 
   .slot {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 400;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-regular);
     color: var(--color-text);
     background: none;
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
@@ -544,9 +544,9 @@
 
   .confirm-label {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-accent-teal);
     margin: 0;
@@ -554,7 +554,7 @@
 
   .form-input {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.88rem;
+    font-size: var(--text-base);
     color: var(--color-text);
     background: transparent;
     border: none;
@@ -593,9 +593,9 @@
 
   .confirm-btn {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     background-color: var(--color-accent);
     background-image: linear-gradient(90deg, var(--color-accent-teal) 50%, transparent 50%);
@@ -641,7 +641,7 @@
 
   .form-error {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.78rem;
+    font-size: var(--text-sm);
     color: var(--color-error);
     margin: 0;
   }
@@ -661,21 +661,21 @@
 
   .success-msg {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    font-size: var(--text-xl);
     color: var(--color-text);
     margin: 0 0 0.35rem;
   }
 
   .success-detail {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem;
+    font-size: var(--text-base);
     color: var(--color-accent);
     margin: 0 0 0.25rem;
   }
 
   .success-hint {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.72rem;
+    font-size: var(--text-sm);
     color: var(--color-text-muted);
     margin: 0;
   }
@@ -734,7 +734,7 @@
 
   .consent-text {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.72rem;
+    font-size: var(--text-sm);
     line-height: 1.5;
     color: var(--color-text-muted);
   }

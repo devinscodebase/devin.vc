@@ -100,10 +100,10 @@
 
   .about-copy {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(1.8rem, 3.8vw, 3rem);
+    font-size: var(--text-2xl);
     line-height: 1.45;
     color: var(--color-text-muted);
-    letter-spacing: -0.015em;
+    letter-spacing: var(--tracking-tight);
   }
 
   .accent {
@@ -137,7 +137,7 @@
   .tag-number {
     font-family: 'Instrument Serif', serif;
     font-style: italic;
-    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    font-size: var(--text-md);
     line-height: 1;
     color: var(--color-accent-teal);
   }
@@ -150,9 +150,9 @@
 
   .tag-label {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.6rem;
-    font-weight: 500;
-    letter-spacing: 0.25em;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
   }
@@ -162,9 +162,9 @@
     align-items: center;
     gap: 0.5rem;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 400;
-    letter-spacing: 0.18em;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-regular);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
     text-decoration: none;
@@ -189,7 +189,7 @@
     }
 
     .about-copy {
-      font-size: clamp(1.4rem, 5vw, 1.8rem);
+      font-size: var(--text-xl);
     }
   }
 </style>

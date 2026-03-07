@@ -141,9 +141,9 @@
 
   .percent {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.55rem;
-    font-weight: 400;
-    letter-spacing: 0.1em;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-regular);
+    letter-spacing: var(--tracking-wide);
     color: var(--color-text-muted);
     opacity: 0;
     transform: translateX(4px);

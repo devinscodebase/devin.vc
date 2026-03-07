@@ -95,7 +95,7 @@
   .tag-number {
     font-family: 'Instrument Serif', serif;
     font-style: italic;
-    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    font-size: var(--text-md);
     line-height: 1;
     color: var(--color-accent-amber);
   }
@@ -108,9 +108,9 @@
 
   .tag-label {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.6rem;
-    font-weight: 500;
-    letter-spacing: 0.25em;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
   }
@@ -173,7 +173,7 @@
   .quote-text {
     font-family: 'Instrument Serif', serif;
     font-style: italic;
-    font-size: clamp(0.92rem, 1.2vw, 1.05rem);
+    font-size: var(--text-base);
     line-height: 1.6;
     color: var(--color-text);
     margin: 0 0 auto;
@@ -189,9 +189,9 @@
 
   .attr-name {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text);
   }
@@ -209,9 +209,9 @@
 
   .attr-detail {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 400;
-    letter-spacing: 0.12em;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-regular);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
   }
@@ -233,7 +233,7 @@
   .cta-text {
     font-family: 'Instrument Serif', serif;
     font-style: italic;
-    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-size: var(--text-xl);
     line-height: 1.3;
     color: var(--color-text);
     margin: 0;
@@ -244,9 +244,9 @@
     align-items: center;
     gap: 0.5rem;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-accent);
     text-decoration: none;

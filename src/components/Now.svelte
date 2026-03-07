@@ -135,7 +135,7 @@
   .tag-number {
     font-family: 'Instrument Serif', serif;
     font-style: italic;
-    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    font-size: var(--text-md);
     line-height: 1;
     color: var(--color-accent-teal);
   }
@@ -148,20 +148,20 @@
 
   .tag-label {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.6rem;
-    font-weight: 500;
-    letter-spacing: 0.25em;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
   }
 
   .section-heading {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(2rem, 4.5vw, 3rem);
-    font-weight: 400;
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-regular);
     line-height: 1.1;
     color: var(--color-text);
-    letter-spacing: -0.02em;
+    letter-spacing: var(--tracking-tight);
     margin: 0 0 var(--space-block);
   }
 
@@ -241,7 +241,7 @@
   .project-number {
     font-family: 'Instrument Serif', serif;
     font-size: clamp(5rem, 12vw, 8rem);
-    font-weight: 400;
+    font-weight: var(--weight-regular);
     line-height: 0.8;
     color: var(--color-accent-teal);
     opacity: 0.07;
@@ -288,17 +288,17 @@
 
   .project-status {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
   }
 
   .project-name {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(1.3rem, 2.2vw, 1.5rem);
-    font-weight: 400;
+    font-size: var(--text-md);
+    font-weight: var(--weight-regular);
     line-height: 1.3;
     color: var(--color-text);
     margin: 0 0 0.65rem;
@@ -307,12 +307,12 @@
   }
 
   .project:first-child .project-name {
-    font-size: clamp(1.6rem, 2.8vw, 2rem);
+    font-size: var(--text-xl);
   }
 
   .project-desc {
     font-family: 'DM Sans', sans-serif;
-    font-size: clamp(0.92rem, 1.2vw, 1rem);
+    font-size: var(--text-base);
     line-height: 1.65;
     color: var(--color-text-muted);
     margin-top: auto;
@@ -339,7 +339,7 @@
     }
 
     .project:first-child .project-name {
-      font-size: clamp(1.3rem, 2.2vw, 1.5rem);
+      font-size: var(--text-md);
     }
   }
 </style>

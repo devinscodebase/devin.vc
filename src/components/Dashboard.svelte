@@ -358,8 +358,8 @@
     border: none;
     padding: 0.75rem 1.25rem;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 500;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
     color: var(--color-text-muted);
     cursor: pointer;
     position: relative;
@@ -388,8 +388,8 @@
   }
 
   .tab-count {
-    font-size: 0.7rem;
-    font-weight: 500;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
     background: color-mix(in oklab, var(--color-accent) 15%, transparent);
     color: var(--color-accent);
     padding: 0.1rem 0.45rem;
@@ -420,7 +420,7 @@
     border-radius: 6px;
     padding: 0.4rem 0.75rem;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.78rem;
+    font-size: var(--text-sm);
     color: var(--color-text);
     outline: none;
     transition: border-color 0.2s;
@@ -451,8 +451,8 @@
     border-radius: 6px;
     padding: 0.35rem 0.75rem;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 500;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
     color: var(--color-text-muted);
     cursor: pointer;
     transition: color 0.2s, border-color 0.2s;
@@ -481,16 +481,16 @@
   }
 
   .stat-value {
-    font-size: 1.25rem;
-    font-weight: 500;
+    font-size: var(--text-lg);
+    font-weight: var(--weight-medium);
     color: var(--color-text);
-    letter-spacing: -0.02em;
+    letter-spacing: var(--tracking-tight);
   }
 
   .stat-label {
-    font-size: 0.7rem;
+    font-size: var(--text-sm);
     color: var(--color-text-muted);
-    letter-spacing: 0.06em;
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
   }
 
@@ -511,9 +511,8 @@
   }
 
   .list-header-text {
-    font-size: 0.72rem;
+    font-size: var(--text-sm);
     color: var(--color-text-muted);
-    letter-spacing: 0.03em;
   }
 
   .checkbox-label {
@@ -550,7 +549,7 @@
 
   .notif-row.unread .notif-name {
     color: var(--color-text);
-    font-weight: 500;
+    font-weight: var(--weight-medium);
   }
 
   .unread-dot {
@@ -562,9 +561,9 @@
   }
 
   .notif-badge {
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.06em;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     padding: 0.15rem 0.4rem;
     border-radius: 4px;
@@ -582,14 +581,14 @@
   }
 
   .notif-name {
-    font-size: 0.82rem;
+    font-size: var(--text-base);
     color: var(--color-text-muted);
     flex-shrink: 0;
     min-width: 0;
   }
 
   .notif-preview {
-    font-size: 0.78rem;
+    font-size: var(--text-sm);
     color: color-mix(in oklab, var(--color-text-muted) 70%, transparent);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -599,7 +598,7 @@
   }
 
   .notif-date {
-    font-size: 0.72rem;
+    font-size: var(--text-sm);
     color: var(--color-text-muted);
     flex-shrink: 0;
     opacity: 0.7;
@@ -619,9 +618,9 @@
   }
 
   .detail-label {
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
     width: 5rem;
@@ -630,7 +629,7 @@
   }
 
   .detail-value {
-    font-size: 0.82rem;
+    font-size: var(--text-base);
     color: var(--color-text);
     line-height: 1.5;
   }
@@ -663,9 +662,9 @@
   }
 
   .sub-status {
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.06em;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     padding: 0.15rem 0.4rem;
     border-radius: 4px;
@@ -688,7 +687,7 @@
   }
 
   .sub-email {
-    font-size: 0.82rem;
+    font-size: var(--text-base);
     color: var(--color-text);
     flex: 1;
     min-width: 0;
@@ -698,13 +697,13 @@
   }
 
   .sub-name {
-    font-size: 0.78rem;
+    font-size: var(--text-sm);
     color: var(--color-text-muted);
     flex-shrink: 0;
   }
 
   .sub-date {
-    font-size: 0.72rem;
+    font-size: var(--text-sm);
     color: var(--color-text-muted);
     opacity: 0.7;
     flex-shrink: 0;
@@ -745,7 +744,7 @@
     border-radius: 6px;
     padding: 0.35rem 0.75rem;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.78rem;
+    font-size: var(--text-sm);
     color: var(--color-text-muted);
     cursor: pointer;
     transition: color 0.2s, border-color 0.2s;
@@ -762,7 +761,7 @@
   }
 
   .page-info {
-    font-size: 0.75rem;
+    font-size: var(--text-sm);
     color: var(--color-text-muted);
   }
 
@@ -770,7 +769,7 @@
   .empty {
     text-align: center;
     padding: 3rem 1rem;
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
     color: var(--color-text-muted);
   }
 

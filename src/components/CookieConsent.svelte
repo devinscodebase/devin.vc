@@ -176,9 +176,9 @@
 
   .label {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.14em;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-accent);
     position: relative;
@@ -188,20 +188,19 @@
   .title {
     font-family: 'Instrument Serif', serif;
     font-style: italic;
-    font-size: 1.15rem;
+    font-size: var(--text-md);
     color: var(--color-text);
     margin: 0;
-    letter-spacing: -0.01em;
+    letter-spacing: var(--tracking-tight);
     line-height: 1.2;
   }
 
   .body {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
     line-height: 1.6;
     color: var(--color-text-muted);
     margin: 0;
-    letter-spacing: 0.005em;
   }
 
   .actions {
@@ -215,9 +214,8 @@
   .btn-decline,
   .btn-accept {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.01em;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
     border: none;
     cursor: pointer;
     border-radius: 8px;

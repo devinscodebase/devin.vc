@@ -161,10 +161,10 @@
   /* ---- logo ---- */
   .logo {
     font-family: 'Instrument Serif', serif;
-    font-size: 1.35rem;
+    font-size: var(--text-md);
     color: var(--color-text);
     text-decoration: none;
-    letter-spacing: -0.02em;
+    letter-spacing: var(--tracking-tight);
     position: relative;
     transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -345,8 +345,8 @@
 
   .nav-number {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
     color: var(--color-accent-teal);
     opacity: 0.8;
     transition: opacity 0.3s;
@@ -360,9 +360,9 @@
 
   .nav-label {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(2.5rem, 7vw, 4.5rem);
+    font-size: var(--text-3xl);
     color: var(--color-text);
-    letter-spacing: -0.02em;
+    letter-spacing: var(--tracking-tight);
     line-height: 1;
     transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -424,8 +424,8 @@
   .footer-domain,
   .footer-tagline {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.15em;
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
   }
@@ -435,7 +435,7 @@
     font-style: italic;
     text-transform: none;
     letter-spacing: 0;
-    font-size: 0.9rem;
+    font-size: var(--text-base);
   }
 
   /* ==============================

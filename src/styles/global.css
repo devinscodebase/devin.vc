@@ -47,6 +47,27 @@
   --duration-normal: 350ms;
   --duration-slow: 500ms;
 
+  /* — Type Scale — */
+  --text-xs:   0.7rem;
+  --text-sm:   0.85rem;
+  --text-base: 1rem;
+  --text-md:   clamp(1.05rem, 1.3vw, 1.15rem);
+  --text-lg:   clamp(1.1rem, 1.4vw, 1.25rem);
+  --text-xl:   clamp(1.5rem, 2.8vw, 2rem);
+  --text-2xl:  clamp(2rem, 4.5vw, 3rem);
+  --text-3xl:  clamp(3rem, 7vw, 5rem);
+  --text-4xl:  clamp(4rem, 12vw, 9rem);
+
+  /* — Tracking — */
+  --tracking-tight:  -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide:   0.18em;
+
+  /* — Weights — */
+  --weight-light:   300;
+  --weight-regular: 400;
+  --weight-medium:  500;
+
   /* — Spacing — */
   --space-section:     clamp(8rem, 20vh, 14rem);
   --space-page-top:    clamp(8rem, 18vh, 12rem);

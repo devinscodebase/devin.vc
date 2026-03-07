@@ -201,7 +201,7 @@
   .tag-number {
     font-family: 'Instrument Serif', serif;
     font-style: italic;
-    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    font-size: var(--text-md);
     line-height: 1;
     color: var(--color-accent-teal);
   }
@@ -214,9 +214,9 @@
 
   .tag-label {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.6rem;
-    font-weight: 500;
-    letter-spacing: 0.25em;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
   }
@@ -232,11 +232,11 @@
 
   .section-heading {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(2rem, 4.5vw, 3rem);
-    font-weight: 400;
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-regular);
     line-height: 1.1;
     color: var(--color-text);
-    letter-spacing: -0.02em;
+    letter-spacing: var(--tracking-tight);
     margin: 0;
     flex-shrink: 0;
   }
@@ -300,8 +300,8 @@
 
   .detail-name {
     font-family: 'Instrument Serif', serif;
-    font-size: 1.1rem;
-    font-weight: 400;
+    font-size: var(--text-md);
+    font-weight: var(--weight-regular);
     color: var(--color-text);
     line-height: 1;
     flex-shrink: 0;
@@ -313,8 +313,8 @@
 
   .detail-desc {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 400;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-regular);
     line-height: 1.45;
     color: var(--color-text-muted);
   }
@@ -426,9 +426,9 @@
 
   .chip-name {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
     transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -473,7 +473,7 @@
     }
 
     .chip-name {
-      font-size: 0.7rem;
+      font-size: var(--text-xs);
     }
 
     .marquee-set {
@@ -487,11 +487,11 @@
     }
 
     .detail-name {
-      font-size: 0.95rem;
+      font-size: var(--text-base);
     }
 
     .detail-desc {
-      font-size: 0.75rem;
+      font-size: var(--text-xs);
     }
   }
 

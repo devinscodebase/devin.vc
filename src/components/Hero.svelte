@@ -208,8 +208,8 @@
     white-space: nowrap;
     font-family: 'DM Sans', sans-serif;
     font-size: clamp(2.5rem, 5vw, 4.5rem);
-    font-weight: 300;
-    letter-spacing: 0.12em;
+    font-weight: var(--weight-light);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-kinetic);
     opacity: 0.03;
@@ -234,7 +234,7 @@
   }
 
   .kinetic-row.heavy {
-    font-weight: 500;
+    font-weight: var(--weight-medium);
     opacity: 0.04;
     translate: calc(var(--mx, 0) * 12px) calc(var(--my, 0) * 12px);
   }
@@ -291,7 +291,7 @@
   .name {
     font-family: 'Instrument Serif', serif;
     line-height: 0.95;
-    letter-spacing: -0.025em;
+    letter-spacing: var(--tracking-tight);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -300,7 +300,7 @@
 
   .name-line {
     display: block;
-    font-size: clamp(4rem, 12vw, 9rem);
+    font-size: var(--text-4xl);
     padding: 0.05em 0.15em;
     background: linear-gradient(180deg, var(--color-name-start) 0%, var(--color-name-end) 100%);
     -webkit-background-clip: text;
@@ -317,16 +317,16 @@
   .tagline {
     font-family: 'Instrument Serif', serif;
     font-style: italic;
-    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    font-size: var(--text-lg);
     color: var(--color-text);
     margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
   }
 
   .descriptors {
     font-family: 'DM Sans', sans-serif;
-    font-size: clamp(0.65rem, 1.1vw, 0.8rem);
-    font-weight: 400;
-    letter-spacing: 0.18em;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-regular);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
     display: flex;
@@ -344,9 +344,9 @@
 
   .hero-cta {
     font-family: 'DM Sans', sans-serif;
-    font-size: clamp(0.78rem, 1.1vw, 0.88rem);
-    font-weight: 500;
-    letter-spacing: 0.18em;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-bg);
     background-color: var(--color-accent);
@@ -394,7 +394,7 @@
     }
 
     .descriptors {
-      font-size: clamp(0.72rem, 2.5vw, 0.8rem);
+      font-size: var(--text-xs);
     }
 
     .kinetic {
