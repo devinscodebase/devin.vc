@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { db } from '../../../lib/db';
+import { getDb } from '../../../lib/db';
 import { notifications } from '../../../db/schema';
 import { eq, desc, and, inArray, sql } from 'drizzle-orm';
 
@@ -12,6 +12,7 @@ const json = (body: object, status = 200) =>
   });
 
 export const GET: APIRoute = async ({ url }) => {
+  const db = getDb();
   const type = url.searchParams.get('type'); // 'contact' | 'booking' | null (all)
   const status = url.searchParams.get('status'); // 'new' | 'read' | 'archived' | null (all)
   const page = Math.max(1, Number(url.searchParams.get('page')) || 1);
@@ -70,7 +71,7 @@ export const PATCH: APIRoute = async ({ request }) => {
     updates.readAt = null;
   }
 
-  await db
+  await getDb()
     .update(notifications)
     .set(updates)
     .where(inArray(notifications.id, ids));

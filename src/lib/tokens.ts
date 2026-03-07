@@ -1,8 +1,7 @@
 import { createHmac } from 'node:crypto';
 
-const secret = import.meta.env.NEWSLETTER_SECRET;
-
 export function generateToken(email: string): string {
+  const secret = import.meta.env.NEWSLETTER_SECRET;
   return createHmac('sha256', secret).update(email.toLowerCase()).digest('hex');
 }
 

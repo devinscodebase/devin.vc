@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { Webhook } from 'svix';
-import { db } from '../../../lib/db';
+import { getDb } from '../../../lib/db';
 import { subscribers } from '../../../db/schema';
 import { eq } from 'drizzle-orm';
 
@@ -34,7 +34,7 @@ export const POST: APIRoute = async ({ request }) => {
     const recipients = event.data.to as string[] | undefined;
     if (recipients?.length) {
       for (const email of recipients) {
-        await db
+        await getDb()
           .update(subscribers)
           .set({
             status: 'unsubscribed',

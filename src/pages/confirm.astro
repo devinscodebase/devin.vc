@@ -1,9 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { db } from '../lib/db';
+import { getDb } from '../lib/db';
 import { subscribers } from '../db/schema';
 import { eq } from 'drizzle-orm';
-import { resend } from '../lib/resend';
+import { getResend } from '../lib/resend';
 
 export const prerender = false;
 
@@ -11,6 +11,7 @@ const token = Astro.url.searchParams.get('token');
 let status: 'success' | 'already' | 'invalid' = 'invalid';
 
 if (token) {
+  const db = getDb();
   const subscriber = await db
     .select()
     .from(subscribers)
@@ -32,7 +33,7 @@ if (token) {
 
       // Sync to Resend Audience
       try {
-        const { data } = await resend.contacts.create({
+        const { data } = await getResend().contacts.create({
           email: subscriber.email,
           firstName: subscriber.firstName || undefined,
           unsubscribed: false,

@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
-import { db } from '../../lib/db';
+import { getDb } from '../../lib/db';
 import { notifications } from '../../db/schema';
-import { resend, SENDER } from '../../lib/resend';
+import { getResend, SENDER } from '../../lib/resend';
 import { render } from '@react-email/components';
 import BookingNotification from '../../emails/booking-notification';
 import BookingConfirmation from '../../emails/booking-confirmation';
@@ -65,6 +65,7 @@ export const POST: APIRoute = async ({ request }) => {
     ]);
 
     // Log to DB first
+    const db = getDb();
     await db.insert(notifications).values({
       type: 'booking',
       fromName: name,
@@ -77,6 +78,7 @@ export const POST: APIRoute = async ({ request }) => {
     });
 
     // Send emails in parallel, log failures
+    const resend = getResend();
     const [notify, confirm] = await Promise.allSettled([
       resend.emails.send({
         from: SENDER,

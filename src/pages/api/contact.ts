@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
-import { db } from '../../lib/db';
+import { getDb } from '../../lib/db';
 import { notifications } from '../../db/schema';
-import { resend, SENDER } from '../../lib/resend';
+import { getResend, SENDER } from '../../lib/resend';
 import { render } from '@react-email/components';
 import ContactNotification from '../../emails/contact-notification';
 import ContactConfirmation from '../../emails/contact-confirmation';
@@ -30,6 +30,7 @@ export const POST: APIRoute = async ({ request }) => {
     ]);
 
     // Log to DB first (independent of email delivery)
+    const db = getDb();
     await db.insert(notifications).values({
       type: 'contact',
       fromName: name,
@@ -41,6 +42,7 @@ export const POST: APIRoute = async ({ request }) => {
     });
 
     // Send emails in parallel, capture results
+    const resend = getResend();
     const [notify, confirm] = await Promise.allSettled([
       resend.emails.send({
         from: SENDER,

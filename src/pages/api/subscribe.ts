@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
-import { db } from '../../lib/db';
+import { getDb } from '../../lib/db';
 import { subscribers } from '../../db/schema';
-import { resend, SENDER } from '../../lib/resend';
+import { getResend, SENDER } from '../../lib/resend';
 import { generateToken } from '../../lib/tokens';
 import { eq } from 'drizzle-orm';
 import { render } from '@react-email/components';
@@ -26,6 +26,7 @@ export const POST: APIRoute = async ({ request, url }) => {
   const siteUrl = url.origin;
 
   // Check for existing subscriber
+  const db = getDb();
   const existing = await db
     .select()
     .from(subscribers)
@@ -46,7 +47,7 @@ export const POST: APIRoute = async ({ request, url }) => {
 
   const unsubscribeUrl = `${siteUrl}/unsubscribe?token=${token}`;
 
-  const { error: emailError } = await resend.emails.send({
+  const { error: emailError } = await getResend().emails.send({
     from: SENDER,
     to: email,
     replyTo: 'me@devin.vc',

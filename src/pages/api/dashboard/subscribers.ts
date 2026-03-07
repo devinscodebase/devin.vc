@@ -1,8 +1,8 @@
 import type { APIRoute } from 'astro';
-import { db } from '../../../lib/db';
+import { getDb } from '../../../lib/db';
 import { subscribers } from '../../../db/schema';
 import { eq, desc, and, like, sql } from 'drizzle-orm';
-import { resend } from '../../../lib/resend';
+import { getResend } from '../../../lib/resend';
 
 export const prerender = false;
 
@@ -13,6 +13,7 @@ const json = (body: object, status = 200) =>
   });
 
 export const GET: APIRoute = async ({ url }) => {
+  const db = getDb();
   const status = url.searchParams.get('status'); // 'pending' | 'confirmed' | 'unsubscribed' | null
   const search = url.searchParams.get('search')?.trim();
   const page = Math.max(1, Number(url.searchParams.get('page')) || 1);
@@ -70,6 +71,7 @@ export const GET: APIRoute = async ({ url }) => {
 };
 
 export const DELETE: APIRoute = async ({ request }) => {
+  const db = getDb();
   const { id } = await request.json();
 
   if (!id) {
@@ -89,7 +91,7 @@ export const DELETE: APIRoute = async ({ request }) => {
   // Remove from Resend Audience if synced
   if (subscriber.resendContactId && import.meta.env.RESEND_AUDIENCE_ID) {
     try {
-      await resend.contacts.remove({
+      await getResend().contacts.remove({
         id: subscriber.resendContactId,
         audienceId: import.meta.env.RESEND_AUDIENCE_ID,
       });
