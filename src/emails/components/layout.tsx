@@ -21,10 +21,7 @@ export function Layout({ preview, children, unsubscribeUrl }: LayoutProps) {
   return (
     <Html>
       <Head>
-        <meta name="color-scheme" content="dark" />
-        <meta name="supported-color-schemes" content="dark" />
         <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
           @media only screen and (max-width: 600px) {
             .email-container { padding: 0 !important; }
             .email-content { padding: 24px 20px 8px !important; }
@@ -139,7 +136,6 @@ const header: React.CSSProperties = {
 
 const logoText: React.CSSProperties = {
   fontFamily: "Georgia, 'Times New Roman', serif",
-  fontStyle: 'italic',
   fontSize: '18px',
   color: colors.text,
   letterSpacing: '-0.02em',

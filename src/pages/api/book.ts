@@ -57,9 +57,11 @@ export const POST: APIRoute = async ({ request }) => {
 
   // Log notification + send emails (non-blocking to Cal.com response)
   try {
-    const [notificationHtml, confirmationHtml] = await Promise.all([
+    const [notificationHtml, notificationText, confirmationHtml, confirmationText] = await Promise.all([
       render(BookingNotification({ name, email, phone, slot: slotLabel, timezone: tz, notes })),
+      render(BookingNotification({ name, email, phone, slot: slotLabel, timezone: tz, notes }), { plainText: true }),
       render(BookingConfirmation({ name, slot: slotLabel, timezone: tz, phone })),
+      render(BookingConfirmation({ name, slot: slotLabel, timezone: tz, phone }), { plainText: true }),
     ]);
 
     // Log to DB first
@@ -78,16 +80,18 @@ export const POST: APIRoute = async ({ request }) => {
     const [notify, confirm] = await Promise.allSettled([
       resend.emails.send({
         from: SENDER,
-        to: 'hello@devin.vc',
+        to: 'me@devin.vc',
         replyTo: email,
         subject: `New booking from ${name}`,
         html: notificationHtml,
+        text: notificationText,
       }),
       resend.emails.send({
         from: SENDER,
         to: email,
         subject: `You're booked - ${slotLabel}`,
         html: confirmationHtml,
+        text: confirmationText,
       }),
     ]);
 

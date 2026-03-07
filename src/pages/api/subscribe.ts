@@ -39,15 +39,17 @@ export const POST: APIRoute = async ({ request, url }) => {
   const confirmUrl = `${siteUrl}/confirm?token=${token}`;
 
   // Send double opt-in email
-  const html = await render(
-    NewsletterWelcome({ confirmUrl, firstName })
-  );
+  const [html, text] = await Promise.all([
+    render(NewsletterWelcome({ confirmUrl, firstName })),
+    render(NewsletterWelcome({ confirmUrl, firstName }), { plainText: true }),
+  ]);
 
   const { error: emailError } = await resend.emails.send({
     from: SENDER,
     to: email,
     subject: 'Confirm your subscription',
     html,
+    text,
   });
 
   if (emailError) {

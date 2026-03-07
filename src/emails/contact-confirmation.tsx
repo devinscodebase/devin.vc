@@ -10,17 +10,15 @@ export default function ContactConfirmation({
   name,
 }: ContactConfirmationProps) {
   return (
-    <Layout preview={`I've received your message and will get back to you within a day or two.`}>
+    <Layout preview={`Good to hear from you — I'll follow up within a day or two.`}>
       <Text style={heading}>
-        Thanks for reaching out, {name}.
+        Good to hear from you, {name}.
       </Text>
       <Text style={body}>
-        I've received your message and will get back to you as soon as I can —
-        usually within a day or two.
+        Your note landed safely. Expect a personal follow-up within a day or two.
       </Text>
       <Text style={body}>
-        In the meantime, feel free to explore some of my recent work or read
-        through the journal:
+        While you're here, take a look around:
       </Text>
 
       <table cellPadding="0" cellSpacing="0" style={{ width: '100%', marginBottom: '24px' }}>

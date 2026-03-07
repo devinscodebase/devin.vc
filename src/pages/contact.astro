@@ -214,21 +214,29 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
 </script>
 
 <style>
+  /* ---- Centered stage layout ---- */
   .contact-page {
     min-height: 100dvh;
-    padding: var(--space-page-top) var(--space-page-x) var(--space-page-bottom);
+    display: grid;
+    place-items: center;
+    padding: clamp(6rem, 14vh, 10rem) var(--space-page-x) var(--space-page-bottom);
     background: var(--color-bg);
   }
 
   .contact-inner {
-    max-width: 960px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: 580px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 
   /* ---- Section tag ---- */
   .section-tag {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.65rem;
     margin-bottom: clamp(1rem, 2vw, 1.5rem);
   }
@@ -258,15 +266,18 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
 
   /* ---- Header ---- */
   .page-header {
-    margin-bottom: var(--space-block-lg);
+    margin-bottom: var(--space-block);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .page-title {
     font-family: 'Instrument Serif', serif;
-    font-size: clamp(3rem, 7vw, 5rem);
+    font-size: clamp(3.5rem, 8vw, 5.5rem);
     font-weight: 400;
     line-height: 1.05;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.03em;
     color: var(--color-text);
     margin: 0 0 1rem;
   }
@@ -274,10 +285,10 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   .page-subtitle {
     font-family: 'Instrument Serif', serif;
     font-style: italic;
-    font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+    font-size: clamp(1.1rem, 1.8vw, 1.35rem);
     line-height: 1.5;
     color: var(--color-text-muted);
-    max-width: 520px;
+    max-width: 440px;
     margin: 0;
   }
 
@@ -295,7 +306,6 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
 
   /* ---- Tab switcher ---- */
   .contact-switcher {
-    max-width: 640px;
     margin-bottom: clamp(1.5rem, 3vw, 2rem);
   }
 
@@ -339,7 +349,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     color: var(--color-text-muted);
     background: none;
     border: none;
-    padding: 0.6rem 1.25rem;
+    padding: 0.65rem 1.4rem;
     cursor: pointer;
     transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     border-radius: 999px;
@@ -362,15 +372,22 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   /* ---- Contact card ---- */
   .contact-card {
     position: relative;
-    max-width: 640px;
+    width: 100%;
+    max-width: 540px;
     overflow: hidden;
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
-    padding: clamp(1.5rem, 4vw, 2.5rem);
-    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+    transition: border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 0 60px color-mix(in oklab, var(--color-accent) 4%, transparent),
+                0 0 120px color-mix(in oklab, var(--color-accent-teal) 3%, transparent);
+    text-align: left;
   }
 
   .contact-card:hover {
     border-color: color-mix(in oklab, var(--color-text-muted) 22%, transparent);
+    box-shadow: 0 0 80px color-mix(in oklab, var(--color-accent) 6%, transparent),
+                0 0 160px color-mix(in oklab, var(--color-accent-teal) 4%, transparent);
   }
 
   .card-accent {
@@ -399,6 +416,16 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
 
   .contact-card.booking .card-accent.amber {
     opacity: 1;
+  }
+
+  .contact-card.booking {
+    box-shadow: 0 0 60px color-mix(in oklab, var(--color-accent-amber) 4%, transparent),
+                0 0 120px color-mix(in oklab, var(--color-accent-amber) 3%, transparent);
+  }
+
+  .contact-card.booking:hover {
+    box-shadow: 0 0 80px color-mix(in oklab, var(--color-accent-amber) 6%, transparent),
+                0 0 160px color-mix(in oklab, var(--color-accent-amber) 4%, transparent);
   }
 
   /* ---- Panels ---- */
@@ -432,7 +459,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   }
 
   .form-field {
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
     position: relative;
   }
 
@@ -444,7 +471,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     background: transparent;
     border: none;
     border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 20%, transparent);
-    padding: 0.75rem 0;
+    padding: 0.85rem 0;
     outline: none;
     transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -478,9 +505,9 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
 
   .form-textarea {
     resize: vertical;
-    min-height: 80px;
+    min-height: 90px;
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
-    padding: 0.75rem;
+    padding: 0.85rem;
   }
 
   .form-textarea:focus {
@@ -500,12 +527,12 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     background-position: 100% 0;
     color: var(--color-bg);
     border: 1px solid var(--color-accent);
-    padding: 0.8rem 1.75rem;
+    padding: 0.85rem 2rem;
     cursor: pointer;
     transition: background-position 0.25s cubic-bezier(0.16, 1, 0.3, 1),
                 border-color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
     margin-top: 0.25rem;
-    align-self: flex-start;
+    align-self: center;
   }
 
   .form-submit:hover {
@@ -523,6 +550,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     font-size: 0.82rem;
     margin: 0.75rem 0 0;
     min-height: 1.2em;
+    text-align: center;
   }
 
   .form-status.success {
@@ -579,9 +607,13 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
 
   /* ---- Footer ---- */
   .page-footer {
-    margin-top: var(--space-block);
-    padding-top: 2rem;
-    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+    width: 100%;
+    max-width: 540px;
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+    display: flex;
+    justify-content: center;
   }
 
   .back-link {
@@ -616,7 +648,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     align-items: flex-start;
     gap: 0.6rem;
     cursor: pointer;
-    margin: 0.25rem 0 0.75rem;
+    margin: 0.25rem 0 1rem;
     user-select: none;
   }
 

@@ -22,9 +22,11 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   try {
-    const [notificationHtml, confirmationHtml] = await Promise.all([
+    const [notificationHtml, notificationText, confirmationHtml, confirmationText] = await Promise.all([
       render(ContactNotification({ name, email, message })),
+      render(ContactNotification({ name, email, message }), { plainText: true }),
       render(ContactConfirmation({ name })),
+      render(ContactConfirmation({ name }), { plainText: true }),
     ]);
 
     // Log to DB first (independent of email delivery)
@@ -42,16 +44,20 @@ export const POST: APIRoute = async ({ request }) => {
     const [notify, confirm] = await Promise.allSettled([
       resend.emails.send({
         from: SENDER,
-        to: 'hello@devin.vc',
+        to: 'me@devin.vc',
         replyTo: email,
         subject: `New message from ${name}`,
         html: notificationHtml,
+        text: notificationText,
+        headers: { 'X-Entity-Ref-ID': `contact-notify-${Date.now()}` },
       }),
       resend.emails.send({
         from: SENDER,
         to: email,
-        subject: `Thanks for reaching out, ${name.split(' ')[0]}`,
+        subject: `${name.split(' ')[0]}, your message was received`,
         html: confirmationHtml,
+        text: confirmationText,
+        headers: { 'X-Entity-Ref-ID': `contact-confirm-${Date.now()}` },
       }),
     ]);
 

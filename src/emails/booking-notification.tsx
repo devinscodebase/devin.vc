@@ -78,7 +78,7 @@ const badge: React.CSSProperties = {
   letterSpacing: '0.15em',
   textTransform: 'uppercase' as const,
   color: '#c4a47c',
-  backgroundColor: 'rgba(196, 164, 124, 0.1)',
+  backgroundColor: '#1e1810',
   padding: '4px 10px',
   borderRadius: '4px',
   margin: '0 0 14px 0',

@@ -21,10 +21,10 @@ export default function ContactNotification({
     .slice(0, 2);
 
   return (
-    <Layout preview={`${name} (${email}): "${message.slice(0, 80)}${message.length > 80 ? '...' : ''}"`}>
+    <Layout preview={`${name}: "${message.slice(0, 80)}${message.length > 80 ? '...' : ''}"`}>
       <Text style={badge}>NEW MESSAGE</Text>
       <Text style={heading}>
-        Someone reached out via the contact form.
+        New inquiry from {name}.
       </Text>
 
       <Section style={card}>
@@ -47,7 +47,7 @@ export default function ContactNotification({
       </Section>
 
       <Text style={hint}>
-        Reply directly to this email to respond to {name.split(' ')[0]}.
+        Hit reply to respond to {name.split(' ')[0]}.
       </Text>
     </Layout>
   );
@@ -60,7 +60,7 @@ const badge: React.CSSProperties = {
   letterSpacing: '0.15em',
   textTransform: 'uppercase' as const,
   color: '#5ba3a3',
-  backgroundColor: 'rgba(91, 163, 163, 0.1)',
+  backgroundColor: '#142222',
   padding: '4px 10px',
   borderRadius: '4px',
   margin: '0 0 14px 0',
