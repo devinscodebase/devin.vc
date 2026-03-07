@@ -1,7 +1,0 @@
-# Cloudflare Pages configuration
-name = "devin-vc"
-pages_build_output_dir = "dist"
-
-# nodejs_compat required for node:crypto, MessageChannel (React DOM), etc.
-compatibility_date = "2024-12-01"
-compatibility_flags = ["nodejs_compat"]
