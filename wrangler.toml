@@ -1,0 +1,4 @@
+# Cloudflare Pages configuration
+# Required for astro:env/server to access CF bindings via `cloudflare:workers`
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
