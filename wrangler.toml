@@ -1,4 +1,7 @@
 # Cloudflare Pages configuration
-# Required for astro:env/server to access CF bindings via `cloudflare:workers`
+# pages_build_output_dir required for CF Pages to read this file
+pages_build_output_dir = "dist"
+
+# nodejs_compat required for node:crypto, MessageChannel (React DOM), etc.
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
