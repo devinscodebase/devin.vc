@@ -1,5 +1,6 @@
 import satori from 'satori';
-import { Resvg } from '@resvg/resvg-js';
+import { Resvg, initWasm } from '@resvg/resvg-wasm';
+import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm?init';
 import {
   DefaultTemplate,
   JournalTemplate,
@@ -12,7 +13,8 @@ const INSTRUMENT_SERIF_URL =
 const DM_SANS_URL =
   'https://fonts.gstatic.com/s/dmsans/v17/rP2tp2ywxg089UriI5-g4vlH9VoD8CmcqZG40F9JadbnoEwAopxhTg.ttf';
 
-// Module-scope font cache for warm serverless instances
+// Module-scope caches
+let wasmInitialized = false;
 let instrumentSerifData: ArrayBuffer | null = null;
 let dmSansData: ArrayBuffer | null = null;
 
@@ -36,7 +38,11 @@ export interface OgImageParams {
   date?: string;
 }
 
-export async function generateOgImage(params: OgImageParams): Promise<Buffer> {
+export async function generateOgImage(params: OgImageParams): Promise<Uint8Array> {
+  if (!wasmInitialized) {
+    await initWasm(resvgWasm());
+    wasmInitialized = true;
+  }
   const [instrumentSerif, dmSans] = await loadFonts();
 
   // Build the React element based on type

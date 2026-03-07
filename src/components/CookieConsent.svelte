@@ -8,8 +8,8 @@
   let entered = $state(false);
 
   function injectAnalytics() {
-    import('@vercel/analytics').then(({ inject }) => inject({ mode: 'production' }));
-    import('@vercel/speed-insights').then(({ injectSpeedInsights }) => injectSpeedInsights());
+    // Cloudflare Web Analytics — injected via CF dashboard, no client JS needed.
+    // This function is kept as a hook for any future client-side analytics.
   }
 
   function dismiss(callback) {

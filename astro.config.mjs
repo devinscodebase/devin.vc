@@ -5,7 +5,7 @@ import svelte from '@astrojs/svelte';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 
-import vercel from '@astrojs/vercel';
+import cloudflare from '@astrojs/cloudflare';
 
 import mdx from '@astrojs/mdx';
 
@@ -42,5 +42,5 @@ export default defineConfig({
     defaultStrategy: 'viewport',
   },
 
-  adapter: vercel()
+  adapter: cloudflare()
 });
