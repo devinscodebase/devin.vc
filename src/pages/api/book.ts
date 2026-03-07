@@ -53,8 +53,16 @@ export const POST: APIRoute = async ({ request }) => {
     }
   }
 
-  // Format slot for display
-  const slotLabel = slot.label || slot.time;
+  // Format slot for display — include date and time
+  const slotDate = new Date(slot.time);
+  const slotLabel = slotDate.toLocaleString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZone: tz,
+  });
 
   // Log notification + send emails (non-blocking to Cal.com response)
   try {
@@ -97,7 +105,7 @@ export const POST: APIRoute = async ({ request }) => {
         html: confirmationHtml,
         text: confirmationText,
         headers: {
-          'List-Unsubscribe': '<mailto:me@devin.vc?subject=unsubscribe>',
+          'X-Entity-Ref-ID': `booking-confirm-${Date.now()}`,
         },
       }),
     ]);
