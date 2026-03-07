@@ -24,6 +24,9 @@ pnpm-debug.log*
 .idea/
 .vercel
 docs/
-CLAUDE.md
-helper.md
+
+# markdown (keep README only)
+*.md
+!README.md
+
 .wrangler
