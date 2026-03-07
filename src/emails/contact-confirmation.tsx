@@ -1,4 +1,4 @@
-import { Text, Section, Link } from '@react-email/components';
+import { Text, Link } from '@react-email/components';
 import * as React from 'react';
 import { Layout } from './components/layout';
 
@@ -10,36 +10,14 @@ export default function ContactConfirmation({
   name,
 }: ContactConfirmationProps) {
   return (
-    <Layout preview={`Good to hear from you — I'll follow up within a day or two.`}>
+    <Layout preview={`Your message was received -- I'll follow up within a day or two.`} minimal>
       <Text style={heading}>
         Good to hear from you, {name}.
       </Text>
       <Text style={body}>
         Your note landed safely. Expect a personal follow-up within a day or two.
       </Text>
-      <Text style={body}>
-        While you're here, take a look around:
-      </Text>
-
-      <table cellPadding="0" cellSpacing="0" style={{ width: '100%', marginBottom: '24px' }}>
-        <tr>
-          <td style={linkCard}>
-            <Link href="https://www.devin.vc/work" style={linkTitle}>
-              Work &rarr;
-            </Link>
-            <Text style={linkDesc}>Case studies & leadership</Text>
-          </td>
-          <td style={{ width: '10px' }} />
-          <td style={linkCard}>
-            <Link href="https://www.devin.vc/journal" style={linkTitle}>
-              Journal &rarr;
-            </Link>
-            <Text style={linkDesc}>Writing & reflections</Text>
-          </td>
-        </tr>
-      </table>
-
-      <Text style={signoff}>— Devin</Text>
+      <Text style={signoff}>-- Devin</Text>
     </Layout>
   );
 }
@@ -57,28 +35,6 @@ const body: React.CSSProperties = {
   lineHeight: '1.7',
   color: '#a09488',
   margin: '0 0 14px 0',
-};
-
-const linkCard: React.CSSProperties = {
-  backgroundColor: '#141210',
-  border: '1px solid #1e1a14',
-  borderRadius: '8px',
-  padding: '14px 16px',
-  verticalAlign: 'top',
-  width: '50%',
-};
-
-const linkTitle: React.CSSProperties = {
-  fontSize: '13px',
-  fontWeight: 500,
-  color: '#c4a47c',
-  textDecoration: 'none',
-};
-
-const linkDesc: React.CSSProperties = {
-  fontSize: '11px',
-  color: '#6d5c48',
-  margin: '4px 0 0 0',
 };
 
 const signoff: React.CSSProperties = {

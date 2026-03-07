@@ -15,9 +15,11 @@ interface LayoutProps {
   preview: string;
   children: React.ReactNode;
   unsubscribeUrl?: string;
+  /** Use a minimal footer for transactional emails (reduces spam score) */
+  minimal?: boolean;
 }
 
-export function Layout({ preview, children, unsubscribeUrl }: LayoutProps) {
+export function Layout({ preview, children, unsubscribeUrl, minimal }: LayoutProps) {
   return (
     <Html>
       <Head>
@@ -62,29 +64,33 @@ export function Layout({ preview, children, unsubscribeUrl }: LayoutProps) {
 
           {/* Footer */}
           <Section style={footer} className="email-footer">
-            <Text style={socialRow}>
-              <Link href="https://x.com/devinmarkets" style={socialLink}>
-                X / Twitter
-              </Link>
-              <span style={dot}>&nbsp;&middot;&nbsp;</span>
-              <Link href="https://www.linkedin.com/in/devalexander/" style={socialLink}>
-                LinkedIn
-              </Link>
-              <span style={dot}>&nbsp;&middot;&nbsp;</span>
-              <Link href="https://www.devin.vc" style={socialLink}>
-                Website
-              </Link>
-            </Text>
+            {!minimal && (
+              <>
+                <Text style={socialRow}>
+                  <Link href="https://x.com/devinmarkets" style={socialLink}>
+                    X / Twitter
+                  </Link>
+                  <span style={dot}>&nbsp;&middot;&nbsp;</span>
+                  <Link href="https://www.linkedin.com/in/devalexander/" style={socialLink}>
+                    LinkedIn
+                  </Link>
+                  <span style={dot}>&nbsp;&middot;&nbsp;</span>
+                  <Link href="https://www.devin.vc" style={socialLink}>
+                    Website
+                  </Link>
+                </Text>
 
-            <Text style={navRow}>
-              <Link href="https://www.devin.vc/work" style={navLink}>Work</Link>
-              <span style={dot}>&nbsp;&middot;&nbsp;</span>
-              <Link href="https://www.devin.vc/projects" style={navLink}>Projects</Link>
-              <span style={dot}>&nbsp;&middot;&nbsp;</span>
-              <Link href="https://www.devin.vc/journal" style={navLink}>Journal</Link>
-              <span style={dot}>&nbsp;&middot;&nbsp;</span>
-              <Link href="https://www.devin.vc/contact" style={navLink}>Contact</Link>
-            </Text>
+                <Text style={navRow}>
+                  <Link href="https://www.devin.vc/work" style={navLink}>Work</Link>
+                  <span style={dot}>&nbsp;&middot;&nbsp;</span>
+                  <Link href="https://www.devin.vc/projects" style={navLink}>Projects</Link>
+                  <span style={dot}>&nbsp;&middot;&nbsp;</span>
+                  <Link href="https://www.devin.vc/journal" style={navLink}>Journal</Link>
+                  <span style={dot}>&nbsp;&middot;&nbsp;</span>
+                  <Link href="https://www.devin.vc/contact" style={navLink}>Contact</Link>
+                </Text>
+              </>
+            )}
 
             <Text style={copyright}>
               &copy; {new Date().getFullYear()} Devin Alexander &middot; All rights reserved

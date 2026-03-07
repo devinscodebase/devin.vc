@@ -62,7 +62,6 @@ export const POST: APIRoute = async ({ request }) => {
         text: confirmationText,
         headers: {
           'X-Entity-Ref-ID': `contact-confirm-${Date.now()}`,
-          'List-Unsubscribe': '<mailto:me@devin.vc?subject=unsubscribe>',
         },
       }),
     ]);
