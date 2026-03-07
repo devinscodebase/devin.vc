@@ -3,6 +3,7 @@ import { getDb } from '../../lib/db';
 import { notifications } from '../../db/schema';
 import { getResend, SENDER } from '../../lib/resend';
 import { render } from '@react-email/components';
+import { CAL_API_KEY, CAL_EVENT_TYPE_ID } from 'astro:env/server';
 import BookingNotification from '../../emails/booking-notification';
 import BookingConfirmation from '../../emails/booking-confirmation';
 
@@ -21,8 +22,8 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ error: 'Name, email, and time slot are required' }, 400);
   }
 
-  const apiKey = import.meta.env.CAL_API_KEY;
-  const eventTypeId = import.meta.env.CAL_EVENT_TYPE_ID;
+  const apiKey = CAL_API_KEY;
+  const eventTypeId = CAL_EVENT_TYPE_ID;
   const tz = timezone || 'America/New_York';
 
   // Book via Cal.com if configured

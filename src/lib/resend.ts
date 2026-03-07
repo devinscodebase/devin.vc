@@ -1,10 +1,11 @@
 import { Resend } from 'resend';
+import { RESEND_API_KEY } from 'astro:env/server';
 
 let _resend: Resend | null = null;
 
 export function getResend() {
   if (!_resend) {
-    _resend = new Resend(import.meta.env.RESEND_API_KEY);
+    _resend = new Resend(RESEND_API_KEY);
   }
   return _resend;
 }

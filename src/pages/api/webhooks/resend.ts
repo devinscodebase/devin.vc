@@ -3,13 +3,12 @@ import { Webhook } from 'svix';
 import { getDb } from '../../../lib/db';
 import { subscribers } from '../../../db/schema';
 import { eq } from 'drizzle-orm';
+import { RESEND_WEBHOOK_SECRET } from 'astro:env/server';
 
 export const prerender = false;
 
 export const POST: APIRoute = async ({ request }) => {
-  const secret = import.meta.env.RESEND_WEBHOOK_SECRET;
-
-  if (!secret) {
+  if (!RESEND_WEBHOOK_SECRET) {
     return new Response('Webhook not configured', { status: 500 });
   }
 
@@ -23,7 +22,7 @@ export const POST: APIRoute = async ({ request }) => {
   // Verify signature
   let event: { type: string; data: Record<string, unknown> };
   try {
-    const wh = new Webhook(secret);
+    const wh = new Webhook(RESEND_WEBHOOK_SECRET);
     event = wh.verify(payload, headers) as typeof event;
   } catch {
     return new Response('Invalid signature', { status: 400 });

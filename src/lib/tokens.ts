@@ -1,8 +1,8 @@
 import { createHmac } from 'node:crypto';
+import { NEWSLETTER_SECRET } from 'astro:env/server';
 
 export function generateToken(email: string): string {
-  const secret = import.meta.env.NEWSLETTER_SECRET;
-  return createHmac('sha256', secret).update(email.toLowerCase()).digest('hex');
+  return createHmac('sha256', NEWSLETTER_SECRET).update(email.toLowerCase()).digest('hex');
 }
 
 export function verifyToken(email: string, token: string): boolean {

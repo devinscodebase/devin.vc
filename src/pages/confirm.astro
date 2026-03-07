@@ -4,6 +4,7 @@ import { getDb } from '../lib/db';
 import { subscribers } from '../db/schema';
 import { eq } from 'drizzle-orm';
 import { getResend } from '../lib/resend';
+import { RESEND_AUDIENCE_ID } from 'astro:env/server';
 
 export const prerender = false;
 
@@ -37,7 +38,7 @@ if (token) {
           email: subscriber.email,
           firstName: subscriber.firstName || undefined,
           unsubscribed: false,
-          audienceId: import.meta.env.RESEND_AUDIENCE_ID || '',
+          audienceId: RESEND_AUDIENCE_ID || '',
         });
 
         if (data?.id) {

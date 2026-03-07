@@ -4,6 +4,7 @@ import { getDb } from '../lib/db';
 import { subscribers } from '../db/schema';
 import { eq } from 'drizzle-orm';
 import { getResend } from '../lib/resend';
+import { RESEND_AUDIENCE_ID } from 'astro:env/server';
 
 export const prerender = false;
 
@@ -31,11 +32,11 @@ if (token) {
         .where(eq(subscribers.id, subscriber.id));
 
       // Sync to Resend
-      if (subscriber.resendContactId && import.meta.env.RESEND_AUDIENCE_ID) {
+      if (subscriber.resendContactId && RESEND_AUDIENCE_ID) {
         try {
           await getResend().contacts.update({
             id: subscriber.resendContactId,
-            audienceId: import.meta.env.RESEND_AUDIENCE_ID,
+            audienceId: RESEND_AUDIENCE_ID,
             unsubscribed: true,
           });
         } catch {

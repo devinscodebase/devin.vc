@@ -26,3 +26,4 @@ pnpm-debug.log*
 docs/
 CLAUDE.md
 helper.md
+.wrangler

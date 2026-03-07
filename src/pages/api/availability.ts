@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { CAL_API_KEY, CAL_EVENT_TYPE_ID } from 'astro:env/server';
 
 export const prerender = false;
 
@@ -13,8 +14,8 @@ export const GET: APIRoute = async ({ url }) => {
     });
   }
 
-  const apiKey = import.meta.env.CAL_API_KEY;
-  const eventTypeId = import.meta.env.CAL_EVENT_TYPE_ID;
+  const apiKey = CAL_API_KEY;
+  const eventTypeId = CAL_EVENT_TYPE_ID;
 
   if (!apiKey || !eventTypeId) {
     // Return mock slots when Cal.com is not configured

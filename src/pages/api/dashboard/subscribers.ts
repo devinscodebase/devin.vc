@@ -3,6 +3,7 @@ import { getDb } from '../../../lib/db';
 import { subscribers } from '../../../db/schema';
 import { eq, desc, and, like, sql } from 'drizzle-orm';
 import { getResend } from '../../../lib/resend';
+import { RESEND_AUDIENCE_ID } from 'astro:env/server';
 
 export const prerender = false;
 
@@ -89,11 +90,11 @@ export const DELETE: APIRoute = async ({ request }) => {
   }
 
   // Remove from Resend Audience if synced
-  if (subscriber.resendContactId && import.meta.env.RESEND_AUDIENCE_ID) {
+  if (subscriber.resendContactId && RESEND_AUDIENCE_ID) {
     try {
       await getResend().contacts.remove({
         id: subscriber.resendContactId,
-        audienceId: import.meta.env.RESEND_AUDIENCE_ID,
+        audienceId: RESEND_AUDIENCE_ID,
       });
     } catch {
       // Non-critical
