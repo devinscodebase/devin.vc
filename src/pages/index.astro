@@ -51,14 +51,14 @@ const tools = await sanityClient.fetch(`
 >
   <main>
     <Hero client:load />
-    <About client:load />
+    <About client:visible={{rootMargin: "200px"}} />
     <Gallery />
-    <Timeline client:load />
-    <Now client:load />
-    <Toolkit client:load tools={tools} />
-    <Projects client:load projects={featuredProjects} />
-    <Proof client:load testimonials={testimonials} />
-    <Journal client:load posts={latestPosts} />
-    <Contact client:load />
+    <Timeline client:visible={{rootMargin: "200px"}} />
+    <Now client:visible={{rootMargin: "200px"}} />
+    <Toolkit client:visible={{rootMargin: "200px"}} tools={tools} />
+    <Projects client:visible={{rootMargin: "200px"}} projects={featuredProjects} />
+    <Proof client:visible={{rootMargin: "200px"}} testimonials={testimonials} />
+    <Journal client:visible={{rootMargin: "200px"}} posts={latestPosts} />
+    <Contact client:visible={{rootMargin: "200px"}} />
   </main>
 </Layout>

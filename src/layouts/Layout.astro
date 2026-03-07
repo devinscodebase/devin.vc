@@ -71,12 +71,8 @@ const ogImage = `${siteUrl}${ogImagePath.startsWith('/') ? ogImagePath : `/${ogI
         document.documentElement.setAttribute('data-theme', stored || 'dark');
       })();
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Instrument+Serif:ital@0;1&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preload" href="/fonts/InstrumentSerif-Regular-Latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/DMSans-Variable-Latin.woff2" as="font" type="font/woff2" crossorigin />
     <ClientRouter />
     <title>{title}</title>
 

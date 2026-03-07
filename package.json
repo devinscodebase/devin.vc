@@ -14,8 +14,6 @@
     "@astrojs/react": "^4.4.2",
     "@astrojs/svelte": "^7.2.5",
     "@clerk/astro": "^3.0.1",
-    "@fontsource-variable/climate-crisis": "^5.2.11",
-    "@fontsource-variable/hubot-sans": "^5.2.8",
     "@libsql/client": "^0.17.0",
     "@react-email/components": "^1.0.8",
     "@resvg/resvg-wasm": "^2.6.2",
