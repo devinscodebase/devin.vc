@@ -87,6 +87,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
 <script>
   import { animate, inView } from 'motion';
 
+  document.addEventListener('astro:page-load', () => {
   // ---- Tab switching ----
   const tabMessage = document.getElementById('tab-message');
   const tabBooking = document.getElementById('tab-booking');
@@ -211,6 +212,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
       }
     });
   }
+  });
 </script>
 
 <style>
