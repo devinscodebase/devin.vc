@@ -54,10 +54,14 @@ export const POST: APIRoute = async ({ request }) => {
       resend.emails.send({
         from: SENDER,
         to: email,
+        replyTo: 'me@devin.vc',
         subject: `${name.split(' ')[0]}, your message was received`,
         html: confirmationHtml,
         text: confirmationText,
-        headers: { 'X-Entity-Ref-ID': `contact-confirm-${Date.now()}` },
+        headers: {
+          'X-Entity-Ref-ID': `contact-confirm-${Date.now()}`,
+          'List-Unsubscribe': '<mailto:me@devin.vc?subject=unsubscribe>',
+        },
       }),
     ]);
 

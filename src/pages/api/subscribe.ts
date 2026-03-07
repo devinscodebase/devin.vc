@@ -44,12 +44,19 @@ export const POST: APIRoute = async ({ request, url }) => {
     render(NewsletterWelcome({ confirmUrl, firstName }), { plainText: true }),
   ]);
 
+  const unsubscribeUrl = `${siteUrl}/unsubscribe?token=${token}`;
+
   const { error: emailError } = await resend.emails.send({
     from: SENDER,
     to: email,
+    replyTo: 'me@devin.vc',
     subject: 'Confirm your subscription',
     html,
     text,
+    headers: {
+      'List-Unsubscribe': `<${unsubscribeUrl}>`,
+      'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+    },
   });
 
   if (emailError) {

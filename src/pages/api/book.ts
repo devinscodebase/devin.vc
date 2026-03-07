@@ -89,9 +89,13 @@ export const POST: APIRoute = async ({ request }) => {
       resend.emails.send({
         from: SENDER,
         to: email,
+        replyTo: 'me@devin.vc',
         subject: `You're booked - ${slotLabel}`,
         html: confirmationHtml,
         text: confirmationText,
+        headers: {
+          'List-Unsubscribe': '<mailto:me@devin.vc?subject=unsubscribe>',
+        },
       }),
     ]);
 
