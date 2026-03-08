@@ -1,0 +1,31 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import GtmPlanner from '../../components/tools/GtmPlanner.svelte';
+---
+
+<Layout
+  title="GTM Budget Planner — Devin Alexander"
+  description="Reverse-engineer your go-to-market funnel. Input your revenue target, get the exact leads, budget, and pipeline you need."
+  image="/api/og.png?type=page&title=GTM%20Budget%20Planner&subtitle=Reverse-engineer%20your%20go-to-market%20funnel"
+>
+  <main>
+    <section class="gtm-page">
+      <div class="gtm-page-inner">
+        <GtmPlanner client:load />
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .gtm-page {
+    min-height: 100dvh;
+    padding: var(--space-page-top) var(--space-page-x) var(--space-page-bottom);
+    background: var(--color-bg);
+  }
+
+  .gtm-page-inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+</style>
