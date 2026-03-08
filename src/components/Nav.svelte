@@ -108,6 +108,10 @@
       <span class="nav-number">05</span>
       <span class="nav-label">Contact</span>
     </a>
+    <a href="/tools/gtm-planner" class="nav-link" class:active={currentPath.startsWith('/tools')} onclick={() => open = false}>
+      <span class="nav-number">06</span>
+      <span class="nav-label">Tools</span>
+    </a>
   </nav>
 
   <div class="overlay-footer">
@@ -342,6 +346,8 @@
   .overlay.open .nav-link:nth-child(2) { transition-delay: 0.27s, 0.27s, 0s; }
   .overlay.open .nav-link:nth-child(3) { transition-delay: 0.34s, 0.34s, 0s; }
   .overlay.open .nav-link:nth-child(4) { transition-delay: 0.41s, 0.41s, 0s; }
+  .overlay.open .nav-link:nth-child(5) { transition-delay: 0.48s, 0.48s, 0s; }
+  .overlay.open .nav-link:nth-child(6) { transition-delay: 0.55s, 0.55s, 0s; }
 
   .nav-number {
     font-family: 'DM Sans', sans-serif;
@@ -357,6 +363,8 @@
   .nav-link:nth-child(2) .nav-number { color: var(--color-accent-amber); }
   .nav-link:nth-child(3) .nav-number { color: var(--color-accent-rust); }
   .nav-link:nth-child(4) .nav-number { color: var(--color-accent-amber); }
+  .nav-link:nth-child(5) .nav-number { color: var(--color-accent-rust); }
+  .nav-link:nth-child(6) .nav-number { color: var(--color-accent-teal); }
 
   .nav-label {
     font-family: 'Instrument Serif', serif;

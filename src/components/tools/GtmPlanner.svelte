@@ -898,9 +898,10 @@ Generated at devin.vc/tools/gtm-planner`;
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .step-content,
     .slide-from-right,
     .slide-from-left {
-      animation: none;
+      animation: none !important;
     }
   }
 
