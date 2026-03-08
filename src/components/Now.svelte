@@ -73,17 +73,17 @@
     <h2 class="section-heading" style="opacity: 0;">What I'm Working On</h2>
 
     <div class="projects">
-      <article class="project" style="opacity: 0;" onmouseenter={cardEnter} onmouseleave={cardLeave}>
+      <a href="/contact" class="project" style="opacity: 0;" onmouseenter={cardEnter} onmouseleave={cardLeave}>
         <div class="project-top">
           <span class="project-number">01</span>
           <div class="project-header">
             <span class="status-dot" aria-hidden="true"></span>
-            <span class="project-status">Active</span>
+            <span class="project-status">Available</span>
           </div>
         </div>
-        <h3 class="project-name">COO, Andreou Enterprises</h3>
-        <p class="project-desc">Running marketing and operations across the Andreou brand portfolio and Bitmern Mining. Leading a team of 9 as second-in-command in the Web3 and crypto space.</p>
-      </article>
+        <h3 class="project-name">Open to Consulting Projects</h3>
+        <p class="project-desc">GTM strategy, marketing systems, operations, and growth — for companies that need senior-level thinking without a full-time hire. Let's talk.</p>
+      </a>
 
       <article class="project" style="opacity: 0;" onmouseenter={cardEnter} onmouseleave={cardLeave}>
         <div class="project-top">
@@ -186,6 +186,8 @@
     position: relative;
     overflow: hidden;
     transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    text-decoration: none;
+    color: inherit;
   }
 
   /* Cursor-following spotlight */
