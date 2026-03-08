@@ -1,4 +1,7 @@
 <script>
+  import { onMount, tick } from 'svelte';
+  import { animate, stagger } from 'motion';
+
   /* ── Wizard state ── */
   let currentStep = $state(1);
   let direction = $state(1); // 1 = forward, -1 = back
@@ -226,6 +229,98 @@
       next();
     }
   }
+
+  /* ── Entrance animations ── */
+  onMount(() => {
+    if (window.__vtNav) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const header = document.querySelector('.wizard-header');
+    if (header) {
+      animate(header, { opacity: [0, 1], y: [12, 0] }, {
+        duration: 0.4,
+        easing: [0.16, 1, 0.3, 1],
+      });
+    }
+  });
+
+  $effect(() => {
+    if (!showResults) return;
+
+    tick().then(() => {
+      const dashboard = document.querySelector('.results-dashboard');
+      if (!dashboard) return;
+
+      // Skip animations on view transition navigation
+      if (window.__vtNav) return;
+
+      // Respect reduced motion preference
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      // Animate header
+      const header = dashboard.querySelector('.results-header');
+      if (header) {
+        animate(header, { opacity: [0, 1], y: [20, 0] }, {
+          duration: 0.4,
+          easing: [0.16, 1, 0.3, 1],
+        });
+      }
+
+      // Stagger sections
+      const sections = dashboard.querySelectorAll('.results-section');
+      if (sections.length) {
+        animate(sections, { opacity: [0, 1], y: [20, 0] }, {
+          duration: 0.4,
+          delay: stagger(0.08, { start: 0.15 }),
+          easing: [0.16, 1, 0.3, 1],
+        });
+      }
+
+      // Animate funnel bars width
+      const bars = dashboard.querySelectorAll('.funnel-bar');
+      if (bars.length) {
+        bars.forEach((bar, i) => {
+          const targetWidth = bar.style.width;
+          bar.style.width = '0%';
+          animate(bar, { width: ['0%', targetWidth] }, {
+            duration: 0.6,
+            delay: 0.2 + (i * 0.08),
+            easing: [0.16, 1, 0.3, 1],
+          });
+        });
+      }
+
+      // Stagger number cards and metrics
+      const cards = dashboard.querySelectorAll('.results-card, .results-metric');
+      if (cards.length) {
+        animate(cards, { opacity: [0, 1], y: [12, 0] }, {
+          duration: 0.35,
+          delay: stagger(0.04, { start: 0.3 }),
+          easing: [0.16, 1, 0.3, 1],
+        });
+      }
+
+      // Animate post-results actions
+      const actions = dashboard.querySelector('.results-actions');
+      if (actions) {
+        animate(actions, { opacity: [0, 1] }, {
+          duration: 0.4,
+          delay: 0.6,
+          easing: [0.16, 1, 0.3, 1],
+        });
+      }
+
+      // Animate CTA
+      const cta = dashboard.querySelector('.results-cta');
+      if (cta) {
+        animate(cta, { opacity: [0, 1], y: [12, 0] }, {
+          duration: 0.4,
+          delay: 0.7,
+          easing: [0.16, 1, 0.3, 1],
+        });
+      }
+    });
+  });
 
   /* ── Clipboard ── */
   let copied = $state(false);
@@ -1075,12 +1170,7 @@ Generated at devin.vc/tools/gtm-planner`;
      ══════════════════════════════════════════ */
 
   .results-dashboard {
-    animation: fadeIn var(--duration-normal) var(--ease-out-expo) both;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
+    /* Entrance handled by motion library in $effect */
   }
 
   /* ── Results header ── */
@@ -1380,9 +1470,5 @@ Generated at devin.vc/tools/gtm-planner`;
     transform: translateX(3px);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .results-dashboard {
-      animation: none;
-    }
-  }
+  /* prefers-reduced-motion handled in JS for results entrance */
 </style>
