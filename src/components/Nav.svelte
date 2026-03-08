@@ -28,6 +28,12 @@
 
   function toggleMenu() {
     open = !open;
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+
+  function closeMenu() {
+    open = false;
+    document.body.style.overflow = '';
   }
 
   function toggleTheme() {
@@ -35,13 +41,9 @@
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }
-
-  $effect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
-  });
 </script>
 
-<svelte:window onkeydown={(e) => { if (e.key === 'Escape' && open) open = false; }} />
+<svelte:window onkeydown={(e) => { if (e.key === 'Escape' && open) closeMenu(); }} />
 
 <header class="navbar" class:open class:scrolled>
   <a href="/" class="logo">Devin</a>
@@ -88,29 +90,25 @@
   <div class="grain-overlay" aria-hidden="true"></div>
 
   <nav class="overlay-nav">
-    <a href="/work" class="nav-link" class:active={currentPath.startsWith('/work')} onclick={() => open = false}>
+    <a href="/work" class="nav-link" class:active={currentPath.startsWith('/work')} onclick={closeMenu}>
       <span class="nav-number">01</span>
       <span class="nav-label">Work</span>
     </a>
-    <a href="/projects" class="nav-link" class:active={currentPath.startsWith('/projects')} onclick={() => open = false}>
+    <a href="/projects" class="nav-link" class:active={currentPath.startsWith('/projects')} onclick={closeMenu}>
       <span class="nav-number">02</span>
       <span class="nav-label">Projects</span>
     </a>
-    <a href="/about" class="nav-link" class:active={currentPath.startsWith('/about')} onclick={() => open = false}>
+    <a href="/about" class="nav-link" class:active={currentPath.startsWith('/about')} onclick={closeMenu}>
       <span class="nav-number">03</span>
       <span class="nav-label">About</span>
     </a>
-    <a href="/journal" class="nav-link" class:active={currentPath.startsWith('/journal')} onclick={() => open = false}>
+    <a href="/journal" class="nav-link" class:active={currentPath.startsWith('/journal')} onclick={closeMenu}>
       <span class="nav-number">04</span>
       <span class="nav-label">Journal</span>
     </a>
-    <a href="/contact" class="nav-link" class:active={currentPath.startsWith('/contact')} onclick={() => open = false}>
+    <a href="/contact" class="nav-link" class:active={currentPath.startsWith('/contact')} onclick={closeMenu}>
       <span class="nav-number">05</span>
       <span class="nav-label">Contact</span>
-    </a>
-    <a href="/tools/gtm-planner" class="nav-link" class:active={currentPath.startsWith('/tools')} onclick={() => open = false}>
-      <span class="nav-number">06</span>
-      <span class="nav-label">Tools</span>
     </a>
   </nav>
 
@@ -347,7 +345,6 @@
   .overlay.open .nav-link:nth-child(3) { transition-delay: 0.34s, 0.34s, 0s; }
   .overlay.open .nav-link:nth-child(4) { transition-delay: 0.41s, 0.41s, 0s; }
   .overlay.open .nav-link:nth-child(5) { transition-delay: 0.48s, 0.48s, 0s; }
-  .overlay.open .nav-link:nth-child(6) { transition-delay: 0.55s, 0.55s, 0s; }
 
   .nav-number {
     font-family: 'DM Sans', sans-serif;
@@ -364,7 +361,6 @@
   .nav-link:nth-child(3) .nav-number { color: var(--color-accent-rust); }
   .nav-link:nth-child(4) .nav-number { color: var(--color-accent-amber); }
   .nav-link:nth-child(5) .nav-number { color: var(--color-accent-rust); }
-  .nav-link:nth-child(6) .nav-number { color: var(--color-accent-teal); }
 
   .nav-label {
     font-family: 'Instrument Serif', serif;

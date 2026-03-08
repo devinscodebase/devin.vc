@@ -910,11 +910,7 @@ Generated at devin.vc/tools/gtm-planner`;
   <div class="lead-capture" onkeydown={(e) => { if (e.key === 'Enter' && leadFormValid && !leadSubmitting) submitLead(); }}>
     <!-- Persist wizard header for visual continuity -->
     <header class="wizard-header">
-      <div class="section-tag">
-        <span class="tag-number">01</span>
-        <span class="tag-dash" aria-hidden="true"></span>
-        <span class="tag-label">Tools</span>
-      </div>
+      <span class="tag-label">Tools</span>
       <h1 class="wizard-title">GTM Budget Planner</h1>
       <p class="wizard-subtitle">Reverse-engineer your go-to-market budget from a revenue target.</p>
     </header>
@@ -1012,11 +1008,7 @@ Generated at devin.vc/tools/gtm-planner`;
   <div class="wizard" onkeydown={handleKeydown}>
     <!-- Header -->
     <header class="wizard-header">
-      <div class="section-tag">
-        <span class="tag-number">01</span>
-        <span class="tag-dash" aria-hidden="true"></span>
-        <span class="tag-label">Tools</span>
-      </div>
+      <span class="tag-label">Tools</span>
       <h1 class="wizard-title">GTM Budget Planner</h1>
       <p class="wizard-subtitle">Reverse-engineer your go-to-market budget from a revenue target.</p>
 
@@ -1262,34 +1254,15 @@ Generated at devin.vc/tools/gtm-planner`;
     margin-bottom: clamp(1.25rem, 2vw, 1.5rem);
   }
 
-  .section-tag {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .tag-number {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    font-size: var(--text-md);
-    line-height: 1;
-    color: var(--color-accent-teal);
-  }
-
-  .tag-dash {
-    width: 24px;
-    height: 1px;
-    background: linear-gradient(90deg, var(--color-accent-teal), transparent);
-  }
-
   .tag-label {
+    display: block;
     font-family: 'DM Sans', sans-serif;
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
   }
 
   .wizard-title {
