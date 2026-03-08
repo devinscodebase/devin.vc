@@ -20,12 +20,18 @@ export const GET: APIRoute = async ({ url }) => {
     date: url.searchParams.get('date') || undefined,
   };
 
-  const png = await generateOgImage(params);
+  try {
+    const png = await generateOgImage(params);
 
-  return new Response(png, {
-    headers: {
-      'Content-Type': 'image/png',
-      'Cache-Control': 'public, max-age=31536000, immutable',
-    },
-  });
+    return new Response(png, {
+      headers: {
+        'Content-Type': 'image/png',
+        'Cache-Control': 'public, max-age=31536000, immutable',
+      },
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('OG image generation failed:', message);
+    return new Response(`OG generation error: ${message}`, { status: 500 });
+  }
 };

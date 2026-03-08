@@ -1,6 +1,7 @@
 import satori from 'satori';
 import { Resvg, initWasm } from '@resvg/resvg-wasm';
-import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm?init';
+// @ts-ignore — CF adapter handles .wasm?module as WebAssembly.Module
+import resvgWasmModule from '@resvg/resvg-wasm/index_bg.wasm?module';
 import {
   DefaultTemplate,
   JournalTemplate,
@@ -40,7 +41,7 @@ export interface OgImageParams {
 
 export async function generateOgImage(params: OgImageParams): Promise<Uint8Array> {
   if (!wasmInitialized) {
-    await initWasm(resvgWasm());
+    await initWasm(resvgWasmModule);
     wasmInitialized = true;
   }
   const [instrumentSerif, dmSans] = await loadFonts();
