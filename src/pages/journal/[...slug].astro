@@ -69,12 +69,11 @@ const showToc = headings.length >= 2;
 
 const postUrl = `https://devin.vc/journal/${post.slug}`;
 const seoTitle = post.seoTitle || `${post.title} — Devin Alexander`;
-const dynamicOgUrl = `/api/og.png?type=journal&title=${encodeURIComponent(post.title)}${post.description ? `&subtitle=${encodeURIComponent(post.description)}` : ''}${post.tag ? `&tag=${encodeURIComponent(post.tag)}` : ''}${formattedDate ? `&date=${encodeURIComponent(formattedDate)}` : ''}`;
 const ogImage = post.ogImage
   ? urlFor(post.ogImage).width(1200).url()
   : post.heroImage
     ? urlFor(post.heroImage).width(1200).url()
-    : dynamicOgUrl;
+    : '/og/journal.png';
 ---
 
 <Layout

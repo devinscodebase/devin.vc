@@ -30,7 +30,7 @@ const {
 } = Astro.props;
 
 const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
-const ogImagePath = image || '/api/og.png?type=default';
+const ogImagePath = image || '/og/default.png';
 const ogImage = `${siteUrl}${ogImagePath.startsWith('/') ? ogImagePath : `/${ogImagePath}`}`;
 ---
 
