@@ -269,9 +269,181 @@ Generated at devin.vc/tools/gtm-planner`;
 </script>
 
 {#if showResults && results}
-  <div class="results-placeholder">
-    <p>Results ready. Leads/month: {fmtNum(results.leadsPerMonth, 0)}</p>
-    <button onclick={startOver}>Start over</button>
+  <div class="results-dashboard">
+    <!-- Results header -->
+    <header class="results-header">
+      <h1 class="results-title">Your GTM Plan</h1>
+      <p class="results-revenue">{fmtCurrency(revenueTarget)} annual target</p>
+    </header>
+
+    <!-- Section 1: Funnel -->
+    <section class="results-section">
+      <h2 class="results-section-heading">Funnel</h2>
+
+      <div class="results-funnel">
+        <!-- Leads -->
+        <div class="funnel-stage">
+          <div class="funnel-bar-track">
+            <div class="funnel-bar funnel-bar--leads" style="width: 100%"></div>
+          </div>
+          <div class="funnel-meta">
+            <span class="funnel-label">Leads</span>
+            <span class="funnel-numbers">{fmtNum(results.leadsPerMonth, 0)}/mo &middot; {fmtNum(results.leadsPerWeek, 0)}/wk &middot; {fmtNum(results.leadsPerDay, 1)}/day</span>
+          </div>
+        </div>
+
+        <!-- Connector: lead → SQL -->
+        <div class="funnel-connector">
+          <div class="funnel-connector-line"></div>
+          <span class="funnel-connector-rate">{results.leadToSqlRate}%</span>
+          <div class="funnel-connector-line"></div>
+        </div>
+
+        <!-- SQLs -->
+        <div class="funnel-stage">
+          <div class="funnel-bar-track">
+            <div class="funnel-bar funnel-bar--sqls" style="width: {results.leadsPerMonth > 0 ? (results.sqlsPerMonth / results.leadsPerMonth) * 100 : 0}%"></div>
+          </div>
+          <div class="funnel-meta">
+            <span class="funnel-label">SQLs</span>
+            <span class="funnel-numbers">{fmtNum(results.sqlsPerMonth, 0)}/mo &middot; {fmtNum(results.sqlsPerWeek, 1)}/wk</span>
+          </div>
+        </div>
+
+        <!-- Connector: SQL → Opp -->
+        <div class="funnel-connector">
+          <div class="funnel-connector-line"></div>
+          <span class="funnel-connector-rate">{results.sqlToOppRate}%</span>
+          <div class="funnel-connector-line"></div>
+        </div>
+
+        <!-- Opportunities -->
+        <div class="funnel-stage">
+          <div class="funnel-bar-track">
+            <div class="funnel-bar funnel-bar--opps" style="width: {results.leadsPerMonth > 0 ? (results.oppsPerMonth / results.leadsPerMonth) * 100 : 0}%"></div>
+          </div>
+          <div class="funnel-meta">
+            <span class="funnel-label">Opportunities</span>
+            <span class="funnel-numbers">{fmtNum(results.oppsPerMonth, 0)}/mo &middot; {fmtNum(results.oppsPerWeek, 1)}/wk</span>
+          </div>
+        </div>
+
+        <!-- Connector: Opp → Deal -->
+        <div class="funnel-connector">
+          <div class="funnel-connector-line"></div>
+          <span class="funnel-connector-rate">{results.closeRateVal}%</span>
+          <div class="funnel-connector-line"></div>
+        </div>
+
+        <!-- Closed Deals -->
+        <div class="funnel-stage">
+          <div class="funnel-bar-track">
+            <div class="funnel-bar funnel-bar--deals" style="width: {Math.max(results.leadsPerMonth > 0 ? (results.dealsPerMonth / results.leadsPerMonth) * 100 : 0, 2)}%"></div>
+          </div>
+          <div class="funnel-meta">
+            <span class="funnel-label">Closed Deals</span>
+            <span class="funnel-numbers">{fmtNum(results.dealsPerMonth, 1)}/mo</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Budget -->
+    <section class="results-section">
+      <h2 class="results-section-heading">Budget</h2>
+
+      <div class="results-budget-grid">
+        <div class="results-card">
+          <span class="results-card-value">{fmtCurrency(results.monthlyBudget)}</span>
+          <span class="results-card-label">Monthly spend</span>
+        </div>
+        <div class="results-card">
+          <span class="results-card-value">{fmtCurrency(results.annualBudget)}</span>
+          <span class="results-card-label">Annual spend</span>
+        </div>
+        <div class="results-card">
+          <span class="results-card-value">{fmtPercent(results.spendPercent)}</span>
+          <span class="results-card-label">Of revenue target</span>
+        </div>
+        <div class="results-card results-card--accent">
+          <span class="results-card-value">{fmtCurrency(results.cac)}</span>
+          <span class="results-card-label">Cost per customer</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Unit Economics -->
+    <section class="results-section">
+      <h2 class="results-section-heading">Unit Economics</h2>
+
+      <div class="results-metrics-row">
+        <div class="results-metric">
+          <span class="results-metric-value">{fmtCurrency(results.cac)}</span>
+          <span class="results-metric-label">Customer Acquisition Cost</span>
+        </div>
+        <div class="results-metric">
+          <span class="results-metric-value">{fmtCurrency(results.ltv)}</span>
+          <span class="results-metric-label">Lifetime Value</span>
+        </div>
+        <div class="results-metric">
+          <span class="results-metric-value results-metric-value--{results.ltvCacHealth}">{fmtNum(results.ltvCacRatio)}:1</span>
+          <span class="results-metric-label">
+            {#if results.ltvCacHealth === 'warning'}
+              Below 3:1 benchmark — spending too much relative to customer value
+            {:else if results.ltvCacHealth === 'healthy'}
+              Healthy — acquisition costs balanced against value
+            {:else}
+              Strong — room to invest more in growth
+            {/if}
+          </span>
+        </div>
+      </div>
+
+      {#if results.cacWarning}
+        <div class="results-warning">
+          Your CAC ({fmtCurrency(results.cac)}) is {fmtPercent(results.cacDealPercent)} of your deal size. That leaves thin margin for error.
+        </div>
+      {/if}
+    </section>
+
+    <!-- Section 4: Pipeline -->
+    <section class="results-section">
+      <h2 class="results-section-heading">Pipeline</h2>
+
+      <div class="results-metrics-row">
+        <div class="results-metric">
+          <span class="results-metric-value">{fmtCurrency(results.pipelineCoverage)}</span>
+          <span class="results-metric-label">Active pipeline needed (3-4x coverage)</span>
+        </div>
+        <div class="results-metric">
+          <span class="results-metric-value">~{fmtNum(results.timeToRevenue, 1)} months</span>
+          <span class="results-metric-label">From first marketing spend to first closed deal</span>
+        </div>
+        <div class="results-metric">
+          <span class="results-metric-value">~{fmtNum(results.rampUp, 1)} months</span>
+          <span class="results-metric-label">To reach steady-state pipeline</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Post-results actions -->
+    <div class="results-actions-divider"></div>
+
+    <div class="results-actions">
+      <button
+        type="button"
+        class="results-copy"
+        class:results-copy--copied={copied}
+        onclick={copyResults}
+      >{copied ? 'Copied' : 'Copy results'}</button>
+      <button type="button" class="results-start-over" onclick={startOver}>Start over</button>
+    </div>
+
+    <!-- Quiet CTA -->
+    <div class="results-cta">
+      <p class="results-cta-text">Need help turning these numbers into an actual plan?</p>
+      <a href="/contact" class="results-cta-link">Talk to Devin <span class="results-cta-arrow">&rarr;</span></a>
+    </div>
   </div>
 {:else}
   <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
@@ -896,5 +1068,321 @@ Generated at devin.vc/tools/gtm-planner`;
   .nav-next--disabled {
     opacity: 0.35;
     cursor: not-allowed;
+  }
+
+  /* ══════════════════════════════════════════
+     Results Dashboard
+     ══════════════════════════════════════════ */
+
+  .results-dashboard {
+    animation: fadeIn var(--duration-normal) var(--ease-out-expo) both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Results header ── */
+  .results-header {
+    margin-bottom: clamp(3rem, 6vw, 4rem);
+  }
+
+  .results-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-regular);
+    line-height: 1.1;
+    color: var(--color-text);
+    letter-spacing: var(--tracking-tight);
+    margin: 0 0 0.5rem;
+  }
+
+  .results-revenue {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  /* ── Section pattern ── */
+  .results-section {
+    margin-bottom: clamp(3rem, 6vw, 4rem);
+  }
+
+  .results-section-heading {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 0 0 1.5rem;
+  }
+
+  /* ── Funnel ── */
+  .results-funnel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .funnel-stage {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .funnel-bar-track {
+    width: 100%;
+    height: 6px;
+    background: color-mix(in oklab, var(--color-text-muted) 8%, transparent);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .funnel-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width var(--duration-slow) var(--ease-out-expo);
+    min-width: 4px;
+  }
+
+  .funnel-bar--leads { background: var(--color-accent-teal); }
+  .funnel-bar--sqls { background: var(--color-accent-amber); }
+  .funnel-bar--opps { background: var(--color-accent); }
+  .funnel-bar--deals { background: var(--color-accent-rust); }
+
+  .funnel-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .funnel-label {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
+  }
+
+  .funnel-numbers {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Funnel connectors ── */
+  .funnel-connector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 0;
+    padding-left: 1rem;
+  }
+
+  .funnel-connector-line {
+    flex: 0 0 12px;
+    height: 1px;
+    background: color-mix(in oklab, var(--color-text-muted) 20%, transparent);
+  }
+
+  .funnel-connector-rate {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  /* ── Budget grid ── */
+  .results-budget-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+  }
+
+  .results-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+  }
+
+  .results-card--accent {
+    border-left: 2px solid var(--color-accent);
+  }
+
+  .results-card-value {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    color: var(--color-text);
+    line-height: 1.1;
+  }
+
+  .results-card-label {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 640px) {
+    .results-budget-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ── Metrics row (unit economics, pipeline) ── */
+  .results-metrics-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  @media (max-width: 640px) {
+    .results-metrics-row {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  .results-metric {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .results-metric-value {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    color: var(--color-text);
+    line-height: 1.1;
+  }
+
+  .results-metric-value--warning { color: var(--color-accent-rust); }
+  .results-metric-value--healthy { color: var(--color-accent-teal); }
+  .results-metric-value--strong { color: var(--color-accent); }
+
+  .results-metric-label {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    line-height: 1.45;
+  }
+
+  /* ── CAC Warning ── */
+  .results-warning {
+    margin-top: 1.25rem;
+    padding: 1rem 1.25rem;
+    border-left: 2px solid var(--color-accent-rust);
+    background: color-mix(in oklab, var(--color-accent-rust) 5%, transparent);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  /* ── Post-results actions ── */
+  .results-actions-divider {
+    height: 1px;
+    background: color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    margin-bottom: 1.5rem;
+  }
+
+  .results-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .results-copy {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text);
+    background: transparent;
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 25%, transparent);
+    padding: 0.75rem 2rem;
+    cursor: pointer;
+    transition: border-color var(--duration-fast) var(--ease-out-expo),
+                color var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .results-copy:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .results-copy--copied {
+    border-color: var(--color-accent-teal);
+    color: var(--color-accent-teal);
+  }
+
+  .results-start-over {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem 0;
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .results-start-over:hover {
+    color: var(--color-text);
+  }
+
+  /* ── Quiet CTA ── */
+  .results-cta {
+    margin-top: clamp(4rem, 8vw, 6rem);
+  }
+
+  .results-cta-text {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    line-height: 1.35;
+    margin: 0 0 0.75rem;
+  }
+
+  .results-cta-link {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .results-cta-link:hover {
+    color: var(--color-accent);
+  }
+
+  .results-cta-arrow {
+    display: inline-block;
+    transition: transform var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .results-cta-link:hover .results-cta-arrow {
+    transform: translateX(3px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .results-dashboard {
+      animation: none;
+    }
   }
 </style>
