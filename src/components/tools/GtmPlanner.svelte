@@ -25,17 +25,17 @@
   /* ── Step definitions ── */
   let steps = $derived.by(() => {
     const base = [
-      { id: 'revenue', label: 'What\'s your annual revenue target?', field: 'currency' },
-      { id: 'deal', label: isRecurring ? 'What\'s your monthly contract value?' : 'What\'s your average deal size?', field: 'currency-toggle' },
-      { id: 'cycle', label: 'How long is your average sales cycle?', field: 'days', default: 90, benchmark: 'Industry average: 90 days' },
-      { id: 'close', label: 'What % of opportunities become closed deals?', field: 'percent', default: 25, benchmark: 'B2B average: 25%' },
-      { id: 'sql-opp', label: 'What % of qualified leads become opportunities?', field: 'percent', default: 50, benchmark: 'Industry average: 50%' },
-      { id: 'lead-sql', label: 'What % of leads become sales-qualified?', field: 'percent', default: 20, benchmark: 'Industry average: 20%' },
-      { id: 'cpl', label: 'What\'s your average cost per lead?', field: 'currency' },
-      { id: 'margin', label: 'What\'s your gross margin?', field: 'percent', default: 70, benchmark: 'B2B SaaS average: 70%' },
+      { id: 'revenue', category: 'Revenue', label: 'What\'s your annual revenue target?', field: 'currency' },
+      { id: 'deal', category: 'Revenue', label: isRecurring ? 'What\'s your monthly contract value?' : 'What\'s your average deal size?', field: 'currency-toggle' },
+      { id: 'cycle', category: 'Funnel', label: 'How long is your average sales cycle?', field: 'days', default: 90, benchmark: 'Industry average: 90 days' },
+      { id: 'close', category: 'Funnel', label: 'What % of opportunities become closed deals?', field: 'percent', default: 25, benchmark: 'B2B average: 25%' },
+      { id: 'sql-opp', category: 'Funnel', label: 'What % of qualified leads become opportunities?', field: 'percent', default: 50, benchmark: 'Industry average: 50%' },
+      { id: 'lead-sql', category: 'Funnel', label: 'What % of leads become sales-qualified?', field: 'percent', default: 20, benchmark: 'Industry average: 20%' },
+      { id: 'cpl', category: 'Economics', label: 'What\'s your average cost per lead?', field: 'currency' },
+      { id: 'margin', category: 'Economics', label: 'What\'s your gross margin?', field: 'percent', default: 70, benchmark: 'B2B SaaS average: 70%' },
     ];
     if (isRecurring) {
-      base.push({ id: 'lifespan', label: 'How long does a typical customer stay?', field: 'months' });
+      base.push({ id: 'lifespan', category: 'Economics', label: 'How long does a typical customer stay?', field: 'months' });
     }
     return base;
   });
@@ -208,6 +208,28 @@
 
   /* ── Focus tracking for currency/number inputs ── */
   let inputFocused = $state(false);
+  let inputInvalid = $state(false);
+
+  function handleNumericInput(e, stepIndex) {
+    const val = parseRawNumber(e.target.value);
+    setValue(stepIndex, val);
+    // Flag invalid if there's text but no valid number
+    inputInvalid = e.target.value.trim().length > 0 && val === null;
+  }
+
+  function handleNumericBlur(e, stepIndex) {
+    inputFocused = false;
+    const val = parseRawNumber(e.target.value);
+    setValue(stepIndex, val);
+    inputInvalid = false;
+  }
+
+  function handleNumericFocus(e, stepIndex) {
+    inputFocused = true;
+    inputInvalid = false;
+    const raw = getValue(stepIndex);
+    e.target.value = raw ?? '';
+  }
 
   /* ── Step validity (for disabling Next button) ── */
   let currentStepValid = $derived.by(() => {
@@ -930,6 +952,29 @@ Generated at devin.vc/tools/gtm-planner`;
       <h2 class="lead-heading">Your plan is ready.</h2>
       <p class="lead-subheading">Enter your details to unlock your results. We'll email you a copy too.</p>
 
+      {#if results}
+        <div class="lead-teaser">
+          <div class="lead-teaser-header">
+            <svg class="lead-teaser-lock" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="7" height="5" rx="1"/><path d="M4 5.5V3.5a2 2 0 014 0V5.5"/></svg>
+            <span class="lead-teaser-title">Your results preview</span>
+          </div>
+          <div class="lead-teaser-rows">
+            <div class="lead-teaser-row">
+              <span class="lead-teaser-label">Monthly budget</span>
+              <span class="lead-teaser-redacted" style="width: 5.5rem"></span>
+            </div>
+            <div class="lead-teaser-row">
+              <span class="lead-teaser-label">Leads per month</span>
+              <span class="lead-teaser-redacted" style="width: 3.5rem"></span>
+            </div>
+            <div class="lead-teaser-row">
+              <span class="lead-teaser-label">LTV:CAC ratio</span>
+              <span class="lead-teaser-redacted" style="width: 2.5rem"></span>
+            </div>
+          </div>
+        </div>
+      {/if}
+
       <div class="lead-fields">
         <div class="lead-field">
           <input
@@ -1069,64 +1114,45 @@ Generated at devin.vc/tools/gtm-planner`;
     <!-- Step content with transition -->
     {#key currentStep}
       <div class="step-content" class:slide-from-right={direction === 1} class:slide-from-left={direction === -1}>
+        <span class="step-category">{steps[currentStep - 1].category}</span>
         <h2 class="step-question">{steps[currentStep - 1].label}</h2>
 
         <!-- Currency input -->
         {#if steps[currentStep - 1].field === 'currency'}
           <div class="input-row">
-            <div class="currency-wrapper" class:focused={inputFocused}>
+            <div class="currency-wrapper" class:focused={inputFocused} class:invalid={inputInvalid}>
               <span class="currency-prefix">$</span>
               <input
                 type="text"
                 inputmode="numeric"
                 class="input-currency"
                 value={inputFocused ? (getValue(currentStep - 1) ?? '') : formatWithCommas(getValue(currentStep - 1))}
-                onfocus={(e) => {
-                  inputFocused = true;
-                  const raw = getValue(currentStep - 1);
-                  e.target.value = raw ?? '';
-                }}
-                onblur={(e) => {
-                  inputFocused = false;
-                  const val = parseRawNumber(e.target.value);
-                  setValue(currentStep - 1, val);
-                }}
-                oninput={(e) => {
-                  const val = parseRawNumber(e.target.value);
-                  setValue(currentStep - 1, val);
-                }}
+                onfocus={(e) => handleNumericFocus(e, currentStep - 1)}
+                onblur={(e) => handleNumericBlur(e, currentStep - 1)}
+                oninput={(e) => handleNumericInput(e, currentStep - 1)}
                 placeholder="0"
               />
             </div>
+            {#if inputInvalid}<p class="input-hint">Enter a number</p>{/if}
           </div>
 
         <!-- Currency with toggle (deal size step) -->
         {:else if steps[currentStep - 1].field === 'currency-toggle'}
           <div class="input-row">
-            <div class="currency-wrapper" class:focused={inputFocused}>
+            <div class="currency-wrapper" class:focused={inputFocused} class:invalid={inputInvalid}>
               <span class="currency-prefix">$</span>
               <input
                 type="text"
                 inputmode="numeric"
                 class="input-currency"
                 value={inputFocused ? (getValue(currentStep - 1) ?? '') : formatWithCommas(getValue(currentStep - 1))}
-                onfocus={(e) => {
-                  inputFocused = true;
-                  const raw = getValue(currentStep - 1);
-                  e.target.value = raw ?? '';
-                }}
-                onblur={(e) => {
-                  inputFocused = false;
-                  const val = parseRawNumber(e.target.value);
-                  setValue(currentStep - 1, val);
-                }}
-                oninput={(e) => {
-                  const val = parseRawNumber(e.target.value);
-                  setValue(currentStep - 1, val);
-                }}
+                onfocus={(e) => handleNumericFocus(e, currentStep - 1)}
+                onblur={(e) => handleNumericBlur(e, currentStep - 1)}
+                oninput={(e) => handleNumericInput(e, currentStep - 1)}
                 placeholder="0"
               />
             </div>
+            {#if inputInvalid}<p class="input-hint">Enter a number</p>{/if}
             <div class="toggle-pill">
               <button
                 type="button"
@@ -1146,72 +1172,59 @@ Generated at devin.vc/tools/gtm-planner`;
         <!-- Percent slider -->
         {:else if steps[currentStep - 1].field === 'percent'}
           <div class="input-row input-row--slider">
-            <input
-              type="range"
-              min="1"
-              max="100"
-              class="input-range"
-              value={getValue(currentStep - 1)}
-              oninput={(e) => setValue(currentStep - 1, parseInt(e.target.value))}
-              style="--range-pct: {getValue(currentStep - 1)}%"
-            />
+            <div class="range-track-wrapper">
+              <input
+                type="range"
+                min="1"
+                max="100"
+                class="input-range"
+                value={getValue(currentStep - 1)}
+                oninput={(e) => setValue(currentStep - 1, parseInt(e.target.value))}
+                style="--range-pct: {getValue(currentStep - 1)}%"
+              />
+              {#if steps[currentStep - 1].default}
+                <span class="range-tick" style="left: {steps[currentStep - 1].default}%" aria-hidden="true"></span>
+              {/if}
+            </div>
             <span class="range-value">{getValue(currentStep - 1)}%</span>
           </div>
 
         <!-- Days input -->
         {:else if steps[currentStep - 1].field === 'days'}
           <div class="input-row">
-            <div class="suffix-wrapper" class:focused={inputFocused}>
+            <div class="suffix-wrapper" class:focused={inputFocused} class:invalid={inputInvalid}>
               <input
                 type="text"
                 inputmode="numeric"
                 class="input-number"
                 value={inputFocused ? (getValue(currentStep - 1) ?? '') : getValue(currentStep - 1)}
-                onfocus={(e) => {
-                  inputFocused = true;
-                  e.target.value = getValue(currentStep - 1) ?? '';
-                }}
-                onblur={(e) => {
-                  inputFocused = false;
-                  const val = parseRawNumber(e.target.value);
-                  setValue(currentStep - 1, val);
-                }}
-                oninput={(e) => {
-                  const val = parseRawNumber(e.target.value);
-                  setValue(currentStep - 1, val);
-                }}
+                onfocus={(e) => handleNumericFocus(e, currentStep - 1)}
+                onblur={(e) => handleNumericBlur(e, currentStep - 1)}
+                oninput={(e) => handleNumericInput(e, currentStep - 1)}
                 placeholder="0"
               />
               <span class="input-suffix">days</span>
             </div>
+            {#if inputInvalid}<p class="input-hint">Enter a number</p>{/if}
           </div>
 
         <!-- Months input -->
         {:else if steps[currentStep - 1].field === 'months'}
           <div class="input-row">
-            <div class="suffix-wrapper" class:focused={inputFocused}>
+            <div class="suffix-wrapper" class:focused={inputFocused} class:invalid={inputInvalid}>
               <input
                 type="text"
                 inputmode="numeric"
                 class="input-number"
                 value={inputFocused ? (getValue(currentStep - 1) ?? '') : getValue(currentStep - 1)}
-                onfocus={(e) => {
-                  inputFocused = true;
-                  e.target.value = getValue(currentStep - 1) ?? '';
-                }}
-                onblur={(e) => {
-                  inputFocused = false;
-                  const val = parseRawNumber(e.target.value);
-                  setValue(currentStep - 1, val);
-                }}
-                oninput={(e) => {
-                  const val = parseRawNumber(e.target.value);
-                  setValue(currentStep - 1, val);
-                }}
+                onfocus={(e) => handleNumericFocus(e, currentStep - 1)}
+                onblur={(e) => handleNumericBlur(e, currentStep - 1)}
+                oninput={(e) => handleNumericInput(e, currentStep - 1)}
                 placeholder="0"
               />
               <span class="input-suffix">months</span>
             </div>
+            {#if inputInvalid}<p class="input-hint">Enter a number</p>{/if}
           </div>
         {/if}
 
@@ -1346,6 +1359,25 @@ Generated at devin.vc/tools/gtm-planner`;
     border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
   }
 
+  .hiw-body,
+  .hiw-heading,
+  .hiw-def {
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      opacity var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .how-it-works-panel--open .hiw-body { opacity: 1; transform: translateY(0); transition-delay: 0.15s; }
+  .how-it-works-panel--open .hiw-heading { opacity: 1; transform: translateY(0); transition-delay: 0.25s; }
+  .how-it-works-panel--open .hiw-def:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.30s; }
+  .how-it-works-panel--open .hiw-def:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.34s; }
+  .how-it-works-panel--open .hiw-def:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.38s; }
+  .how-it-works-panel--open .hiw-def:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.42s; }
+  .how-it-works-panel--open .hiw-def:nth-child(5) { opacity: 1; transform: translateY(0); transition-delay: 0.46s; }
+  .how-it-works-panel--open .hiw-def:nth-child(6) { opacity: 1; transform: translateY(0); transition-delay: 0.50s; }
+
   .hiw-body {
     font-family: var(--font-body);
     font-size: var(--text-sm);
@@ -1456,6 +1488,17 @@ Generated at devin.vc/tools/gtm-planner`;
   .step-content {
     flex: 1;
     margin-bottom: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .step-category {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-accent-teal);
+    margin-bottom: 0.5rem;
   }
 
   .step-question {
@@ -1572,6 +1615,26 @@ Generated at devin.vc/tools/gtm-planner`;
     border-color: var(--color-accent);
   }
 
+  /* ── Invalid state ── */
+  .currency-wrapper.invalid,
+  .suffix-wrapper.invalid {
+    border-color: var(--color-accent-rust);
+  }
+
+  .input-hint {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-accent-rust);
+    margin: 0.5rem 0 0;
+    opacity: 0;
+    animation: hint-enter 0.3s var(--ease-out-expo) forwards;
+  }
+
+  @keyframes hint-enter {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   .input-number {
     font-family: var(--font-display);
     font-size: var(--text-2xl);
@@ -1623,6 +1686,17 @@ Generated at devin.vc/tools/gtm-planner`;
   .toggle-option.toggle-active {
     background: var(--color-accent);
     color: var(--color-bg);
+  }
+
+  @media (max-width: 480px) {
+    .toggle-pill {
+      width: 100%;
+    }
+
+    .toggle-option {
+      flex: 1;
+      text-align: center;
+    }
   }
 
   /* ── Range slider ── */
@@ -1698,6 +1772,29 @@ Generated at devin.vc/tools/gtm-planner`;
     border-radius: 1px;
   }
 
+  .range-track-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .range-track-wrapper .input-range {
+    width: 100%;
+  }
+
+  .range-tick {
+    position: absolute;
+    top: 50%;
+    width: 1px;
+    height: 10px;
+    background: var(--color-accent-teal);
+    opacity: 0.5;
+    transform: translateX(-50%) translateY(-50%);
+    pointer-events: none;
+    border-radius: 1px;
+  }
+
   .range-value {
     font-family: var(--font-display);
     font-size: var(--text-2xl);
@@ -1748,22 +1845,29 @@ Generated at devin.vc/tools/gtm-planner`;
     text-transform: uppercase;
     color: var(--color-text);
     background: transparent;
-    border: 1px solid color-mix(in oklab, var(--color-text-muted) 25%, transparent);
+    border: 1px solid var(--color-accent);
     padding: 0.75rem 2rem;
     cursor: pointer;
-    transition: border-color var(--duration-fast) var(--ease-out-expo),
+    transition: background var(--duration-fast) var(--ease-out-expo),
+                border-color var(--duration-fast) var(--ease-out-expo),
                 color var(--duration-fast) var(--ease-out-expo),
-                opacity var(--duration-fast) var(--ease-out-expo);
+                opacity var(--duration-fast) var(--ease-out-expo),
+                transform var(--duration-fast) var(--ease-out-expo);
   }
 
   .nav-next:hover:not(:disabled) {
-    border-color: var(--color-accent);
+    background: color-mix(in oklab, var(--color-accent) 12%, transparent);
     color: var(--color-accent);
   }
 
+  .nav-next:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
   .nav-next--disabled {
-    opacity: 0.35;
+    opacity: 0.25;
     cursor: not-allowed;
+    border-color: color-mix(in oklab, var(--color-text-muted) 20%, transparent);
   }
 
   /* ══════════════════════════════════════════
@@ -1841,6 +1945,21 @@ Generated at devin.vc/tools/gtm-planner`;
   /* ── Section pattern ── */
   .results-section {
     margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+    padding-bottom: clamp(2rem, 4vw, 3rem);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 8%, transparent);
+  }
+
+  .results-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .results-section:nth-child(odd) {
+    margin-bottom: clamp(2rem, 4vw, 2.75rem);
+  }
+
+  .results-section:nth-child(even) {
+    margin-bottom: clamp(2.75rem, 5.5vw, 3.75rem);
   }
 
   .results-section-header {
@@ -2284,6 +2403,77 @@ Generated at devin.vc/tools/gtm-planner`;
     color: var(--color-text-muted);
     line-height: 1.4;
     margin: 0 0 clamp(1.25rem, 2.5vw, 1.5rem);
+  }
+
+  .lead-teaser {
+    padding: 1rem 1.25rem;
+    margin-bottom: clamp(1.25rem, 2.5vw, 1.5rem);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+    border-radius: var(--radius-md);
+    background: color-mix(in oklab, var(--color-text-muted) 4%, transparent);
+  }
+
+  .lead-teaser-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .lead-teaser-lock {
+    color: var(--color-accent);
+    flex-shrink: 0;
+  }
+
+  .lead-teaser-title {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+  }
+
+  .lead-teaser-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .lead-teaser-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 8%, transparent);
+  }
+
+  .lead-teaser-row:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .lead-teaser-label {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .lead-teaser-redacted {
+    display: inline-block;
+    height: 0.625rem;
+    border-radius: 3px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--color-accent) 15%, transparent),
+      color-mix(in oklab, var(--color-accent) 8%, transparent)
+    );
+    animation: shimmer 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes shimmer {
+    0% { opacity: 0.6; }
+    100% { opacity: 1; }
   }
 
   .lead-fields {
