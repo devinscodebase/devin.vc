@@ -6,6 +6,19 @@
     parseRawNumber, abbreviateTarget, calculateGtmResults
   } from './gtm-planner-utils.js';
 
+  const relatedTools = [
+    {
+      title: 'Retention Revenue Calculator',
+      description: 'See the real cost of customer churn and the compounding gap over 3 years.',
+      href: '/tools/retention-calculator',
+    },
+    {
+      title: 'Marketing Efficiency Scorecard',
+      description: 'Score your marketing engine across 11 metrics and find the bottleneck.',
+      href: '/tools/marketing-scorecard',
+    },
+  ];
+
   /* ── Wizard state ── */
   let currentStep = $state(1);
   let direction = $state(1); // 1 = forward, -1 = back
@@ -53,6 +66,7 @@
   let leadError = $state('');
   let leadSubmitted = $state(false);
   let leadEmailDisplay = $state('');
+  let leadAttempts = $state(0);
 
   let leadFormValid = $derived(
     leadName.trim().length > 0 &&
@@ -120,9 +134,16 @@
     leadError = '';
     leadSubmitted = false;
     leadEmailDisplay = '';
+    leadAttempts = 0;
     pdfGenerating = false;
     showHowItWorks = false;
     direction = 1;
+  }
+
+  function skipToResults() {
+    showLeadCapture = false;
+    showResults = true;
+    animateResults();
   }
 
   async function submitLead() {
@@ -165,6 +186,7 @@
       showResults = true;
       animateResults();
     } catch (err) {
+      leadAttempts++;
       leadError = err instanceof Error ? err.message : 'Something went wrong';
     } finally {
       leadSubmitting = false;
@@ -457,6 +479,7 @@ Generated at devin.vc/tools/gtm-planner`;
       const accent = [196, 164, 124];
       const teal = [91, 163, 163];
       const rust = [176, 106, 82];
+      const amber = [196, 154, 60];
       const border = [50, 44, 36];
 
       // Dark background
@@ -606,7 +629,7 @@ Generated at devin.vc/tools/gtm-planner`;
       // Right column: Unit Economics
       const rightX = mx + cw * 0.55;
       const healthColor = r.ltvCacHealth === 'warning' ? rust
-        : r.ltvCacHealth === 'strong' ? teal : accent;
+        : r.ltvCacHealth === 'strong' ? teal : amber;
 
       const econItems = [
         { label: 'CAC', value: fmtCurrency(r.cac), color: text },
@@ -667,7 +690,37 @@ Generated at devin.vc/tools/gtm-planner`;
         doc.text(item.value, mx, iy + 5);
       });
 
-      // ─── Zone 5: Footer ───
+      // ─── Zone 5: Glossary ───
+      doc.setDrawColor(...border);
+      doc.line(mx, y, W - mx, y);
+      y += 8;
+
+      doc.setFontSize(8);
+      doc.setTextColor(...teal);
+      doc.text('GLOSSARY', mx, y);
+      y += 6;
+
+      const glossary = [
+        ['SQL', 'Sales-Qualified Lead. A lead your sales team has vetted and is actively pursuing.'],
+        ['CAC', 'Customer Acquisition Cost. Total marketing + sales spend to win one customer.'],
+        ['LTV', 'Lifetime Value. Total gross profit from one customer over their full lifespan.'],
+        ['LTV:CAC', 'Return on acquisition spend. 3:1 is the floor; 5:1+ is strong.'],
+        ['Pipeline Coverage', 'Total active deal value vs. target. 3\u20133.5x coverage ensures consistent closes.'],
+      ];
+
+      glossary.forEach(([term, def]) => {
+        doc.setFontSize(7);
+        doc.setFont('Helvetica', 'bold');
+        doc.setTextColor(...accent);
+        doc.text(term, mx, y);
+        doc.setFont('Helvetica', 'normal');
+        doc.setTextColor(...dim);
+        const lines = doc.splitTextToSize(def, cw - 25);
+        doc.text(lines, mx + 25, y);
+        y += lines.length * 3.2 + 2;
+      });
+
+      // ─── Zone 6: Footer ───
       doc.setFontSize(8);
       doc.setFont('Helvetica', 'normal');
       doc.setTextColor(...muted);
@@ -925,6 +978,24 @@ Generated at devin.vc/tools/gtm-planner`;
       </button>
       <button type="button" class="results-start-over" onclick={startOver}>Start over</button>
     </div>
+
+    <!-- Related tools -->
+    {#if relatedTools.length}
+      <div class="related-tools">
+        <span class="related-tools-heading">Also on devin.vc</span>
+        <div class="related-tools-grid">
+          {#each relatedTools as tool}
+            <a href={tool.href} class="related-tool-card">
+              <span class="related-tool-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 14L14 2M14 2H6M14 2v8"/></svg>
+              </span>
+              <span class="related-tool-title">{tool.title}</span>
+              <span class="related-tool-desc">{tool.description}</span>
+            </a>
+          {/each}
+        </div>
+      </div>
+    {/if}
   </div>
 {:else if showLeadCapture}
   <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
@@ -1024,6 +1095,12 @@ Generated at devin.vc/tools/gtm-planner`;
 
       {#if leadError}
         <p class="lead-error">{leadError}</p>
+      {/if}
+
+      {#if leadAttempts >= 2}
+        <button type="button" class="lead-skip" onclick={skipToResults}>
+          Skip and view results
+        </button>
       {/if}
     </div>
 
@@ -2461,19 +2538,21 @@ Generated at devin.vc/tools/gtm-planner`;
 
   .lead-teaser-redacted {
     display: inline-block;
-    height: 0.625rem;
+    height: 14px;
     border-radius: 3px;
     background: linear-gradient(
       90deg,
-      color-mix(in oklab, var(--color-accent) 15%, transparent),
-      color-mix(in oklab, var(--color-accent) 8%, transparent)
+      color-mix(in oklab, var(--color-text-muted) 15%, transparent) 25%,
+      color-mix(in oklab, var(--color-text-muted) 8%, transparent) 50%,
+      color-mix(in oklab, var(--color-text-muted) 15%, transparent) 75%
     );
-    animation: shimmer 2s ease-in-out infinite alternate;
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
   }
 
   @keyframes shimmer {
-    0% { opacity: 0.6; }
-    100% { opacity: 1; }
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
   }
 
   .lead-fields {
@@ -2634,6 +2713,99 @@ Generated at devin.vc/tools/gtm-planner`;
   @keyframes leadDotPulse {
     0%, 100% { opacity: 0.25; }
     50% { opacity: 1; }
+  }
+
+  /* ── Lead skip fallback ── */
+  .lead-skip {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    padding: 0.5rem 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    margin-top: 0.5rem;
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .lead-skip:hover {
+    color: var(--color-text);
+  }
+
+  /* ── Related tools ── */
+  .related-tools {
+    margin-top: clamp(3rem, 6vw, 4rem);
+    padding-top: 2rem;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 8%, transparent);
+  }
+
+  .related-tools-heading {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .related-tools-grid {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .related-tool-card {
+    display: block;
+    text-decoration: none;
+    padding: clamp(1rem, 2vw, 1.25rem);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+    border-radius: var(--radius-md);
+    position: relative;
+    transition: border-color var(--duration-fast) var(--ease-out-expo),
+                background var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .related-tool-card:hover {
+    border-color: color-mix(in oklab, var(--color-accent) 30%, transparent);
+    background: color-mix(in oklab, var(--color-accent) 3%, transparent);
+  }
+
+  .related-tool-icon {
+    position: absolute;
+    top: clamp(1rem, 2vw, 1.25rem);
+    right: clamp(1rem, 2vw, 1.25rem);
+    color: var(--color-text-muted);
+    opacity: 0.4;
+    transition: opacity var(--duration-fast) var(--ease-out-expo),
+                color var(--duration-fast) var(--ease-out-expo),
+                transform var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .related-tool-card:hover .related-tool-icon {
+    opacity: 0.8;
+    color: var(--color-accent);
+    transform: translate(2px, -2px);
+  }
+
+  .related-tool-title {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+    color: var(--color-text);
+    margin-bottom: 0.25rem;
+    line-height: 1.3;
+  }
+
+  .related-tool-desc {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.45;
+    max-width: 40ch;
   }
 
   /* prefers-reduced-motion handled in JS for results entrance */

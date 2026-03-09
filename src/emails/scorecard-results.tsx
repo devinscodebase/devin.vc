@@ -137,7 +137,7 @@ export default function ScorecardResultsEmail({
   return (
     <Layout preview={`Your marketing scorecard for ${company}`}>
       <Text style={badge}>EFFICIENCY SCORECARD</Text>
-      <Text style={heading}>Your diagnosis, {firstName}.</Text>
+      <Text style={heading}>Your numbers, {firstName}.</Text>
       <Text style={context}>
         {company} | {fmtCurrency(arr)} ARR | {stageLabels[stage] || stage}
       </Text>

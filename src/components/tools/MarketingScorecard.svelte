@@ -513,7 +513,7 @@
       doc.setTextColor(...text);
       doc.text(leadCompany.trim() || 'Your Company', mx, 30);
 
-      doc.setFontSize(10);
+      doc.setFontSize(11);
       doc.setFont('Helvetica', 'normal');
       doc.setTextColor(...muted);
       const stageLabel = STAGES[stage]?.label || stage;
@@ -521,15 +521,15 @@
       doc.text(`${fmtCurrency(arr)} ARR  ·  ${stageLabel}  ·  ${modelLabel}`, mx, 37);
 
       const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-      doc.setFontSize(8);
+      doc.setFontSize(9);
       doc.setTextColor(...dim);
       doc.text(today, mx, 43);
 
       doc.setDrawColor(...border);
       doc.setLineWidth(0.3);
-      doc.line(mx, 46, W - mx, 46);
+      doc.line(mx, 47, W - mx, 47);
 
-      let y = 52;
+      let y = 53;
 
       // ── Constraint Card ──
       doc.setFontSize(9);
@@ -546,7 +546,7 @@
       doc.rect(mx, y - 2, 1.5, cardH, 'F');
 
       // Constraint label
-      doc.setFontSize(7.5);
+      doc.setFontSize(8);
       doc.setFont('Helvetica', 'bold');
       doc.setTextColor(...sColor);
       doc.text(c.name.toUpperCase(), mx + 6, y + 3);
@@ -562,7 +562,7 @@
       // ── Metrics: Acquisition (left) & Retention (right) ──
       const rh = 5.5; // row height — one line per metric
 
-      doc.setFontSize(7.5);
+      doc.setFontSize(8);
       doc.setFont('Helvetica', 'normal');
       doc.setTextColor(...teal);
       doc.text('ACQUISITION', mx, y);
@@ -585,7 +585,7 @@
       y += 5;
 
       // ── Metrics: Pipeline ──
-      doc.setFontSize(7.5);
+      doc.setFontSize(8);
       doc.setTextColor(...teal);
       doc.text('PIPELINE', mx, y);
       y += 5;
@@ -609,7 +609,7 @@
 
       // ── Watch List ──
       if (r.watchList.length > 0) {
-        doc.setFontSize(7.5);
+        doc.setFontSize(8);
         doc.setFont('Helvetica', 'bold');
         doc.setTextColor(...amber);
         doc.text('WATCH', mx, y);
@@ -630,7 +630,7 @@
 
       // ── Next Steps ──
       if (r.recommendations.length > 0) {
-        doc.setFontSize(7.5);
+        doc.setFontSize(8);
         doc.setFont('Helvetica', 'bold');
         doc.setTextColor(...teal);
         doc.text('NEXT STEPS', mx, y);
@@ -671,11 +671,11 @@
       });
 
       // ── Footer ──
-      doc.setFontSize(7);
+      doc.setFontSize(8);
       doc.setFont('Helvetica', 'normal');
-      doc.setTextColor(...dim);
-      doc.text('devin.vc/tools/marketing-scorecard', mx, H - 12);
-      doc.text(today, W - mx, H - 12, { align: 'right' });
+      doc.setTextColor(...muted);
+      doc.text('devin.vc', mx, H - 12);
+      doc.text('Generated with Marketing Efficiency Scorecard', W - mx, H - 12, { align: 'right' });
 
       const dateStr = new Date().toISOString().split('T')[0];
       const shortArr = abbreviateTarget(arr);
@@ -1518,13 +1518,13 @@
   .lead-input-line::after { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 0; background: var(--color-accent); transition: width var(--duration-normal) var(--ease-out-expo); }
   .lead-input:focus + .lead-input-line::after { width: 100%; }
 
-  .lead-consent { display: flex; align-items: flex-start; gap: 0.6rem; cursor: pointer; margin-top: 0.5rem; }
-  .lead-checkbox { display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 3px; border: 1.5px solid color-mix(in oklab, var(--color-text-muted) 35%, transparent); flex-shrink: 0; margin-top: 1px; transition: border-color var(--duration-fast) var(--ease-out-expo), background var(--duration-fast) var(--ease-out-expo); }
+  .lead-consent { display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer; margin-top: 0.5rem; }
+  .lead-checkbox { display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 3px; border: 1.5px solid color-mix(in oklab, var(--color-text-muted) 30%, transparent); flex-shrink: 0; margin-top: 1px; transition: border-color var(--duration-fast) var(--ease-out-expo), background var(--duration-fast) var(--ease-out-expo); }
   .lead-checkbox--checked { border-color: var(--color-accent-teal); background: var(--color-accent-teal); color: var(--color-bg); }
   .lead-checkbox-input { position: absolute; opacity: 0; pointer-events: none; }
   .lead-consent-text { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.5; }
-  .lead-consent-link { color: var(--color-accent); text-decoration: none; }
-  .lead-consent-link:hover { text-decoration: underline; }
+  .lead-consent-link { color: var(--color-text-muted); text-decoration: underline; text-underline-offset: 2px; }
+  .lead-consent-link:hover { color: var(--color-text); }
 
   .lead-error { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-accent-rust); margin: 0.75rem 0 0; }
 
@@ -1679,7 +1679,7 @@
 
   /* Actions */
   .results-actions-divider { height: 1px; background: color-mix(in oklab, var(--color-text-muted) 10%, transparent); margin-bottom: 1.5rem; }
-  .results-actions { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  .results-actions { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
   .results-copy { display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--font-body); font-size: var(--text-xs); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--color-text-muted); background: none; border: 1px solid color-mix(in oklab, var(--color-text-muted) 20%, transparent); padding: 0.55rem 1rem; cursor: pointer; transition: all var(--duration-fast) var(--ease-out-expo); }
   .results-copy:hover:not(:disabled) { color: var(--color-accent); border-color: var(--color-accent); }
   .results-copy:disabled { opacity: 0.5; cursor: not-allowed; }

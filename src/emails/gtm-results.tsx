@@ -34,7 +34,17 @@ interface GtmResultsEmailProps {
   results: GtmResults;
 }
 
-function fmtCurrency(n: number): string {
+function fmtCurrency(n: number | null): string {
+  if (n == null) return '\u2014';
+  const abs = Math.abs(n);
+  if (abs >= 1_000_000_000) {
+    const b = n / 1_000_000_000;
+    return '$' + (Number.isInteger(b) ? b.toFixed(0) : b.toFixed(1)) + 'B';
+  }
+  if (abs >= 1_000_000) {
+    const m = n / 1_000_000;
+    return '$' + (Number.isInteger(m) ? m.toFixed(0) : m.toFixed(1)) + 'M';
+  }
   return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
 }
 
@@ -58,8 +68,8 @@ export default function GtmResultsEmail({
 
   const healthColor =
     r.ltvCacHealth === 'warning' ? colors.rust :
-    r.ltvCacHealth === 'healthy' ? colors.teal :
-    colors.accent;
+    r.ltvCacHealth === 'strong' ? colors.teal :
+    colors.amber;
 
   const healthLabel =
     r.ltvCacHealth === 'warning' ? 'Below benchmark' :
@@ -71,7 +81,7 @@ export default function GtmResultsEmail({
       <Text style={badge}>GTM PLAN</Text>
       <Text style={heading}>Your numbers, {firstName}.</Text>
       <Text style={context}>
-        {company} -- {fmtCurrency(revenueTarget)} annual target
+        {company} | {fmtCurrency(revenueTarget)} annual target
         {isRecurring ? ' (recurring)' : ' (one-time)'}
       </Text>
 
@@ -233,6 +243,7 @@ const colors = {
   accent: '#c4a47c',
   teal: '#5ba3a3',
   rust: '#b06a52',
+  amber: '#c49a3c',
   border: '#1e1a14',
 };
 
