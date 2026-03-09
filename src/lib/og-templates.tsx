@@ -215,10 +215,7 @@ export function JournalTemplate({
   const fontSize = len > 60 ? 64 : len > 40 ? 76 : 88;
   const accentColor = getTagColor(tag);
 
-  // Truncate subtitle for OG display
-  const truncatedSubtitle = subtitle && subtitle.length > 90
-    ? subtitle.slice(0, 87).replace(/\s+\S*$/, '') + '...'
-    : subtitle;
+  const displaySubtitle = subtitle;
 
   return (
     <OgWrapper accentColor={accentColor}>
@@ -292,7 +289,7 @@ export function JournalTemplate({
         </span>
 
         {/* Description / subtitle */}
-        {truncatedSubtitle && (
+        {displaySubtitle && (
           <span
             style={{
               fontFamily: fonts.sans,
@@ -303,7 +300,7 @@ export function JournalTemplate({
               maxWidth: '900px',
             }}
           >
-            {truncatedSubtitle}
+            {displaySubtitle}
           </span>
         )}
 
