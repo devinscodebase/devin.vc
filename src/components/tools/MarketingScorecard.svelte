@@ -472,8 +472,37 @@
 
       const mx = 20;
       const cw = W - 2 * mx;
+      const halfW = cw * 0.47;
+      const rightX = mx + cw * 0.53;
 
-      // Header
+      // Health color helper
+      function hc(m) {
+        if (m.health === 'critical' || m.health === 'contraction') return rust;
+        if (m.health === 'warning' || m.health === 'stable') return amber;
+        if (m.health === 'strong' || m.health === 'elite') return teal;
+        return text;
+      }
+
+      // Render a single metric row: label left, value right-aligned, one line
+      function row(x, y, label, value, color, w) {
+        doc.setFontSize(9);
+        doc.setFont('Helvetica', 'normal');
+        doc.setTextColor(...muted);
+        doc.text(label, x, y);
+        doc.setFont('Helvetica', 'bold');
+        doc.setTextColor(...color);
+        doc.text(value, x + w, y, { align: 'right' });
+      }
+
+      // Render a scored metric by key
+      function mrow(x, y, key, w) {
+        const m = r.metrics[key];
+        if (!m?.scored) return false;
+        row(x, y, metricLabels[key] || key, formatMetric(key, m), hc(m), w);
+        return true;
+      }
+
+      // ── Header ──
       doc.setFontSize(8);
       doc.setFont('Helvetica', 'normal');
       doc.setTextColor(...teal);
@@ -484,7 +513,7 @@
       doc.setTextColor(...text);
       doc.text(leadCompany.trim() || 'Your Company', mx, 30);
 
-      doc.setFontSize(11);
+      doc.setFontSize(10);
       doc.setFont('Helvetica', 'normal');
       doc.setTextColor(...muted);
       const stageLabel = STAGES[stage]?.label || stage;
@@ -492,148 +521,161 @@
       doc.text(`${fmtCurrency(arr)} ARR  ·  ${stageLabel}  ·  ${modelLabel}`, mx, 37);
 
       const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-      doc.setFontSize(9);
+      doc.setFontSize(8);
       doc.setTextColor(...dim);
       doc.text(today, mx, 43);
 
       doc.setDrawColor(...border);
       doc.setLineWidth(0.3);
-      doc.line(mx, 47, W - mx, 47);
+      doc.line(mx, 46, W - mx, 46);
 
-      let y = 54;
+      let y = 52;
 
-      // Verdict
-      doc.setFontSize(8);
-      doc.setTextColor(...(severityColors[c.severity] || teal));
-      doc.text(`PRIMARY CONSTRAINT: ${c.name.toUpperCase()}`, mx, y);
-      y += 7;
+      // ── Constraint Card ──
+      doc.setFontSize(9);
+      const verdictLines = doc.splitTextToSize(c.verdict, cw - 10);
+      const cardH = 10 + verdictLines.length * 4 + 4;
 
-      doc.setFontSize(10);
+      // Elevated card background
+      doc.setFillColor(...elevated);
+      doc.roundedRect(mx, y - 2, cw, cardH, 1.5, 1.5, 'F');
+
+      // Severity-colored left accent bar
+      const sColor = severityColors[c.severity] || teal;
+      doc.setFillColor(...sColor);
+      doc.rect(mx, y - 2, 1.5, cardH, 'F');
+
+      // Constraint label
+      doc.setFontSize(7.5);
+      doc.setFont('Helvetica', 'bold');
+      doc.setTextColor(...sColor);
+      doc.text(c.name.toUpperCase(), mx + 6, y + 3);
+
+      // Verdict text
+      doc.setFontSize(9);
       doc.setFont('Helvetica', 'normal');
       doc.setTextColor(...text);
-      const verdictLines = doc.splitTextToSize(c.verdict, cw);
-      doc.text(verdictLines, mx, y);
-      y += verdictLines.length * 4.5 + 6;
+      doc.text(verdictLines, mx + 6, y + 9);
 
-      doc.setDrawColor(...border);
-      doc.line(mx, y, W - mx, y);
-      y += 8;
+      y += cardH + 6;
 
-      // Scorecard
-      doc.setFontSize(8);
+      // ── Metrics: Acquisition (left) & Retention (right) ──
+      const rh = 5.5; // row height — one line per metric
+
+      doc.setFontSize(7.5);
+      doc.setFont('Helvetica', 'normal');
       doc.setTextColor(...teal);
-      doc.text('SCORECARD', mx, y);
-      y += 7;
+      doc.text('ACQUISITION', mx, y);
+      doc.text('RETENTION & GROWTH', rightX, y);
+      y += 5;
 
-      const colW = cw * 0.48;
-      let col = 0;
-      let row = 0;
-      const metricEntries = Object.entries(r.metrics).filter(([, m]) => m.scored);
+      const acqKeys = ['cac', 'ltv', 'ltvCac', 'cacPayback'];
+      const retKeys = ['nrr', 'monthlyChurn', 'mer', 'marketingSpendPercent'];
 
-      metricEntries.forEach(([key, m]) => {
-        const ix = mx + col * colW;
-        const iy = y + row * 14;
-
-        doc.setFontSize(8);
-        doc.setFont('Helvetica', 'normal');
-        doc.setTextColor(...muted);
-        doc.text(metricLabels[key] || key, ix, iy);
-
-        doc.setFontSize(11);
-        doc.setFont('Helvetica', 'bold');
-        const hColor = (m.health === 'critical' || m.health === 'contraction') ? rust
-          : (m.health === 'warning' || m.health === 'stable') ? amber
-          : (m.health === 'strong' || m.health === 'elite') ? teal : text;
-        doc.setTextColor(...hColor);
-        doc.text(formatMetric(key, m), ix, iy + 5);
-
-        doc.setFontSize(7);
-        doc.setFont('Helvetica', 'normal');
-        doc.setTextColor(...dim);
-        doc.text(healthLabel(m.health), ix, iy + 9);
-
-        col++;
-        if (col >= 2) { col = 0; row++; }
-      });
-
-      y += (Math.ceil(metricEntries.length / 2)) * 14 + 4;
-      doc.setDrawColor(...border);
-      doc.line(mx, y, W - mx, y);
-      y += 8;
-
-      // Watch List
-      if (r.watchList.length > 0) {
-        doc.setFontSize(8);
-        doc.setTextColor(...teal);
-        doc.text('WATCH LIST', mx, y);
-        y += 6;
-        r.watchList.forEach(item => {
-          doc.setFontSize(8);
-          doc.setFont('Helvetica', 'italic');
-          doc.setTextColor(...amber);
-          const wLines = doc.splitTextToSize(item.message, cw);
-          doc.text(wLines, mx, y);
-          y += wLines.length * 3.5 + 2;
-        });
-        y += 4;
-        doc.setDrawColor(...border);
-        doc.line(mx, y, W - mx, y);
-        y += 8;
+      const maxRows = Math.max(acqKeys.length, retKeys.length);
+      for (let i = 0; i < maxRows; i++) {
+        const ry = y + i * rh;
+        if (i < acqKeys.length) mrow(mx, ry, acqKeys[i], halfW - 2);
+        if (i < retKeys.length) mrow(rightX, ry, retKeys[i], halfW - 2);
       }
 
-      // Recommendations
+      y += maxRows * rh + 3;
+      doc.setDrawColor(...border);
+      doc.line(mx, y, W - mx, y);
+      y += 5;
+
+      // ── Metrics: Pipeline ──
+      doc.setFontSize(7.5);
+      doc.setTextColor(...teal);
+      doc.text('PIPELINE', mx, y);
+      y += 5;
+
+      const pipKeys = ['pipelineCoverage', 'pipelineVelocity', 'conversionRate'];
+      let pi = 0;
+      for (const k of pipKeys) {
+        const m = r.metrics[k];
+        if (!m?.scored) continue;
+        const col = pi % 2;
+        const rx = col === 0 ? mx : rightX;
+        const ry = y + Math.floor(pi / 2) * rh;
+        mrow(rx, ry, k, halfW - 2);
+        pi++;
+      }
+
+      y += Math.ceil(pi / 2) * rh + 3;
+      doc.setDrawColor(...border);
+      doc.line(mx, y, W - mx, y);
+      y += 5;
+
+      // ── Watch List ──
+      if (r.watchList.length > 0) {
+        doc.setFontSize(7.5);
+        doc.setFont('Helvetica', 'bold');
+        doc.setTextColor(...amber);
+        doc.text('WATCH', mx, y);
+        y += 4.5;
+        r.watchList.forEach(item => {
+          doc.setFontSize(8);
+          doc.setFont('Helvetica', 'normal');
+          doc.setTextColor(...dim);
+          const wLines = doc.splitTextToSize(item.message, cw);
+          doc.text(wLines, mx, y);
+          y += wLines.length * 3.5 + 1;
+        });
+        y += 2;
+        doc.setDrawColor(...border);
+        doc.line(mx, y, W - mx, y);
+        y += 5;
+      }
+
+      // ── Next Steps ──
       if (r.recommendations.length > 0) {
-        doc.setFontSize(8);
+        doc.setFontSize(7.5);
+        doc.setFont('Helvetica', 'bold');
         doc.setTextColor(...teal);
-        doc.text('RECOMMENDATIONS', mx, y);
-        y += 6;
+        doc.text('NEXT STEPS', mx, y);
+        y += 4.5;
         r.recommendations.forEach((rec, i) => {
           doc.setFontSize(8);
           doc.setFont('Helvetica', 'normal');
           doc.setTextColor(...text);
           const rLines = doc.splitTextToSize(`${i + 1}. ${rec.text}`, cw);
           doc.text(rLines, mx, y);
-          y += rLines.length * 3.5 + 3;
+          y += rLines.length * 3.5 + 1.5;
         });
-        y += 4;
+        y += 2;
         doc.setDrawColor(...border);
         doc.line(mx, y, W - mx, y);
-        y += 8;
+        y += 5;
       }
 
-      // Glossary
-      doc.setFontSize(8);
-      doc.setTextColor(...teal);
-      doc.text('GLOSSARY', mx, y);
-      y += 6;
-
+      // ── Glossary (compact single-line definitions) ──
+      doc.setFontSize(7);
+      doc.setTextColor(...dim);
+      doc.setFont('Helvetica', 'normal');
       const glossary = [
-        ['CAC', 'Customer Acquisition Cost. Total marketing spend / new customers. Lower is better, but context matters by stage.'],
-        ['LTV:CAC', 'Lifetime value per acquisition dollar. 3:1 to 5:1 is healthy.'],
-        ['CAC Payback', 'Months to recover acquisition cost. Under 12 months is healthy.'],
-        ['NRR', 'Net Revenue Retention. Revenue retained from existing customers + expansion. Above 100% = growth engine.'],
-        ['MER', 'Marketing Efficiency Ratio. Total revenue per marketing dollar. Measures overall marketing productivity.'],
-        ['Pipeline Coverage', 'Active pipeline as a multiple of revenue target. 3-4x is healthy.'],
+        ['CAC', 'Acquisition cost per customer'],
+        ['LTV:CAC', 'Lifetime value per dollar acquired. 3-5:1 healthy'],
+        ['NRR', 'Revenue retained + expansion from existing customers'],
+        ['MER', 'Total revenue per marketing dollar spent'],
+        ['Pipeline', 'Active pipeline as multiple of target. 3-4x healthy'],
       ];
-
       glossary.forEach(([term, def]) => {
-        doc.setFontSize(7);
         doc.setFont('Helvetica', 'bold');
         doc.setTextColor(...accent);
         doc.text(term, mx, y);
         doc.setFont('Helvetica', 'normal');
         doc.setTextColor(...dim);
-        const lines = doc.splitTextToSize(def, cw - 30);
-        doc.text(lines, mx + 30, y);
-        y += lines.length * 3.2 + 2;
+        doc.text(def, mx + 24, y);
+        y += 3.5;
       });
 
-      // Footer
-      doc.setFontSize(8);
+      // ── Footer ──
+      doc.setFontSize(7);
       doc.setFont('Helvetica', 'normal');
-      doc.setTextColor(...muted);
-      doc.text('devin.vc', mx, H - 12);
-      doc.text('Generated with Marketing Efficiency Scorecard', W - mx, H - 12, { align: 'right' });
+      doc.setTextColor(...dim);
+      doc.text('devin.vc/tools/marketing-scorecard', mx, H - 12);
+      doc.text(today, W - mx, H - 12, { align: 'right' });
 
       const dateStr = new Date().toISOString().split('T')[0];
       const shortArr = abbreviateTarget(arr);
