@@ -695,7 +695,8 @@
     <!-- Hero header -->
     <header class="results-header">
       <span class="results-tag">Your Marketing Scorecard</span>
-      <p class="results-hero-context">{STAGES[stage]?.label || stage} Stage | {fmtCurrency(arr)} ARR | {MODELS[model]?.label || model}</p>
+      <p class="results-hero-number">{r.scoredMetricsCount}<span class="results-hero-period"> of 11</span></p>
+      <p class="results-hero-context">{STAGES[stage]?.label || stage} | {fmtCurrency(arr)} ARR | {MODELS[model]?.label || model}</p>
     </header>
 
     {#if leadSuccess && leadEmail}
@@ -725,50 +726,50 @@
     {/if}
 
     <!-- Section 1: The Verdict -->
-    <section class="verdict-card {severityClass(c.severity)}">
-      <div class="verdict-header">
-        <span class="verdict-severity-dot {severityClass(c.severity)}"></span>
-        <span class="verdict-name">{c.name}</span>
+    <section class="results-section">
+      <div class="verdict-block {severityClass(c.severity)}">
+        <div class="verdict-header">
+          <span class="verdict-severity-dot {severityClass(c.severity)}"></span>
+          <span class="verdict-name">{c.name}</span>
+        </div>
+        <p class="verdict-text">{c.verdict}</p>
+        {#if c.relatedTool}
+          <a href={c.relatedTool.url} class="verdict-link">{c.relatedTool.cta} &rarr;</a>
+        {/if}
       </div>
-      <p class="verdict-text">{c.verdict}</p>
-      {#if c.relatedTool}
-        <a href={c.relatedTool.url} class="verdict-link">{c.relatedTool.cta}</a>
-      {/if}
     </section>
 
-    <!-- Section 2: Scorecard Grid -->
+    <!-- Section 2: Scorecard -->
     <section class="results-section">
       <div class="results-section-header">
         <span class="results-section-number">01</span>
         <h2 class="results-section-heading">Scorecard</h2>
       </div>
 
-      <div class="scorecard-grid">
+      <div class="scorecard-table">
         {#each Object.entries(r.metrics) as [key, m]}
           {#if m.scored}
-            <div class="metric-card" class:metric-card--constraint={isConstraintMetric(c.id, key)}>
-              <div class="metric-card-top">
-                <span class="metric-card-name">{metricLabels[key] || key}</span>
-                <span class="metric-card-health {healthClass(m.health)}">{healthLabel(m.health)}</span>
-              </div>
-              <span class="metric-card-value {healthClass(m.health)}">{formatMetric(key, m)}</span>
-              <span class="metric-card-benchmark">{m.benchmark}</span>
-              <span class="metric-card-interpretation">{m.interpretation}</span>
+            <div class="metric-row" class:metric-row--constraint={isConstraintMetric(c.id, key)}>
+              <span class="metric-row-name">{metricLabels[key] || key}</span>
+              <span class="metric-row-value {healthClass(m.health)}">{formatMetric(key, m)}</span>
+              <span class="metric-row-health {healthClass(m.health)}">{healthLabel(m.health)}</span>
+            </div>
+            <div class="metric-detail">
+              <span class="metric-detail-benchmark">{m.benchmark}</span>
+              <span class="metric-detail-interpretation">{m.interpretation}</span>
             </div>
           {:else}
-            <div class="metric-card metric-card--unscored">
-              <div class="metric-card-top">
-                <span class="metric-card-name">{metricLabels[key] || key}</span>
-              </div>
-              <span class="metric-card-value health--muted">Not enough data</span>
-              <span class="metric-card-benchmark">Provide {m.missingInput || 'additional data'} for this score</span>
+            <div class="metric-row metric-row--unscored">
+              <span class="metric-row-name">{metricLabels[key] || key}</span>
+              <span class="metric-row-value health--muted">&mdash;</span>
+              <span class="metric-row-health health--muted">Needs data</span>
             </div>
           {/if}
         {/each}
       </div>
 
       {#if r.incompleteAssessment}
-        <p class="incomplete-note">This assessment scored {r.scoredMetricsCount} of 11 possible metrics. Complete the optional fields for a fuller picture.</p>
+        <p class="incomplete-note">{r.scoredMetricsCount} of 11 metrics scored. Complete the optional fields for a fuller picture.</p>
       {/if}
     </section>
 
@@ -1545,52 +1546,49 @@
 
   .results-header { margin-bottom: clamp(1.5rem, 3vw, 2rem); }
   .results-tag { font-family: var(--font-body); font-size: var(--text-xs); font-weight: var(--weight-medium); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--color-text-muted); display: block; margin-bottom: 0.75rem; }
+  .results-hero-number { font-family: var(--font-display); font-size: var(--text-4xl); color: var(--color-text); line-height: 1; letter-spacing: var(--tracking-tight); margin: 0 0 0.5rem; }
+  .results-hero-period { font-size: var(--text-lg); color: var(--color-text-muted); }
   .results-hero-context { font-family: var(--font-display); font-style: italic; font-size: var(--text-lg); color: var(--color-text-muted); line-height: 1.35; margin: 0; }
 
-  .results-email-sent { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-body); font-size: var(--text-xs); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--color-accent-teal); padding: 0.5rem 0.75rem; border: 1px solid color-mix(in oklab, var(--color-accent-teal) 15%, transparent); border-radius: var(--radius-sm); margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .results-email-sent { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-body); font-size: var(--text-xs); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--color-accent-teal); padding: 0.5rem 0.75rem; border: 1px solid color-mix(in oklab, var(--color-accent-teal) 15%, transparent); margin-bottom: clamp(2rem, 4vw, 3rem); }
   .results-email-sent svg { flex-shrink: 0; opacity: 0.6; }
 
   .outlier-warnings { margin-bottom: 1.5rem; }
   .outlier-warning {
     display: flex; align-items: flex-start; gap: 0.5rem;
     font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-muted);
-    padding: 0.75rem 1rem;
-    background: color-mix(in oklab, var(--color-accent-amber) 4%, transparent);
-    border: 1px solid color-mix(in oklab, var(--color-accent-amber) 12%, transparent);
-    border-radius: var(--radius-sm); margin-bottom: 0.5rem;
+    line-height: 1.5; padding-left: 1rem; margin-bottom: 0.5rem;
+    border-left: 2px solid var(--color-accent-amber);
   }
   .outlier-warning svg { flex-shrink: 0; color: var(--color-accent-amber); margin-top: 1px; }
 
   .pre-revenue-note {
     font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-muted);
-    line-height: 1.6; padding: 1rem;
-    background: color-mix(in oklab, var(--color-text) 3%, transparent);
-    border-radius: var(--radius-sm); margin-bottom: 1.5rem;
+    line-height: 1.6; padding-left: 1rem; margin-bottom: 1.5rem;
+    border-left: 2px solid color-mix(in oklab, var(--color-text-muted) 25%, transparent);
   }
 
-  /* Verdict Card */
-  .verdict-card {
-    padding: 1.5rem; border-radius: var(--radius-lg);
-    background: color-mix(in oklab, var(--color-text) 3%, transparent);
-    border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
-    margin-bottom: clamp(2rem, 4vw, 2.5rem);
+  /* Verdict Block */
+  .verdict-block {
+    padding-left: 1.25rem;
+    border-left: 2px solid var(--color-text-muted);
   }
-  .verdict-card.severity--critical { border-left: 3px solid var(--color-accent-rust); }
-  .verdict-card.severity--warning { border-left: 3px solid var(--color-accent-amber); }
-  .verdict-card.severity--opportunity { border-left: 3px solid var(--color-accent); }
-  .verdict-card.severity--healthy { border-left: 3px solid var(--color-accent-teal); }
+  .verdict-block.severity--critical { border-left-color: var(--color-accent-rust); }
+  .verdict-block.severity--warning { border-left-color: var(--color-accent-amber); }
+  .verdict-block.severity--opportunity { border-left-color: var(--color-accent); }
+  .verdict-block.severity--healthy { border-left-color: var(--color-accent-teal); }
 
-  .verdict-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
-  .verdict-severity-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .verdict-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+  .verdict-severity-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
   .verdict-severity-dot.severity--critical { background: var(--color-accent-rust); }
   .verdict-severity-dot.severity--warning { background: var(--color-accent-amber); }
   .verdict-severity-dot.severity--opportunity { background: var(--color-accent); }
   .verdict-severity-dot.severity--healthy { background: var(--color-accent-teal); }
 
-  .verdict-name { font-family: var(--font-display); font-size: var(--text-lg); color: var(--color-text); }
+  .verdict-name { font-family: var(--font-body); font-size: var(--text-xs); font-weight: var(--weight-medium); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--color-text); }
   .verdict-text { font-family: var(--font-body); font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.6; margin: 0; }
-  .verdict-link { display: inline-block; font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-accent); text-decoration: none; margin-top: 0.75rem; transition: opacity var(--duration-fast) var(--ease-out-expo); }
-  .verdict-link:hover { opacity: 0.8; }
+  .verdict-link { display: inline-block; font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-accent); text-decoration: none; margin-top: 0.75rem; transition: color var(--duration-fast) var(--ease-out-expo); }
+  .verdict-link:hover { color: var(--color-text); }
 
   /* Sections */
   .results-section { margin-bottom: clamp(2.5rem, 5vw, 3.5rem); padding-bottom: clamp(2rem, 4vw, 3rem); border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 8%, transparent); }
@@ -1599,52 +1597,61 @@
   .results-section-number { font-family: 'Instrument Serif', serif; font-style: italic; font-size: var(--text-md); line-height: 1; color: var(--color-accent-teal); }
   .results-section-heading { font-family: var(--font-body); font-size: var(--text-xs); font-weight: var(--weight-medium); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--color-text-muted); margin: 0; }
 
-  /* Scorecard Grid */
-  .scorecard-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+  /* Scorecard Table */
+  .scorecard-table {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .metric-row {
+    display: flex;
+    align-items: baseline;
     gap: 0.75rem;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 8%, transparent);
   }
 
-  .metric-card {
-    background: color-mix(in oklab, var(--color-text) 3%, transparent);
-    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
-    border-radius: var(--radius-md);
-    padding: 1rem 1.25rem;
-    display: flex; flex-direction: column; gap: 0.25rem;
-  }
-
-  .metric-card--constraint {
+  .metric-row--constraint {
+    padding-left: 0.75rem;
     border-left: 2px solid var(--color-accent);
-    background: color-mix(in oklab, var(--color-accent) 3%, transparent);
   }
 
-  .metric-card--unscored { opacity: 0.5; border-style: dashed; }
+  .metric-row--unscored { opacity: 0.45; }
 
-  .metric-card-top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
-
-  .metric-card-name {
-    font-family: var(--font-body); font-size: var(--text-xs); font-weight: var(--weight-medium);
-    letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--color-text-muted);
+  .metric-row-name {
+    font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-muted);
+    flex: 1; min-width: 0;
   }
 
-  .metric-card-health {
+  .metric-row-value {
+    font-family: var(--font-display); font-size: var(--text-lg); color: var(--color-text);
+    line-height: 1; text-align: right; flex-shrink: 0;
+  }
+  .metric-row-value.health--strong, .metric-row-value.health--healthy { color: var(--color-accent-teal); }
+  .metric-row-value.health--warning { color: var(--color-accent-amber); }
+  .metric-row-value.health--critical { color: var(--color-accent-rust); }
+  .metric-row-value.health--muted { color: var(--color-text-muted); font-size: var(--text-sm); font-family: var(--font-body); }
+
+  .metric-row-health {
     font-family: var(--font-body); font-size: 10px; font-weight: var(--weight-medium);
-    letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 6px; border-radius: 3px;
+    letter-spacing: 0.05em; text-transform: uppercase; flex-shrink: 0;
+    width: 5.5rem; text-align: right;
   }
-  .metric-card-health.health--strong { color: var(--color-accent-teal); background: color-mix(in oklab, var(--color-accent-teal) 10%, transparent); }
-  .metric-card-health.health--healthy { color: var(--color-accent-teal); background: color-mix(in oklab, var(--color-accent-teal) 10%, transparent); }
-  .metric-card-health.health--warning { color: var(--color-accent-amber); background: color-mix(in oklab, var(--color-accent-amber) 10%, transparent); }
-  .metric-card-health.health--critical { color: var(--color-accent-rust); background: color-mix(in oklab, var(--color-accent-rust) 10%, transparent); }
+  .metric-row-health.health--strong, .metric-row-health.health--healthy { color: var(--color-accent-teal); }
+  .metric-row-health.health--warning { color: var(--color-accent-amber); }
+  .metric-row-health.health--critical { color: var(--color-accent-rust); }
+  .metric-row-health.health--muted { color: var(--color-text-muted); }
 
-  .metric-card-value { font-family: var(--font-display); font-size: var(--text-xl); color: var(--color-text); line-height: 1.2; }
-  .metric-card-value.health--strong, .metric-card-value.health--healthy { color: var(--color-accent-teal); }
-  .metric-card-value.health--warning { color: var(--color-accent-amber); }
-  .metric-card-value.health--critical { color: var(--color-accent-rust); }
-  .metric-card-value.health--muted { color: var(--color-text-muted); font-size: var(--text-sm); }
+  .metric-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.35rem 0 0.5rem;
+    margin-bottom: 0.25rem;
+  }
 
-  .metric-card-benchmark { font-family: var(--font-body); font-size: 11px; color: var(--color-text-muted); line-height: 1.4; }
-  .metric-card-interpretation { font-family: var(--font-body); font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.5; margin-top: 0.25rem; }
+  .metric-detail-benchmark { font-family: var(--font-body); font-size: 11px; color: var(--color-text-muted); line-height: 1.4; }
+  .metric-detail-interpretation { font-family: var(--font-body); font-size: var(--text-xs); color: color-mix(in oklab, var(--color-text-muted) 70%, transparent); line-height: 1.45; }
 
   .incomplete-note { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-muted); margin-top: 1rem; font-style: italic; }
 
@@ -1660,27 +1667,23 @@
   .recommendations { display: flex; flex-direction: column; gap: 1rem; }
   .recommendation { display: flex; gap: 0.75rem; align-items: flex-start; }
   .recommendation-number {
-    font-family: var(--font-body); font-size: var(--text-xs); font-weight: var(--weight-medium);
-    color: var(--color-accent); flex-shrink: 0; width: 1.5rem; height: 1.5rem;
-    display: flex; align-items: center; justify-content: center;
-    border: 1px solid color-mix(in oklab, var(--color-accent) 25%, transparent);
-    border-radius: 50%; margin-top: 2px;
+    font-family: 'Instrument Serif', serif; font-style: italic; font-size: var(--text-sm);
+    color: var(--color-accent-teal); flex-shrink: 0; line-height: 1; margin-top: 2px;
   }
   .recommendation-text { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.6; margin: 0; }
 
   /* CTA */
-  .results-cta { margin-bottom: clamp(2rem, 4vw, 3rem); padding: clamp(1.25rem, 2.5vw, 1.75rem); border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
-  .results-cta-text { font-family: var(--font-display); font-style: italic; font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.35; margin: 0; }
-  .results-cta-link { font-family: var(--font-body); font-size: var(--text-xs); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--color-text); text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; white-space: nowrap; padding: 0.6rem 1.25rem; border: 1px solid color-mix(in oklab, var(--color-text-muted) 25%, transparent); transition: border-color var(--duration-fast) var(--ease-out-expo), color var(--duration-fast) var(--ease-out-expo); }
-  .results-cta-link:hover { border-color: var(--color-accent); color: var(--color-accent); }
+  .results-cta { margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .results-cta-text { font-family: var(--font-display); font-style: italic; font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.35; margin: 0 0 0.5rem; }
+  .results-cta-link { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; transition: color var(--duration-fast) var(--ease-out-expo); }
+  .results-cta-link:hover { color: var(--color-accent); }
   .results-cta-arrow { display: inline-block; transition: transform var(--duration-fast) var(--ease-out-expo); }
   .results-cta-link:hover .results-cta-arrow { transform: translateX(3px); }
-  @media (max-width: 640px) { .results-cta { flex-direction: column; align-items: flex-start; } }
 
   /* Actions */
   .results-actions-divider { height: 1px; background: color-mix(in oklab, var(--color-text-muted) 10%, transparent); margin-bottom: 1.5rem; }
   .results-actions { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
-  .results-copy { display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--font-body); font-size: var(--text-xs); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--color-text-muted); background: none; border: 1px solid color-mix(in oklab, var(--color-text-muted) 20%, transparent); padding: 0.55rem 1rem; cursor: pointer; transition: all var(--duration-fast) var(--ease-out-expo); }
+  .results-copy { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-body); font-size: var(--text-xs); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--color-text); background: transparent; border: 1px solid color-mix(in oklab, var(--color-text-muted) 25%, transparent); padding: 0.75rem 2rem; cursor: pointer; transition: border-color var(--duration-fast) var(--ease-out-expo), color var(--duration-fast) var(--ease-out-expo); }
   .results-copy:hover:not(:disabled) { color: var(--color-accent); border-color: var(--color-accent); }
   .results-copy:disabled { opacity: 0.5; cursor: not-allowed; }
   .results-copy--copied { color: var(--color-accent-teal); border-color: var(--color-accent-teal); }
@@ -1703,7 +1706,7 @@
   @media (max-width: 640px) {
     .card-options { grid-template-columns: 1fr; }
     .combo-inputs { grid-template-columns: 1fr; gap: 1rem; }
-    .scorecard-grid { grid-template-columns: 1fr; }
+    .metric-row-health { width: auto; }
   }
 
   @media (max-width: 480px) {
