@@ -1,0 +1,20 @@
+CREATE TABLE `retention_leads` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`name` text NOT NULL,
+	`email` text NOT NULL,
+	`company` text NOT NULL,
+	`arr` integer NOT NULL,
+	`customers` integer NOT NULL,
+	`monthly_churn_rate` text NOT NULL,
+	`arpc` text NOT NULL,
+	`expansion_rate` text NOT NULL,
+	`gross_margin` integer NOT NULL,
+	`marketing_spend` integer,
+	`new_customers_month` integer,
+	`annual_churn_revenue` text NOT NULL,
+	`grr` text NOT NULL,
+	`nrr` text NOT NULL,
+	`revenue_gap_36` text NOT NULL,
+	`resend_contact_id` text,
+	`created_at` text NOT NULL
+);

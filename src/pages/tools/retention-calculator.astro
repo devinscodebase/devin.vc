@@ -1,0 +1,72 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import RetentionCalc from '../../components/tools/RetentionCalc.svelte';
+---
+
+<Layout
+  title="Retention Revenue Calculator — Devin Alexander"
+  description="See the real cost of customer churn — annual revenue lost, replacement spend, and the compounding gap over 3 years."
+  image="/og/retention-calculator.png"
+>
+  <main>
+    <section class="retention-page">
+      <div class="retention-page-inner">
+        <RetentionCalc client:load />
+
+        <div class="page-footer">
+          <a href="/" class="back-link">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 7H1M6 2L1 7l5 5" />
+            </svg>
+            Back home
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .retention-page {
+    min-height: 100dvh;
+    padding: var(--space-page-top) var(--space-page-x) var(--space-page-bottom);
+    background: var(--color-bg);
+  }
+
+  .retention-page-inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .page-footer {
+    margin-top: var(--space-block-lg);
+    padding-top: 2rem;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-regular);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+
+  .back-link svg {
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .back-link:hover svg {
+    transform: translateX(-3px);
+  }
+</style>

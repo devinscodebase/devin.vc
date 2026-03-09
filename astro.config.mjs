@@ -21,6 +21,8 @@ export default defineConfig({
       TURSO_AUTH_TOKEN: envField.string({ context: 'server', access: 'secret' }),
       RESEND_API_KEY: envField.string({ context: 'server', access: 'secret' }),
       RESEND_AUDIENCE_ID: envField.string({ context: 'server', access: 'secret', optional: true }),
+      RESEND_GTM_PLANNER_AUDIENCE_ID: envField.string({ context: 'server', access: 'secret', optional: true }),
+      RESEND_RETENTION_CALC_AUDIENCE_ID: envField.string({ context: 'server', access: 'secret', optional: true }),
       RESEND_WEBHOOK_SECRET: envField.string({ context: 'server', access: 'secret', optional: true }),
       NEWSLETTER_SECRET: envField.string({ context: 'server', access: 'secret' }),
       CAL_API_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),

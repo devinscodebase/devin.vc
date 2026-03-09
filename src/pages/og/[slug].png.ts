@@ -20,6 +20,14 @@ const pages: OgPageDef[] = [
     },
   },
   {
+    slug: 'retention-calculator',
+    params: {
+      type: 'page',
+      title: 'Retention Revenue Calculator',
+      subtitle: 'See the real cost of customer churn',
+    },
+  },
+  {
     slug: 'journal',
     params: {
       type: 'page',
