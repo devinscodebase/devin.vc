@@ -274,7 +274,7 @@ function interpretPipelineCoverage(value, health) {
 function interpretConversionRate(value, health) {
   if (health === 'critical') return `Converting ${fmtPercent(value)} of leads is very low. Audit lead quality and sales process.`;
   if (health === 'warning') return `Converting ${fmtPercent(value)} of leads is below average. Room for improvement.`;
-  if (health === 'healthy') return `Converting ${fmtPercent(value)} of leads is solid for B2B SaaS.`;
+  if (health === 'healthy') return `Converting ${fmtPercent(value)} of leads is solid for B2B.`;
   return `Converting ${fmtPercent(value)} of leads is excellent.`;
 }
 

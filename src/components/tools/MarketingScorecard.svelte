@@ -94,13 +94,13 @@
   let acvBenchmark = $derived(
     model === 'enterprise' ? 'Enterprise average: $50K-$250K' :
     model === 'plg' ? 'PLG average: $1K-$10K' :
-    'B2B SaaS average: $10K-$50K'
+    'B2B average: $10K-$50K'
   );
 
   let cycleBenchmark = $derived(
     model === 'enterprise' ? 'Enterprise average: 90-180 days' :
     model === 'plg' ? 'PLG average: 14-30 days' :
-    'B2B SaaS average: 30-90 days'
+    'B2B average: 30-90 days'
   );
 
   const totalSteps = 9;
@@ -609,7 +609,7 @@
 
       const glossary = [
         ['CAC', 'Customer Acquisition Cost. Total marketing spend / new customers. Lower is better, but context matters by stage.'],
-        ['LTV:CAC', 'Lifetime value per acquisition dollar. 3:1 to 5:1 is healthy for most B2B SaaS.'],
+        ['LTV:CAC', 'Lifetime value per acquisition dollar. 3:1 to 5:1 is healthy.'],
         ['CAC Payback', 'Months to recover acquisition cost. Under 12 months is healthy.'],
         ['NRR', 'Net Revenue Retention. Revenue retained from existing customers + expansion. Above 100% = growth engine.'],
         ['MER', 'Marketing Efficiency Ratio. Total revenue per marketing dollar. Measures overall marketing productivity.'],
@@ -938,7 +938,7 @@
 
     <div id="how-it-works-panel" class="how-it-works-panel" class:how-it-works-panel--open={showHowItWorks} aria-hidden={!showHowItWorks}>
       <div class="how-it-works-inner">
-        <p class="hiw-body">Answer 9 questions about your SaaS metrics. We'll score each against stage-specific benchmarks, identify your primary constraint, and give you a specific diagnosis with actionable recommendations. No account required.</p>
+        <p class="hiw-body">Answer 9 questions about your marketing metrics. We'll score each against stage-specific benchmarks, identify your primary constraint, and give you a specific diagnosis with actionable recommendations. No account required.</p>
         <div class="hiw-glossary">
           <h3 class="hiw-heading">Jargon decoder</h3>
           <dl class="hiw-defs">

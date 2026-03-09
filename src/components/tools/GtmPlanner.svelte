@@ -32,7 +32,7 @@
       { id: 'sql-opp', category: 'Funnel', label: 'What % of qualified leads become opportunities?', field: 'percent', default: 50, benchmark: 'Industry average: 50%' },
       { id: 'lead-sql', category: 'Funnel', label: 'What % of leads become sales-qualified?', field: 'percent', default: 20, benchmark: 'Industry average: 20%' },
       { id: 'cpl', category: 'Economics', label: 'What\'s your average cost per lead?', field: 'currency' },
-      { id: 'margin', category: 'Economics', label: 'What\'s your gross margin?', field: 'percent', default: 70, benchmark: 'B2B SaaS average: 70%' },
+      { id: 'margin', category: 'Economics', label: 'What\'s your gross margin?', field: 'percent', default: 70, benchmark: 'B2B average: 70%' },
     ];
     if (isRecurring) {
       base.push({ id: 'lifespan', category: 'Economics', label: 'How long does a typical customer stay?', field: 'months' });

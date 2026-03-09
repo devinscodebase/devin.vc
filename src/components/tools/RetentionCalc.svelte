@@ -59,10 +59,10 @@
   let steps = $derived.by(() => [
     { id: 'arr', category: 'Revenue', label: 'What\'s your current annual recurring revenue?', field: 'currency' },
     { id: 'customers', category: 'Revenue', label: 'How many active customers do you have?', field: 'number' },
-    { id: 'churn', category: 'Retention', label: 'What percentage of customers do you lose each month?', field: 'percent', default: 5, benchmark: 'SMB SaaS average: 4-7%' },
+    { id: 'churn', category: 'Retention', label: 'What percentage of customers do you lose each month?', field: 'percent', default: 5, benchmark: 'SMB average: 4-7%' },
     { id: 'arpc', category: 'Retention', label: `That puts your average customer at ${fmtCurrency(roundToNearest5(autoArpc || 0))}/month. Does that feel right?`, field: 'arpc-confirm' },
     { id: 'expansion', category: 'Retention', label: 'What percentage of existing revenue comes from upsells/expansions each month?', field: 'percent-decimal', default: 0.5, benchmark: 'Top performers: 2-3%/month, most SMBs: 0-1%' },
-    { id: 'margin', category: 'Economics', label: 'What\'s your gross margin?', field: 'percent', default: 70, benchmark: 'SaaS benchmark: 70-80%' },
+    { id: 'margin', category: 'Economics', label: 'What\'s your gross margin?', field: 'percent', default: 70, benchmark: 'Industry benchmark: 70-80%' },
     { id: 'marketing', category: 'Acquisition', label: 'How much do you spend per month acquiring new customers?', field: 'currency' },
     { id: 'new-customers', category: 'Acquisition', label: 'How many new customers do you add per month?', field: 'number' },
   ]);
