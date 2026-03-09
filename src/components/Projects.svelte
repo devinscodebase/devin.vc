@@ -31,25 +31,25 @@
     const footer = section.querySelector('.section-footer');
 
     const stop = inView(section, () => {
-      animate(tag, { opacity: [0, 1], y: [8, 0] }, {
+      animate(tag, { opacity: 1, y: 0 }, {
         duration: 0.35,
         easing: [0.25, 1, 0.5, 1],
       });
 
-      animate(heading, { opacity: [0, 1], y: [12, 0] }, {
+      animate(heading, { opacity: 1, y: 0 }, {
         duration: 0.4,
         delay: 0.05,
         easing: [0.25, 1, 0.5, 1],
       });
 
-      animate(rows, { opacity: [0, 1], y: [10, 0] }, {
+      animate(rows, { opacity: 1, y: 0 }, {
         duration: 0.35,
         delay: stagger(0.05, { start: 0.1 }),
         easing: [0.25, 1, 0.5, 1],
       });
 
       if (footer) {
-        animate(footer, { opacity: [0, 1] }, {
+        animate(footer, { opacity: 1 }, {
           duration: 0.4,
           delay: 0.4,
           easing: [0.25, 1, 0.5, 1],
@@ -65,12 +65,12 @@
 
 <section class="projects-section" bind:this={section}>
   <div class="projects-inner">
-    <div class="section-tag" style="opacity: 0;"><span class="tag-number">05</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Projects</span></div>
-    <h2 class="section-heading" style="opacity: 0;">Selected Work</h2>
+    <div class="section-tag" style="opacity: 0; transform: translateY(8px);"><span class="tag-number">05</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Projects</span></div>
+    <h2 class="section-heading" style="opacity: 0; transform: translateY(12px);">Selected Work</h2>
 
     <div class="project-list">
       {#each projects as project, i (project.name)}
-        <a href={project.url} target="_blank" rel="noopener" class="project-row project-row--{project.accent}" style="opacity: 0;">
+        <a href={project.url} target="_blank" rel="noopener" class="project-row project-row--{project.accent}" style="opacity: 0; transform: translateY(10px);">
           <div class="row-left">
             <span class="row-index">{String(i + 1).padStart(2, '0')}</span>
             <div class="row-info">

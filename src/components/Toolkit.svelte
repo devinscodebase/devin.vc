@@ -67,18 +67,18 @@
     const rows = section.querySelectorAll('.marquee-row');
 
     const stop = inView(section, () => {
-      animate(tag, { opacity: [0, 1], y: [8, 0] }, {
+      animate(tag, { opacity: 1, y: 0 }, {
         duration: 0.35,
         easing: [0.25, 1, 0.5, 1],
       });
 
-      animate(header, { opacity: [0, 1], y: [12, 0] }, {
+      animate(header, { opacity: 1, y: 0 }, {
         duration: 0.4,
         delay: 0.05,
         easing: [0.25, 1, 0.5, 1],
       });
 
-      animate(rows, { opacity: [0, 1], y: [15, 0] }, {
+      animate(rows, { opacity: 1, y: 0 }, {
         duration: 0.4,
         delay: stagger(0.1, { start: 0.12 }),
         easing: [0.25, 1, 0.5, 1],
@@ -97,9 +97,9 @@
 
 <section class="toolkit" bind:this={section}>
   <div class="toolkit-inner">
-    <div class="section-tag" style="opacity: 0;"><span class="tag-number">04</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Toolkit</span></div>
+    <div class="section-tag" style="opacity: 0; transform: translateY(8px);"><span class="tag-number">04</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Toolkit</span></div>
 
-    <div class="toolkit-header" style="opacity: 0;">
+    <div class="toolkit-header" style="opacity: 0; transform: translateY(12px);">
       <h2 class="section-heading">Tools I Work With</h2>
 
       <div class="detail-panel" class:is-visible={activeTool}>
@@ -139,7 +139,7 @@
       {@const items = getToolsByCategory(cat.key)}
       <div
         class="marquee-row"
-        style="--speed: {cat.speed}; --direction: {cat.direction}; --copies: {COPIES}; opacity: 0;"
+        style="--speed: {cat.speed}; --direction: {cat.direction}; --copies: {COPIES}; opacity: 0; transform: translateY(15px);"
         role="marquee"
         aria-label="{cat.label} tools"
       >

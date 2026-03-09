@@ -16,7 +16,7 @@
 
     // Section tag reveal
     const stopTag = inView(tag, () => {
-      animate(tag, { opacity: [0, 1], y: [10, 0] }, {
+      animate(tag, { opacity: 1, y: 0 }, {
         duration: 0.5,
         easing: [0.25, 1, 0.5, 1],
       });
@@ -33,13 +33,13 @@
 
       const stopEntry = inView(entry, () => {
         // Year number slides in from left
-        animate(yearBig, { opacity: [0, 1], x: [-30, 0] }, {
+        animate(yearBig, { opacity: 1, x: 0 }, {
           duration: 0.8,
           easing: [0.25, 1, 0.5, 1],
         });
 
         // Content slides up
-        animate(content, { opacity: [0, 1], y: [30, 0] }, {
+        animate(content, { opacity: 1, y: 0 }, {
           duration: 0.8,
           delay: 0.15,
           easing: [0.25, 1, 0.5, 1],
@@ -56,7 +56,7 @@
 
         // Bar grows down
         if (bar) {
-          animate(bar, { scaleY: [0, 1] }, {
+          animate(bar, { scaleY: 1 }, {
             duration: 0.6,
             delay: 0.5,
             easing: [0.25, 1, 0.5, 1],
@@ -74,7 +74,7 @@
 
 <section class="timeline" bind:this={section}>
   <div class="timeline-inner">
-    <div class="section-tag" style="opacity: 0;">
+    <div class="section-tag" style="opacity: 0; transform: translateY(10px);">
       <span class="tag-number">02</span>
       <span class="tag-dash" aria-hidden="true"></span>
       <span class="tag-label">Career</span>
@@ -83,14 +83,14 @@
     <ol class="entries">
       <li class="entry">
         <div class="entry-year">
-          <span class="year-big" style="opacity: 0;">2025</span>
+          <span class="year-big" style="opacity: 0; transform: translateX(-30px);">2025</span>
           <span class="year-range">Present</span>
         </div>
         <div class="entry-line" aria-hidden="true">
           <span class="line-dot" style="transform: scale(0);"></span>
           <span class="line-bar" style="transform: scaleY(0);"></span>
         </div>
-        <div class="entry-content" style="opacity: 0;">
+        <div class="entry-content" style="opacity: 0; transform: translateY(30px);">
           <h3 class="role">COO</h3>
           <span class="company">Andreou Enterprises</span>
           <p class="detail">Joined as CMO of Bitmern Mining, promoted within a month to COO. Leading a team of 9, running marketing across the brand portfolio, and serving as second-in-command. Proof that you don't need to be a niche expert to excel — you need to work hard, stay customer-focused, and never assume you know it all.</p>
@@ -99,14 +99,14 @@
 
       <li class="entry">
         <div class="entry-year">
-          <span class="year-big" style="opacity: 0;">2024</span>
+          <span class="year-big" style="opacity: 0; transform: translateX(-30px);">2024</span>
           <span class="year-range">2025</span>
         </div>
         <div class="entry-line" aria-hidden="true">
           <span class="line-dot" style="transform: scale(0);"></span>
           <span class="line-bar" style="transform: scaleY(0);"></span>
         </div>
-        <div class="entry-content" style="opacity: 0;">
+        <div class="entry-content" style="opacity: 0; transform: translateY(30px);">
           <h3 class="role">Freelance Marketing Consultant</h3>
           <span class="company">Independent</span>
           <p class="detail">Relocated to South Africa and built bespoke growth systems across industries. Discovered that every business is fundamentally different — abandoned the cookie-cutter funnel approach and started treating each client like a custom suit.</p>
@@ -115,14 +115,14 @@
 
       <li class="entry">
         <div class="entry-year">
-          <span class="year-big" style="opacity: 0;">2022</span>
+          <span class="year-big" style="opacity: 0; transform: translateX(-30px);">2022</span>
           <span class="year-range">2024</span>
         </div>
         <div class="entry-line" aria-hidden="true">
           <span class="line-dot" style="transform: scale(0);"></span>
           <span class="line-bar" style="transform: scaleY(0);"></span>
         </div>
-        <div class="entry-content" style="opacity: 0;">
+        <div class="entry-content" style="opacity: 0; transform: translateY(30px);">
           <h3 class="role">Head of Marketing</h3>
           <span class="company">B2B Business Experts → Revenx</span>
           <p class="detail">Took a leap on a two-person startup and helped scale it from $30K/month to $300K/month in revenue. Named and designed the rebrand to Revenx as we pivoted to insurance marketing. Led the website rebuild, built a customer training platform, and grew the team to 6. Mastered data analysis, process documentation, and optimization — streamlining every system to its absolute limit.</p>
@@ -131,14 +131,14 @@
 
       <li class="entry">
         <div class="entry-year">
-          <span class="year-big" style="opacity: 0;">2021</span>
+          <span class="year-big" style="opacity: 0; transform: translateX(-30px);">2021</span>
           <span class="year-range">2022</span>
         </div>
         <div class="entry-line" aria-hidden="true">
           <span class="line-dot" style="transform: scale(0);"></span>
           <span class="line-bar" style="transform: scaleY(0);"></span>
         </div>
-        <div class="entry-content" style="opacity: 0;">
+        <div class="entry-content" style="opacity: 0; transform: translateY(30px);">
           <h3 class="role">VP Marketing & Operations</h3>
           <span class="company">ContentOne (Richter)</span>
           <p class="detail">Led promotion and production for a B2B SMB subsidiary. Built automation workflows across Dropbox, DocuSign, Monday.com, and Zapier — transforming scattered processes into streamlined production systems that dramatically increased efficiency.</p>
@@ -147,14 +147,14 @@
 
       <li class="entry">
         <div class="entry-year">
-          <span class="year-big" style="opacity: 0;">2019</span>
+          <span class="year-big" style="opacity: 0; transform: translateX(-30px);">2019</span>
           <span class="year-range">2021</span>
         </div>
         <div class="entry-line" aria-hidden="true">
           <span class="line-dot" style="transform: scale(0);"></span>
           <span class="line-bar" style="transform: scaleY(0);"></span>
         </div>
-        <div class="entry-content" style="opacity: 0;">
+        <div class="entry-content" style="opacity: 0; transform: translateY(30px);">
           <h3 class="role">VP of Marketing</h3>
           <span class="company">Richter</span>
           <p class="detail">Pitched myself for the role and got it. Richter had 40+ Fortune 500 clients on their roster. Launched thought leadership forums, podcasts, and more — some of the most challenging, rewarding work touching nearly every part of the marketing lifecycle.</p>
@@ -163,14 +163,14 @@
 
       <li class="entry">
         <div class="entry-year">
-          <span class="year-big" style="opacity: 0;">2019</span>
+          <span class="year-big" style="opacity: 0; transform: translateX(-30px);">2019</span>
           <span class="year-range">2019</span>
         </div>
         <div class="entry-line" aria-hidden="true">
           <span class="line-dot" style="transform: scale(0);"></span>
           <span class="line-bar" style="transform: scaleY(0);"></span>
         </div>
-        <div class="entry-content" style="opacity: 0;">
+        <div class="entry-content" style="opacity: 0; transform: translateY(30px);">
           <h3 class="role">VP</h3>
           <span class="company">The Customer Factory</span>
           <p class="detail">Promoted to lead the company's own marketing to chiropractors. Built lead magnets attracting hundreds of doctors weekly, cultivated referral relationships, and activated consulting partners. Drove the highest new business and growth in company history.</p>
@@ -179,14 +179,14 @@
 
       <li class="entry">
         <div class="entry-year">
-          <span class="year-big" style="opacity: 0;">2018</span>
+          <span class="year-big" style="opacity: 0; transform: translateX(-30px);">2018</span>
           <span class="year-range">2019</span>
         </div>
         <div class="entry-line" aria-hidden="true">
           <span class="line-dot" style="transform: scale(0);"></span>
           <span class="line-bar" style="transform: scaleY(0);"></span>
         </div>
-        <div class="entry-content" style="opacity: 0;">
+        <div class="entry-content" style="opacity: 0; transform: translateY(30px);">
           <h3 class="role">Creative Director</h3>
           <span class="company">The Customer Factory</span>
           <p class="detail">Chiropractic marketing for 100+ practices. Moved to Atlanta and learned that marketing isn't just "if this, then that" — there are far more variables in the equation for strategic customer acquisition.</p>
@@ -195,14 +195,14 @@
 
       <li class="entry">
         <div class="entry-year">
-          <span class="year-big" style="opacity: 0;">2016</span>
+          <span class="year-big" style="opacity: 0; transform: translateX(-30px);">2016</span>
           <span class="year-range">2018</span>
         </div>
         <div class="entry-line" aria-hidden="true">
           <span class="line-dot" style="transform: scale(0);"></span>
           <span class="line-bar" style="transform: scaleY(0);"></span>
         </div>
-        <div class="entry-content" style="opacity: 0;">
+        <div class="entry-content" style="opacity: 0; transform: translateY(30px);">
           <h3 class="role">Junior Advertiser</h3>
           <span class="company">Flood Media</span>
           <p class="detail">Where it all began. Learned the fundamentals of Google Ads and digital advertising, then worked remotely from England. Discovered the systematic "if this, then that" logic of advertising — a foundation that still guides my thinking today.</p>

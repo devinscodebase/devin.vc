@@ -18,12 +18,12 @@
     const cards = section.querySelectorAll('.card');
 
     const stop = inView(section, () => {
-      animate(tag, { opacity: [0, 1], y: [8, 0] }, {
+      animate(tag, { opacity: 1, y: 0 }, {
         duration: 0.35,
         easing: [0.25, 1, 0.5, 1],
       });
 
-      animate(cards, { opacity: [0, 1], y: [15, 0] }, {
+      animate(cards, { opacity: 1, y: 0 }, {
         duration: 0.4,
         delay: stagger(0.1, { start: 0.08 }),
         easing: [0.25, 1, 0.5, 1],
@@ -38,11 +38,11 @@
 
 <section class="proof" bind:this={section}>
   <div class="proof-inner">
-    <div class="section-tag" style="opacity: 0;"><span class="tag-number">06</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Kind Words</span></div>
+    <div class="section-tag" style="opacity: 0; transform: translateY(8px);"><span class="tag-number">07</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Kind Words</span></div>
 
     <div class="grid">
       {#each testimonials.slice(0, 4) as t, i}
-        <blockquote class="card testimonial" class:accent-amber={accents[i] === 'amber'} style="opacity: 0;">
+        <blockquote class="card testimonial" class:accent-amber={accents[i] === 'amber'} style="opacity: 0; transform: translateY(15px);">
           <div class="accent-bar" class:amber={accents[i] === 'amber'} aria-hidden="true"></div>
           <span class="quote-mark" class:amber={accents[i] === 'amber'} aria-hidden="true">&ldquo;</span>
           <p class="quote-text">{t.quote}</p>
@@ -56,7 +56,7 @@
         </blockquote>
       {/each}
 
-      <div class="card cta-card" style="opacity: 0;">
+      <div class="card cta-card" style="opacity: 0; transform: translateY(15px);">
         <div class="accent-bar gold" aria-hidden="true"></div>
         <div class="cta-content">
           <p class="cta-text">You could be here.</p>

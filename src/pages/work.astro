@@ -182,8 +182,9 @@ const roles = [
   if (!isVtNav) {
     if (header) {
       header.style.opacity = '0';
+      header.style.transform = 'translateY(12px)';
       inView(header, () => {
-        animate(header, { opacity: [0, 1], y: [12, 0] }, {
+        animate(header, { opacity: 1, y: 0 }, {
           duration: 0.4,
           easing: [0.25, 1, 0.5, 1],
         });
@@ -192,8 +193,9 @@ const roles = [
 
     cards.forEach(card => {
       card.style.opacity = '0';
+      card.style.transform = 'translateY(15px)';
       inView(card, () => {
-        animate(card, { opacity: [0, 1], y: [15, 0] }, {
+        animate(card, { opacity: 1, y: 0 }, {
           duration: 0.4,
           easing: [0.25, 1, 0.5, 1],
         });

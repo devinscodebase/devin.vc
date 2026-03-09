@@ -36,6 +36,14 @@ const pages: OgPageDef[] = [
     },
   },
   {
+    slug: 'tools',
+    params: {
+      type: 'page',
+      title: 'Free Tools',
+      subtitle: 'Marketing and growth tools for operators',
+    },
+  },
+  {
     slug: 'journal',
     params: {
       type: 'page',

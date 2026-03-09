@@ -114,6 +114,12 @@
 
   <div class="overlay-footer">
     <span class="footer-domain">devin.vc</span>
+    <a href="/tools" class="footer-tools" class:active={currentPath.startsWith('/tools')} onclick={closeMenu}>
+      Tools
+      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M1 7h12M8 2l5 5-5 5" />
+      </svg>
+    </a>
     <span class="footer-tagline">Build your future with me</span>
   </div>
 </div>
@@ -423,6 +429,36 @@
   .overlay.open .overlay-footer {
     opacity: 1;
     transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.45s;
+  }
+
+  .footer-tools {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .footer-tools:hover {
+    color: var(--color-accent-amber);
+  }
+
+  .footer-tools.active {
+    color: var(--color-accent-amber);
+  }
+
+  .footer-tools svg {
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .footer-tools:hover svg {
+    transform: translateX(3px);
   }
 
   .footer-domain,

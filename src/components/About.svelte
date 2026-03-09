@@ -15,18 +15,18 @@
     const border = section.querySelector('.about-border');
 
     const stop = inView(section, () => {
-      animate(footer, { opacity: [0, 1], y: [10, 0] }, {
+      animate(footer, { opacity: 1, y: 0 }, {
         duration: 0.5,
         easing: [0.25, 1, 0.5, 1],
       });
 
-      animate(quote, { opacity: [0, 1], y: [50, 0] }, {
+      animate(quote, { opacity: 1, y: 0 }, {
         duration: 1,
         delay: 0.1,
         easing: [0.25, 1, 0.5, 1],
       });
 
-      animate(border, { scaleY: [0, 1] }, {
+      animate(border, { scaleY: 1 }, {
         duration: 0.8,
         delay: 0.3,
         easing: [0.25, 1, 0.5, 1],
@@ -42,15 +42,15 @@
 <section class="about" bind:this={section}>
   <div class="about-inner">
     <div class="about-quote-wrap">
-      <div class="about-border" aria-hidden="true"></div>
-      <div class="about-quote" style="opacity: 0;">
+      <div class="about-border" style="transform: scaleY(0);" aria-hidden="true"></div>
+      <div class="about-quote" style="opacity: 0; transform: translateY(50px);">
         <p class="about-copy">
           <span class="accent">A decade of building what matters.</span> <span class="discipline teal">Marketing</span> that moves people. <span class="discipline amber">Operations</span> that scale. <span class="discipline rust">Design</span> that earns trust. <span class="discipline gold">GTM</span> strategies that actually go to market. I work across disciplines because <span class="accent">the best results live at the intersections.</span>
         </p>
       </div>
     </div>
 
-    <div class="about-footer" style="opacity: 0;">
+    <div class="about-footer" style="opacity: 0; transform: translateY(10px);">
       <div class="section-tag">
         <span class="tag-number">01</span>
         <span class="tag-dash" aria-hidden="true"></span>

@@ -18,37 +18,37 @@
 
     const stop = inView(section, () => {
       // Section tag
-      animate(tag, { opacity: [0, 1], y: [8, 0] }, {
+      animate(tag, { opacity: 1, y: 0 }, {
         duration: 0.35,
         easing: [0.25, 1, 0.5, 1],
       });
 
       // Heading scales up and fades in
       animate(heading, {
-        opacity: [0, 1],
-        y: [12, 0],
-        scale: [0.97, 1],
+        opacity: 1,
+        y: 0,
+        scale: 1,
       }, {
         duration: 0.45,
         easing: [0.25, 1, 0.5, 1],
       });
 
       // Email button
-      animate(email, { opacity: [0, 1], y: [12, 0] }, {
+      animate(email, { opacity: 1, y: 0 }, {
         duration: 0.4,
         delay: 0.15,
         easing: [0.25, 1, 0.5, 1],
       });
 
       // Body text
-      animate(body, { opacity: [0, 1], y: [10, 0] }, {
+      animate(body, { opacity: 1, y: 0 }, {
         duration: 0.4,
         delay: 0.25,
         easing: [0.25, 1, 0.5, 1],
       });
 
       // Social links
-      animate(links, { opacity: [0, 1] }, {
+      animate(links, { opacity: 1 }, {
         duration: 0.35,
         delay: 0.32,
         easing: [0.25, 1, 0.5, 1],
@@ -71,12 +71,12 @@
 
 <section class="contact" bind:this={section}>
   <div class="contact-inner">
-    <div class="section-tag" style="opacity: 0;"><span class="tag-number">08</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Contact</span></div>
-    <h2 class="cta-heading" style="opacity: 0;">Let's build<br />something together.</h2>
+    <div class="section-tag" style="opacity: 0; transform: translateY(8px);"><span class="tag-number">09</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Contact</span></div>
+    <h2 class="cta-heading" style="opacity: 0; transform: translateY(12px) scale(0.97);">Let's build<br />something together.</h2>
 
-    <a href="/contact" class="email" style="opacity: 0;">Get in touch</a>
+    <a href="/contact" class="email" style="opacity: 0; transform: translateY(12px);">Get in touch</a>
 
-    <p class="cta-body" style="opacity: 0;">I'm always open to conversations about GTM strategy, design, operations, or interesting problems worth solving.</p>
+    <p class="cta-body" style="opacity: 0; transform: translateY(10px);">I'm always open to conversations about GTM strategy, design, operations, or interesting problems worth solving.</p>
 
     <div class="links" style="opacity: 0;">
       <a href="https://www.linkedin.com/in/devalexander/" target="_blank" rel="noopener" class="social-link">LinkedIn</a>

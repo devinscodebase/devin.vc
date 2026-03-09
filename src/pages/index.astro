@@ -7,6 +7,7 @@ import Timeline from '../components/Timeline.svelte';
 import Now from '../components/Now.svelte';
 import Toolkit from '../components/Toolkit.svelte';
 import Projects from '../components/Projects.svelte';
+import ToolsPreview from '../components/ToolsPreview.svelte';
 import Proof from '../components/Proof.svelte';
 import Journal from '../components/Journal.svelte';
 import Contact from '../components/Contact.svelte';
@@ -57,6 +58,7 @@ const tools = await sanityClient.fetch(`
     <Now client:visible={{rootMargin: "200px"}} />
     <Toolkit client:visible={{rootMargin: "200px"}} tools={tools} />
     <Projects client:visible={{rootMargin: "200px"}} projects={featuredProjects} />
+    <ToolsPreview client:visible={{rootMargin: "200px"}} />
     <Proof client:visible={{rootMargin: "200px"}} testimonials={testimonials} />
     <Journal client:visible={{rootMargin: "200px"}} posts={latestPosts} />
     <Contact client:visible={{rootMargin: "200px"}} />

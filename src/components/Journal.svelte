@@ -57,19 +57,19 @@
     const stackEls = section.querySelectorAll('.post-stack .post');
 
     const stop = inView(section, () => {
-      animate(tag, { opacity: [0, 1], y: [8, 0] }, {
+      animate(tag, { opacity: 1, y: 0 }, {
         duration: 0.35,
         easing: [0.25, 1, 0.5, 1],
       });
 
-      animate(header, { opacity: [0, 1], y: [12, 0] }, {
+      animate(header, { opacity: 1, y: 0 }, {
         duration: 0.4,
         delay: 0.05,
         easing: [0.25, 1, 0.5, 1],
       });
 
       if (featured) {
-        animate(featured, { opacity: [0, 1], y: [15, 0] }, {
+        animate(featured, { opacity: 1, y: 0 }, {
           duration: 0.4,
           delay: 0.1,
           easing: [0.25, 1, 0.5, 1],
@@ -77,7 +77,7 @@
       }
 
       if (accentBar) {
-        animate(accentBar, { scaleX: [0, 1] }, {
+        animate(accentBar, { scaleX: 1 }, {
           duration: 0.35,
           delay: 0.35,
           easing: [0.25, 1, 0.5, 1],
@@ -85,7 +85,7 @@
       }
 
       if (stackEls.length) {
-        animate(stackEls, { opacity: [0, 1], y: [15, 0] }, {
+        animate(stackEls, { opacity: 1, y: 0 }, {
           duration: 0.4,
           delay: stagger(0.06, { start: 0.15 }),
           easing: [0.25, 1, 0.5, 1],
@@ -101,8 +101,8 @@
 
 <section class="journal" bind:this={section}>
   <div class="journal-inner">
-    <div class="section-tag" style="opacity: 0;"><span class="tag-number">07</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Journal</span></div>
-    <div class="journal-header" style="opacity: 0;">
+    <div class="section-tag" style="opacity: 0; transform: translateY(8px);"><span class="tag-number">08</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Journal</span></div>
+    <div class="journal-header" style="opacity: 0; transform: translateY(12px);">
       <h2 class="section-heading">Latest Thinking</h2>
       <a href="/journal" class="view-all">
         View all
@@ -115,7 +115,7 @@
     {#if posts.length > 0}
       <div class="posts">
         {#if featuredPost}
-          <a href={`/journal/${featuredPost.slug}`} class="post featured" style="opacity: 0;" onmouseenter={postEnter} onmouseleave={postLeave}>
+          <a href={`/journal/${featuredPost.slug}`} class="post featured" style="opacity: 0; transform: translateY(15px);" onmouseenter={postEnter} onmouseleave={postLeave}>
             <div class="post-accent" aria-hidden="true" style="transform: scaleX(0); transform-origin: left;"></div>
             <span class="post-tag">{capitalizeTag(featuredPost.tag)}</span>
             <h3 class="post-title">{featuredPost.title}</h3>
@@ -127,7 +127,7 @@
         {#if stackPosts.length > 0}
           <div class="post-stack">
             {#each stackPosts as post}
-              <a href={`/journal/${post.slug}`} class="post" style="opacity: 0;" onmouseenter={postEnter} onmouseleave={postLeave}>
+              <a href={`/journal/${post.slug}`} class="post" style="opacity: 0; transform: translateY(15px);" onmouseenter={postEnter} onmouseleave={postLeave}>
                 <span class="post-tag">{capitalizeTag(post.tag)}</span>
                 <h3 class="post-title">{post.title}</h3>
                 <p class="post-excerpt">{post.description}</p>

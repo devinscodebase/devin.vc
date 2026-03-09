@@ -41,20 +41,20 @@
 
     const stop = inView(section, () => {
       // Section tag
-      animate(tag, { opacity: [0, 1], y: [8, 0] }, {
+      animate(tag, { opacity: 1, y: 0 }, {
         duration: 0.35,
         easing: [0.25, 1, 0.5, 1],
       });
 
       // Heading
-      animate(heading, { opacity: [0, 1], y: [12, 0] }, {
+      animate(heading, { opacity: 1, y: 0 }, {
         duration: 0.4,
         delay: 0.05,
         easing: [0.25, 1, 0.5, 1],
       });
 
       // Cards stagger in
-      animate(cards, { opacity: [0, 1], y: [15, 0] }, {
+      animate(cards, { opacity: 1, y: 0 }, {
         duration: 0.4,
         delay: stagger(0.06, { start: 0.1 }),
         easing: [0.25, 1, 0.5, 1],
@@ -69,11 +69,11 @@
 
 <section class="now" bind:this={section}>
   <div class="now-inner">
-    <div class="section-tag" style="opacity: 0;"><span class="tag-number">03</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Now</span></div>
-    <h2 class="section-heading" style="opacity: 0;">What I'm Working On</h2>
+    <div class="section-tag" style="opacity: 0; transform: translateY(8px);"><span class="tag-number">03</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Now</span></div>
+    <h2 class="section-heading" style="opacity: 0; transform: translateY(12px);">What I'm Working On</h2>
 
     <div class="projects">
-      <a href="/contact" class="project" style="opacity: 0;" onmouseenter={cardEnter} onmouseleave={cardLeave}>
+      <a href="/contact" class="project" style="opacity: 0; transform: translateY(15px);" onmouseenter={cardEnter} onmouseleave={cardLeave}>
         <div class="project-top">
           <span class="project-number">01</span>
           <div class="project-header">
@@ -85,7 +85,7 @@
         <p class="project-desc">GTM strategy, marketing systems, operations, and growth — for companies that need senior-level thinking without a full-time hire. Let's talk.</p>
       </a>
 
-      <article class="project" style="opacity: 0;" onmouseenter={cardEnter} onmouseleave={cardLeave}>
+      <article class="project" style="opacity: 0; transform: translateY(15px);" onmouseenter={cardEnter} onmouseleave={cardLeave}>
         <div class="project-top">
           <span class="project-number">02</span>
           <div class="project-header">
@@ -97,7 +97,7 @@
         <p class="project-desc">A work management platform for small teams. Consolidates chats, tasks, CRM, marketing, G-Suite, and more into one place — delivering everything your team needs at a fraction of the cost of running them all separately.</p>
       </article>
 
-      <article class="project" style="opacity: 0;" onmouseenter={cardEnter} onmouseleave={cardLeave}>
+      <article class="project" style="opacity: 0; transform: translateY(15px);" onmouseenter={cardEnter} onmouseleave={cardLeave}>
         <div class="project-top">
           <span class="project-number">03</span>
           <div class="project-header">

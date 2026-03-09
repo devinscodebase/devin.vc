@@ -15,6 +15,7 @@ const currentPath = Astro.url.pathname;
       <nav class="footer-nav" aria-label="Footer navigation">
         <a href="/work" class:list={['footer-link', { active: currentPath.startsWith('/work') }]}>Work</a>
         <a href="/projects" class:list={['footer-link', { active: currentPath.startsWith('/projects') }]}>Projects</a>
+        <a href="/tools" class:list={['footer-link', { active: currentPath.startsWith('/tools') }]}>Tools</a>
         <a href="/about" class:list={['footer-link', { active: currentPath.startsWith('/about') }]}>About</a>
         <a href="/journal" class:list={['footer-link', { active: currentPath.startsWith('/journal') }]}>Journal</a>
         <a href="/contact" class:list={['footer-link', { active: currentPath.startsWith('/contact') }]}>Contact</a>
