@@ -28,6 +28,14 @@ const pages: OgPageDef[] = [
     },
   },
   {
+    slug: 'marketing-scorecard',
+    params: {
+      type: 'page',
+      title: 'Marketing Efficiency Scorecard',
+      subtitle: 'Find out what\'s actually holding you back',
+    },
+  },
+  {
     slug: 'journal',
     params: {
       type: 'page',

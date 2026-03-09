@@ -69,6 +69,35 @@ export const retentionLeads = sqliteTable('retention_leads', {
   createdAt: text('created_at').notNull(),
 });
 
+export const scorecardLeads = sqliteTable('scorecard_leads', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  // Contact
+  name: text('name').notNull(),
+  email: text('email').notNull(),
+  company: text('company').notNull(),
+  // Context
+  stage: text('stage').notNull(),
+  model: text('model').notNull(),
+  // Inputs
+  arr: integer('arr').notNull(),
+  marketingSpend: integer('marketing_spend').notNull(),
+  newCustomersMonth: integer('new_customers_month').notNull(),
+  acv: integer('acv').notNull(),
+  monthlyChurnRate: text('monthly_churn_rate').notNull(),
+  expansionRate: text('expansion_rate').notNull(),
+  salesCycleLength: integer('sales_cycle_length'),
+  pipelineValue: integer('pipeline_value'),
+  monthlyLeadVolume: integer('monthly_lead_volume'),
+  leadToCustomerRate: text('lead_to_customer_rate'),
+  // Key results
+  constraintId: text('constraint_id').notNull(),
+  constraintSeverity: text('constraint_severity').notNull(),
+  scoredMetricsCount: integer('scored_metrics_count').notNull(),
+  // Meta
+  resendContactId: text('resend_contact_id'),
+  createdAt: text('created_at').notNull(),
+});
+
 export const notifications = sqliteTable('notifications', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   type: text('type', { enum: ['contact', 'booking'] }).notNull(),

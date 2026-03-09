@@ -1,0 +1,23 @@
+CREATE TABLE `scorecard_leads` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`name` text NOT NULL,
+	`email` text NOT NULL,
+	`company` text NOT NULL,
+	`stage` text NOT NULL,
+	`model` text NOT NULL,
+	`arr` integer NOT NULL,
+	`marketing_spend` integer NOT NULL,
+	`new_customers_month` integer NOT NULL,
+	`acv` integer NOT NULL,
+	`monthly_churn_rate` text NOT NULL,
+	`expansion_rate` text NOT NULL,
+	`sales_cycle_length` integer,
+	`pipeline_value` integer,
+	`monthly_lead_volume` integer,
+	`lead_to_customer_rate` text,
+	`constraint_id` text NOT NULL,
+	`constraint_severity` text NOT NULL,
+	`scored_metrics_count` integer NOT NULL,
+	`resend_contact_id` text,
+	`created_at` text NOT NULL
+);
