@@ -81,7 +81,7 @@
     <div class="links" style="opacity: 0;">
       <a href="https://www.linkedin.com/in/devalexander/" target="_blank" rel="noopener" class="social-link">LinkedIn</a>
       <span class="link-dot" aria-hidden="true">&middot;</span>
-      <a href="https://x.com/devinmarkets" target="_blank" rel="noopener" class="social-link">X / Twitter</a>
+      <a href="https://x.com/devinhelps" target="_blank" rel="noopener" class="social-link">X / Twitter</a>
     </div>
 
   </div>

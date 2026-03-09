@@ -67,7 +67,7 @@ export function Layout({ preview, children, unsubscribeUrl, minimal }: LayoutPro
             {!minimal && (
               <>
                 <Text style={socialRow}>
-                  <Link href="https://x.com/devinmarkets" style={socialLink}>
+                  <Link href="https://x.com/devinhelps" style={socialLink}>
                     X / Twitter
                   </Link>
                   <span style={dot}>&nbsp;&middot;&nbsp;</span>
