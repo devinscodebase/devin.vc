@@ -46,7 +46,10 @@
 <svelte:window onkeydown={(e) => { if (e.key === 'Escape' && open) closeMenu(); }} />
 
 <header class="navbar" class:open class:scrolled>
-  <a href="/" class="logo">Devin</a>
+  <a href="/" class="logo">
+    <img src="/images/avatar.png" alt="" class="logo-avatar" width="28" height="28" />
+    Devin
+  </a>
 
   <div class="nav-actions">
     <button
@@ -174,27 +177,38 @@
     text-decoration: none;
     letter-spacing: var(--tracking-tight);
     position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
     transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  .logo-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+    opacity: 0.85;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .logo:hover .logo-avatar {
+    opacity: 1;
+    border-color: color-mix(in oklab, var(--color-accent) 25%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 8%, transparent);
+  }
+
   .logo::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: var(--color-accent);
-    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    content: none;
   }
 
   .logo:hover {
     color: var(--color-accent);
   }
 
-  .logo:hover::after {
-    width: 100%;
-  }
 
   /* ---- theme toggle ---- */
   .theme-toggle {
