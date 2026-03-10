@@ -6,6 +6,12 @@
   let scrolled = $state(false);
   let currentPath = $state('/');
 
+  const tools = [
+    { name: 'GTM Planner', href: '/tools/gtm-planner', accent: 'teal' },
+    { name: 'Retention Calc', href: '/tools/retention-calculator', accent: 'amber' },
+    { name: 'Scorecard', href: '/tools/marketing-scorecard', accent: 'rust' },
+  ];
+
   onMount(() => {
     theme = document.documentElement.getAttribute('data-theme') || 'dark';
     currentPath = window.location.pathname;
@@ -92,37 +98,45 @@
 <div class="overlay" class:open>
   <div class="grain-overlay" aria-hidden="true"></div>
 
-  <nav class="overlay-nav">
-    <a href="/work" class="nav-link" class:active={currentPath.startsWith('/work')} onclick={closeMenu}>
-      <span class="nav-number">01</span>
-      <span class="nav-label">Work</span>
-    </a>
-    <a href="/projects" class="nav-link" class:active={currentPath.startsWith('/projects')} onclick={closeMenu}>
-      <span class="nav-number">02</span>
-      <span class="nav-label">Projects</span>
-    </a>
-    <a href="/about" class="nav-link" class:active={currentPath.startsWith('/about')} onclick={closeMenu}>
-      <span class="nav-number">03</span>
-      <span class="nav-label">About</span>
-    </a>
-    <a href="/journal" class="nav-link" class:active={currentPath.startsWith('/journal')} onclick={closeMenu}>
-      <span class="nav-number">04</span>
-      <span class="nav-label">Journal</span>
-    </a>
-    <a href="/contact" class="nav-link" class:active={currentPath.startsWith('/contact')} onclick={closeMenu}>
-      <span class="nav-number">05</span>
-      <span class="nav-label">Contact</span>
-    </a>
-  </nav>
+  <div class="overlay-content">
+    <nav class="overlay-nav">
+      <a href="/work" class="nav-link accent-teal" class:active={currentPath.startsWith('/work')} onclick={closeMenu}>
+        <span class="nav-label">Work</span>
+      </a>
+      <a href="/projects" class="nav-link accent-amber" class:active={currentPath.startsWith('/projects')} onclick={closeMenu}>
+        <span class="nav-label">Projects</span>
+      </a>
+      <a href="/about" class="nav-link accent-rust" class:active={currentPath.startsWith('/about')} onclick={closeMenu}>
+        <span class="nav-label">About</span>
+      </a>
+      <a href="/journal" class="nav-link accent-amber" class:active={currentPath.startsWith('/journal')} onclick={closeMenu}>
+        <span class="nav-label">Journal</span>
+      </a>
+      <a href="/contact" class="nav-link accent-teal" class:active={currentPath.startsWith('/contact')} onclick={closeMenu}>
+        <span class="nav-label">Contact</span>
+      </a>
+    </nav>
+
+    <div class="tools-section">
+      <div class="tools-divider" aria-hidden="true"></div>
+      <span class="tools-label">Free Tools</span>
+      <div class="tools-row">
+        {#each tools as tool}
+          <a href={tool.href} class="tool-link accent-{tool.accent}" class:active={currentPath === tool.href} onclick={closeMenu}>
+            <span class="tool-dot" aria-hidden="true"></span>
+            {tool.name}
+            <svg class="tool-arrow" width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 7h12M8 2l5 5-5 5" />
+            </svg>
+          </a>
+        {/each}
+      </div>
+      <a href="/tools" class="tools-view-all" class:active={currentPath === '/tools'} onclick={closeMenu}>View all tools</a>
+    </div>
+  </div>
 
   <div class="overlay-footer">
     <span class="footer-domain">devin.vc</span>
-    <a href="/tools" class="footer-tools" class:active={currentPath.startsWith('/tools')} onclick={closeMenu}>
-      Tools
-      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M1 7h12M8 2l5 5-5 5" />
-      </svg>
-    </a>
     <span class="footer-tagline">Build your future with me</span>
   </div>
 </div>
@@ -208,7 +222,6 @@
   .logo:hover {
     color: var(--color-accent);
   }
-
 
   /* ---- theme toggle ---- */
   .theme-toggle {
@@ -330,19 +343,26 @@
     pointer-events: auto;
   }
 
+  .overlay-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   /* ---- nav links ---- */
   .overlay-nav {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: clamp(1.5rem, 4vh, 2.5rem);
+    gap: clamp(1.25rem, 3.5vh, 2rem);
     position: relative;
   }
 
   .nav-link {
+    --link-accent: var(--color-accent-teal);
     display: flex;
-    align-items: baseline;
-    gap: 1rem;
+    align-items: center;
+    gap: 0.75rem;
     text-decoration: none;
     position: relative;
     opacity: 0;
@@ -350,6 +370,25 @@
     transition:
       opacity 0.2s,
       transform 0.2s;
+  }
+
+  .nav-link.accent-teal { --link-accent: var(--color-accent-teal); }
+  .nav-link.accent-amber { --link-accent: var(--color-accent-amber); }
+  .nav-link.accent-rust { --link-accent: var(--color-accent-rust); }
+
+  /* Accent dash — hidden by default, slides in on hover/active */
+  .nav-link::before {
+    content: '';
+    width: 0;
+    height: 1.5px;
+    background: var(--link-accent);
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    flex-shrink: 0;
+  }
+
+  .nav-link:hover::before,
+  .nav-link.active::before {
+    width: 28px;
   }
 
   .overlay.open .nav-link {
@@ -366,22 +405,6 @@
   .overlay.open .nav-link:nth-child(4) { transition-delay: 0.41s, 0.41s, 0s; }
   .overlay.open .nav-link:nth-child(5) { transition-delay: 0.48s, 0.48s, 0s; }
 
-  .nav-number {
-    font-family: 'DM Sans', sans-serif;
-    font-size: var(--text-xs);
-    letter-spacing: var(--tracking-wide);
-    color: var(--color-accent-teal);
-    opacity: 0.8;
-    transition: opacity 0.3s;
-    position: relative;
-    top: -0.4em;
-  }
-
-  .nav-link:nth-child(2) .nav-number { color: var(--color-accent-amber); }
-  .nav-link:nth-child(3) .nav-number { color: var(--color-accent-rust); }
-  .nav-link:nth-child(4) .nav-number { color: var(--color-accent-amber); }
-  .nav-link:nth-child(5) .nav-number { color: var(--color-accent-rust); }
-
   .nav-label {
     font-family: 'Instrument Serif', serif;
     font-size: var(--text-3xl);
@@ -391,39 +414,129 @@
     transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: var(--color-accent);
-    transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
   .nav-link:hover .nav-label {
-    color: var(--color-accent);
-  }
-
-  .nav-link:hover .nav-number {
-    opacity: 1;
-  }
-
-  .nav-link:hover::after {
-    width: 100%;
+    color: var(--link-accent);
   }
 
   .nav-link.active .nav-label {
-    color: var(--color-accent);
+    color: var(--link-accent);
   }
 
-  .nav-link.active .nav-number {
+  /* ---- tools section ---- */
+  .tools-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: clamp(2rem, 5vh, 3.5rem);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .overlay.open .tools-section {
+    opacity: 1;
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.5s;
+  }
+
+  .tools-divider {
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent,
+      color-mix(in oklab, var(--color-text-muted) 30%, transparent),
+      transparent
+    );
+    margin-bottom: 1.25rem;
+  }
+
+  .tools-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .tools-row {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.25rem, 3vw, 2rem);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .tool-link {
+    --tool-accent: var(--color-accent-teal);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .tool-link.accent-teal { --tool-accent: var(--color-accent-teal); }
+  .tool-link.accent-amber { --tool-accent: var(--color-accent-amber); }
+  .tool-link.accent-rust { --tool-accent: var(--color-accent-rust); }
+
+  .tool-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--tool-accent);
+    opacity: 0.6;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .tool-arrow {
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .tool-link:hover {
+    color: var(--tool-accent);
+  }
+
+  .tool-link:hover .tool-dot {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+
+  .tool-link:hover .tool-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .tool-link.active {
+    color: var(--tool-accent);
+  }
+
+  .tool-link.active .tool-dot {
     opacity: 1;
   }
 
-  .nav-link.active::after {
-    width: 100%;
+  .tools-view-all {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--color-text-muted) 50%, transparent);
+    text-decoration: none;
+    margin-top: 0.85rem;
+    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .tools-view-all:hover,
+  .tools-view-all.active {
+    color: var(--color-accent);
   }
 
   /* ---- footer ---- */
@@ -442,37 +555,7 @@
 
   .overlay.open .overlay-footer {
     opacity: 1;
-    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.45s;
-  }
-
-  .footer-tools {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: var(--text-xs);
-    font-weight: var(--weight-medium);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-    text-decoration: none;
-    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .footer-tools:hover {
-    color: var(--color-accent-amber);
-  }
-
-  .footer-tools.active {
-    color: var(--color-accent-amber);
-  }
-
-  .footer-tools svg {
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .footer-tools:hover svg {
-    transform: translateX(3px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.55s;
   }
 
   .footer-domain,
@@ -490,6 +573,14 @@
     text-transform: none;
     letter-spacing: 0;
     font-size: var(--text-base);
+  }
+
+  /* ---- mobile ---- */
+  @media (max-width: 640px) {
+    .tools-row {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
   }
 
   /* ==============================
