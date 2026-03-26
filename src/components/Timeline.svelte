@@ -83,8 +83,24 @@
     <ol class="entries">
       <li class="entry">
         <div class="entry-year">
-          <span class="year-big" style="opacity: 0; transform: translateX(-30px);">2025</span>
+          <span class="year-big" style="opacity: 0; transform: translateX(-30px);">2026</span>
           <span class="year-range">Present</span>
+        </div>
+        <div class="entry-line" aria-hidden="true">
+          <span class="line-dot" style="transform: scale(0);"></span>
+          <span class="line-bar" style="transform: scaleY(0);"></span>
+        </div>
+        <div class="entry-content" style="opacity: 0; transform: translateY(30px);">
+          <h3 class="role">CMO</h3>
+          <span class="company">Jensen Business Advisory</span>
+          <p class="detail">Leading marketing and growth for David Lee Jensen's advisory firm and The 728 Network — an exclusive mastermind for entrepreneurs scaling past $1M. Building the go-to-market engine across consulting, community, and course products that help growth-stage founders align people, process, and profits.</p>
+        </div>
+      </li>
+
+      <li class="entry">
+        <div class="entry-year">
+          <span class="year-big" style="opacity: 0; transform: translateX(-30px);">2025</span>
+          <span class="year-range">2026</span>
         </div>
         <div class="entry-line" aria-hidden="true">
           <span class="line-dot" style="transform: scale(0);"></span>
@@ -93,7 +109,7 @@
         <div class="entry-content" style="opacity: 0; transform: translateY(30px);">
           <h3 class="role">COO</h3>
           <span class="company">Andreou Enterprises</span>
-          <p class="detail">Joined as CMO of Bitmern Mining, promoted within a month to COO. Leading a team of 9, running marketing across the brand portfolio, and serving as second-in-command. Proof that you don't need to be a niche expert to excel — you need to work hard, stay customer-focused, and never assume you know it all.</p>
+          <p class="detail">Joined as CMO of Bitmern Mining, promoted within a month to COO. Led a team of 9, ran marketing across the brand portfolio, and served as second-in-command. Proof that you don't need to be a niche expert to excel — you need to work hard, stay customer-focused, and never assume you know it all.</p>
         </div>
       </li>
 
