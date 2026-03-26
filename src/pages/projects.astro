@@ -54,7 +54,7 @@ const projects = await sanityClient.fetch(`
 
                 <div class="project-footer">
                   <div class="project-tags">
-                    {project.tags.map((tag: string) => (
+                    {(project.tags || []).map((tag: string) => (
                       <span class="tag">{tag}</span>
                     ))}
                   </div>
