@@ -92,7 +92,7 @@
               </div>
             {/if}
             <div class="row-tags">
-              {#each project.tags as tag (tag)}
+              {#each (project.tags ?? []).slice(0, 2) as tag (tag)}
                 <span class="row-tag">{tag}</span>
               {/each}
             </div>
@@ -219,6 +219,8 @@
     align-items: baseline;
     gap: clamp(0.5rem, 1.5vw, 1rem);
     min-width: 0;
+    flex-wrap: wrap;
+    row-gap: 0.25rem;
   }
 
   .row-name {

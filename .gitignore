@@ -30,3 +30,6 @@ docs/
 !README.md
 
 .wrangler
+
+# Claude Code local settings
+.claude/

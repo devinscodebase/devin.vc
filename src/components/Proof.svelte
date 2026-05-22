@@ -171,10 +171,10 @@
   }
 
   .quote-text {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    font-size: var(--text-base);
-    line-height: 1.6;
+    font-family: 'DM Sans', sans-serif;
+    font-style: normal;
+    font-size: var(--text-sm);
+    line-height: 1.65;
     color: var(--color-text);
     margin: 0 0 auto;
     padding-bottom: clamp(1.25rem, 2.5vw, 1.75rem);

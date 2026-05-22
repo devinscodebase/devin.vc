@@ -1,0 +1,2742 @@
+---
+export const prerender = false;
+
+import Layout from '../../layouts/Layout.astro';
+import { sanityClient, urlFor } from '../../lib/sanity';
+
+const PROPOSAL_PASSWORD = 'ssiproposal';
+const AUTH_COOKIE = 'proposal-auth-ss';
+
+let unlocked = false;
+
+if (Astro.request.method === 'POST') {
+  let submitted: FormDataEntryValue | null = null;
+  try {
+    const formData = await Astro.request.formData();
+    submitted = formData.get('password');
+  } catch {
+    return new Response(JSON.stringify({ ok: false, error: 'Invalid request.' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  // Trim and normalize case — protects against autocomplete trailing spaces and mobile autocapitalize.
+  const normalized = typeof submitted === 'string' ? submitted.trim().toLowerCase() : '';
+
+  if (normalized === PROPOSAL_PASSWORD) {
+    Astro.cookies.set(AUTH_COOKIE, 'unlocked', {
+      path: '/proposals/survival-strategies',
+      sameSite: 'lax',
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 30,
+    });
+    return new Response(JSON.stringify({ ok: true }), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  return new Response(JSON.stringify({ ok: false, error: 'Incorrect password.' }), {
+    status: 401,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
+const cookie = Astro.cookies.get(AUTH_COOKIE);
+if (cookie?.value === 'unlocked') {
+  unlocked = true;
+}
+
+const projects = unlocked
+  ? await sanityClient.fetch(`
+      *[_type == "project"] | order(order asc) {
+        name, url, category, tags, accent, screenshot, order
+      }
+    `)
+  : [];
+
+const testimonials = unlocked
+  ? await sanityClient.fetch(`
+      *[_type == "testimonial"] | order(order asc) {
+        quote, name, role, company
+      }
+    `)
+  : [];
+
+// Double the list for seamless marquee looping
+const marqueeProjects = [...projects, ...projects];
+
+// Split testimonials into two columns and double each for seamless vertical loop
+const tCol1 = testimonials.filter((_: any, i: number) => i % 2 === 0);
+const tCol2 = testimonials.filter((_: any, i: number) => i % 2 === 1).reverse();
+const tCol1Track = [...tCol1, ...tCol1];
+const tCol2Track = [...tCol2, ...tCol2];
+
+const tiers = [
+  {
+    accent: 'teal',
+    label: 'Tier 01',
+    name: 'Rebuild',
+    tagline: 'A rebuild on Webflow. Same site, much better design.',
+    price: 7500,
+    timeline: '5–6 weeks',
+    payment: '50% on signing · 50% at launch',
+    cmsCount: '2 CMSs',
+    builds_on: null,
+    groups: [
+      {
+        label: 'Pages & design',
+        items: [
+          'Full rebuild of ~20 core marketing pages: Home, About (+ Founder, Philosophy, Advisory Board, FAQs, Awards), Services + four service pages, Programs, Who We Serve (PT, OT/SLP, Audiology, SMB), Results, Communities, Resources, Contact.',
+          'A custom design system built natively in Webflow: typography, color, spacing, motion.',
+          'Photography direction and asset sourcing to replace stock-feeling imagery.',
+        ],
+      },
+      {
+        label: 'Content & products',
+        items: [
+          'Blog CMS with 188 existing posts migrated via CSV and a redesigned article template.',
+          'Products CMS with 20 items, each linked to a Stripe Payment Link. No cart, no WooCommerce.',
+          'Five to eight testimonials placed by hand across the site.',
+        ],
+      },
+      {
+        label: 'Forms, quality & handoff',
+        items: [
+          'A single intake form rebuilt in Webflow, wired to your existing CRM.',
+          'Mobile-first, WCAG AA accessible, Core Web Vitals green.',
+          'A 60-minute Webflow training session and a written handoff doc.',
+        ],
+      },
+    ],
+    phases: [
+      { week: 'W1', name: 'Discovery' },
+      { week: 'W2–3', name: 'Design' },
+      { week: 'W3–4', name: 'Build' },
+      { week: 'W5', name: 'QA' },
+      { week: 'W6', name: 'Launch' },
+    ],
+    outcome: 'A site that finally looks like your business built it.',
+  },
+  {
+    accent: 'amber',
+    label: 'Tier 02',
+    name: 'Engine',
+    tagline: 'Same rebuild, plus the site does real work for you between consultations.',
+    price: 11500,
+    timeline: '7–9 weeks',
+    payment: '40% on signing · 30% at design approval · 30% at launch',
+    cmsCount: '5 CMSs',
+    builds_on: 'Rebuild',
+    groups: [
+      {
+        label: 'New content engines',
+        items: [
+          'Case Studies CMS: a proper editorial template with narrative, before-and-after data, pull quotes, practice-type taxonomy, and a filterable index.',
+          'Owner Tools CMS: two interactive self-assessments at launch (a Practice Profitability Snapshot and a Hiring Scorecard), each ending in a lead capture. The CMS structure lets your team publish more later.',
+          'Testimonials CMS: all 47 existing reviews structured for reuse across the site with practice-type filtering.',
+        ],
+      },
+      {
+        label: 'Lead capture & qualification',
+        items: [
+          'Multi-step intake forms for Practice Analysis, the F.A.T., and Contact. Calibrated questions that pre-qualify owners before a consultant ever picks up the phone.',
+          'The Programs page redesigned as a visible curriculum: Practice Analysis through the seven specialized programs to Power of Choice.',
+          'Email capture into your existing platform (Mailchimp, HubSpot, or ConvertKit).',
+        ],
+      },
+      {
+        label: 'Measurement',
+        items: [
+          'Analytics and event tracking on every form, scroll, and CTA, so you can see what is and isn’t working after launch.',
+        ],
+      },
+    ],
+    phases: [
+      { week: 'W1–2', name: 'Discovery' },
+      { week: 'W2–4', name: 'Design' },
+      { week: 'W4–7', name: 'Build' },
+      { week: 'W6–8', name: 'CMS + integrations' },
+      { week: 'W8–9', name: 'QA + launch' },
+    ],
+    outcome: 'Better leads, fewer junk calls, content your team can publish without me.',
+  },
+  {
+    accent: 'rust',
+    label: 'Tier 03',
+    name: 'Authority',
+    tagline: 'Everything in Engine, plus the parts that make it the best site in your category.',
+    price: 15000,
+    timeline: '9–12 weeks',
+    payment: '30% on signing · 35% at design approval · 35% at launch',
+    cmsCount: '7 CMSs',
+    builds_on: 'Engine',
+    groups: [
+      {
+        label: 'Lead magnet machinery',
+        items: [
+          'Free Downloads / Ebooks CMS: gated lead magnets (your existing 8, with room to grow), each with a hero, preview pages, and a capture form.',
+          'Webinars CMS: on-demand replays and upcoming sessions in a real content hub. Strong top-of-funnel for owners not yet ready for a call.',
+        ],
+      },
+      {
+        label: 'Personalization & storytelling',
+        items: [
+          'Practice-type personalization on Home and Services: same site, four tailored experiences (PT, OT/SLP, Audiology, Pediatric) via conditional content and URL parameters.',
+          'Scroll-driven storytelling on Home and Results: the 30-year timeline becomes a moment, the proof numbers count up in view, and case studies unfold as you scroll.',
+          'Survival Strategies Magazine treated as a real editorial destination: typography-led article template, featured pieces, full archive.',
+        ],
+      },
+      {
+        label: 'Post-launch',
+        items: [
+          '30 days of post-launch support: bug fixes, copy tweaks, performance tuning, and a measurement readout once real traffic hits.',
+        ],
+      },
+    ],
+    phases: [
+      { week: 'W1–2', name: 'Discovery' },
+      { week: 'W2–5', name: 'Design' },
+      { week: 'W5–9', name: 'Build' },
+      { week: 'W7–10', name: 'CMS + personalization' },
+      { week: 'W10–12', name: 'QA + launch' },
+    ],
+    outcome: 'When a practice owner Googles "how to grow my PT practice," your site is the one they keep coming back to.',
+  },
+];
+---
+
+<Layout
+  title="Proposal: Survival Strategies"
+  description="A three-tier web design proposal for Survival Strategies, Inc."
+  noIndex={true}
+>
+  <main>
+    {!unlocked && (
+      <section class="gate-page">
+        <div class="gate-inner" data-state="idle">
+
+          <div class="gate-form-wrap">
+            <div class="section-tag">
+              <span class="tag-number">00</span>
+              <span class="tag-dash" aria-hidden="true"></span>
+              <span class="tag-label">Restricted access</span>
+            </div>
+            <h1 class="gate-title">This proposal is private.</h1>
+            <p class="gate-subtitle">Enter the password to continue.</p>
+            <div class="title-rule" aria-hidden="true"></div>
+
+            <form method="POST" class="gate-form" novalidate>
+              <label class="gate-field">
+                <span class="gate-field-label">Password</span>
+                <input
+                  type="password"
+                  name="password"
+                  class="gate-input"
+                  required
+                  autocomplete="off"
+                  autofocus
+                />
+              </label>
+
+              <button type="submit" class="gate-submit">
+                <span class="gate-submit-label" data-label-default="Continue" data-label-loading="Checking…">Continue</span>
+                <svg class="gate-submit-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 7h8M7 3l4 4-4 4" />
+                </svg>
+                <span class="gate-submit-spinner" aria-hidden="true"></span>
+              </button>
+
+              <p class="gate-message" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+
+          <div class="gate-success-wrap" aria-hidden="true">
+            <svg class="gate-check" viewBox="0 0 52 52" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle class="gate-check-circle" cx="26" cy="26" r="24"></circle>
+              <path class="gate-check-path" d="M14 27 l8 8 l16 -18"></path>
+            </svg>
+            <p class="gate-success-text">Access granted.</p>
+            <p class="gate-success-sub">Loading the proposal…</p>
+          </div>
+
+        </div>
+      </section>
+    )}
+
+    {unlocked && (
+    <section class="proposal-page">
+      <div class="proposal-inner">
+
+        <!-- ═══════════ HEADER ═══════════ -->
+        <header class="page-header">
+          <div class="section-tag">
+            <span class="tag-number">00</span>
+            <span class="tag-dash" aria-hidden="true"></span>
+            <span class="tag-label">Proposal · Survival Strategies</span>
+          </div>
+          <h1 class="page-title">A proposal for the Survival Strategies website.</h1>
+          <div class="title-rule" aria-hidden="true"></div>
+
+          <p class="cover-intro">
+            Before recommending anything, I audited the current site against the standards every
+            modern web page is judged by: how fast it loads, how it's designed, how visitors move
+            through it, and whether it actually converts the leads already arriving. This document
+            walks through what I found, what it's costing in lost conversions, and what we'd build
+            to fix it.
+          </p>
+        </header>
+
+        <!-- ═══════════ 01: WHAT I SEE ═══════════ -->
+        <section class="section">
+          <div class="section-tag">
+            <span class="tag-number">01</span>
+            <span class="tag-dash" aria-hidden="true"></span>
+            <span class="tag-label">What I see</span>
+          </div>
+
+          <h2 class="section-title">Your business and the website don't match.</h2>
+
+          <div class="prose">
+            <p>
+              Survival Strategies has been around since 1989. Craig started your business with one idea: practice
+              owners need management training, not motivation. Thirty-something years later, your business is
+              still here.
+            </p>
+
+            <p>
+              Your <a href="https://survivalstrategies.com/results/" class="prose-link" target="_blank" rel="noopener">results page</a>
+              tells the story most consultancies fabricate. <span class="num-inline">65%</span> more new
+              patients on average. <span class="num-inline">70%</span> more visits. Numbers you've earned
+              over decades.
+            </p>
+
+            <p>
+              And your business has built a lot. Ten programs from Practice Analysis through Power of Choice.
+              Five full case studies. Forty-seven testimonials. Eight ebooks. Twenty products. A magazine.
+              A Knowledge Center going back to 2009.
+            </p>
+
+            <p>The site doesn't showcase or represent that level of expertise and industry knowledge.</p>
+
+            <p>
+              The site works. It loads, the forms submit, the structure is fine. But it reads the same
+              as the other "private practice consultants" you've outperformed for thirty years. A
+              practice owner landing on your homepage in 2026 can't tell in three seconds whether
+              you've been around since 1989 or just registered a domain last week.
+            </p>
+
+            <blockquote class="pull-quote">
+              You've been doing this since 1989. The site doesn't show it.
+            </blockquote>
+
+            <h3 class="section-subhead">What "done" actually means.</h3>
+
+            <p>
+              A rebuild without measurable goals is a redesign with no way to know if it worked.
+              Four things define success.
+            </p>
+
+            <h4 class="beat-marker">
+              <span class="beat-num">i</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">The intake form qualifies leads</span>
+            </h4>
+            <p>
+              Within 60 days of launch, at least 60% of intake submissions arrive with practice
+              type, pain point, and visit volume pre-identified.
+            </p>
+
+            <h4 class="beat-marker">
+              <span class="beat-num">ii</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">The site performs</span>
+            </h4>
+            <p>
+              Core Web Vitals green across the board. Mobile load under 2.5 seconds. WCAG AA
+              accessible.
+            </p>
+
+            <h4 class="beat-marker">
+              <span class="beat-num">iii</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Your team publishes without me</span>
+            </h4>
+            <p>
+              Within 30 days of launch, your team adds at least one piece of content (case study,
+              blog post, ebook) without involving me.
+            </p>
+
+            <h4 class="beat-marker">
+              <span class="beat-num">iv</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">The shop works on Stripe</span>
+            </h4>
+            <p>
+              WooCommerce decommissioned. Stripe Payment Links handle 100% of product transactions.
+              No transaction failures in the first 30 days.
+            </p>
+          </div>
+        </section>
+
+        <hr class="chapter-divider" aria-hidden="true" />
+
+        <!-- ═══════════ 02: THE PAGES ═══════════ -->
+        <section class="section">
+          <div class="section-tag tag--amber">
+            <span class="tag-number">02</span>
+            <span class="tag-dash" aria-hidden="true"></span>
+            <span class="tag-label">The pages</span>
+          </div>
+
+          <h2 class="section-title">What we see, page by page.</h2>
+
+          <div class="prose">
+            <p>
+              I ran each of the eight core marketing pages through three things: Google's free website
+              diagnostic tool (Lighthouse), browser automation that captures the rendered design
+              (Playwright), and a manual content review. The findings are below, page by page.
+            </p>
+
+            <p>
+              A few technical terms come up. Each one is explained here once, in plain English, so the
+              rest of this section reads cleanly.
+            </p>
+
+            <p>
+              <strong>Lighthouse.</strong> Google's free website diagnostic tool. It scores any web
+              page from 0 to 100 across four categories: Performance (how fast it loads), Accessibility
+              (whether it works for people with disabilities and assistive technologies), SEO (whether
+              it's optimized for Google's search ranking), and Best Practices (general modern web
+              standards). Anything below 90 fails Google's bar for a production-ready page.
+            </p>
+
+            <p>
+              <strong>CTA.</strong> Stands for "call-to-action." A button or link asking the visitor to
+              do something, like "Schedule a Consultation" or "Get the F.A.T."
+            </p>
+
+            <p>
+              <strong>H1.</strong> The main heading of a web page. Every page should have exactly one
+              H1, and it tells both human visitors and Google what the page is about.
+            </p>
+
+            <p>
+              <strong>LCP (Largest Contentful Paint).</strong> How long it takes for the biggest piece
+              of visible content (a hero image, a headline, the first paragraph) to appear on the
+              screen. Google considers under 2.5 seconds "good." Anything over 4 seconds is poor and
+              visitors start bouncing.
+            </p>
+
+            <p>
+              <strong>CLS (Cumulative Layout Shift).</strong> A measure of how much the page content
+              moves around while it loads. Zero means nothing shifts. Under 0.1 is "good." Over 0.25
+              is poor and visitors find it visibly broken.
+            </p>
+
+            <p>
+              <strong>Server response time.</strong> How long the website's server takes to send back
+              the first piece of the page before anything else can render. Industry target is under
+              200 milliseconds (0.2 seconds). The current site sits between 1.0 and 2.2 seconds, which
+              is five to ten times slower than the target.
+            </p>
+
+            <p>With that out of the way, here's the page-by-page audit.</p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">i</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Home</span>
+            </h3>
+            <p>
+              The homepage has 26 different CTAs competing for attention. With no clear primary
+              action, visitors don't know what to click. The hero section uses a 2.1 MB image, which
+              is the single largest asset on the entire site and takes several seconds to download on
+              a phone. Server response time is 2.2 seconds before anything else can begin loading.
+              Eight different button styles appear on the same page, breaking visual consistency. The
+              page has 43 headings (one H1, fourteen H2s, sixteen H3s, plus more), which dilutes the
+              hierarchy enough that no single message lands.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">ii</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">About</span>
+            </h3>
+            <p>
+              The About page has two H1 elements, when there should only ever be one. Three different
+              font families render on the page (only two are intentional). The main "Contact us"
+              call-to-action is buried at the very bottom of a long bio block, where most readers
+              never scroll.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">iii</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Services</span>
+            </h3>
+            <p>
+              Four different font families render on this page: Prompt, Montserrat, Times, and Lucida
+              Grande. Only the first two are intentional. The other two appear because form inputs and
+              certain text elements don't override the operating system's default fonts. The page
+              also shifts visibly during load (CLS of 0.138, which is over the "good" threshold). At
+              the bottom is an intake form that asks ten or more questions across roughly 25 form
+              fields before the visitor can submit anything.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">iv</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Programs</span>
+            </h3>
+            <p>
+              This is the slowest page on the site. Its LCP is 9.4 seconds, meaning the main
+              content takes nearly ten seconds to appear on a phone. Google considers anything over
+              2.5 seconds poor. The ten programs are presented as a flat list with no visual
+              hierarchy between the flagship and the supporting programs, so visitors leave without
+              a clear sense of which one is right for them. The same long intake form from the
+              Services page appears here, too.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">v</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Who We Serve</span>
+            </h3>
+            <p>
+              The audience overview is too thin to actually qualify visitors. It routes them to the
+              Results page to figure out which audience they belong to, instead of into a Practice
+              Analysis intake. A visitor who doesn't already know they're a fit will bounce.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">vi</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Results</span>
+            </h3>
+            <p>
+              This is the most important page on the entire site, because it's where Craig's
+              proven case studies live and where prospects decide whether to schedule a Practice
+              Analysis. It's also the worst-performing page on the site. Its Lighthouse Performance
+              score is 40 (a failing grade). Its CLS is 0.326, which is over three times Google's
+              "good" threshold of 0.1. That means the page content visibly jumps around as it
+              loads. The testimonials on the page are shown as initials only ("S.Y., BS, MPT" or
+              "M.J.S., PT/CHT") instead of as named people with photos and full attribution. The
+              underlying reviews are genuine, but initials read as anonymous and unverifiable.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">vii</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Resources</span>
+            </h3>
+            <p>
+              Five resource types are listed (Knowledge Center, F.A.T., Online Store, Calendar,
+              Communities) with no sense of which is most valuable to a new visitor. Every link
+              sends the visitor off the page before they can engage with anything inline.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">viii</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Contact</span>
+            </h3>
+            <p>
+              The Contact page has two separate forms on it. The main contact form asks about ten
+              questions (roughly 25 form fields when each radio button and checkbox is counted
+              individually). The second form is "OMS Support," which exists for existing-customer
+              technical issues, not for new prospects. Having both forms on the same page confuses
+              both audiences. The page also has eleven CTAs competing for attention.
+            </p>
+
+            <blockquote class="pull-quote">
+              Every one of these pages is trying to do everything. None of them do one thing well.
+            </blockquote>
+          </div>
+        </section>
+
+        <hr class="chapter-divider" aria-hidden="true" />
+
+        <!-- ═══════════ 03: THE PATTERNS ═══════════ -->
+        <section class="section">
+          <div class="section-tag tag--rust">
+            <span class="tag-number">03</span>
+            <span class="tag-dash" aria-hidden="true"></span>
+            <span class="tag-label">The patterns</span>
+          </div>
+
+          <h2 class="section-title">What's broken across the site.</h2>
+
+          <div class="prose">
+            <p>
+              The page-by-page issues above fall into four clear patterns. Each one repeats almost
+              everywhere on the site.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">i</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Design</span>
+            </h3>
+            <p>
+              Eight different CTA button styles appear on the homepage alone. Several buttons render
+              with zero vertical padding, which means they visually collapse and become hard to click
+              on a phone. The "primary" blue accent color is actually being used as two slightly
+              different shades on the same page (<span class="num-inline">rgb(46,109,168)</span> and
+              <span class="num-inline">rgb(46,109,169)</span>). Ten distinct text colors appear on
+              the homepage, including off-by-one duplicates and several barely-different shades of
+              white. A consistent design system uses three to four colors at most. The current site
+              has nearly three times that.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">ii</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Typography</span>
+            </h3>
+            <p>
+              The homepage uses <span class="num-inline">26</span> distinct font sizes. A real type
+              scale has five to eight sizes that the entire site reuses consistently. Twenty-six is
+              the accumulated result of dozens of WordPress block defaults and inline overrides, not
+              a designed system.
+            </p>
+            <p>
+              Multiple pages render with four different font families: Prompt, Montserrat, Times, and
+              Lucida Grande. Only the first two are intentional. The other two creep in because some
+              inline text elements and all form inputs don't override the operating system's default
+              fonts. The chosen body font (Prompt) reads as modern and tech-forward, which quietly
+              undercuts the heritage claim of a 30-year firm.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">iii</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Performance</span>
+            </h3>
+            <p>
+              The mobile Lighthouse Performance score averages <span class="num-inline">57</span>
+              across the site. The Results page scores <span class="num-inline">40</span>, which is a
+              flat failing grade. (As a reminder, Lighthouse scores any page 0 to 100, and anything
+              under 90 fails the bar for a production-ready page.)
+            </p>
+            <p>
+              Server response time sits between 1.0 and 2.2 seconds across pages. The industry
+              target is under 200 milliseconds (0.2 seconds). The current site is five to ten times
+              slower at this first step alone, before any image, font, or script has even started
+              loading.
+            </p>
+            <p>
+              The homepage ships 4.46 MB of total content to a phone, driven by a single 2.1 MB
+              hero image that was never properly compressed. YouTube alone loads about 780 KB of
+              JavaScript to embed one video, even before the visitor presses play.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">iv</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Structure</span>
+            </h3>
+            <p>
+              The homepage is <span class="num-inline">8,678</span> pixels tall, which is about six
+              full mobile screens of scrolling. It contains 43 headings and 26 CTAs. There is no
+              single dominant message because everything is competing with everything else.
+            </p>
+            <p>
+              The Services and Programs pages both end with an intake form that asks ten or more
+              questions across roughly 25 individual form fields. The Contact page hosts two separate
+              forms, one for new prospects and one for existing-customer technical support, which
+              confuses both audiences. The right model for a B2B intake is three to five questions in
+              a multi-step flow, where each step is short and the visitor can see progress.
+            </p>
+
+            <p>
+              The accessibility findings are real but smaller in scale. Heading hierarchy is broken
+              on every page (an H1 followed by an H4 with no H2 or H3 between them is common). 24 of
+              28 homepage images are missing alt text, which costs both screen-reader users and
+              Google's image search. Two pages fail the "links rely on color alone" check, meaning a
+              colorblind visitor can't tell a link from surrounding text. Compared to the design and
+              performance issues above, these are cleanup items.
+            </p>
+          </div>
+        </section>
+
+        <hr class="chapter-divider" aria-hidden="true" />
+
+        <!-- ═══════════ 04: THE COST ═══════════ -->
+        <section class="section">
+          <div class="section-tag tag--gold">
+            <span class="tag-number">04</span>
+            <span class="tag-dash" aria-hidden="true"></span>
+            <span class="tag-label">The cost</span>
+          </div>
+
+          <h2 class="section-title">What this is costing your business.</h2>
+
+          <div class="prose">
+            <p>
+              Every one of these failures has a measurable cost in lost conversions. Drawing from
+              Google's own page experience research, Nielsen Norman form completion data, and standard
+              B2B funnel benchmarks, here's what the current state is taking off the table.
+            </p>
+
+            <p>
+              <strong>Slow main content (LCP over 4 seconds): 20 to 30 percent fewer page reads
+              complete.</strong> Google's research shows that every additional second of main-content
+              load time increases bounce rate by about 32 percent. Five of the eight pages on the
+              site have LCPs between 4.5 and 9.5 seconds.
+            </p>
+
+            <p>
+              <strong>26 CTAs on the homepage: roughly 50 percent reduction in click-through
+              rate.</strong> When visitors face too many choices, none of them get clicked. The best
+              practice for a homepage is one primary CTA plus two or three secondary ones, all using
+              the same visual style so the visitor learns what "clickable" looks like.
+            </p>
+
+            <p>
+              <strong>Intake forms of ten-plus questions: 5 to 10 times lower completion than a 3 to
+              5 question multi-step flow.</strong> Every form field past field seven reduces
+              completion by roughly 5 percent. By the time a visitor reaches question ten or beyond,
+              completion is in the low single digits. The Services and Programs forms both fall into
+              this trap.
+            </p>
+
+            <p>
+              <strong>Content jumping during load (CLS of 0.326 on the Results page): about 12
+              percent more bounces.</strong> The Results page is the most important conversion page
+              on the site, and its content visibly shifts around while loading. That shifting is
+              directly correlated with visitors leaving before reading.
+            </p>
+
+            <p>
+              <strong>Slow server response (1.0 to 2.2 seconds before anything else can load):
+              roughly 25 percent more bounces from the delay alone.</strong> The industry target is
+              under 200 milliseconds. The current site is five to ten times slower at this first step.
+            </p>
+
+            <p>
+              <strong>Testimonials shown as initials only (S.Y., M.J.S., R.G.): roughly 40 percent
+              weaker trust signal.</strong> People trust named, attributed quotes from real people
+              with photos. Initials read as anonymous and potentially fabricated, even when the
+              underlying review is genuine.
+            </p>
+
+            <blockquote class="pull-quote">
+              Conservatively, the site is leaving 30 to 50 percent of potential leads on the table.
+            </blockquote>
+
+            <p>
+              For a firm whose typical engagement is in the five-figure range, that's significant
+              revenue annually. None of it requires more marketing spend or more leads at the top of
+              the funnel. The leads are already arriving. The site is losing them between arrival
+              and conversion.
+            </p>
+          </div>
+        </section>
+
+        <hr class="chapter-divider" aria-hidden="true" />
+
+        <!-- ═══════════ 05: THE RECOMMENDATION ═══════════ -->
+        <section class="section">
+          <div class="section-tag">
+            <span class="tag-number">05</span>
+            <span class="tag-dash" aria-hidden="true"></span>
+            <span class="tag-label">What I'd build</span>
+          </div>
+
+          <h2 class="section-title">A new website on Webflow.</h2>
+
+          <div class="prose">
+            <p>
+              A new website on Webflow. Same brand, same logo, same name. The site looks like a firm that's
+              been around for 30 years instead of one that's been around for two.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">i</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Design</span>
+            </h3>
+
+            <p>
+              The current site is fine, but it's interchangeable with every other consultancy site out
+              there. The rebuild fixes that. The <span class="num-inline">65%</span> and
+              <span class="num-inline">70%</span> numbers from your results page get treated like the
+              proof points they are, not subheadings on a generic stats block. Case studies read like the
+              narratives they are. The thirty-year history gets a moment on the homepage instead of a
+              footnote on About.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">ii</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Lead capture</span>
+            </h3>
+
+            <p>
+              The current site has one form and it's a black box. Someone hits submit, your team calls
+              back, and 90 seconds into the call your consultant realizes the lead isn't close to a fit.
+              The new intake asks 5 to 8 questions up front. Practice type, what's broken, monthly visits,
+              current staff size. By the time a consultant calls, they already know who they're talking
+              to.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">iii</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Content</span>
+            </h3>
+
+            <p>
+              Blogs, case studies, ebooks, owner tools, webinars. All in proper CMSes your team can publish
+              to without calling me. The site keeps getting better after I leave.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">iv</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Platform</span>
+            </h3>
+
+            <p>
+              Webflow is the right call. WordPress works, but it costs you time. Security updates, plugin
+              conflicts, the annual "why is the site broken?" panic with your developer. Webflow is a
+              modern CMS that your team uses directly. No middleman.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">v</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Shop</span>
+            </h3>
+
+            <p>
+              You have 20 products on WooCommerce, most of them digital downloads in the $50 to $1,500
+              range. That's not a use case for a full ecommerce platform.
+            </p>
+
+            <p>
+              A Products CMS in Webflow plus a Stripe Payment Link per item handles checkout, tax,
+              receipts, and digital delivery. WordPress disappears. So do the cart, checkout, and
+              my-account pages clogging the sitemap. Stripe takes 2.9% + 30¢. That's what WooCommerce's
+              gateway already charges you anyway.
+            </p>
+
+            <blockquote class="pull-quote">
+              The site keeps getting better after I leave.
+            </blockquote>
+          </div>
+        </section>
+
+        <hr class="chapter-divider" aria-hidden="true" />
+
+        <!-- ═══════════ 06: SELECTED WORK ═══════════ -->
+        <section class="section section--showcase">
+          <div class="section-tag tag--amber">
+            <span class="tag-number">06</span>
+            <span class="tag-dash" aria-hidden="true"></span>
+            <span class="tag-label">Selected work</span>
+          </div>
+
+          <h2 class="section-title">Recent work.</h2>
+
+          <p class="showcase-lead">
+            Five sites I designed and built recently. Different industries, same craft.
+          </p>
+
+          <div class="marquee" aria-label="Selected client work">
+            <div class="marquee-track">
+              {marqueeProjects.map((project: any, i: number) => (
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener"
+                  class={`marquee-card marquee-card--${project.accent}`}
+                  aria-hidden={i >= projects.length ? 'true' : undefined}
+                  tabindex={i >= projects.length ? -1 : undefined}
+                >
+                  <div class="browser-frame">
+                    <div class="browser-chrome" aria-hidden="true">
+                      <span class="dot"></span>
+                      <span class="dot"></span>
+                      <span class="dot"></span>
+                    </div>
+                    <div class="browser-screen">
+                      {project.screenshot ? (
+                        <img
+                          src={urlFor(project.screenshot).width(800).height(500).fit('crop').crop('top').quality(85).auto('format').url()}
+                          alt={`${project.name} screenshot`}
+                          width="400"
+                          height="250"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      ) : (
+                        <div class="screen-placeholder"></div>
+                      )}
+                    </div>
+                  </div>
+                  <div class="marquee-caption">
+                    <span class="caption-name">{project.name}</span>
+                    <span class="caption-category">{project.category}</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <p class="showcase-footer">
+            More at <a href="https://devin.vc/projects" class="prose-link" target="_blank" rel="noopener">devin.vc/projects</a>.
+          </p>
+        </section>
+
+        <hr class="chapter-divider" aria-hidden="true" />
+
+        <!-- ═══════════ 07: KIND WORDS ═══════════ -->
+        <section class="section section--testimonials">
+          <div class="section-tag tag--rust">
+            <span class="tag-number">07</span>
+            <span class="tag-dash" aria-hidden="true"></span>
+            <span class="tag-label">Kind words</span>
+          </div>
+
+          <h2 class="section-title">What clients have said.</h2>
+
+          <p class="testimonials-lead">
+            Quotes from people I've actually built things for. Hover any card to pause the wall.
+          </p>
+
+          <div class="testimonials-wall" aria-label="Client testimonials">
+            <div class="testimonials-col testimonials-col--down">
+              <div class="testimonials-track">
+                {tCol1Track.map((t: any, i: number) => {
+                  const accent = i % 2 === 0 ? 'teal' : 'amber';
+                  const isDuplicate = i >= tCol1.length;
+                  return (
+                    <blockquote class={`tmnl tmnl--${accent}`} aria-hidden={isDuplicate ? 'true' : undefined}>
+                      <span class="tmnl-mark" aria-hidden="true">&ldquo;</span>
+                      <p class="tmnl-quote">{t.quote}</p>
+                      <footer class="tmnl-attr">
+                        <span class="tmnl-name">{t.name}</span>
+                        {(t.role || t.company) && (
+                          <Fragment>
+                            <span class="tmnl-rule" aria-hidden="true"></span>
+                            <span class="tmnl-detail">{t.role}{t.role && t.company ? ', ' : ''}{t.company}</span>
+                          </Fragment>
+                        )}
+                      </footer>
+                    </blockquote>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div class="testimonials-col testimonials-col--up">
+              <div class="testimonials-track">
+                {tCol2Track.map((t: any, i: number) => {
+                  const accent = i % 2 === 0 ? 'amber' : 'teal';
+                  const isDuplicate = i >= tCol2.length;
+                  return (
+                    <blockquote class={`tmnl tmnl--${accent}`} aria-hidden={isDuplicate ? 'true' : undefined}>
+                      <span class="tmnl-mark" aria-hidden="true">&ldquo;</span>
+                      <p class="tmnl-quote">{t.quote}</p>
+                      <footer class="tmnl-attr">
+                        <span class="tmnl-name">{t.name}</span>
+                        {(t.role || t.company) && (
+                          <Fragment>
+                            <span class="tmnl-rule" aria-hidden="true"></span>
+                            <span class="tmnl-detail">{t.role}{t.role && t.company ? ', ' : ''}{t.company}</span>
+                          </Fragment>
+                        )}
+                      </footer>
+                    </blockquote>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <hr class="chapter-divider" aria-hidden="true" />
+
+        <!-- ═══════════ 08: THE TIERS ═══════════ -->
+        <section class="section">
+          <div class="section-tag tag--gold">
+            <span class="tag-number">08</span>
+            <span class="tag-dash" aria-hidden="true"></span>
+            <span class="tag-label">Three tiers</span>
+          </div>
+
+          <h2 class="section-title">Three tiers. Pick one.</h2>
+
+          <div class="tiers-list">
+            {tiers.map((tier) => (
+              <article class={`tier tier--${tier.accent}`}>
+                <div class="tier-watermark" aria-hidden="true">{tier.label.replace('Tier ', '')}</div>
+
+                <header class="tier-head">
+                  <div class="tier-identity">
+                    <span class="tier-eyebrow">
+                      <span class="tier-eyebrow-label">{tier.label}</span>
+                      <span class="tier-eyebrow-dot" aria-hidden="true"></span>
+                      <span class="tier-eyebrow-cms">{tier.cmsCount}</span>
+                    </span>
+                    <h3 class="tier-name">{tier.name}</h3>
+                    <p class="tier-tagline">{tier.tagline}</p>
+                  </div>
+
+                  <div class="tier-pricing">
+                    <span class="tier-pricing-value">
+                      <span class="tier-pricing-dollar">$</span>{tier.price.toLocaleString()}
+                    </span>
+                    <span class="tier-pricing-meta">{tier.timeline}</span>
+                    <span class="tier-pricing-meta tier-pricing-meta--pay">{tier.payment}</span>
+                  </div>
+                </header>
+
+                <div class="tier-divider" aria-hidden="true"></div>
+
+                {tier.builds_on && (
+                  <div class="tier-builds-on">
+                    <span class="tier-builds-on-mark" aria-hidden="true">+</span>
+                    <span class="tier-builds-on-text">
+                      Everything in <strong>{tier.builds_on}</strong>, plus:
+                    </span>
+                  </div>
+                )}
+
+                <div class="tier-groups">
+                  {tier.groups.map((group: any) => (
+                    <div class="tier-group">
+                      <h4 class="tier-group-label">{group.label}</h4>
+                      <ul class="tier-list">
+                        {group.items.map((item: string) => (
+                          <li>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+
+                <div class="tier-divider" aria-hidden="true"></div>
+
+                <div class="tier-phases">
+                  <span class="tier-phases-label">Phases</span>
+                  <div class="tier-phases-track">
+                    {tier.phases.map((phase: any) => (
+                      <div class="tier-phase">
+                        <span class="tier-phase-week">{phase.week}</span>
+                        <span class="tier-phase-name">{phase.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div class="tier-divider" aria-hidden="true"></div>
+
+                <div class="tier-outcome">
+                  <span class="tier-outcome-mark" aria-hidden="true">↳</span>
+                  <p class="tier-outcome-text">{tier.outcome}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <hr class="chapter-divider" aria-hidden="true" />
+
+        <!-- ═══════════ 09: OUT OF SCOPE ═══════════ -->
+        <section class="section">
+          <div class="section-tag">
+            <span class="tag-number">09</span>
+            <span class="tag-dash" aria-hidden="true"></span>
+            <span class="tag-label">Not in any tier</span>
+          </div>
+
+          <h2 class="section-title">A few things that aren't in any of these.</h2>
+
+          <div class="prose">
+            <p>
+              <strong>Brand identity.</strong> The logo, name, and voice stay where they are. No rebrand.
+            </p>
+            <p>
+              <strong>Heavy copywriting.</strong> I'll polish copy as we go, but rewriting 95 pages is a
+              separate job. Happy to recommend a writer.
+            </p>
+            <p>
+              <strong>A client portal or LMS.</strong> That's its own build. Probably the right next
+              conversation once the site itself is in place.
+            </p>
+            <p>
+              <strong>Webflow's native ecommerce.</strong> Stripe Payment Links cover what you need at 20
+              products. If the catalog grows past a few hundred items, we'd want to revisit.
+            </p>
+          </div>
+        </section>
+
+        <hr class="chapter-divider" aria-hidden="true" />
+
+        <!-- ═══════════ 10: HOW WE'D WORK ═══════════ -->
+        <section class="section">
+          <div class="section-tag tag--amber">
+            <span class="tag-number">10</span>
+            <span class="tag-dash" aria-hidden="true"></span>
+            <span class="tag-label">How we'd work</span>
+          </div>
+
+          <h2 class="section-title">How this actually works.</h2>
+
+          <div class="prose">
+            <p>
+              You're hiring me, not an agency. I do the design. I write the code. I own the result.
+              There's no account manager and no design-to-dev handoff because there's no one to hand
+              off to.
+            </p>
+            <p>
+              Kickoff happens two weeks after you sign. I block the calendar time, you spend the two
+              weeks pulling together CRM access, brand files, content priorities, and a list of who
+              needs to approve what.
+            </p>
+            <p>
+              We meet once a week for 30 to 45 minutes. You get shared Figma and Webflow access from
+              day one, so you can see the site evolve as it happens, not in big surprise reveals every
+              two weeks.
+            </p>
+            <p>
+              One round of substantive revisions per milestone (design, build, pre-launch). I don't
+              run unlimited rounds because they almost always mean a conversation didn't happen up
+              front.
+            </p>
+
+            <blockquote class="pull-quote">
+              I'd rather we talk first and design once.
+            </blockquote>
+
+            <p>
+              <strong>Scope changes.</strong> If you want to add to the scope mid-project (a new
+              page, a new feature, an extra round of stakeholder review), I'll quote it as a
+              change order with a revised timeline. You approve or skip. Nothing gets added
+              without that conversation.
+            </p>
+
+            <p>
+              <strong>Revisions.</strong> The "one round per milestone" note above means one
+              substantive round of feedback per phase (design, build, pre-launch). Feedback inside
+              a round can be unlimited as long as it's iterating on the same direction. Changing
+              direction entirely after sign-off counts as new scope.
+            </p>
+
+            <p>
+              <strong>Ownership.</strong> Code and design files are yours on final payment. Fonts,
+              stock photography, and any other third-party assets follow their own licensing terms.
+              Most are perpetual. Anything that isn't, I'll flag during build.
+            </p>
+          </div>
+        </section>
+
+        <hr class="chapter-divider" aria-hidden="true" />
+
+        <!-- ═══════════ 11: ABOUT ═══════════ -->
+        <section class="section">
+          <div class="section-tag tag--rust">
+            <span class="tag-number">11</span>
+            <span class="tag-dash" aria-hidden="true"></span>
+            <span class="tag-label">About me</span>
+          </div>
+
+          <h2 class="section-title">About me.</h2>
+
+          <div class="prose">
+            <p>
+              I'm Devin. I run <a href="https://devin.vc" class="prose-link">devin.vc</a>. I take a small
+              number of design and build engagements a year, and I work directly with founders and
+              operators. No account team between us.
+            </p>
+            <p>
+              I'm taking this one because your business has already done the hard part. Thirty years of
+              building a system that actually works, and a results page most consultancies would kill for.
+            </p>
+
+            <p>
+              The site is the only piece that hasn't kept up. That's a fixable problem.
+            </p>
+          </div>
+        </section>
+
+        <hr class="chapter-divider" aria-hidden="true" />
+
+        <!-- ═══════════ 12: THE DECISION ═══════════ -->
+        <section class="section section--close">
+          <div class="section-tag tag--gold">
+            <span class="tag-number">12</span>
+            <span class="tag-dash" aria-hidden="true"></span>
+            <span class="tag-label">The decision</span>
+          </div>
+
+          <h2 class="section-title">Pick a tier. Kickoff in two weeks.</h2>
+
+          <div class="prose">
+            <p>
+              Reply with the tier you want. I'll send back the contract, a kickoff agenda, and an asset
+              checklist by the next business day.
+            </p>
+
+            <p>Reach out to me below.</p>
+
+            <div class="close-contact">
+              <div class="close-contact-row">
+                <span class="close-contact-label">Phone</span>
+                <a href="tel:+12253713493" class="close-contact-value">+1 225-371-3493</a>
+              </div>
+              <div class="close-contact-row">
+                <span class="close-contact-label">Email</span>
+                <a href="mailto:me@devin.vc" class="close-contact-value">me@devin.vc</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="signoff">
+            <span class="signoff-dash" aria-hidden="true">—</span>
+            <span class="signoff-name">Devin Alexander</span>
+          </div>
+        </section>
+
+      </div>
+    </section>
+    )}
+  </main>
+</Layout>
+
+<script>
+  import { animate, inView } from 'motion';
+
+  // ─── Password gate handling ───
+  const gateForm = document.querySelector<HTMLFormElement>('.gate-form');
+  const gateInner = document.querySelector<HTMLElement>('.gate-inner');
+  if (gateForm && gateInner) {
+    const input = gateForm.querySelector<HTMLInputElement>('input[name="password"]');
+    const submitBtn = gateForm.querySelector<HTMLButtonElement>('.gate-submit');
+    const submitLabel = gateForm.querySelector<HTMLElement>('.gate-submit-label');
+    const messageEl = gateForm.querySelector<HTMLElement>('.gate-message');
+
+    const setState = (state: 'idle' | 'loading' | 'error' | 'success') => {
+      gateInner.dataset.state = state;
+      if (state === 'loading') {
+        submitBtn?.setAttribute('disabled', 'true');
+        input?.setAttribute('disabled', 'true');
+        if (submitLabel) submitLabel.textContent = submitLabel.dataset.labelLoading || 'Checking…';
+      } else if (state === 'idle') {
+        submitBtn?.removeAttribute('disabled');
+        input?.removeAttribute('disabled');
+        if (submitLabel) submitLabel.textContent = submitLabel.dataset.labelDefault || 'Continue';
+      }
+    };
+
+    gateForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (gateInner.dataset.state === 'loading' || gateInner.dataset.state === 'success') return;
+
+      // Capture form data BEFORE disabling inputs — disabled inputs are excluded from FormData.
+      const formData = new FormData(gateForm);
+
+      if (messageEl) messageEl.textContent = '';
+      setState('loading');
+
+      try {
+        const response = await fetch(window.location.href, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json() as { ok: boolean; error?: string };
+
+        if (response.ok && data.ok) {
+          setState('success');
+          // Wait for the success animation to play, then load the proposal.
+          window.setTimeout(() => {
+            window.location.reload();
+          }, 1400);
+        } else {
+          setState('error');
+          if (messageEl) messageEl.textContent = data.error || 'Something went wrong.';
+          // Restore the form to idle after a brief moment.
+          window.setTimeout(() => {
+            setState('idle');
+            input?.focus();
+            input?.select();
+          }, 400);
+        }
+      } catch (err) {
+        setState('error');
+        if (messageEl) messageEl.textContent = 'Network error. Try again.';
+        window.setTimeout(() => setState('idle'), 400);
+      }
+    });
+  }
+
+  const isVtNav = (window as any).__vtNav;
+  if (!isVtNav) {
+    const header = document.querySelector('.page-header') as HTMLElement | null;
+    if (header) {
+      header.style.opacity = '0';
+      inView(header, () => {
+        animate(header, { opacity: [0, 1], y: [12, 0] }, {
+          duration: 0.5,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }, { amount: 0.3 });
+    }
+
+    const sections = document.querySelectorAll<HTMLElement>('.section');
+    sections.forEach((section, i) => {
+      section.style.opacity = '0';
+      inView(section, () => {
+        animate(section, { opacity: [0, 1], y: [10, 0] }, {
+          duration: 0.5,
+          delay: 0.05,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }, { amount: 0.15 });
+    });
+
+    const tiers = document.querySelectorAll<HTMLElement>('.tier');
+    tiers.forEach((tier, i) => {
+      tier.style.opacity = '0';
+      inView(tier, () => {
+        animate(tier, { opacity: [0, 1], y: [12, 0] }, {
+          duration: 0.5,
+          delay: i * 0.06,
+          easing: [0.25, 1, 0.5, 1],
+        });
+      }, { amount: 0.1 });
+    });
+  }
+</script>
+
+<style>
+  /* ═══════════════════════════════════════
+     PASSWORD GATE — devin.vc-aligned
+     States: idle, loading, error, success
+     ═══════════════════════════════════════ */
+  .gate-page {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-page-top) var(--space-page-x) var(--space-page-bottom);
+    background: var(--color-bg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Soft accent glow in the background, subtle */
+  .gate-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 35%,
+        color-mix(in oklab, var(--color-accent) 6%, transparent) 0%,
+        transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .gate-inner {
+    width: 100%;
+    max-width: 460px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Form wrap (idle / loading / error states) */
+  .gate-form-wrap {
+    transition: opacity 0.45s var(--ease-out-expo),
+                transform 0.45s var(--ease-out-expo),
+                filter 0.45s var(--ease-out-expo);
+  }
+
+  .gate-inner[data-state="success"] .gate-form-wrap {
+    opacity: 0;
+    transform: translateY(-12px);
+    filter: blur(4px);
+    pointer-events: none;
+  }
+
+  .gate-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.25rem, 5vw, 3rem);
+    font-weight: var(--weight-regular);
+    line-height: 1.05;
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+    margin: clamp(1rem, 2vw, 1.5rem) 0 0.75rem;
+  }
+
+  .gate-subtitle {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: var(--text-lg);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .gate-page .title-rule {
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .gate-form {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.5rem, 3vw, 2rem);
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+
+  /* Shake on error */
+  .gate-inner[data-state="error"] .gate-form {
+    animation: gate-shake 0.42s var(--ease-out-expo);
+  }
+
+  @keyframes gate-shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(7px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(4px); }
+  }
+
+  /* Field — underline-only editorial style */
+  .gate-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .gate-field-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .gate-input {
+    appearance: none;
+    width: 100%;
+    padding: 0.5rem 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 30%, transparent);
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-lg);
+    letter-spacing: 0.1em;
+    color: var(--color-text);
+    outline: none;
+    transition: border-color 0.3s var(--ease-out-expo), letter-spacing 0.3s var(--ease-out-expo);
+  }
+
+  .gate-input:focus {
+    border-bottom-color: var(--color-accent);
+  }
+
+  .gate-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .gate-inner[data-state="error"] .gate-input {
+    border-bottom-color: var(--color-error, #c47c7c);
+  }
+
+  /* Submit — pill-style accent button with state changes */
+  .gate-submit {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 1.4rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.02em;
+    color: var(--color-bg);
+    background: var(--color-accent);
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s var(--ease-out-expo),
+                box-shadow 0.2s var(--ease-out-expo),
+                opacity 0.2s var(--ease-out-expo);
+  }
+
+  .gate-submit:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px color-mix(in oklab, var(--color-accent) 30%, transparent);
+  }
+
+  .gate-submit:disabled {
+    cursor: progress;
+    opacity: 0.85;
+  }
+
+  .gate-submit-arrow {
+    transition: transform 0.2s var(--ease-out-expo);
+  }
+
+  .gate-submit:hover:not(:disabled) .gate-submit-arrow {
+    transform: translateX(2px);
+  }
+
+  /* Loading: hide arrow, show spinner */
+  .gate-submit-spinner {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1.5px solid color-mix(in oklab, var(--color-bg) 35%, transparent);
+    border-top-color: var(--color-bg);
+    animation: gate-spin 0.7s linear infinite;
+    display: none;
+  }
+
+  @keyframes gate-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .gate-inner[data-state="loading"] .gate-submit-arrow { display: none; }
+  .gate-inner[data-state="loading"] .gate-submit-spinner { display: inline-block; }
+
+  /* Message (error or status) */
+  .gate-message {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-sm);
+    color: var(--color-error, #c47c7c);
+    margin: 0;
+    min-height: 1.4em;
+    opacity: 0;
+    transition: opacity 0.25s var(--ease-out-expo);
+  }
+
+  .gate-inner[data-state="error"] .gate-message {
+    opacity: 1;
+  }
+
+  /* Success state */
+  .gate-success-wrap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s var(--ease-out-expo) 0.1s;
+  }
+
+  .gate-inner[data-state="success"] .gate-success-wrap {
+    opacity: 1;
+  }
+
+  .gate-check {
+    width: 64px;
+    height: 64px;
+    color: var(--color-accent);
+  }
+
+  .gate-check-circle {
+    stroke-dasharray: 152;
+    stroke-dashoffset: 152;
+  }
+
+  .gate-check-path {
+    stroke-dasharray: 36;
+    stroke-dashoffset: 36;
+  }
+
+  .gate-inner[data-state="success"] .gate-check-circle {
+    animation: gate-draw 0.55s var(--ease-out-expo) 0.15s forwards;
+  }
+
+  .gate-inner[data-state="success"] .gate-check-path {
+    animation: gate-draw 0.4s var(--ease-out-expo) 0.55s forwards;
+  }
+
+  @keyframes gate-draw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  .gate-success-text {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--color-text);
+    margin: 0;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  .gate-inner[data-state="success"] .gate-success-text {
+    animation: gate-fade-up 0.5s var(--ease-out-expo) 0.85s forwards;
+  }
+
+  .gate-success-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    letter-spacing: 0.02em;
+    margin: 0;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  .gate-inner[data-state="success"] .gate-success-sub {
+    animation: gate-fade-up 0.5s var(--ease-out-expo) 1.05s forwards;
+  }
+
+  @keyframes gate-fade-up {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .gate-form-wrap,
+    .gate-success-wrap,
+    .gate-input,
+    .gate-submit,
+    .gate-message {
+      transition: none;
+    }
+    .gate-check-circle,
+    .gate-check-path,
+    .gate-success-text,
+    .gate-success-sub,
+    .gate-submit-spinner {
+      animation: none;
+    }
+    .gate-inner[data-state="success"] .gate-success-text,
+    .gate-inner[data-state="success"] .gate-success-sub {
+      opacity: 1;
+      transform: none;
+    }
+    .gate-inner[data-state="success"] .gate-check-circle,
+    .gate-inner[data-state="success"] .gate-check-path {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* ═══════════ PAGE ═══════════ */
+  .proposal-page {
+    min-height: 100dvh;
+    padding: var(--space-page-top) var(--space-page-x) var(--space-page-bottom);
+    background: var(--color-bg);
+  }
+
+  .proposal-inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* ═══════════ HEADER ═══════════ */
+  .page-header {
+    margin-bottom: var(--space-block-lg);
+  }
+
+  /* ───── Section tag (reused exactly from projects.astro / about.astro) ───── */
+  .section-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .tag-number {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: var(--text-md);
+    line-height: 1;
+    color: var(--color-accent-teal);
+  }
+
+  .tag--amber .tag-number { color: var(--color-accent-amber); }
+  .tag--rust .tag-number { color: var(--color-accent-rust); }
+  .tag--gold .tag-number { color: var(--color-accent); }
+
+  .tag-dash {
+    width: 24px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-accent-teal), transparent);
+  }
+
+  .tag--amber .tag-dash { background: linear-gradient(90deg, var(--color-accent-amber), transparent); }
+  .tag--rust .tag-dash { background: linear-gradient(90deg, var(--color-accent-rust), transparent); }
+  .tag--gold .tag-dash { background: linear-gradient(90deg, var(--color-accent), transparent); }
+
+  .tag-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* ───── Title + subtitle + rule ───── */
+  .page-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: var(--text-3xl);
+    font-weight: var(--weight-regular);
+    line-height: 1.05;
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+    margin: 0 0 1rem;
+  }
+
+  .page-subtitle {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: var(--text-lg);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    margin: 0;
+    max-width: 36ch;
+  }
+
+  .sub-accent {
+    font-style: normal;
+  }
+
+  .sub-accent.teal { color: var(--color-accent-teal); }
+  .sub-accent.rust { color: var(--color-accent-rust); }
+
+  .title-rule {
+    width: 48px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-accent-teal), var(--color-accent-rust));
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  /* ─── Cover intro (one short paragraph below the page header) ─── */
+  .cover-intro {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-md);
+    line-height: 1.65;
+    color: var(--color-text-muted);
+    max-width: 52ch;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+  }
+
+  /* ─── Section subhead (sub-heading inside a section, between h2 and beat-marker) ─── */
+  .section-subhead {
+    font-family: 'Instrument Serif', serif;
+    font-size: var(--text-xl);
+    font-weight: var(--weight-regular);
+    line-height: 1.15;
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+    margin: clamp(2.5rem, 5vw, 3.5rem) 0 1rem;
+  }
+
+  /* ═══════════ SECTION ═══════════ */
+  .section {
+    margin-top: 0;
+  }
+
+  .section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-regular);
+    line-height: 1.1;
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+    margin: 0 0 clamp(1.25rem, 2.5vw, 1.75rem);
+    max-width: 26ch;
+  }
+
+  /* ─── Chapter divider (reused from about.astro) ─── */
+  .chapter-divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-text-muted) 20%, transparent), transparent);
+    margin: clamp(3rem, 6vw, 4.5rem) 0;
+  }
+
+  /* ═══════════ SELECTED WORK SHOWCASE ═══════════ */
+  .section--showcase .section-title {
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .showcase-lead {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-md);
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    margin: 0 0 clamp(2rem, 4vw, 3rem);
+    max-width: 56ch;
+  }
+
+  .showcase-footer {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: clamp(1.75rem, 3.5vw, 2.5rem) 0 0;
+  }
+
+  /* ─── Marquee container ─── */
+  .marquee {
+    position: relative;
+    overflow: hidden;
+    /* Break out beyond the 720px proposal-inner to a contained full-bleed */
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    padding: clamp(1rem, 2vw, 1.5rem) 0;
+    /* Edge fade:masks where cards exit the viewport */
+    mask-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%
+    );
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+    width: max-content;
+    animation: marquee-scroll 55s linear infinite;
+    will-change: transform;
+  }
+
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee-scroll {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-50%, 0, 0); }
+  }
+
+  /* ─── Individual card ─── */
+  .marquee-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    width: clamp(280px, 38vw, 380px);
+    flex: 0 0 auto;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.4s var(--ease-out-expo);
+  }
+
+  .marquee-card:hover {
+    transform: translateY(-4px);
+  }
+
+  /* ─── Browser chrome frame ─── */
+  .browser-frame {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    background: color-mix(in oklab, var(--color-text) 4%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 14%, transparent);
+    box-shadow: var(--shadow-md);
+    transition: box-shadow 0.4s var(--ease-out-expo),
+                border-color 0.4s var(--ease-out-expo);
+  }
+
+  .marquee-card:hover .browser-frame {
+    box-shadow: var(--shadow-lg);
+    border-color: color-mix(in oklab, var(--card-accent, var(--color-accent)) 35%, transparent);
+  }
+
+  .marquee-card--teal { --card-accent: var(--color-accent-teal); }
+  .marquee-card--amber { --card-accent: var(--color-accent-amber); }
+  .marquee-card--rust { --card-accent: var(--color-accent-rust); }
+
+  .browser-chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.75rem;
+    background: color-mix(in oklab, var(--color-text) 5%, var(--color-bg));
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+  }
+
+  .browser-chrome .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--color-text-muted) 30%, transparent);
+  }
+
+  .browser-chrome .dot:nth-child(1) { background: color-mix(in oklab, var(--color-accent-rust) 60%, transparent); }
+  .browser-chrome .dot:nth-child(2) { background: color-mix(in oklab, var(--color-accent-amber) 60%, transparent); }
+  .browser-chrome .dot:nth-child(3) { background: color-mix(in oklab, var(--color-accent-teal) 60%, transparent); }
+
+  .browser-screen {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background: var(--color-bg);
+    overflow: hidden;
+  }
+
+  .browser-screen img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 0.7s var(--ease-out-expo);
+  }
+
+  .marquee-card:hover .browser-screen img {
+    transform: scale(1.03);
+  }
+
+  .screen-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg,
+      color-mix(in oklab, var(--card-accent, var(--color-accent)) 8%, var(--color-bg)),
+      color-mix(in oklab, var(--card-accent, var(--color-accent)) 2%, var(--color-bg))
+    );
+  }
+
+  /* ─── Caption ─── */
+  .marquee-caption {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0 0.15rem;
+  }
+
+  .caption-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: var(--text-lg);
+    line-height: 1.1;
+    color: var(--color-text);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .caption-category {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--card-accent, var(--color-text-muted));
+  }
+
+  /* ─── Reduced motion fallback ─── */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+      flex-wrap: wrap;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .marquee {
+      mask-image: none;
+      -webkit-mask-image: none;
+    }
+
+    .marquee-card {
+      width: clamp(260px, 45%, 340px);
+    }
+  }
+
+  /* ═══════════ TESTIMONIALS WALL ═══════════ */
+  .section--testimonials .section-title {
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .testimonials-lead {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-md);
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    margin: 0 0 clamp(2rem, 4vw, 3rem);
+    max-width: 56ch;
+  }
+
+  /* ─── Two-column wall ─── */
+  .testimonials-wall {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    height: clamp(520px, 70vh, 720px);
+    overflow: hidden;
+    /* Top + bottom edge fades */
+    mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%
+    );
+  }
+
+  .testimonials-col {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .testimonials-track {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    will-change: transform;
+  }
+
+  /* Two opposing scroll directions for visual rhythm */
+  .testimonials-col--down .testimonials-track {
+    animation: testimonials-scroll-down 55s linear infinite;
+  }
+
+  .testimonials-col--up .testimonials-track {
+    animation: testimonials-scroll-up 65s linear infinite;
+  }
+
+  .testimonials-wall:hover .testimonials-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes testimonials-scroll-down {
+    from { transform: translate3d(0, -50%, 0); }
+    to   { transform: translate3d(0, 0, 0); }
+  }
+
+  @keyframes testimonials-scroll-up {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(0, -50%, 0); }
+  }
+
+  /* ─── Individual testimonial card ─── */
+  .tmnl {
+    position: relative;
+    margin: 0;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    padding-top: clamp(1.5rem, 3vw, 2rem);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    display: flex;
+    flex-direction: column;
+    background: color-mix(in oklab, var(--color-text) 2%, transparent);
+    transition: border-color 0.4s var(--ease-out-expo),
+                background 0.4s var(--ease-out-expo);
+  }
+
+  .tmnl::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--tmnl-accent), color-mix(in oklab, var(--tmnl-accent) 20%, transparent));
+  }
+
+  .tmnl--teal { --tmnl-accent: var(--color-accent-teal); }
+  .tmnl--amber { --tmnl-accent: var(--color-accent-amber); }
+
+  .tmnl:hover {
+    border-color: color-mix(in oklab, var(--tmnl-accent) 30%, transparent);
+    background: color-mix(in oklab, var(--tmnl-accent) 4%, transparent);
+  }
+
+  .tmnl-mark {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
+    line-height: 0.7;
+    color: var(--tmnl-accent);
+    opacity: 0.18;
+    display: block;
+    margin-bottom: 0.5rem;
+    user-select: none;
+  }
+
+  .tmnl-quote {
+    font-family: 'DM Sans', sans-serif;
+    font-style: normal;
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    color: var(--color-text);
+    margin: 0 0 1.25rem;
+  }
+
+  .tmnl-attr {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    flex-wrap: wrap;
+    margin-top: auto;
+  }
+
+  .tmnl-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text);
+  }
+
+  .tmnl-rule {
+    width: 16px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--tmnl-accent), transparent);
+    flex-shrink: 0;
+  }
+
+  .tmnl-detail {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-regular);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* ─── Responsive: single column on small screens ─── */
+  @media (max-width: 640px) {
+    .testimonials-wall {
+      grid-template-columns: 1fr;
+      height: clamp(440px, 60vh, 600px);
+    }
+
+    .testimonials-col--up {
+      display: none;
+    }
+  }
+
+  /* ─── Reduced motion fallback ─── */
+  @media (prefers-reduced-motion: reduce) {
+    .testimonials-wall {
+      height: auto;
+      max-height: none;
+      mask-image: none;
+      -webkit-mask-image: none;
+    }
+
+    .testimonials-track {
+      animation: none;
+    }
+
+    .testimonials-col--up .testimonials-track {
+      animation: none;
+    }
+  }
+
+  /* ═══════════ PROSE ═══════════ */
+  .prose {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-md);
+    line-height: 1.65;
+    color: var(--color-text);
+  }
+
+  .prose p {
+    margin: 0 0 1.25em;
+  }
+
+  .prose p:last-child {
+    margin-bottom: 0;
+  }
+
+  .prose strong {
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
+  }
+
+  /* Inline numerals (matches about.astro .story-stat pattern) */
+  .num-inline {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--color-accent);
+    font-size: 1.05em;
+  }
+
+  /* Prose links (matches existing devin.vc treatment) */
+  .prose-link {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    text-decoration-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+    transition: text-decoration-color 0.25s var(--ease-out-expo);
+  }
+
+  .prose-link:hover {
+    text-decoration-color: var(--color-accent);
+  }
+
+  /* ─── Beat marker (sub-heading within a section, matches about.astro chapter-marker pattern) ─── */
+  .beat-marker {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: clamp(2rem, 4vw, 3rem) 0 1rem;
+    /* Reset default h3 styles */
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: 1;
+  }
+
+  .beat-marker:first-of-type {
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .beat-num {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: var(--text-md);
+    color: var(--color-accent-amber);
+    line-height: 1;
+    min-width: 1.25rem;
+  }
+
+  .beat-dash {
+    width: 18px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-accent-amber), transparent);
+    flex-shrink: 0;
+  }
+
+  .beat-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text);
+  }
+
+  /* ─── Pull quote (matches about.astro pattern) ─── */
+  .pull-quote {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(1.25rem, 2.5vw, 1.65rem);
+    line-height: 1.35;
+    color: var(--color-text);
+    text-align: center;
+    width: fit-content;
+    max-width: 100%;
+    margin: clamp(2rem, 4vw, 3rem) auto;
+    padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 3vw, 2rem);
+    border-top: 1px solid color-mix(in oklab, var(--color-accent) 25%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-accent) 25%, transparent);
+  }
+
+  /* ═══════════ TIERS ═══════════ */
+  .tiers-list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2rem, 4vw, 3rem);
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .tier {
+    position: relative;
+    padding: clamp(2rem, 4vw, 3rem);
+    border-top: 2px solid color-mix(in oklab, var(--tier-accent, var(--color-accent)) 40%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    background: color-mix(in oklab, var(--tier-accent, var(--color-accent)) 2%, transparent);
+    overflow: hidden;
+    transition: border-top-color 0.4s var(--ease-out-expo), background 0.4s var(--ease-out-expo);
+  }
+
+  .tier--teal { --tier-accent: var(--color-accent-teal); }
+  .tier--amber { --tier-accent: var(--color-accent-amber); }
+  .tier--rust { --tier-accent: var(--color-accent-rust); }
+
+  .tier:hover {
+    border-top-color: color-mix(in oklab, var(--tier-accent) 70%, transparent);
+    background: color-mix(in oklab, var(--tier-accent) 4%, transparent);
+  }
+
+  /* Giant number watermark in the background */
+  .tier-watermark {
+    position: absolute;
+    top: clamp(-1rem, -2vw, -0.5rem);
+    right: clamp(-1rem, -1vw, 0rem);
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(7rem, 18vw, 12rem);
+    line-height: 1;
+    color: color-mix(in oklab, var(--tier-accent) 8%, transparent);
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+    letter-spacing: -0.04em;
+  }
+
+  /* All tier content sits above the watermark */
+  .tier > *:not(.tier-watermark) {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── Tier head ─── */
+  .tier-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: clamp(1rem, 2vw, 2rem);
+  }
+
+  .tier-identity {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .tier-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .tier-eyebrow-label {
+    color: var(--tier-accent);
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: var(--text-md);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .tier-eyebrow-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--color-text-muted) 50%, transparent);
+  }
+
+  .tier-eyebrow-cms {
+    color: var(--color-text-muted);
+  }
+
+  .tier-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.25rem, 4.5vw, 3.25rem);
+    font-weight: var(--weight-regular);
+    line-height: 0.95;
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .tier-tagline {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: var(--text-lg);
+    line-height: 1.35;
+    color: var(--color-text-muted);
+    margin: 0;
+    max-width: 40ch;
+  }
+
+  /* ─── Tier pricing block (right side of head row) ─── */
+  .tier-pricing {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    gap: 0.25rem;
+    flex-shrink: 0;
+  }
+
+  .tier-pricing-value {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.5rem, 5.5vw, 3.75rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--color-text);
+    display: inline-flex;
+    align-items: baseline;
+  }
+
+  .tier-pricing-dollar {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 0.55em;
+    color: var(--tier-accent);
+    margin-right: 0.05em;
+    line-height: 1;
+    align-self: flex-start;
+    margin-top: 0.15em;
+  }
+
+  .tier-pricing-meta {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    letter-spacing: 0.01em;
+    margin-top: 0.5rem;
+  }
+
+  .tier-pricing-meta--pay {
+    margin-top: 0;
+    color: var(--tier-accent);
+    font-weight: var(--weight-medium);
+  }
+
+  /* ─── Tier dividers ─── */
+  .tier-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--tier-accent) 25%, transparent), transparent);
+    margin: clamp(1.75rem, 3.5vw, 2.5rem) 0;
+  }
+
+  /* ─── Builds-on callout (Tier 2 and 3) ─── */
+  .tier-builds-on {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
+    padding: 0.75rem 1rem;
+    background: color-mix(in oklab, var(--tier-accent) 6%, transparent);
+    border-left: 2px solid var(--tier-accent);
+  }
+
+  .tier-builds-on-mark {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: var(--text-lg);
+    color: var(--tier-accent);
+    line-height: 1;
+  }
+
+  .tier-builds-on-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    line-height: 1.4;
+  }
+
+  .tier-builds-on-text strong {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-weight: var(--weight-regular);
+    color: var(--tier-accent);
+    font-size: 1.1em;
+  }
+
+  /* ─── Tier groups (categorized includes) ─── */
+  .tier-groups {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .tier-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .tier-group-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--tier-accent);
+    margin: 0;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid color-mix(in oklab, var(--tier-accent) 18%, transparent);
+  }
+
+  .tier-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .tier-list li {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-base);
+    line-height: 1.55;
+    color: var(--color-text);
+    padding-left: 1.25rem;
+    position: relative;
+  }
+
+  .tier-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 8px;
+    height: 1px;
+    background: var(--tier-accent);
+  }
+
+  /* ─── Phase timeline (horizontal visual) ─── */
+  .tier-phases {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .tier-phases-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .tier-phases-track {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    align-items: flex-start;
+  }
+
+  .tier-phase {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    position: relative;
+    padding-right: 1.25rem;
+  }
+
+  .tier-phase:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: 0;
+    top: 0.6em;
+    font-size: var(--text-sm);
+    color: color-mix(in oklab, var(--tier-accent) 50%, transparent);
+    transform: translateX(50%);
+  }
+
+  .tier-phase-week {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: var(--text-md);
+    color: var(--tier-accent);
+    line-height: 1;
+  }
+
+  .tier-phase-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text);
+    white-space: nowrap;
+  }
+
+  /* ─── Outcome line ─── */
+  .tier-outcome {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .tier-outcome-mark {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: var(--text-xl);
+    color: var(--tier-accent);
+    line-height: 1.2;
+    flex-shrink: 0;
+    margin-top: 0.1em;
+  }
+
+  .tier-outcome-text {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: var(--text-lg);
+    line-height: 1.4;
+    color: var(--color-text);
+    margin: 0;
+    max-width: 50ch;
+  }
+
+  /* ═══════════ CLOSE ═══════════ */
+  .section--close .cta-link {
+    margin-top: 0.5rem;
+  }
+
+  .close-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+    padding: clamp(1.25rem, 2.5vw, 1.75rem) clamp(1.5rem, 3vw, 2rem);
+    border-top: 1px solid color-mix(in oklab, var(--color-accent) 25%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-accent) 25%, transparent);
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .close-contact-row {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    align-items: baseline;
+    gap: clamp(1rem, 2vw, 2rem);
+  }
+
+  .close-contact-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .close-contact-value {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+    color: var(--color-text);
+    text-decoration: none;
+    letter-spacing: -0.005em;
+    transition: color 0.25s var(--ease-out-expo);
+  }
+
+  .close-contact-value:hover {
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 480px) {
+    .close-contact-row {
+      grid-template-columns: 1fr;
+      gap: 0.15rem;
+    }
+  }
+
+  .cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.01em;
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 5px;
+    text-decoration-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+    transition: text-decoration-color 0.25s var(--ease-out-expo), gap 0.25s var(--ease-out-expo);
+  }
+
+  .cta-link:hover {
+    text-decoration-color: var(--color-accent);
+    gap: 0.7rem;
+  }
+
+  .cta-link svg {
+    transition: transform 0.25s var(--ease-out-expo);
+  }
+
+  .cta-link:hover svg {
+    transform: translateX(3px);
+  }
+
+  .signoff {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: 'Instrument Serif', serif;
+  }
+
+  .signoff-dash {
+    color: var(--color-accent);
+    font-size: var(--text-lg);
+  }
+
+  .signoff-name {
+    font-style: italic;
+    font-size: var(--text-xl);
+    color: var(--color-text);
+  }
+
+  /* ═══════════ RESPONSIVE ═══════════ */
+  @media (max-width: 640px) {
+    .page-subtitle {
+      font-size: var(--text-md);
+    }
+
+    .tier {
+      padding: clamp(1.5rem, 5vw, 2rem);
+    }
+
+    .tier-head {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
+    .tier-pricing {
+      align-items: flex-start;
+      text-align: left;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.5rem 1rem;
+    }
+
+    .tier-pricing-meta {
+      margin-top: 0;
+    }
+
+    .tier-watermark {
+      font-size: clamp(5rem, 22vw, 8rem);
+      top: -0.5rem;
+      right: -0.5rem;
+    }
+  }
+
+  /* ═══════════ PRINT (PDF-ready) ═══════════ */
+  @media print {
+    .proposal-inner {
+      max-width: none;
+    }
+
+    .section, .tier {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .cta-link svg {
+      display: none;
+    }
+  }
+</style>
