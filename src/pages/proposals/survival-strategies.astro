@@ -147,7 +147,7 @@ const tiers = [
       {
         label: 'Lead capture & qualification',
         items: [
-          'Multi-step intake forms for Practice Analysis, the F.A.T., and Contact. Calibrated questions that pre-qualify owners before a consultant ever picks up the phone.',
+          'A purpose-built multi-step intake for the F.A.T. (your free consultation, currently your weakest lead-capture surface). Calibrated questions that pre-qualify owners before a consultant ever picks up the phone. Practice Analysis and Contact intakes rebuilt to the same standard.',
           'The Programs page redesigned as a visible curriculum: Practice Analysis through the seven specialized programs to Power of Choice.',
           'Email capture into your existing platform (Mailchimp, HubSpot, or ConvertKit).',
         ],
@@ -711,11 +711,14 @@ const tiers = [
             </h3>
 
             <p>
-              The current site has one form and it's a black box. Someone hits submit, your team calls
-              back, and 90 seconds into the call your consultant realizes the lead isn't close to a fit.
-              The new intake asks 5 to 8 questions up front. Practice type, what's broken, monthly visits,
-              current staff size. By the time a consultant calls, they already know who they're talking
-              to.
+              Start with the F.A.T. (your Free Financial Assessment Tool, the free consultation that's
+              meant to be your top-of-funnel lead source). Today, it's a single-page form with a long
+              list of questions. Few owners finish it, and the ones who do come through cold. The new
+              F.A.T. intake is a multi-step form that asks 5 to 8 calibrated questions one at a time:
+              practice type, what's broken, monthly visits, current staff size. Each step is short.
+              The visitor sees progress. By the time the form is submitted, your consultant already
+              knows whether this is a real lead and which program is the right entry point. We rebuild
+              the Practice Analysis and Contact forms to the same standard.
             </p>
 
             <h3 class="beat-marker">
@@ -726,7 +729,9 @@ const tiers = [
 
             <p>
               Blogs, case studies, ebooks, owner tools, webinars. All in proper CMSes your team can publish
-              to without calling me. The site keeps getting better after I leave.
+              to without calling me. Every new piece of content auto-formats to match the site's design,
+              gets indexed by Google, and surfaces in the right place across the rest of the site. The
+              more your team publishes, the more leads the site pulls in on its own.
             </p>
 
             <h3 class="beat-marker">
@@ -760,7 +765,8 @@ const tiers = [
             </p>
 
             <blockquote class="pull-quote">
-              The site keeps getting better after I leave.
+              Every blog post, case study, or ebook your team publishes becomes part of the site
+              automatically. No developer required.
             </blockquote>
           </div>
         </section>
@@ -1027,9 +1033,9 @@ const tiers = [
 
           <div class="prose">
             <p>
-              You're hiring me, not an agency. I do the design. I write the code. I own the result.
-              There's no account manager and no design-to-dev handoff because there's no one to hand
-              off to.
+              You're hiring me, not an agency. I do the design. I write the code. If the site
+              doesn't work, that's on me to fix. There's no account manager and no design-to-dev
+              handoff because there's no one to hand off to.
             </p>
             <p>
               Kickoff happens two weeks after you sign. I block the calendar time, you spend the two
@@ -1577,6 +1583,15 @@ const tiers = [
   html.js-ready .section,
   html.js-ready .tier {
     opacity: 0;
+    /* Safety-net CSS reveal in case motion's inView fails to fire (e.g., very
+       tall sections or IntersectionObserver quirks). Motion's WAAPI animation
+       with fill:both takes precedence when it runs, so this only kicks in if
+       the JS animation never fires. */
+    animation: proposal-fallback-reveal 0.4s ease 3s forwards;
+  }
+
+  @keyframes proposal-fallback-reveal {
+    to { opacity: 1; }
   }
 
   /* ═══════════ PAGE ═══════════ */
