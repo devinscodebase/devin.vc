@@ -1712,6 +1712,8 @@ const tiers = [
   }
 
   .section-title {
+    position: relative;
+    z-index: 1;
     font-family: 'Instrument Serif', serif;
     font-size: var(--text-2xl);
     font-weight: var(--weight-regular);
@@ -2085,6 +2087,8 @@ const tiers = [
   /* ─── Responsive: single column on small screens, both columns shown statically ─── */
   @media (max-width: 640px) {
     .testimonials-wall {
+      display: flex;
+      flex-direction: column;
       grid-template-columns: 1fr;
       height: auto;
       overflow: visible;
@@ -2094,14 +2098,14 @@ const tiers = [
 
     .testimonials-col {
       overflow: visible;
+      position: static;
     }
 
-    .testimonials-track {
-      animation: none;
-    }
-
+    /* Match desktop selector specificity (0,2,0) so the override actually wins. */
+    .testimonials-col--down .testimonials-track,
     .testimonials-col--up .testimonials-track {
       animation: none;
+      transform: none;
     }
 
     /* Hide duplicate cards used for the desktop marquee loop. */
