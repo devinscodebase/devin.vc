@@ -1,6 +1,7 @@
 ---
 export const prerender = false;
 
+import { Image } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import { sanityClient, urlFor } from '../../lib/sanity';
 
@@ -793,11 +794,11 @@ const tiers = [
                     </div>
                     <div class="browser-screen">
                       {project.screenshot ? (
-                        <img
+                        <Image
                           src={urlFor(project.screenshot).width(800).height(500).fit('crop').crop('top').quality(85).auto('format').url()}
                           alt={`${project.name} screenshot`}
-                          width="400"
-                          height="250"
+                          width={800}
+                          height={500}
                           loading="lazy"
                           decoding="async"
                         />

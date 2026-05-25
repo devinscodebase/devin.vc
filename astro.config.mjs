@@ -43,6 +43,12 @@ export default defineConfig({
     }),
   ],
 
+  image: {
+    // Allow the Sanity CDN as a remote image source so <Image /> can serve
+    // and optimize images from urlFor() URLs.
+    domains: ['cdn.sanity.io'],
+  },
+
   markdown: {
     shikiConfig: {
       theme: 'vitesse-dark',
