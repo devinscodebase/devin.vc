@@ -91,8 +91,10 @@ const projects = await sanityClient.fetch(`
   const projects = document.querySelectorAll('.project');
 
   if (!isVtNav) {
+    // Initial opacity:0 is set via CSS (html.js-ready selector) so elements
+    // never paint visible. No inline style means the global fallback animation
+    // doesn't fire and conflict with motion's entrance.
     if (header) {
-      header.style.opacity = '0';
       inView(header, () => {
         animate(header, { opacity: [0, 1], y: [12, 0] }, {
           duration: 0.4,
@@ -101,7 +103,6 @@ const projects = await sanityClient.fetch(`
       }, { amount: 0.3 });
     }
 
-    projects.forEach(p => { p.style.opacity = '0'; });
     projects.forEach((project, i) => {
       inView(project, () => {
         animate(project, { opacity: [0, 1], y: [15, 0] }, {
@@ -128,6 +129,14 @@ const projects = await sanityClient.fetch(`
 </script>
 
 <style>
+  /* Pre-hide elements that JS will fade in. The js-ready class is set in Layout.astro
+     during head parsing, so this rule applies before first paint and prevents
+     the visible→invisible flash from setting opacity:0 in JS post-render. */
+  html.js-ready .page-header,
+  html.js-ready .project {
+    opacity: 0;
+  }
+
   .projects-page {
     min-height: 100dvh;
     padding: var(--space-page-top) var(--space-page-x) var(--space-page-bottom);

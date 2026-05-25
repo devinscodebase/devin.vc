@@ -165,13 +165,22 @@ const tiers = [
     accent: 'rust',
     label: 'Tier 03',
     name: 'Authority',
-    tagline: 'Everything in Engine, plus the parts that make it the best site in your category.',
+    tagline: 'Everything in Engine, plus the data, email, and analytics infrastructure to actually own your marketing operation.',
     price: 15000,
-    timeline: '9–12 weeks',
+    timeline: '11–14 weeks',
     payment: '30% on signing · 35% at design approval · 35% at launch',
-    cmsCount: '7 CMSs',
+    cmsCount: '7 CMSs · admin dashboard',
     builds_on: 'Engine',
     groups: [
+      {
+        label: 'Owned infrastructure',
+        items: [
+          'Turso database, spun up under SSI ownership and handed over with the keys. Stores every form submission, lead, F.A.T. completion, owner-tools result, and subscriber record. Your team controls it day-to-day, and the Loom library (further down this list) walks them through every common task.',
+          'Resend integration for transactional and automated email, hooked into the Resend account SSI already runs. Transactional confirmations for every form and download. Automated drip sequences for new leads and owner-tools completions. Internal notifications to your team when high-value inquiries land.',
+          'PostHog integration for full site analytics: per-page heatmaps, session replays, custom event tracking on every form, CTA, and scroll event, plus conversion funnels for the paths that matter. You see what visitors actually do, not what we guess they do.',
+          'A custom /admin dashboard SSI logs into. Real-time lead activity feed, form submission inbox, subscriber lists, owner-tools completion stats, and PostHog analytics embedded inline. The data your business runs on, in one place, behind your own login.',
+        ],
+      },
       {
         label: 'Lead magnet machinery',
         items: [
@@ -188,9 +197,10 @@ const tiers = [
         ],
       },
       {
-        label: 'Post-launch',
+        label: 'Handoff & support',
         items: [
-          '30 days of post-launch support: bug fixes, copy tweaks, performance tuning, and a measurement readout once real traffic hits.',
+          'A complete library of screen-recorded Loom walkthroughs covering every part of the website ecosystem. How to publish in each of the seven CMSes, how to work the admin dashboard, how to read PostHog analytics and interpret heatmaps, how to configure Resend workflows, how to back up the Turso database. Each video is topic-tagged and shareable, so any new team member can ramp up without my involvement.',
+          '30 days of post-launch support: bug fixes, copy tweaks, performance tuning, and a measurement readout pulled directly from PostHog and the admin dashboard once real traffic hits.',
         ],
       },
     ],
@@ -198,10 +208,11 @@ const tiers = [
       { week: 'W1–2', name: 'Discovery' },
       { week: 'W2–5', name: 'Design' },
       { week: 'W5–9', name: 'Build' },
-      { week: 'W7–10', name: 'CMS + personalization' },
-      { week: 'W10–12', name: 'QA + launch' },
+      { week: 'W7–11', name: 'CMS + personalization' },
+      { week: 'W9–13', name: 'Integrations + admin' },
+      { week: 'W12–14', name: 'Handoff + launch' },
     ],
-    outcome: 'When a practice owner Googles "how to grow my PT practice," your site is the one they keep coming back to.',
+    outcome: 'When a practice owner Googles "how to grow my PT practice," your site is the one they keep coming back to — and you can see exactly when they did it, what they read, and what they signed up for.',
   },
 ];
 ---
@@ -279,11 +290,9 @@ const tiers = [
           <div class="title-rule" aria-hidden="true"></div>
 
           <p class="cover-intro">
-            Before recommending anything, I audited the current site against the standards every
-            modern web page is judged by: how fast it loads, how it's designed, how visitors move
-            through it, and whether it actually converts the leads already arriving. This document
-            walks through what I found, what it's costing in lost conversions, and what we'd build
-            to fix it.
+            Your site works. It's also leaving 30 to 50 percent of leads on the table. This document
+            walks through what I found in a top-to-bottom audit, what it's costing your business,
+            and what we'd build to fix it.
           </p>
         </header>
 
@@ -338,7 +347,7 @@ const tiers = [
             </p>
 
             <h4 class="beat-marker">
-              <span class="beat-num">i</span>
+              <span class="beat-num">1</span>
               <span class="beat-dash" aria-hidden="true"></span>
               <span class="beat-label">The intake form qualifies leads</span>
             </h4>
@@ -348,7 +357,7 @@ const tiers = [
             </p>
 
             <h4 class="beat-marker">
-              <span class="beat-num">ii</span>
+              <span class="beat-num">2</span>
               <span class="beat-dash" aria-hidden="true"></span>
               <span class="beat-label">The site performs</span>
             </h4>
@@ -358,7 +367,7 @@ const tiers = [
             </p>
 
             <h4 class="beat-marker">
-              <span class="beat-num">iii</span>
+              <span class="beat-num">3</span>
               <span class="beat-dash" aria-hidden="true"></span>
               <span class="beat-label">Your team publishes without me</span>
             </h4>
@@ -368,7 +377,7 @@ const tiers = [
             </p>
 
             <h4 class="beat-marker">
-              <span class="beat-num">iv</span>
+              <span class="beat-num">4</span>
               <span class="beat-dash" aria-hidden="true"></span>
               <span class="beat-label">The shop works on Stripe</span>
             </h4>
@@ -394,112 +403,72 @@ const tiers = [
           <div class="prose">
             <p>
               I ran each of the eight core marketing pages through three things: Google's free website
-              diagnostic tool (Lighthouse), browser automation that captures the rendered design
-              (Playwright), and a manual content review. The findings are below, page by page.
+              diagnostic tool (Lighthouse, which scores any page 0 to 100 across Performance,
+              Accessibility, SEO, and Best Practices; anything under 90 falls below Google's bar for a
+              production-ready page), browser automation that captures the rendered design
+              (Playwright), and a manual content review. The findings are below.
             </p>
-
-            <p>
-              A few technical terms come up. Each one is explained here once, in plain English, so the
-              rest of this section reads cleanly.
-            </p>
-
-            <p>
-              <strong>Lighthouse.</strong> Google's free website diagnostic tool. It scores any web
-              page from 0 to 100 across four categories: Performance (how fast it loads), Accessibility
-              (whether it works for people with disabilities and assistive technologies), SEO (whether
-              it's optimized for Google's search ranking), and Best Practices (general modern web
-              standards). Anything below 90 fails Google's bar for a production-ready page.
-            </p>
-
-            <p>
-              <strong>CTA.</strong> Stands for "call-to-action." A button or link asking the visitor to
-              do something, like "Schedule a Consultation" or "Get the F.A.T."
-            </p>
-
-            <p>
-              <strong>H1.</strong> The main heading of a web page. Every page should have exactly one
-              H1, and it tells both human visitors and Google what the page is about.
-            </p>
-
-            <p>
-              <strong>LCP (Largest Contentful Paint).</strong> How long it takes for the biggest piece
-              of visible content (a hero image, a headline, the first paragraph) to appear on the
-              screen. Google considers under 2.5 seconds "good." Anything over 4 seconds is poor and
-              visitors start bouncing.
-            </p>
-
-            <p>
-              <strong>CLS (Cumulative Layout Shift).</strong> A measure of how much the page content
-              moves around while it loads. Zero means nothing shifts. Under 0.1 is "good." Over 0.25
-              is poor and visitors find it visibly broken.
-            </p>
-
-            <p>
-              <strong>Server response time.</strong> How long the website's server takes to send back
-              the first piece of the page before anything else can render. Industry target is under
-              200 milliseconds (0.2 seconds). The current site sits between 1.0 and 2.2 seconds, which
-              is five to ten times slower than the target.
-            </p>
-
-            <p>With that out of the way, here's the page-by-page audit.</p>
 
             <h3 class="beat-marker">
-              <span class="beat-num">i</span>
+              <span class="beat-num">1</span>
               <span class="beat-dash" aria-hidden="true"></span>
               <span class="beat-label">Home</span>
             </h3>
             <p>
-              The homepage has 26 different CTAs competing for attention. With no clear primary
-              action, visitors don't know what to click. The hero section uses a 2.1 MB image, which
-              is the single largest asset on the entire site and takes several seconds to download on
-              a phone. Server response time is 2.2 seconds before anything else can begin loading.
-              Eight different button styles appear on the same page, breaking visual consistency. The
-              page has 43 headings (one H1, fourteen H2s, sixteen H3s, plus more), which dilutes the
-              hierarchy enough that no single message lands.
+              The homepage has 26 different CTAs (calls-to-action — buttons or links asking the
+              visitor to do something) competing for attention. With no clear primary action, visitors
+              don't know what to click. The hero section uses a 2.1 MB image, which is the single
+              largest asset on the entire site and takes several seconds to download on a phone.
+              Server response time is 2.2 seconds before anything else can begin loading — the
+              industry target is under 0.2 seconds, so the site is roughly ten times slower at this
+              first step alone. Eight different button styles appear on the same page, breaking visual
+              consistency. The page has 43 headings (one H1, fourteen H2s, sixteen H3s, plus more),
+              which dilutes the hierarchy enough that no single message lands.
             </p>
 
             <h3 class="beat-marker">
-              <span class="beat-num">ii</span>
+              <span class="beat-num">2</span>
               <span class="beat-dash" aria-hidden="true"></span>
               <span class="beat-label">About</span>
             </h3>
             <p>
-              The About page has two H1 elements, when there should only ever be one. Three different
-              font families render on the page (only two are intentional). The main "Contact us"
-              call-to-action is buried at the very bottom of a long bio block, where most readers
-              never scroll.
+              The About page has two H1 elements — the H1 is the main heading of a page, and there
+              should only ever be one. Three different font families render on the page (only two are
+              intentional). The main "Contact us" call-to-action is buried at the very bottom of a
+              long bio block, where most readers never scroll.
             </p>
 
             <h3 class="beat-marker">
-              <span class="beat-num">iii</span>
+              <span class="beat-num">3</span>
               <span class="beat-dash" aria-hidden="true"></span>
               <span class="beat-label">Services</span>
             </h3>
             <p>
               Four different font families render on this page: Prompt, Montserrat, Times, and Lucida
               Grande. Only the first two are intentional. The other two appear because form inputs and
-              certain text elements don't override the operating system's default fonts. The page
-              also shifts visibly during load (CLS of 0.138, which is over the "good" threshold). At
+              certain text elements don't override the operating system's default fonts. The page also
+              shifts visibly during load — its Cumulative Layout Shift (CLS, Google's measure of how
+              much content jumps around while loading) is 0.138, over the "good" threshold of 0.1. At
               the bottom is an intake form that asks ten or more questions across roughly 25 form
               fields before the visitor can submit anything.
             </p>
 
             <h3 class="beat-marker">
-              <span class="beat-num">iv</span>
+              <span class="beat-num">4</span>
               <span class="beat-dash" aria-hidden="true"></span>
               <span class="beat-label">Programs</span>
             </h3>
             <p>
-              This is the slowest page on the site. Its LCP is 9.4 seconds, meaning the main
-              content takes nearly ten seconds to appear on a phone. Google considers anything over
-              2.5 seconds poor. The ten programs are presented as a flat list with no visual
-              hierarchy between the flagship and the supporting programs, so visitors leave without
-              a clear sense of which one is right for them. The same long intake form from the
-              Services page appears here, too.
+              This is the slowest page on the site. Its LCP (Largest Contentful Paint, the time the
+              main visible content takes to appear) is 9.4 seconds. Google considers anything over 2.5
+              seconds poor. The ten programs are presented as a flat list with no visual hierarchy
+              between the flagship and the supporting programs, so visitors leave without a clear
+              sense of which one is right for them. The same long intake form from the Services page
+              appears here, too.
             </p>
 
             <h3 class="beat-marker">
-              <span class="beat-num">v</span>
+              <span class="beat-num">5</span>
               <span class="beat-dash" aria-hidden="true"></span>
               <span class="beat-label">Who We Serve</span>
             </h3>
@@ -510,23 +479,23 @@ const tiers = [
             </p>
 
             <h3 class="beat-marker">
-              <span class="beat-num">vi</span>
+              <span class="beat-num">6</span>
               <span class="beat-dash" aria-hidden="true"></span>
               <span class="beat-label">Results</span>
             </h3>
             <p>
-              This is the most important page on the entire site, because it's where Craig's
-              proven case studies live and where prospects decide whether to schedule a Practice
-              Analysis. It's also the worst-performing page on the site. Its Lighthouse Performance
-              score is 40 (a failing grade). Its CLS is 0.326, which is over three times Google's
-              "good" threshold of 0.1. That means the page content visibly jumps around as it
-              loads. The testimonials on the page are shown as initials only ("S.Y., BS, MPT" or
-              "M.J.S., PT/CHT") instead of as named people with photos and full attribution. The
-              underlying reviews are genuine, but initials read as anonymous and unverifiable.
+              This is the most important page on the entire site, because it's where the proven case
+              studies live and where prospects decide whether to schedule a Practice Analysis. It's
+              also the worst-performing page on the site. Its Lighthouse Performance score is 40 — a
+              flat failing grade. Its CLS is 0.326, over three times the "good" threshold of 0.1.
+              That means the page content visibly jumps around as it loads. The testimonials on the
+              page are shown as initials only ("S.Y., BS, MPT" or "M.J.S., PT/CHT") instead of as
+              named people with photos and full attribution. The underlying reviews are genuine, but
+              initials read as anonymous and unverifiable.
             </p>
 
             <h3 class="beat-marker">
-              <span class="beat-num">vii</span>
+              <span class="beat-num">7</span>
               <span class="beat-dash" aria-hidden="true"></span>
               <span class="beat-label">Resources</span>
             </h3>
@@ -537,7 +506,7 @@ const tiers = [
             </p>
 
             <h3 class="beat-marker">
-              <span class="beat-num">viii</span>
+              <span class="beat-num">8</span>
               <span class="beat-dash" aria-hidden="true"></span>
               <span class="beat-label">Contact</span>
             </h3>
@@ -569,84 +538,45 @@ const tiers = [
 
           <div class="prose">
             <p>
-              The page-by-page issues above fall into four clear patterns. Each one repeats almost
-              everywhere on the site.
+              The page-by-page issues above fall into four patterns. Each repeats almost everywhere.
             </p>
 
-            <h3 class="beat-marker">
-              <span class="beat-num">i</span>
-              <span class="beat-dash" aria-hidden="true"></span>
-              <span class="beat-label">Design</span>
-            </h3>
             <p>
-              Eight different CTA button styles appear on the homepage alone. Several buttons render
-              with zero vertical padding, which means they visually collapse and become hard to click
-              on a phone. The "primary" blue accent color is actually being used as two slightly
-              different shades on the same page (<span class="num-inline">rgb(46,109,168)</span> and
-              <span class="num-inline">rgb(46,109,169)</span>). Ten distinct text colors appear on
-              the homepage, including off-by-one duplicates and several barely-different shades of
-              white. A consistent design system uses three to four colors at most. The current site
-              has nearly three times that.
+              <strong>Design.</strong> Eight different CTA button styles on the homepage alone. Some
+              with zero vertical padding, so they visually collapse and become hard to tap. Two
+              slightly different blues both used as "the primary" accent
+              (<span class="num-inline">rgb(46,109,168)</span> and
+              <span class="num-inline">rgb(46,109,169)</span>). Ten distinct text colors on the
+              homepage, including off-by-one duplicates and barely-different shades of white. A
+              consistent design system uses three or four colors and a couple of button variants —
+              the current site has nearly three times that.
             </p>
 
-            <h3 class="beat-marker">
-              <span class="beat-num">ii</span>
-              <span class="beat-dash" aria-hidden="true"></span>
-              <span class="beat-label">Typography</span>
-            </h3>
             <p>
-              The homepage uses <span class="num-inline">26</span> distinct font sizes. A real type
-              scale has five to eight sizes that the entire site reuses consistently. Twenty-six is
-              the accumulated result of dozens of WordPress block defaults and inline overrides, not
-              a designed system.
-            </p>
-            <p>
-              Multiple pages render with four different font families: Prompt, Montserrat, Times, and
-              Lucida Grande. Only the first two are intentional. The other two creep in because some
-              inline text elements and all form inputs don't override the operating system's default
-              fonts. The chosen body font (Prompt) reads as modern and tech-forward, which quietly
-              undercuts the heritage claim of a 30-year firm.
+              <strong>Typography.</strong> <span class="num-inline">26</span> distinct font sizes on
+              the homepage. Real type scales have five to eight. Four font families render across the
+              site when only two are intentional — the others creep in from form inputs and inline
+              elements that don't override the operating system's defaults. The chosen body font
+              (Prompt) reads as a modern tech startup, which quietly undercuts the heritage claim of
+              a 30-year firm.
             </p>
 
-            <h3 class="beat-marker">
-              <span class="beat-num">iii</span>
-              <span class="beat-dash" aria-hidden="true"></span>
-              <span class="beat-label">Performance</span>
-            </h3>
             <p>
-              The mobile Lighthouse Performance score averages <span class="num-inline">57</span>
-              across the site. The Results page scores <span class="num-inline">40</span>, which is a
-              flat failing grade. (As a reminder, Lighthouse scores any page 0 to 100, and anything
-              under 90 fails the bar for a production-ready page.)
-            </p>
-            <p>
-              Server response time sits between 1.0 and 2.2 seconds across pages. The industry
-              target is under 200 milliseconds (0.2 seconds). The current site is five to ten times
-              slower at this first step alone, before any image, font, or script has even started
-              loading.
-            </p>
-            <p>
-              The homepage ships 4.46 MB of total content to a phone, driven by a single 2.1 MB
-              hero image that was never properly compressed. YouTube alone loads about 780 KB of
-              JavaScript to embed one video, even before the visitor presses play.
+              <strong>Performance.</strong> Mobile Lighthouse averages <span class="num-inline">57</span>
+              across the site, with Results scoring <span class="num-inline">40</span> — a flat failing
+              grade. Server response sits between 1.0 and 2.2 seconds; the industry target is 0.2. The
+              homepage ships 4.46 MB on a phone, driven by a single 2.1 MB hero image that was never
+              properly compressed. YouTube alone loads 780 KB of JavaScript before the visitor even
+              presses play.
             </p>
 
-            <h3 class="beat-marker">
-              <span class="beat-num">iv</span>
-              <span class="beat-dash" aria-hidden="true"></span>
-              <span class="beat-label">Structure</span>
-            </h3>
             <p>
-              The homepage is <span class="num-inline">8,678</span> pixels tall, which is about six
-              full mobile screens of scrolling. It contains 43 headings and 26 CTAs. There is no
-              single dominant message because everything is competing with everything else.
-            </p>
-            <p>
-              The Services and Programs pages both end with an intake form that asks ten or more
-              questions across roughly 25 individual form fields. The Contact page hosts two separate
-              forms, one for new prospects and one for existing-customer technical support, which
-              confuses both audiences. The right model for a B2B intake is three to five questions in
-              a multi-step flow, where each step is short and the visitor can see progress.
+              <strong>Structure.</strong> The homepage is <span class="num-inline">8,678</span> pixels
+              tall — about six full mobile screens — with 43 headings and 26 CTAs. The Services and
+              Programs pages both end in intake forms asking 10+ questions across roughly 25 form
+              fields. The Contact page hosts two separate forms, one for prospects and one for
+              existing-customer technical support, which confuses both audiences. Every page tries to
+              do everything, and no page has a single primary action.
             </p>
 
             <p>
@@ -753,7 +683,7 @@ const tiers = [
             </p>
 
             <h3 class="beat-marker">
-              <span class="beat-num">i</span>
+              <span class="beat-num">1</span>
               <span class="beat-dash" aria-hidden="true"></span>
               <span class="beat-label">Design</span>
             </h3>
@@ -768,7 +698,7 @@ const tiers = [
             </p>
 
             <h3 class="beat-marker">
-              <span class="beat-num">ii</span>
+              <span class="beat-num">2</span>
               <span class="beat-dash" aria-hidden="true"></span>
               <span class="beat-label">Lead capture</span>
             </h3>
@@ -782,7 +712,7 @@ const tiers = [
             </p>
 
             <h3 class="beat-marker">
-              <span class="beat-num">iii</span>
+              <span class="beat-num">3</span>
               <span class="beat-dash" aria-hidden="true"></span>
               <span class="beat-label">Content</span>
             </h3>
@@ -793,7 +723,7 @@ const tiers = [
             </p>
 
             <h3 class="beat-marker">
-              <span class="beat-num">iv</span>
+              <span class="beat-num">4</span>
               <span class="beat-dash" aria-hidden="true"></span>
               <span class="beat-label">Platform</span>
             </h3>
@@ -805,7 +735,7 @@ const tiers = [
             </p>
 
             <h3 class="beat-marker">
-              <span class="beat-num">v</span>
+              <span class="beat-num">5</span>
               <span class="beat-dash" aria-hidden="true"></span>
               <span class="beat-label">Shop</span>
             </h3>
@@ -972,8 +902,6 @@ const tiers = [
           <div class="tiers-list">
             {tiers.map((tier) => (
               <article class={`tier tier--${tier.accent}`}>
-                <div class="tier-watermark" aria-hidden="true">{tier.label.replace('Tier ', '')}</div>
-
                 <header class="tier-head">
                   <div class="tier-identity">
                     <span class="tier-eyebrow">
@@ -1276,9 +1204,11 @@ const tiers = [
 
   const isVtNav = (window as any).__vtNav;
   if (!isVtNav) {
+    // Initial opacity:0 is set via CSS (html.js-ready selector) so the elements
+    // never paint visible — no FOUC, no inline style means no global fallback
+    // animation conflict. motion animates from CSS-applied opacity:0 to 1.
     const header = document.querySelector('.page-header') as HTMLElement | null;
     if (header) {
-      header.style.opacity = '0';
       inView(header, () => {
         animate(header, { opacity: [0, 1], y: [12, 0] }, {
           duration: 0.5,
@@ -1289,7 +1219,6 @@ const tiers = [
 
     const sections = document.querySelectorAll<HTMLElement>('.section');
     sections.forEach((section, i) => {
-      section.style.opacity = '0';
       inView(section, () => {
         animate(section, { opacity: [0, 1], y: [10, 0] }, {
           duration: 0.5,
@@ -1301,7 +1230,6 @@ const tiers = [
 
     const tiers = document.querySelectorAll<HTMLElement>('.tier');
     tiers.forEach((tier, i) => {
-      tier.style.opacity = '0';
       inView(tier, () => {
         animate(tier, { opacity: [0, 1], y: [12, 0] }, {
           duration: 0.5,
@@ -1630,6 +1558,16 @@ const tiers = [
     }
   }
 
+  /* ═══════════ FOUC PREVENTION ═══════════
+     Pre-hide elements that JS will fade in.
+     Only applies when JS is ready (set in Layout.astro).
+     This eliminates the visible→invisible flash before animations run. */
+  html.js-ready .page-header,
+  html.js-ready .section,
+  html.js-ready .tier {
+    opacity: 0;
+  }
+
   /* ═══════════ PAGE ═══════════ */
   .proposal-page {
     min-height: 100dvh;
@@ -1717,16 +1655,16 @@ const tiers = [
   .title-rule {
     width: 48px;
     height: 2px;
-    background: linear-gradient(90deg, var(--color-accent-teal), var(--color-accent-rust));
+    background: linear-gradient(90deg, var(--color-accent-teal), var(--color-accent-amber));
     margin-top: clamp(1.5rem, 3vw, 2rem);
   }
 
   /* ─── Cover intro (one short paragraph below the page header) ─── */
   .cover-intro {
     font-family: 'DM Sans', sans-serif;
-    font-size: var(--text-md);
-    line-height: 1.65;
-    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+    line-height: 1.55;
+    color: var(--color-text);
     max-width: 52ch;
     margin: clamp(2rem, 4vw, 3rem) 0 0;
   }
@@ -1833,7 +1771,7 @@ const tiers = [
   .marquee-card {
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
+    gap: 1rem;
     width: clamp(280px, 38vw, 380px);
     flex: 0 0 auto;
     text-decoration: none;
@@ -2118,14 +2056,30 @@ const tiers = [
     color: var(--color-text-muted);
   }
 
-  /* ─── Responsive: single column on small screens ─── */
+  /* ─── Responsive: single column on small screens, both columns shown statically ─── */
   @media (max-width: 640px) {
     .testimonials-wall {
       grid-template-columns: 1fr;
-      height: clamp(440px, 60vh, 600px);
+      height: auto;
+      overflow: visible;
+      mask-image: none;
+      -webkit-mask-image: none;
     }
 
-    .testimonials-col--up {
+    .testimonials-col {
+      overflow: visible;
+    }
+
+    .testimonials-track {
+      animation: none;
+    }
+
+    .testimonials-col--up .testimonials-track {
+      animation: none;
+    }
+
+    /* Hide duplicate cards used for the desktop marquee loop. */
+    .tmnl[aria-hidden="true"] {
       display: none;
     }
   }
@@ -2192,6 +2146,16 @@ const tiers = [
   }
 
   /* ─── Beat marker (sub-heading within a section, matches about.astro chapter-marker pattern) ─── */
+
+  /* Inherit the section's accent so beat-markers match the section-tag color.
+     Defaults to teal (matches the unmodified .section-tag color). */
+  .section {
+    --beat-accent: var(--color-accent-teal);
+  }
+  .section:has(.section-tag.tag--amber) { --beat-accent: var(--color-accent-amber); }
+  .section:has(.section-tag.tag--rust) { --beat-accent: var(--color-accent-rust); }
+  .section:has(.section-tag.tag--gold) { --beat-accent: var(--color-accent); }
+
   .beat-marker {
     display: flex;
     align-items: center;
@@ -2211,7 +2175,7 @@ const tiers = [
     font-family: 'Instrument Serif', serif;
     font-style: italic;
     font-size: var(--text-md);
-    color: var(--color-accent-amber);
+    color: var(--beat-accent);
     line-height: 1;
     min-width: 1.25rem;
   }
@@ -2219,7 +2183,7 @@ const tiers = [
   .beat-dash {
     width: 18px;
     height: 1px;
-    background: linear-gradient(90deg, var(--color-accent-amber), transparent);
+    background: linear-gradient(90deg, var(--beat-accent), transparent);
     flex-shrink: 0;
   }
 
@@ -2273,28 +2237,6 @@ const tiers = [
   .tier:hover {
     border-top-color: color-mix(in oklab, var(--tier-accent) 70%, transparent);
     background: color-mix(in oklab, var(--tier-accent) 4%, transparent);
-  }
-
-  /* Giant number watermark in the background */
-  .tier-watermark {
-    position: absolute;
-    top: clamp(-1rem, -2vw, -0.5rem);
-    right: clamp(-1rem, -1vw, 0rem);
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    font-size: clamp(7rem, 18vw, 12rem);
-    line-height: 1;
-    color: color-mix(in oklab, var(--tier-accent) 8%, transparent);
-    pointer-events: none;
-    user-select: none;
-    z-index: 0;
-    letter-spacing: -0.04em;
-  }
-
-  /* All tier content sits above the watermark */
-  .tier > *:not(.tier-watermark) {
-    position: relative;
-    z-index: 1;
   }
 
   /* ─── Tier head ─── */
@@ -2412,7 +2354,7 @@ const tiers = [
   .tier-divider {
     height: 1px;
     background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--tier-accent) 25%, transparent), transparent);
-    margin: clamp(1.75rem, 3.5vw, 2.5rem) 0;
+    margin: var(--space-element) 0;
   }
 
   /* ─── Builds-on callout (Tier 2 and 3) ─── */
@@ -2459,7 +2401,7 @@ const tiers = [
   .tier-group {
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
+    gap: 1rem;
   }
 
   .tier-group-label {
@@ -2480,7 +2422,7 @@ const tiers = [
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
+    gap: 1rem;
   }
 
   .tier-list li {
@@ -2715,12 +2657,6 @@ const tiers = [
 
     .tier-pricing-meta {
       margin-top: 0;
-    }
-
-    .tier-watermark {
-      font-size: clamp(5rem, 22vw, 8rem);
-      top: -0.5rem;
-      right: -0.5rem;
     }
   }
 

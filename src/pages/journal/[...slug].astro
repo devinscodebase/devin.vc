@@ -234,9 +234,10 @@ const ogImage = post.ogImage
   const isVtNav = window.__vtNav;
 
   if (!isVtNav) {
+    // Initial opacity:0 is set via CSS (html.js-ready selector) so elements
+    // never paint visible.
     const header = document.querySelector('.post-header');
     if (header) {
-      header.style.opacity = '0';
       inView(header, () => {
         animate(header, { opacity: [0, 1], y: [12, 0] }, {
           duration: 0.4,
@@ -247,7 +248,6 @@ const ogImage = post.ogImage
 
     const hero = document.querySelector('.hero-image');
     if (hero) {
-      hero.style.opacity = '0';
       inView(hero, () => {
         animate(hero, { opacity: [0, 1] }, {
           duration: 0.35,
@@ -262,7 +262,6 @@ const ogImage = post.ogImage
     if (postBody) {
       const children = Array.from(postBody.children).slice(0, 5) as HTMLElement[];
       children.forEach((el, i) => {
-        el.style.opacity = '0';
         inView(el, () => {
           animate(el, { opacity: [0, 1], y: [8, 0] }, {
             duration: 0.35,
@@ -366,6 +365,13 @@ const ogImage = post.ogImage
 </script>
 
 <style>
+  /* Pre-hide elements JS will fade in (Layout.astro adds .js-ready before paint). */
+  html.js-ready .post-header,
+  html.js-ready .hero-image,
+  html.js-ready .post-body > *:nth-child(-n+5) {
+    opacity: 0;
+  }
+
   .post {
     min-height: 100dvh;
     padding: var(--space-page-top) var(--space-page-x) var(--space-page-bottom);

@@ -69,6 +69,10 @@ const ogImage = `${siteUrl}${ogImagePath.startsWith('/') ? ogImagePath : `/${ogI
       (function() {
         var stored = localStorage.getItem('theme');
         document.documentElement.setAttribute('data-theme', stored || 'dark');
+        // Mark JS as ready so CSS can pre-hide animation candidates
+        // before the browser paints them. Prevents the visible→invisible
+        // flash that happens when JS sets opacity:0 post-render.
+        document.documentElement.classList.add('js-ready');
       })();
     </script>
     <link rel="preload" href="/fonts/InstrumentSerif-Regular-Latin.woff2" as="font" type="font/woff2" crossorigin />

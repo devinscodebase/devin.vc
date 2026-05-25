@@ -118,8 +118,8 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   const cardEl = document.querySelector('.contact-card');
 
   if (!isVtNav) {
+    // Initial opacity:0 is set via CSS (html.js-ready selector).
     if (header) {
-      header.style.opacity = '0';
       inView(header, () => {
         animate(header, { opacity: [0, 1], y: [12, 0] }, {
           duration: 0.4,
@@ -129,7 +129,6 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     }
 
     if (switcher) {
-      switcher.style.opacity = '0';
       inView(switcher, () => {
         animate(switcher, { opacity: [0, 1], y: [10, 0] }, {
           duration: 0.35,
@@ -140,7 +139,6 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     }
 
     if (cardEl) {
-      cardEl.style.opacity = '0';
       inView(cardEl, () => {
         animate(cardEl, { opacity: [0, 1], y: [15, 0] }, {
           duration: 0.4,
@@ -216,6 +214,13 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
 </script>
 
 <style>
+  /* Pre-hide elements JS will fade in (Layout.astro adds .js-ready before paint). */
+  html.js-ready .page-header,
+  html.js-ready .contact-switcher,
+  html.js-ready .contact-card {
+    opacity: 0;
+  }
+
   /* ---- Centered stage layout ---- */
   .contact-page {
     min-height: 100dvh;

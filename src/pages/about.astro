@@ -326,7 +326,8 @@ import presentDay from '../assets/story/present-day.jpg';
   const convGrid = document.querySelector('.conviction-grid');
 
   if (!isVtNav) {
-    sections.forEach(s => { s.style.opacity = '0'; });
+    // Initial opacity:0 is set via CSS (html.js-ready selector) so elements
+    // never paint visible.
     sections.forEach((el, i) => {
       inView(el, () => {
         animate(el, { opacity: [0, 1], y: [12, 0] }, {
@@ -339,7 +340,6 @@ import presentDay from '../assets/story/present-day.jpg';
 
     const storyTag = document.querySelector('.story-tag');
     if (storyTag) {
-      storyTag.style.opacity = '0';
       inView(storyTag, () => {
         animate(storyTag, { opacity: [0, 1], y: [12, 0] }, {
           duration: 0.4,
@@ -349,7 +349,6 @@ import presentDay from '../assets/story/present-day.jpg';
     }
 
     chapters.forEach(ch => {
-      ch.style.opacity = '0';
       inView(ch, () => {
         animate(ch, { opacity: [0, 1], y: [12, 0] }, {
           duration: 0.45,
@@ -359,7 +358,6 @@ import presentDay from '../assets/story/present-day.jpg';
     });
 
     storyPhotos.forEach(fig => {
-      fig.style.opacity = '0';
       inView(fig, () => {
         animate(fig, { opacity: [0, 1], scale: [1.02, 1] }, {
           duration: 0.5,
@@ -369,7 +367,6 @@ import presentDay from '../assets/story/present-day.jpg';
     });
 
     pullQuotes.forEach(pq => {
-      pq.style.opacity = '0';
       inView(pq, () => {
         animate(pq, { opacity: [0, 1], y: [8, 0] }, {
           duration: 0.5,
@@ -378,7 +375,6 @@ import presentDay from '../assets/story/present-day.jpg';
       }, { amount: 0.3 });
     });
 
-    convictions.forEach(c => { c.style.opacity = '0'; });
     if (convGrid) {
       inView(convGrid, () => {
         animate(convictions, { opacity: [0, 1], y: [12, 0] }, {
@@ -406,7 +402,6 @@ import presentDay from '../assets/story/present-day.jpg';
   const skillGroups = document.querySelectorAll('.skill-group');
   const skillsGrid = document.querySelector('.skills-grid');
   if (!isVtNav) {
-    skillGroups.forEach(g => { g.style.opacity = '0'; });
     if (skillsGrid) {
       inView(skillsGrid, () => {
         animate(skillGroups, { opacity: [0, 1], y: [12, 0] }, {
@@ -420,6 +415,20 @@ import presentDay from '../assets/story/present-day.jpg';
 </script>
 
 <style>
+  /* Pre-hide elements JS will fade in (Layout.astro adds .js-ready before paint). */
+  html.js-ready .about-hero,
+  html.js-ready .convictions,
+  html.js-ready .skills,
+  html.js-ready .closing-cta,
+  html.js-ready .story-tag,
+  html.js-ready .chapter,
+  html.js-ready .chapter figure,
+  html.js-ready .pull-quote,
+  html.js-ready .conviction,
+  html.js-ready .skill-group {
+    opacity: 0;
+  }
+
   .about-page {
     min-height: 100dvh;
     padding: var(--space-page-top) var(--space-page-x) var(--space-page-bottom);

@@ -45,8 +45,7 @@ const images = [
     const items = grid.querySelectorAll('.gallery-item');
 
     if (!isVtNav) {
-      items.forEach(item => { item.style.opacity = '0'; });
-
+      // Initial opacity:0 is set via CSS (html.js-ready selector).
       inView(grid, () => {
         animate(items, {
           opacity: [0, 1],
@@ -118,6 +117,11 @@ const images = [
 </script>
 
 <style>
+  /* Pre-hide gallery items so JS fade-in doesn't flash visible→invisible. */
+  html.js-ready .gallery-item {
+    opacity: 0;
+  }
+
   .gallery {
     background: var(--color-bg);
     padding: var(--space-block) var(--space-page-x);
