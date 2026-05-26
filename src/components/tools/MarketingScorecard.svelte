@@ -1158,7 +1158,10 @@
                 inputmode="decimal"
                 placeholder="0.5"
                 value={expansionRate ?? ''}
-                oninput={(e) => { expansionRate = parseFloat(e.target.value) ?? 0; }}
+                oninput={(e) => {
+                  const v = parseFloat(e.target.value);
+                  expansionRate = Number.isNaN(v) ? 0 : v;
+                }}
                 onblur={() => inputFocused = false}
                 onfocus={() => inputFocused = true}
               />
