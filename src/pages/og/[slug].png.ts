@@ -75,6 +75,14 @@ const pages: OgPageDef[] = [
       subtitle: 'Get in touch',
     },
   },
+  {
+    slug: 'training',
+    params: {
+      type: 'page',
+      title: 'Training',
+      subtitle: 'Free word lists, playbooks, and references for operators',
+    },
+  },
 ];
 
 export const getStaticPaths: GetStaticPaths = () =>

@@ -36,9 +36,10 @@ const categoryLabels: Record<string, string> = {
 
 const pageTitle = `${asset.seoTitle || asset.title} — Devin Alexander`;
 const pageDescription = asset.description || asset.tagline || `Free ${categoryLabels[asset.category] || 'asset'}: ${asset.title}.`;
+const ogImage = `/og/training/${asset.slug}.png`;
 ---
 
-<Layout title={pageTitle} description={pageDescription} noIndex={asset.noIndex}>
+<Layout title={pageTitle} description={pageDescription} image={ogImage} noIndex={asset.noIndex}>
   <main>
     <section class={`gate-page accent-${asset.accent || 'gold'}`}>
       <div class="gate-inner">
