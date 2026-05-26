@@ -1965,7 +1965,7 @@ Generated at devin.vc/tools/gtm-planner`;
 
   .results-tag {
     font-family: var(--font-body);
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
@@ -1976,20 +1976,20 @@ Generated at devin.vc/tools/gtm-planner`;
 
   .results-hero-number {
     font-family: var(--font-display);
-    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    font-size: clamp(2.75rem, 7vw, 4.25rem);
     font-weight: var(--weight-regular);
     line-height: 1;
     color: var(--color-text);
     letter-spacing: -0.03em;
-    margin: 0 0 0.35rem;
+    margin: 0 0 0.5rem;
   }
 
   .results-hero-period {
-    font-size: 0.45em;
+    font-size: 0.55em;
     color: var(--color-text-muted);
     letter-spacing: 0;
     vertical-align: baseline;
-    margin-left: 0.1em;
+    margin-left: 0.15em;
   }
 
   .results-hero-context {
@@ -2004,8 +2004,8 @@ Generated at devin.vc/tools/gtm-planner`;
   /* ── Summary insight ── */
   .results-insight {
     font-family: var(--font-body);
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
+    font-size: var(--text-base);
+    color: var(--color-text);
     line-height: 1.65;
     margin: 0 0 clamp(2.5rem, 5vw, 3.5rem);
     padding: 1rem 0;
@@ -2045,25 +2045,25 @@ Generated at devin.vc/tools/gtm-planner`;
   .results-section-header {
     display: flex;
     align-items: center;
-    gap: 0.65rem;
-    margin-bottom: 1.25rem;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
   }
 
   .results-section-number {
     font-family: 'Instrument Serif', serif;
     font-style: italic;
-    font-size: var(--text-md);
+    font-size: var(--text-lg);
     line-height: 1;
     color: var(--color-accent-teal);
   }
 
   .results-section-heading {
     font-family: var(--font-body);
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
-    color: var(--color-text-muted);
+    color: var(--color-text);
     margin: 0;
   }
 
@@ -2098,7 +2098,7 @@ Generated at devin.vc/tools/gtm-planner`;
 
   .funnel-count {
     font-family: var(--font-display);
-    font-size: var(--text-xl);
+    font-size: var(--text-2xl);
     color: var(--color-text);
     line-height: 1.1;
     letter-spacing: var(--tracking-tight);
@@ -2108,22 +2108,22 @@ Generated at devin.vc/tools/gtm-planner`;
   .funnel-detail {
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
-    padding-top: 0.2em;
+    gap: 0.25rem;
+    padding-top: 0.3em;
   }
 
   .funnel-label {
     font-family: var(--font-body);
-    font-size: var(--text-sm);
+    font-size: var(--text-base);
     font-weight: var(--weight-medium);
-    color: var(--color-text-muted);
-    line-height: 1.2;
+    color: var(--color-text);
+    line-height: 1.25;
   }
 
   .funnel-breakdown {
     font-family: var(--font-body);
-    font-size: var(--text-xs);
-    color: color-mix(in oklab, var(--color-text-muted) 65%, transparent);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
     letter-spacing: 0.02em;
   }
 
@@ -2131,20 +2131,20 @@ Generated at devin.vc/tools/gtm-planner`;
   .funnel-connector {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0.55rem 0 0.55rem 0.1rem;
+    gap: 0.7rem;
+    padding: 0.6rem 0 0.6rem 0.1rem;
   }
 
   .funnel-connector-line {
-    width: 16px;
+    width: 18px;
     height: 1px;
     background: color-mix(in oklab, var(--color-text-muted) 25%, transparent);
   }
 
   .funnel-rate {
     font-family: var(--font-body);
-    font-size: var(--text-xs);
-    color: color-mix(in oklab, var(--color-text-muted) 70%, transparent);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
     letter-spacing: 0.04em;
   }
 
@@ -2165,7 +2165,7 @@ Generated at devin.vc/tools/gtm-planner`;
 
   .budget-primary-value {
     font-family: var(--font-display);
-    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    font-size: clamp(2rem, 4.5vw, 2.5rem);
     color: var(--color-text);
     line-height: 1;
     letter-spacing: -0.02em;
@@ -2173,7 +2173,7 @@ Generated at devin.vc/tools/gtm-planner`;
 
   .budget-primary-label {
     font-family: var(--font-body);
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
@@ -2209,14 +2209,15 @@ Generated at devin.vc/tools/gtm-planner`;
   .results-metric {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.5rem;
   }
 
   .results-metric-value {
     font-family: var(--font-display);
-    font-size: var(--text-xl);
+    font-size: var(--text-2xl);
     color: var(--color-text);
     line-height: 1.1;
+    letter-spacing: -0.02em;
   }
 
   .results-metric-value--warning { color: var(--color-accent-rust); }
@@ -2228,21 +2229,21 @@ Generated at devin.vc/tools/gtm-planner`;
 
   .results-metric-label {
     font-family: var(--font-body);
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
     color: var(--color-text-muted);
-    line-height: 1.45;
+    line-height: 1.5;
   }
 
   /* ── CAC Warning ── */
   .results-warning {
     margin-top: 1.25rem;
-    padding: 1rem 1.25rem;
+    padding: 1.15rem 1.25rem;
     border-left: 2px solid var(--color-accent-rust);
     background: color-mix(in oklab, var(--color-accent-rust) 5%, transparent);
     font-family: var(--font-body);
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
-    line-height: 1.5;
+    font-size: var(--text-base);
+    color: var(--color-text);
+    line-height: 1.55;
   }
 
   /* ── Pipeline ── */
@@ -2260,7 +2261,7 @@ Generated at devin.vc/tools/gtm-planner`;
 
   .pipeline-coverage-value {
     font-family: var(--font-display);
-    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    font-size: clamp(2rem, 4.5vw, 2.5rem);
     color: var(--color-text);
     line-height: 1;
     letter-spacing: -0.02em;
@@ -2268,7 +2269,7 @@ Generated at devin.vc/tools/gtm-planner`;
 
   .pipeline-coverage-label {
     font-family: var(--font-body);
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
@@ -2294,16 +2295,17 @@ Generated at devin.vc/tools/gtm-planner`;
 
   .pipeline-timeline-value {
     font-family: var(--font-display);
-    font-size: var(--text-xl);
+    font-size: var(--text-2xl);
     color: var(--color-text);
     line-height: 1.1;
+    letter-spacing: -0.02em;
   }
 
   .pipeline-timeline-label {
     font-family: var(--font-body);
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
     color: var(--color-text-muted);
-    line-height: 1.45;
+    line-height: 1.5;
   }
 
   @media (max-width: 640px) {
@@ -2331,24 +2333,24 @@ Generated at devin.vc/tools/gtm-planner`;
   .results-cta-text {
     font-family: var(--font-display);
     font-style: italic;
-    font-size: var(--text-base);
-    color: var(--color-text-muted);
+    font-size: var(--text-md);
+    color: var(--color-text);
     line-height: 1.35;
     margin: 0;
   }
 
   .results-cta-link {
     font-family: var(--font-body);
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.4rem;
     white-space: nowrap;
-    padding: 0.6rem 1.25rem;
+    padding: 0.7rem 1.4rem;
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 25%, transparent);
     transition: border-color var(--duration-fast) var(--ease-out-expo),
                 color var(--duration-fast) var(--ease-out-expo);
@@ -2390,13 +2392,13 @@ Generated at devin.vc/tools/gtm-planner`;
 
   .results-copy {
     font-family: var(--font-body);
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text);
     background: transparent;
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 25%, transparent);
-    padding: 0.75rem 2rem;
+    padding: 0.85rem 2rem;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -2417,7 +2419,7 @@ Generated at devin.vc/tools/gtm-planner`;
 
   .results-start-over {
     font-family: var(--font-body);
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
@@ -2438,11 +2440,11 @@ Generated at devin.vc/tools/gtm-planner`;
     align-items: center;
     gap: 0.5rem;
     font-family: var(--font-body);
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-accent-teal);
-    padding: 0.5rem 0.75rem;
+    padding: 0.55rem 0.85rem;
     border: 1px solid color-mix(in oklab, var(--color-accent-teal) 15%, transparent);
     border-radius: var(--radius-sm);
     margin-bottom: clamp(2rem, 4vw, 3rem);
