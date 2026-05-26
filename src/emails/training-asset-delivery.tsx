@@ -7,6 +7,9 @@ interface TrainingAssetDeliveryProps {
   assetTitle: string;
   assetTagline?: string;
   assetUrl: string;
+  categoryLabel?: string;
+  termCount?: number;
+  groups?: string[];
 }
 
 export default function TrainingAssetDelivery({
@@ -14,160 +17,196 @@ export default function TrainingAssetDelivery({
   assetTitle,
   assetTagline,
   assetUrl,
+  categoryLabel = 'Training',
+  termCount,
+  groups,
 }: TrainingAssetDeliveryProps) {
-  const greeting = firstName ? `Hey ${firstName}` : 'Hey there';
+  // Compact meta: "73 terms · 9 sections · free PDF"
+  const sectionCount = Array.isArray(groups) ? groups.filter(Boolean).length : 0;
+  const metaParts: string[] = [];
+  if (termCount && termCount > 0) metaParts.push(`${termCount} terms`);
+  if (sectionCount > 1) metaParts.push(`${sectionCount} sections`);
+  metaParts.push('Free PDF');
 
   return (
-    <Layout preview={`Here's your ${assetTitle}. Open it any time.`}>
-      <Text style={heading}>{greeting}, here's your download.</Text>
-      <Text style={body}>
-        Thanks for grabbing the <strong style={strong}>{assetTitle}</strong>.
-        {assetTagline ? ` ${assetTagline}` : ''}
-      </Text>
-      <Text style={body}>
-        It's hosted as a live page so it stays up to date. You can also save it
-        as a PDF from the page itself.
-      </Text>
+    <Layout preview={`Your ${assetTitle} is ready. Open it any time.`}>
+      {/* Eyebrow */}
+      <Text style={eyebrow}>{categoryLabel.toUpperCase()}</Text>
 
+      {/* Hero title in serif */}
+      <Text style={heroTitle}>{assetTitle}</Text>
+
+      {/* Italic serif tagline */}
+      {assetTagline && <Text style={tagline}>{assetTagline}</Text>}
+
+      {/* Gradient accent rule (matches the site) */}
+      <div style={accentRule} />
+
+      {/* Meta line: term count + section list */}
+      {metaParts.length > 0 && (
+        <Text style={meta}>{metaParts.join('   ·   ')}</Text>
+      )}
+
+      {/* CTA */}
       <Section style={btnContainer}>
         <Button style={button} href={assetUrl}>
-          Open the {assetTitle}
+          Open the {categoryLabel.toLowerCase()} &nbsp;→
         </Button>
       </Section>
 
-      <Text style={smallLink}>
-        Or copy this link: <Link href={assetUrl} style={inlineLink}>{assetUrl}</Link>
+      <Text style={linkFallback}>
+        Or paste this into your browser:{' '}
+        <Link href={assetUrl} style={inlineLink}>
+          {assetUrl}
+        </Link>
       </Text>
 
       <Hr style={divider} />
 
-      <Text style={whatToExpect}>What you can do with it</Text>
-      <table cellPadding="0" cellSpacing="0" style={{ width: '100%' }}>
-        <tr>
-          <td style={bulletCell}>
-            <Text style={bulletDot}>&#9679;</Text>
-          </td>
-          <td>
-            <Text style={bulletText}>
-              Reference it any time. The page lives at the link above.
-            </Text>
-          </td>
-        </tr>
-        <tr>
-          <td style={bulletCell}>
-            <Text style={bulletDot}>&#9679;</Text>
-          </td>
-          <td>
-            <Text style={bulletText}>
-              Download it as a PDF directly from the page.
-            </Text>
-          </td>
-        </tr>
-        <tr>
-          <td style={bulletCell}>
-            <Text style={bulletDot}>&#9679;</Text>
-          </td>
-          <td>
-            <Text style={bulletText}>
-              Share it with your team. No paywall, no login.
-            </Text>
-          </td>
-        </tr>
-      </table>
-
-      <Text style={muted}>
+      {/* Personal note */}
+      <Text style={noteHeading}>
+        {firstName ? `${firstName}, ` : ''}a quick note.
+      </Text>
+      <Text style={noteBody}>
+        This is the first in a series of training assets I'm putting together.
+        Built from real work, written in plain English, free to share. The page
+        stays current, so reference it any time, send it to your team, and grab
+        the PDF from the page itself.
+      </Text>
+      <Text style={noteBody}>
         If something's broken or you have a request for the next one, just reply
         to this email.
+      </Text>
+
+      <Text style={signoff}>
+        <span style={signoffDash}>—</span>{' '}
+        <span style={signoffName}>Devin</span>
       </Text>
     </Layout>
   );
 }
 
-const heading: React.CSSProperties = {
-  fontSize: '20px',
-  fontWeight: 400,
-  color: '#ede8df',
-  lineHeight: '1.4',
-  margin: '0 0 14px 0',
-};
+// ─── Site palette (matches src/styles/global.css) ───
+const COLOR_TEXT = '#ede8df';
+const COLOR_MUTED = '#a09488';
+const COLOR_DIM = '#6d5c48';
+const COLOR_BG_ELEVATED = '#141210';
+const COLOR_ACCENT = '#c4a47c';
+const COLOR_ACCENT_TEAL = '#5ba3a3';
 
-const body: React.CSSProperties = {
-  fontSize: '14px',
-  lineHeight: '1.7',
-  color: '#a09488',
-  margin: '0 0 14px 0',
-};
-
-const strong: React.CSSProperties = {
-  color: '#ede8df',
+const eyebrow: React.CSSProperties = {
+  fontSize: '10px',
   fontWeight: 500,
+  letterSpacing: '0.18em',
+  textTransform: 'uppercase' as const,
+  color: COLOR_ACCENT,
+  margin: '0 0 18px 0',
+  lineHeight: '1',
+};
+
+const heroTitle: React.CSSProperties = {
+  fontFamily: "Georgia, 'Times New Roman', serif",
+  fontSize: '34px',
+  fontWeight: 400,
+  letterSpacing: '-0.02em',
+  lineHeight: '1.05',
+  color: COLOR_TEXT,
+  margin: '0 0 14px 0',
+};
+
+const tagline: React.CSSProperties = {
+  fontFamily: "Georgia, 'Times New Roman', serif",
+  fontStyle: 'italic',
+  fontSize: '16px',
+  lineHeight: '1.4',
+  color: COLOR_MUTED,
+  margin: '0 0 22px 0',
+};
+
+const accentRule: React.CSSProperties = {
+  height: '2px',
+  width: '56px',
+  background: `linear-gradient(90deg, ${COLOR_ACCENT}, ${COLOR_ACCENT_TEAL})`,
+  borderRadius: '1px',
+  margin: '0 0 18px 0',
+  // Email-client fallback: solid color in case gradient is dropped
+  backgroundColor: COLOR_ACCENT,
+};
+
+const meta: React.CSSProperties = {
+  fontSize: '11px',
+  letterSpacing: '0.08em',
+  textTransform: 'uppercase' as const,
+  color: COLOR_DIM,
+  margin: '0 0 28px 0',
+  lineHeight: '1.5',
 };
 
 const btnContainer: React.CSSProperties = {
-  margin: '8px 0 20px 0',
+  margin: '0 0 14px 0',
 };
 
 const button: React.CSSProperties = {
-  backgroundColor: '#c4a47c',
+  display: 'inline-block',
+  backgroundColor: COLOR_ACCENT,
   color: '#0a0a08',
-  padding: '14px 32px',
-  borderRadius: '8px',
+  padding: '16px 28px',
+  borderRadius: '6px',
   fontSize: '14px',
   fontWeight: 500,
+  letterSpacing: '0.02em',
   fontFamily: "'DM Sans', sans-serif",
   textDecoration: 'none',
+  lineHeight: '1',
 };
 
-const smallLink: React.CSSProperties = {
-  fontSize: '12px',
-  color: '#6d5c48',
-  margin: '0 0 14px 0',
+const linkFallback: React.CSSProperties = {
+  fontSize: '11px',
+  color: COLOR_DIM,
+  margin: '0 0 4px 0',
+  lineHeight: '1.5',
   wordBreak: 'break-all' as const,
 };
 
 const inlineLink: React.CSSProperties = {
-  color: '#c4a47c',
+  color: COLOR_ACCENT,
   textDecoration: 'underline',
 };
 
 const divider: React.CSSProperties = {
   borderColor: '#1e1a14',
   borderWidth: '1px 0 0 0',
-  margin: '8px 0 20px 0',
+  margin: '28px 0 22px 0',
 };
 
-const whatToExpect: React.CSSProperties = {
-  fontSize: '10px',
+const noteHeading: React.CSSProperties = {
+  fontSize: '14px',
   fontWeight: 500,
-  letterSpacing: '0.15em',
-  textTransform: 'uppercase' as const,
-  color: '#6d5c48',
+  color: COLOR_TEXT,
+  margin: '0 0 10px 0',
+  lineHeight: '1.4',
+};
+
+const noteBody: React.CSSProperties = {
+  fontSize: '13px',
+  lineHeight: '1.7',
+  color: COLOR_MUTED,
   margin: '0 0 12px 0',
 };
 
-const bulletCell: React.CSSProperties = {
-  width: '16px',
-  verticalAlign: 'top',
-  paddingTop: '1px',
-};
-
-const bulletDot: React.CSSProperties = {
-  fontSize: '6px',
-  color: '#c4a47c',
-  margin: '0',
-  lineHeight: '1.7',
-};
-
-const bulletText: React.CSSProperties = {
-  fontSize: '13px',
-  lineHeight: '1.7',
-  color: '#a09488',
-  margin: '0 0 6px 0',
-};
-
-const muted: React.CSSProperties = {
-  fontSize: '12px',
-  color: '#6d5c48',
+const signoff: React.CSSProperties = {
+  fontSize: '14px',
   margin: '18px 0 0 0',
+  lineHeight: '1',
+};
+
+const signoffDash: React.CSSProperties = {
+  color: COLOR_ACCENT,
+};
+
+const signoffName: React.CSSProperties = {
+  fontFamily: "Georgia, 'Times New Roman', serif",
   fontStyle: 'italic',
+  fontSize: '18px',
+  color: COLOR_TEXT,
 };

@@ -41,7 +41,9 @@ export const POST: APIRoute = async ({ request }) => {
   // Resolve asset details from Sanity (so we know the title + can build the URL)
   const asset = await sanityClient.fetch(
     `*[_type == "trainingAsset" && slug.current == $slug][0]{
-      title, tagline, "slug": slug.current
+      title, tagline, category, "slug": slug.current,
+      "termCount": count(terms),
+      "groups": array::unique(terms[].group)
     }`,
     { slug: assetSlug }
   );
@@ -71,9 +73,25 @@ export const POST: APIRoute = async ({ request }) => {
   const assetUrl = `${origin}/training/${asset.slug}/words`;
 
   // Render delivery email
+  const categoryLabels: Record<string, string> = {
+    'word-list': 'Word List',
+    playbook: 'Playbook',
+    checklist: 'Checklist',
+    template: 'Template',
+    guide: 'Guide',
+  };
+  const emailProps = {
+    firstName,
+    assetTitle: asset.title,
+    assetTagline: asset.tagline ?? undefined,
+    assetUrl,
+    categoryLabel: asset.category ? categoryLabels[asset.category] || asset.category : 'Training',
+    termCount: asset.termCount ?? undefined,
+    groups: Array.isArray(asset.groups) ? asset.groups.filter(Boolean) : [],
+  };
   const [emailHtml, emailText] = await Promise.all([
-    render(TrainingAssetDelivery({ firstName, assetTitle: asset.title, assetTagline: asset.tagline ?? undefined, assetUrl })),
-    render(TrainingAssetDelivery({ firstName, assetTitle: asset.title, assetTagline: asset.tagline ?? undefined, assetUrl }), { plainText: true }),
+    render(TrainingAssetDelivery(emailProps)),
+    render(TrainingAssetDelivery(emailProps), { plainText: true }),
   ]);
 
   const resend = getResend();
