@@ -14,7 +14,7 @@ const json = (body: object, status = 200) =>
     headers: { 'Content-Type': 'application/json' },
   });
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   const { name, email, company, inputs, results } = await request.json();
 
   if (!name || !email || !company || !inputs || !results) {
@@ -56,23 +56,45 @@ export const POST: APIRoute = async ({ request }) => {
     render(ScorecardResultsEmail({ name, company, arr: inputs.arr, stage: inputs.stage, results }), { plainText: true }),
   ]);
 
-  // Fire-and-forget: emails + audience
   const resend = getResend();
   const firstName = name.split(' ')[0];
 
-  Promise.allSettled([
-    // Add to Scorecard audience
-    RESEND_SCORECARD_AUDIENCE_ID
-      ? resend.contacts.create({
+  // User-facing email is awaited so Resend errors surface as a real 502.
+  // Audience add + Devin notification ride ctx.waitUntil() so the Worker
+  // doesn't terminate them after we respond.
+  const ctx = (locals as any)?.runtime?.ctx as
+    | { waitUntil?: (p: Promise<unknown>) => void }
+    | undefined;
+
+  const audienceTask = RESEND_SCORECARD_AUDIENCE_ID
+    ? resend.contacts
+        .create({
           audienceId: RESEND_SCORECARD_AUDIENCE_ID,
           email,
-          firstName: name.split(' ')[0],
+          firstName,
           lastName: name.split(' ').slice(1).join(' ') || undefined,
           unsubscribed: false,
         })
-      : Promise.resolve(),
-    // Send results email to user
-    resend.emails.send({
+        .catch((err) => console.error('[marketing-scorecard] audience failed:', err))
+    : Promise.resolve();
+
+  const notifyTask = resend.emails
+    .send({
+      from: SENDER,
+      to: 'me@devin.vc',
+      subject: `Marketing Scorecard lead: ${name} (${company})`,
+      text: `New Marketing Scorecard submission:\n\nName: ${name}\nEmail: ${email}\nCompany: ${company}\nARR: $${inputs.arr.toLocaleString()}\nStage: ${inputs.stage}\nModel: ${inputs.model}\n\nPrimary Constraint: ${results.constraint.name} (${results.constraint.severity})\nMetrics Scored: ${results.scoredMetricsCount}`,
+      headers: { 'X-Entity-Ref-ID': `scorecard-notify-${Date.now()}` },
+    })
+    .catch((err) => console.error('[marketing-scorecard] notification failed:', err));
+
+  if (ctx?.waitUntil) {
+    ctx.waitUntil(audienceTask);
+    ctx.waitUntil(notifyTask);
+  }
+
+  try {
+    const delivery = await resend.emails.send({
       from: SENDER,
       to: email,
       replyTo: 'me@devin.vc',
@@ -80,23 +102,15 @@ export const POST: APIRoute = async ({ request }) => {
       html: resultsHtml,
       text: resultsText,
       headers: { 'X-Entity-Ref-ID': `scorecard-results-${Date.now()}` },
-    }),
-    // Notify Devin
-    resend.emails.send({
-      from: SENDER,
-      to: 'me@devin.vc',
-      subject: `Marketing Scorecard lead: ${name} (${company})`,
-      text: `New Marketing Scorecard submission:\n\nName: ${name}\nEmail: ${email}\nCompany: ${company}\nARR: $${inputs.arr.toLocaleString()}\nStage: ${inputs.stage}\nModel: ${inputs.model}\n\nPrimary Constraint: ${results.constraint.name} (${results.constraint.severity})\nMetrics Scored: ${results.scoredMetricsCount}`,
-      headers: { 'X-Entity-Ref-ID': `scorecard-notify-${Date.now()}` },
-    }),
-  ]).then((settled) => {
-    settled.forEach((r, i) => {
-      if (r.status === 'rejected') {
-        const labels = ['audience', 'results email', 'notification'];
-        console.error(`[marketing-scorecard] ${labels[i]} failed:`, r.reason);
-      }
     });
-  });
+    if ((delivery as any)?.error) {
+      console.error('[marketing-scorecard] results email failed:', (delivery as any).error);
+      return json({ error: 'Could not send the scorecard. Please try again or email me@devin.vc directly.' }, 502);
+    }
+  } catch (err) {
+    console.error('[marketing-scorecard] results email threw:', err);
+    return json({ error: 'Could not send the scorecard. Please try again or email me@devin.vc directly.' }, 502);
+  }
 
   return json({ ok: true });
 };
