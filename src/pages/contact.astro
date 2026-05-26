@@ -111,6 +111,11 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   tabMessage?.addEventListener('click', () => switchTab('message'));
   tabBooking?.addEventListener('click', () => switchTab('booking'));
 
+  // Deep-link support: #book opens the booking tab on load.
+  if (window.location.hash === '#book') {
+    switchTab('booking');
+  }
+
   // ---- Entrance animations (skip on view transition nav) ----
   const isVtNav = window.__vtNav;
   const header = document.querySelector('.page-header');
