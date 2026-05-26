@@ -81,8 +81,8 @@
             <span class="project-status">Available</span>
           </div>
         </div>
-        <h3 class="project-name">Open to Consulting Projects</h3>
-        <p class="project-desc">GTM strategy, marketing systems, operations, and growth — for companies that need senior-level thinking without a full-time hire. Let's talk.</p>
+        <h3 class="project-name">Open to marketing consulting projects, web design projects, and more</h3>
+        <p class="project-desc">GTM strategy, marketing systems, web design, operations, and growth for companies that need senior-level thinking without a full-time hire. Let's talk.</p>
       </a>
 
       <article class="project" style="opacity: 0; transform: translateY(15px);" onmouseenter={cardEnter} onmouseleave={cardLeave}>
@@ -94,7 +94,7 @@
           </div>
         </div>
         <h3 class="project-name">Something Secret</h3>
-        <p class="project-desc">A work management platform for small teams. Consolidates chats, tasks, CRM, marketing, G-Suite, and more into one place — delivering everything your team needs at a fraction of the cost of running them all separately.</p>
+        <p class="project-desc">A work management platform for small teams. Consolidates chats, tasks, CRM, marketing, G-Suite, and more into one place, delivering everything your team needs at a fraction of the cost of running them all separately.</p>
       </article>
 
       <article class="project" style="opacity: 0; transform: translateY(15px);" onmouseenter={cardEnter} onmouseleave={cardLeave}>
