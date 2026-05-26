@@ -162,7 +162,7 @@ const formattedDate = asset.publishedAt
       assetsPromise = Promise.all([
         fetchBase64('/fonts/InstrumentSerif-Regular-Latin.ttf'),
         fetchBase64('/fonts/InstrumentSerif-Italic-Latin.ttf'),
-        fetchBase64('/fonts/DMSans-Variable-Latin.ttf'),
+        fetchBase64('/fonts/DMSans-Regular.ttf'),
         fetchBase64('/images/avatar-round.png'),
       ]).then(([serif, serifItalic, sans, avatar]) => ({
         serif,
@@ -189,6 +189,9 @@ const formattedDate = asset.publishedAt
 
         const title = document.querySelector('.words-title')?.textContent?.trim() || 'Word List';
         const tagline = document.querySelector('.words-tagline')?.textContent?.trim() || '';
+        const slug = location.pathname.replace(/\/words\/?$/, '').split('/').filter(Boolean).pop() || '';
+        const assetUrl = `devin.vc/training/${slug}`;
+        const contactUrl = 'https://www.devin.vc/contact';
         const groups = Array.from(document.querySelectorAll('.word-group'));
 
         const assets = await loadAssets();
@@ -201,14 +204,17 @@ const formattedDate = asset.publishedAt
         const marginYTop = 64;
         const marginYBottom = 64;
         const contentW = pageW - marginX * 2;
+        // Custom-embedded fonts can have imprecise width metrics in jsPDF.
+        // Apply a small safety margin to line-wrapping so text never overruns.
+        const wrapW = contentW - 4;
 
         // ─── Register site fonts ───
         doc.addFileToVFS('InstrumentSerif-Regular.ttf', assets.serif);
         doc.addFont('InstrumentSerif-Regular.ttf', 'InstrumentSerif', 'normal');
         doc.addFileToVFS('InstrumentSerif-Italic.ttf', assets.serifItalic);
         doc.addFont('InstrumentSerif-Italic.ttf', 'InstrumentSerif', 'italic');
-        doc.addFileToVFS('DMSans-Variable.ttf', assets.sans);
-        doc.addFont('DMSans-Variable.ttf', 'DMSans', 'normal');
+        doc.addFileToVFS('DMSans-Regular.ttf', assets.sans);
+        doc.addFont('DMSans-Regular.ttf', 'DMSans', 'normal');
 
         // ─── Site palette in light mode ───
         const text = [20, 18, 16] as const;       // near-black
@@ -217,22 +223,6 @@ const formattedDate = asset.publishedAt
         const accent = [196, 164, 124] as const;  // warm gold (--color-accent)
 
         let y = marginYTop;
-
-        // ─── Author block: circular avatar + "by Devin Alexander" ───
-        const avatarSize = 32;
-        doc.addImage(assets.avatar, 'PNG', marginX, y, avatarSize, avatarSize);
-
-        doc.setFont('DMSans', 'normal');
-        doc.setFontSize(9);
-        doc.setTextColor(...muted);
-        doc.text('BY', marginX + avatarSize + 12, y + avatarSize / 2 - 5, { baseline: 'middle' });
-
-        doc.setFont('InstrumentSerif', 'italic');
-        doc.setFontSize(16);
-        doc.setTextColor(...text);
-        doc.text('Devin Alexander', marginX + avatarSize + 12, y + avatarSize / 2 + 10, { baseline: 'middle' });
-
-        y += avatarSize + 28;
 
         // ─── Title ───
         doc.setFont('InstrumentSerif', 'normal');
@@ -246,12 +236,19 @@ const formattedDate = asset.publishedAt
           doc.setFont('DMSans', 'normal');
           doc.setFontSize(11);
           doc.setTextColor(...muted);
-          const taglineLines = doc.splitTextToSize(tagline, contentW);
+          const taglineLines = doc.splitTextToSize(tagline, wrapW);
           doc.text(taglineLines, marginX, y);
-          y += taglineLines.length * 16 + 28;
-        } else {
-          y += 12;
+          y += taglineLines.length * 16 + 14;
         }
+
+        // ─── Author block (below tagline): circular avatar + Devin Alexander ───
+        const avatarSize = 28;
+        doc.addImage(assets.avatar, 'PNG', marginX, y, avatarSize, avatarSize);
+        doc.setFont('InstrumentSerif', 'italic');
+        doc.setFontSize(16);
+        doc.setTextColor(...text);
+        doc.text('Devin Alexander', marginX + avatarSize + 10, y + avatarSize / 2 + 5, { baseline: 'middle' });
+        y += avatarSize + 28;
 
         // ─── Groups + entries ───
         function ensureRoom(needed: number) {
@@ -271,7 +268,7 @@ const formattedDate = asset.publishedAt
             let firstHeight = 60;
             if (firstEntry) {
               const def = firstEntry.querySelector('.word-def')?.textContent?.trim() || '';
-              const lines = doc.splitTextToSize(def, contentW);
+              const lines = doc.splitTextToSize(def, wrapW);
               firstHeight = 20 + lines.length * 14 + 14;
             }
             ensureRoom(46 + firstHeight);
@@ -290,7 +287,7 @@ const formattedDate = asset.publishedAt
           for (const entry of entries) {
             const term = entry.querySelector('.word-term')?.textContent?.trim() || '';
             const def = entry.querySelector('.word-def')?.textContent?.trim() || '';
-            const defLines = doc.splitTextToSize(def, contentW);
+            const defLines = doc.splitTextToSize(def, wrapW);
             const blockHeight = 22 + defLines.length * 14 + 16;
 
             ensureRoom(blockHeight);
@@ -311,6 +308,65 @@ const formattedDate = asset.publishedAt
           }
         }
 
+        // ─── Closing block: avatar + sign-off + contact CTA ───
+        const closingHeight = 30 + 14 + 16 + 14 + 32;
+        ensureRoom(closingHeight + 24);
+        y += 24;
+
+        // Hairline rule above the closing block
+        doc.setDrawColor(220, 195, 155);
+        doc.setLineWidth(0.5);
+        doc.line(marginX, y, marginX + contentW, y);
+        y += 28;
+
+        const closeAvatarSize = 32;
+        doc.addImage(assets.avatar, 'PNG', marginX, y, closeAvatarSize, closeAvatarSize);
+        doc.setFont('InstrumentSerif', 'italic');
+        doc.setFontSize(16);
+        doc.setTextColor(...text);
+        doc.text('Devin Alexander', marginX + closeAvatarSize + 12, y + closeAvatarSize / 2 + 5, { baseline: 'middle' });
+        y += closeAvatarSize + 14;
+
+        // Sign-off message
+        doc.setFont('DMSans', 'normal');
+        doc.setFontSize(11);
+        doc.setTextColor(...text);
+        const signoffLines = doc.splitTextToSize('This document was written by Devin Alexander.', wrapW);
+        doc.text(signoffLines, marginX, y);
+        y += signoffLines.length * 16 + 4;
+
+        doc.setTextColor(...muted);
+        const ctaPrefix = 'If you need more in-depth marketing advice or help, feel free to reach out ';
+        const ctaWord = 'here';
+        const ctaSuffix = '.';
+        // Print the static prefix, then "here" in gold + underlined as a real link
+        const prefixLines = doc.splitTextToSize(ctaPrefix + ctaWord + ctaSuffix, wrapW);
+        // Render the prefix lines normally first to position them
+        // Then we overlay a clickable link on the rendered "here" position.
+        doc.text(prefixLines, marginX, y);
+
+        // To get the link to align with the rendered "here", compute the
+        // width of the last line's content up to (and including) "here".
+        const lastLine = prefixLines[prefixLines.length - 1] as string;
+        const hereIdx = lastLine.lastIndexOf(ctaWord);
+        if (hereIdx >= 0) {
+          const beforeHere = lastLine.slice(0, hereIdx);
+          const beforeWidth = doc.getTextWidth(beforeHere);
+          const hereWidth = doc.getTextWidth(ctaWord);
+          const linkX = marginX + beforeWidth;
+          const linkY = y + (prefixLines.length - 1) * 16;
+
+          // Cover original "here" with a gold accented version and underline
+          doc.setTextColor(...accent);
+          doc.text(ctaWord, linkX, linkY);
+          // Underline
+          doc.setDrawColor(...accent);
+          doc.setLineWidth(0.6);
+          doc.line(linkX, linkY + 1.5, linkX + hereWidth, linkY + 1.5);
+          // Clickable link region
+          doc.link(linkX, linkY - 10, hereWidth, 14, { url: contactUrl });
+        }
+
         // ─── Footer on every page ───
         const pageCount = doc.getNumberOfPages();
         for (let i = 1; i <= pageCount; i++) {
@@ -319,7 +375,7 @@ const formattedDate = asset.publishedAt
           doc.setFontSize(8);
           doc.setTextColor(...dim);
           doc.text(
-            `${title}  ·  devin.vc/training  ·  Page ${i} of ${pageCount}`,
+            `${title}  ·  ${assetUrl}  ·  Page ${i} of ${pageCount}`,
             pageW / 2,
             pageH - 36,
             { align: 'center' }
