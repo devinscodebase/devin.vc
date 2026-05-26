@@ -15,10 +15,10 @@ export default function NewsletterWelcome({
 
   return (
     <Layout preview="Click to confirm and you'll start receiving updates when there's something worth sharing.">
-      <Text style={heading}>{greeting} — one quick step.</Text>
+      <Text style={heading}>{greeting}, one quick step.</Text>
       <Text style={body}>
         Thanks for signing up. I write about marketing, operations, design, and
-        the things I'm building — delivered when there's something worth sharing.
+        the things I'm building, delivered when there's something worth sharing.
       </Text>
       <Text style={body}>
         Confirm your subscription to get started:
@@ -60,7 +60,7 @@ export default function NewsletterWelcome({
           </td>
           <td>
             <Text style={bulletText}>
-              No spam, no fluff — only when there's something real to share
+              No spam, no fluff, only when there's something real to share
             </Text>
           </td>
         </tr>

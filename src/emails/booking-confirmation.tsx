@@ -16,7 +16,7 @@ export default function BookingConfirmation({
   phone,
 }: BookingConfirmationProps) {
   return (
-    <Layout preview={`${slot} (${timezone}) — check your email for the calendar invite.`}>
+    <Layout preview={`${slot} (${timezone}), check your email for the calendar invite.`}>
       <Text style={heading}>You're booked, {name}.</Text>
       <Text style={body}>
         Looking forward to our conversation. Here are the details:

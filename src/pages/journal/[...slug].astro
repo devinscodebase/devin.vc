@@ -68,7 +68,7 @@ const headings = (post.body || [])
 const showToc = headings.length >= 2;
 
 const postUrl = `https://devin.vc/journal/${post.slug}`;
-const seoTitle = post.seoTitle || `${post.title} — Devin Alexander`;
+const seoTitle = post.seoTitle || `${post.title}, Devin Alexander`;
 const ogImage = post.ogImage
   ? urlFor(post.ogImage).width(1200).url()
   : post.heroImage
