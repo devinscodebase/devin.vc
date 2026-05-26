@@ -1183,7 +1183,10 @@
                 max="100"
                 class="input-range"
                 value={getValue(currentStep - 1)}
-                oninput={(e) => setValue(currentStep - 1, parseInt(e.target.value))}
+                oninput={(e) => {
+                  const v = parseInt(e.target.value);
+                  setValue(currentStep - 1, Number.isFinite(v) ? v : 0);
+                }}
                 style="--range-pct: {getValue(currentStep - 1)}%"
               />
               {#if steps[currentStep - 1].default}
@@ -1204,7 +1207,10 @@
                 step="1"
                 class="input-range"
                 value={expansionRate * 10}
-                oninput={(e) => { expansionRate = parseInt(e.target.value) / 10; }}
+                oninput={(e) => {
+                  const v = parseInt(e.target.value);
+                  expansionRate = Number.isFinite(v) ? v / 10 : 0;
+                }}
                 style="--range-pct: {(expansionRate * 10 / 50) * 100}%"
               />
               {#if steps[currentStep - 1].default}

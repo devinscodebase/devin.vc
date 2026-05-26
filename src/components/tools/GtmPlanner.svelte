@@ -1256,7 +1256,10 @@ Generated at devin.vc/tools/gtm-planner`;
                 max="100"
                 class="input-range"
                 value={getValue(currentStep - 1)}
-                oninput={(e) => setValue(currentStep - 1, parseInt(e.target.value))}
+                oninput={(e) => {
+                  const v = parseInt(e.target.value);
+                  setValue(currentStep - 1, Number.isFinite(v) ? v : 0);
+                }}
                 style="--range-pct: {getValue(currentStep - 1)}%"
               />
               {#if steps[currentStep - 1].default}
