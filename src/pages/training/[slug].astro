@@ -1,0 +1,514 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { sanityClient } from '../../lib/sanity';
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+
+const asset = await sanityClient.fetch(
+  `*[_type == "trainingAsset" && slug.current == $slug][0] {
+    title,
+    "slug": slug.current,
+    category,
+    tagline,
+    description,
+    accent,
+    publishedAt,
+    "termCount": count(terms),
+    seoTitle,
+    noIndex
+  }`,
+  { slug }
+);
+
+if (!asset) {
+  return Astro.redirect('/training');
+}
+
+const categoryLabels: Record<string, string> = {
+  'word-list': 'Word List',
+  playbook: 'Playbook',
+  checklist: 'Checklist',
+  template: 'Template',
+  guide: 'Guide',
+};
+
+const pageTitle = `${asset.seoTitle || asset.title} — Devin Alexander`;
+const pageDescription = asset.description || asset.tagline || `Free ${categoryLabels[asset.category] || 'asset'}: ${asset.title}.`;
+---
+
+<Layout title={pageTitle} description={pageDescription} noIndex={asset.noIndex}>
+  <main>
+    <section class={`gate-page accent-${asset.accent || 'gold'}`}>
+      <div class="gate-inner">
+        <header class="gate-header">
+          <div class="section-tag">
+            <span class="tag-eyebrow">{categoryLabels[asset.category] || 'Asset'}</span>
+          </div>
+          <h1 class="gate-title">{asset.title}</h1>
+          {asset.tagline && <p class="gate-tagline">{asset.tagline}</p>}
+          {asset.description && <p class="gate-description">{asset.description}</p>}
+          {asset.termCount > 0 && (
+            <p class="gate-meta">
+              <span class="meta-num">{asset.termCount}</span> terms <span class="meta-dot">&middot;</span> Free download
+            </p>
+          )}
+        </header>
+
+        <div class="gate-card">
+          <div class="card-accent" aria-hidden="true"></div>
+
+          <div class="form-state" data-state="form">
+            <h2 class="form-heading">Where should I send it?</h2>
+            <p class="form-hint">Four quick fields and you'll have it in your inbox.</p>
+
+            <form id="training-form" class="training-form" novalidate>
+              <input type="hidden" name="assetSlug" value={asset.slug} />
+
+              <div class="form-row">
+                <label class="form-field">
+                  <span class="field-label">Name</span>
+                  <input type="text" name="name" autocomplete="name" required class="form-input" />
+                </label>
+                <label class="form-field">
+                  <span class="field-label">Email</span>
+                  <input type="email" name="email" autocomplete="email" required class="form-input" />
+                </label>
+              </div>
+
+              <div class="form-row">
+                <label class="form-field">
+                  <span class="field-label">Company name</span>
+                  <input type="text" name="company" autocomplete="organization" required class="form-input" />
+                </label>
+                <label class="form-field">
+                  <span class="field-label">Job title</span>
+                  <input type="text" name="jobTitle" autocomplete="organization-title" required class="form-input" />
+                </label>
+              </div>
+
+              <button type="submit" class="form-submit" id="form-submit">
+                <span class="btn-label">Send it to me</span>
+                <span class="btn-sending" hidden>Sending<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></span>
+              </button>
+
+              <p class="form-status" id="form-status" aria-live="polite"></p>
+
+              <p class="form-fine">
+                By submitting, you'll receive the download link by email. No spam, no nurture sequence unless you opt in.
+              </p>
+            </form>
+          </div>
+
+          <div class="success-state" data-state="success" hidden>
+            <div class="success-icon" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 6L9 17l-5-5"/>
+              </svg>
+            </div>
+            <h2 class="success-heading">It's on its way.</h2>
+            <p class="success-text">Check your inbox for the download link. You can also open it right now:</p>
+            <a href={`/training/${asset.slug}/words`} class="success-cta" id="success-cta">
+              Open the {asset.title}
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 7h12M8 2l5 5-5 5" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="page-footer">
+          <a href="/training" class="back-link">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 7H1M6 2L1 7l5 5" />
+            </svg>
+            All training assets
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  const form = document.getElementById('training-form') as HTMLFormElement | null;
+  const submit = document.getElementById('form-submit') as HTMLButtonElement | null;
+  const status = document.getElementById('form-status') as HTMLElement | null;
+  const formState = document.querySelector('[data-state="form"]') as HTMLElement | null;
+  const successState = document.querySelector('[data-state="success"]') as HTMLElement | null;
+  const successCta = document.getElementById('success-cta') as HTMLAnchorElement | null;
+
+  function setLoading(loading: boolean) {
+    if (!submit) return;
+    const label = submit.querySelector('.btn-label') as HTMLElement;
+    const sending = submit.querySelector('.btn-sending') as HTMLElement;
+    submit.disabled = loading;
+    label.hidden = loading;
+    sending.hidden = !loading;
+  }
+
+  function showError(msg: string) {
+    if (!status) return;
+    status.textContent = msg;
+    status.classList.add('error');
+  }
+
+  function clearError() {
+    if (!status) return;
+    status.textContent = '';
+    status.classList.remove('error');
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearError();
+
+    const fd = new FormData(form);
+    const payload = {
+      name: String(fd.get('name') || '').trim(),
+      email: String(fd.get('email') || '').trim(),
+      company: String(fd.get('company') || '').trim(),
+      jobTitle: String(fd.get('jobTitle') || '').trim(),
+      assetSlug: String(fd.get('assetSlug') || '').trim(),
+    };
+
+    if (!payload.name || !payload.email || !payload.company || !payload.jobTitle) {
+      showError('Please fill in every field.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+      showError('That email address doesn\'t look right.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/training-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        showError(data.error || 'Something went wrong. Please try again.');
+        setLoading(false);
+        return;
+      }
+
+      if (data.assetUrl && successCta) {
+        successCta.href = data.assetUrl;
+      }
+      if (formState && successState) {
+        formState.hidden = true;
+        successState.hidden = false;
+      }
+    } catch (err) {
+      console.error(err);
+      showError('Network error. Please try again.');
+      setLoading(false);
+    }
+  });
+</script>
+
+<style>
+  .gate-page {
+    --gate-accent: var(--color-accent);
+    min-height: 100dvh;
+    padding: var(--space-page-top) var(--space-page-x) var(--space-page-bottom);
+    background: var(--color-bg);
+  }
+  .gate-page.accent-gold { --gate-accent: var(--color-accent); }
+  .gate-page.accent-teal { --gate-accent: var(--color-accent-teal); }
+  .gate-page.accent-amber { --gate-accent: var(--color-accent-amber); }
+  .gate-page.accent-rust { --gate-accent: var(--color-accent-rust); }
+
+  .gate-inner {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .gate-header {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  .section-tag {
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .tag-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--gate-accent);
+  }
+
+  .gate-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: var(--text-3xl);
+    font-weight: var(--weight-regular);
+    line-height: 1.05;
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+    margin: 0 0 1rem;
+  }
+
+  .gate-tagline {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: var(--text-lg);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    margin: 0 0 1rem;
+  }
+
+  .gate-description {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-md);
+    line-height: 1.65;
+    color: var(--color-text);
+    margin: 0 0 1.25rem;
+    max-width: 56ch;
+  }
+
+  .gate-meta {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .meta-num {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: var(--text-md);
+    color: var(--gate-accent);
+    text-transform: none;
+    letter-spacing: 0;
+    line-height: 1;
+  }
+
+  .meta-dot {
+    color: var(--color-text-muted);
+    opacity: 0.6;
+  }
+
+  .gate-card {
+    position: relative;
+    background: color-mix(in oklab, var(--color-text-muted) 3%, transparent);
+    padding: clamp(1.75rem, 3.5vw, 2.5rem);
+    overflow: hidden;
+  }
+
+  .card-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gate-accent), color-mix(in oklab, var(--gate-accent) 20%, transparent));
+  }
+
+  .form-heading {
+    font-family: 'Instrument Serif', serif;
+    font-size: var(--text-xl);
+    font-weight: var(--weight-regular);
+    line-height: 1.2;
+    color: var(--color-text);
+    margin: 0 0 0.5rem;
+  }
+
+  .form-hint {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: 0 0 1.5rem;
+  }
+
+  .training-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  .field-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .form-input {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-md);
+    color: var(--color-text);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 25%, transparent);
+    padding: 0.6rem 0;
+    outline: none;
+    transition: border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .form-input:focus {
+    border-bottom-color: var(--gate-accent);
+  }
+
+  .form-submit {
+    margin-top: 0.75rem;
+    padding: 0.95rem 1.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.02em;
+    color: var(--color-bg);
+    background: var(--gate-accent);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .form-submit:hover:not(:disabled) { transform: translateY(-1px); }
+  .form-submit:active:not(:disabled) { transform: translateY(0); }
+  .form-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+
+  .loading-dots span {
+    animation: dots 1.4s infinite;
+    opacity: 0;
+  }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes dots {
+    0%, 80%, 100% { opacity: 0; }
+    40% { opacity: 1; }
+  }
+
+  .form-status {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+    min-height: 1.2em;
+  }
+  .form-status.error { color: var(--color-accent-rust); }
+
+  .form-fine {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+    opacity: 0.85;
+  }
+
+  .success-state {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .success-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--gate-accent) 12%, transparent);
+    color: var(--gate-accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    animation: pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  @keyframes pop-in {
+    0% { opacity: 0; transform: scale(0.5); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  .success-heading {
+    font-family: 'Instrument Serif', serif;
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-regular);
+    color: var(--color-text);
+    margin: 0 0 0.75rem;
+  }
+
+  .success-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-md);
+    color: var(--color-text-muted);
+    margin: 0 0 1.5rem;
+    line-height: 1.6;
+  }
+
+  .success-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.02em;
+    color: var(--color-bg);
+    background: var(--gate-accent);
+    padding: 0.85rem 1.4rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .success-cta:hover { transform: translateY(-1px); }
+
+  .page-footer {
+    margin-top: var(--space-block-lg);
+    padding-top: 2rem;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-regular);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .back-link:hover { color: var(--color-accent); }
+  .back-link svg { transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+  .back-link:hover svg { transform: translateX(-3px); }
+
+  @media (max-width: 540px) {
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>

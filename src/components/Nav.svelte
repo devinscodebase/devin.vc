@@ -112,6 +112,9 @@
       <a href="/journal" class="nav-link accent-amber" class:active={currentPath.startsWith('/journal')} onclick={closeMenu}>
         <span class="nav-label">Journal</span>
       </a>
+      <a href="/training" class="nav-link accent-rust" class:active={currentPath.startsWith('/training')} onclick={closeMenu}>
+        <span class="nav-label">Training</span>
+      </a>
       <a href="/contact" class="nav-link accent-teal" class:active={currentPath.startsWith('/contact')} onclick={closeMenu}>
         <span class="nav-label">Contact</span>
       </a>

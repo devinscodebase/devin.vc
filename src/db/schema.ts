@@ -98,6 +98,21 @@ export const scorecardLeads = sqliteTable('scorecard_leads', {
   createdAt: text('created_at').notNull(),
 });
 
+export const trainingLeads = sqliteTable('training_leads', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  // Asset they downloaded
+  assetSlug: text('asset_slug').notNull(),
+  assetTitle: text('asset_title').notNull(),
+  // Contact
+  name: text('name').notNull(),
+  email: text('email').notNull(),
+  company: text('company').notNull(),
+  jobTitle: text('job_title').notNull(),
+  // Meta
+  resendContactId: text('resend_contact_id'),
+  createdAt: text('created_at').notNull(),
+});
+
 export const notifications = sqliteTable('notifications', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   type: text('type', { enum: ['contact', 'booking'] }).notNull(),

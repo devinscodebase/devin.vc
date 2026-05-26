@@ -24,6 +24,7 @@ export default defineConfig({
       RESEND_GTM_PLANNER_AUDIENCE_ID: envField.string({ context: 'server', access: 'secret', optional: true }),
       RESEND_RETENTION_CALC_AUDIENCE_ID: envField.string({ context: 'server', access: 'secret', optional: true }),
       RESEND_SCORECARD_AUDIENCE_ID: envField.string({ context: 'server', access: 'secret', optional: true }),
+      RESEND_TRAINING_AUDIENCE_ID: envField.string({ context: 'server', access: 'secret', optional: true }),
       RESEND_WEBHOOK_SECRET: envField.string({ context: 'server', access: 'secret', optional: true }),
       NEWSLETTER_SECRET: envField.string({ context: 'server', access: 'secret' }),
       CAL_API_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),

@@ -1,0 +1,484 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { sanityClient } from '../../../lib/sanity';
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+
+const asset = await sanityClient.fetch(
+  `*[_type == "trainingAsset" && slug.current == $slug][0] {
+    title,
+    "slug": slug.current,
+    category,
+    tagline,
+    description,
+    accent,
+    publishedAt,
+    terms[]{ term, definition, group }
+  }`,
+  { slug }
+);
+
+if (!asset) {
+  return Astro.redirect('/training');
+}
+
+const categoryLabels: Record<string, string> = {
+  'word-list': 'Word List',
+  playbook: 'Playbook',
+  checklist: 'Checklist',
+  template: 'Template',
+  guide: 'Guide',
+};
+
+// Group terms by their optional "group" field. Ungrouped terms fall under "General".
+type Term = { term: string; definition: string; group?: string | null };
+const terms: Term[] = asset.terms || [];
+const grouped: Record<string, Term[]> = {};
+const groupOrder: string[] = [];
+for (const t of terms) {
+  const key = (t.group || '').trim() || 'All Terms';
+  if (!grouped[key]) {
+    grouped[key] = [];
+    groupOrder.push(key);
+  }
+  grouped[key].push(t);
+}
+// Sort each group's terms alphabetically by term name
+for (const key of groupOrder) {
+  grouped[key].sort((a, b) => a.term.localeCompare(b.term, 'en', { sensitivity: 'base' }));
+}
+
+const formattedDate = asset.publishedAt
+  ? new Date(asset.publishedAt).toLocaleDateString('en-US', {
+      month: 'long', year: 'numeric',
+    })
+  : '';
+---
+
+<Layout
+  title={`${asset.title} — Devin Alexander`}
+  description={asset.tagline || asset.description || `${asset.title}: a free reference.`}
+  noIndex={true}
+>
+  <main>
+    <section class={`words-page accent-${asset.accent || 'gold'}`}>
+      <div class="words-inner">
+
+        <header class="words-header">
+          <div class="meta-row no-print">
+            <a href="/training" class="back-link">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M13 7H1M6 2L1 7l5 5" />
+              </svg>
+              Training
+            </a>
+            <span class="meta-divider" aria-hidden="true">&middot;</span>
+            <span class="meta-cat">{categoryLabels[asset.category] || 'Asset'}</span>
+            {formattedDate && (
+              <>
+                <span class="meta-divider" aria-hidden="true">&middot;</span>
+                <span class="meta-date">{formattedDate}</span>
+              </>
+            )}
+          </div>
+
+          <h1 class="words-title">{asset.title}</h1>
+          {asset.tagline && <p class="words-tagline">{asset.tagline}</p>}
+
+          <div class="words-actions no-print">
+            <button type="button" id="download-pdf" class="action-btn primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Download PDF
+            </button>
+            <button type="button" id="print-page" class="action-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9"/>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                <rect x="6" y="14" width="12" height="8"/>
+              </svg>
+              Print
+            </button>
+            <span class="action-meta">
+              <span class="action-num">{terms.length}</span> terms
+            </span>
+          </div>
+        </header>
+
+        <div class="words-body" id="words-body">
+          {groupOrder.map((group) => (
+            <section class="word-group">
+              {groupOrder.length > 1 && (
+                <h2 class="group-heading">
+                  <span class="group-rule" aria-hidden="true"></span>
+                  {group}
+                </h2>
+              )}
+              <dl class="word-list">
+                {grouped[group].map((t) => (
+                  <div class="word-entry">
+                    <dt class="word-term">{t.term}</dt>
+                    <dd class="word-def">{t.definition}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          ))}
+        </div>
+
+        <footer class="words-footer no-print">
+          <p class="footer-text">
+            Built by <a href="/" class="footer-link">Devin Alexander</a>. If you want updates when new training assets drop, <a href="/contact" class="footer-link">say hi</a>.
+          </p>
+        </footer>
+
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  import jsPDF from 'jspdf';
+
+  const printBtn = document.getElementById('print-page');
+  const pdfBtn = document.getElementById('download-pdf');
+
+  printBtn?.addEventListener('click', () => {
+    window.print();
+  });
+
+  pdfBtn?.addEventListener('click', () => {
+    const title = document.querySelector('.words-title')?.textContent?.trim() || 'Word List';
+    const tagline = document.querySelector('.words-tagline')?.textContent?.trim() || '';
+    const groups = Array.from(document.querySelectorAll('.word-group'));
+
+    const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const marginX = 56;
+    const marginY = 64;
+    const contentW = pageW - marginX * 2;
+    let y = marginY;
+
+    function ensureRoom(needed: number) {
+      if (y + needed > pageH - marginY) {
+        doc.addPage();
+        y = marginY;
+      }
+    }
+
+    // Title block
+    doc.setFont('times', 'normal');
+    doc.setFontSize(26);
+    doc.setTextColor(20, 18, 16);
+    doc.text(title, marginX, y);
+    y += 32;
+
+    if (tagline) {
+      doc.setFont('times', 'italic');
+      doc.setFontSize(13);
+      doc.setTextColor(100, 90, 80);
+      const taglineLines = doc.splitTextToSize(tagline, contentW);
+      doc.text(taglineLines, marginX, y);
+      y += taglineLines.length * 16 + 8;
+    }
+
+    // Accent line
+    doc.setDrawColor(196, 164, 124);
+    doc.setLineWidth(1.5);
+    doc.line(marginX, y, marginX + 48, y);
+    y += 24;
+
+    // Groups + entries
+    for (const groupEl of groups) {
+      const heading = groupEl.querySelector('.group-heading')?.textContent?.trim();
+      const entries = Array.from(groupEl.querySelectorAll('.word-entry'));
+
+      if (heading && groups.length > 1) {
+        ensureRoom(40);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+        doc.setTextColor(180, 150, 110);
+        doc.text(heading.toUpperCase(), marginX, y);
+        y += 6;
+        doc.setDrawColor(220, 195, 155);
+        doc.setLineWidth(0.5);
+        doc.line(marginX, y, marginX + contentW, y);
+        y += 16;
+      }
+
+      for (const entry of entries) {
+        const term = entry.querySelector('.word-term')?.textContent?.trim() || '';
+        const def = entry.querySelector('.word-def')?.textContent?.trim() || '';
+        const defLines = doc.splitTextToSize(def, contentW);
+        const blockHeight = 18 + defLines.length * 14 + 12;
+
+        ensureRoom(blockHeight);
+
+        // Term
+        doc.setFont('times', 'bold');
+        doc.setFontSize(13);
+        doc.setTextColor(20, 18, 16);
+        doc.text(term, marginX, y);
+        y += 16;
+
+        // Definition
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10.5);
+        doc.setTextColor(70, 65, 60);
+        doc.text(defLines, marginX, y);
+        y += defLines.length * 14 + 12;
+      }
+    }
+
+    // Footer on last page
+    const pageCount = doc.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(160, 148, 136);
+      doc.text(
+        `${title}  ·  devin.vc/training  ·  Page ${i} of ${pageCount}`,
+        pageW / 2,
+        pageH - 32,
+        { align: 'center' }
+      );
+    }
+
+    const safeName = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    doc.save(`${safeName}.pdf`);
+  });
+</script>
+
+<style>
+  .words-page {
+    --words-accent: var(--color-accent);
+    min-height: 100dvh;
+    padding: var(--space-page-top) var(--space-page-x) var(--space-page-bottom);
+    background: var(--color-bg);
+  }
+  .words-page.accent-gold { --words-accent: var(--color-accent); }
+  .words-page.accent-teal { --words-accent: var(--color-accent-teal); }
+  .words-page.accent-amber { --words-accent: var(--color-accent-amber); }
+  .words-page.accent-rust { --words-accent: var(--color-accent-rust); }
+
+  .words-inner {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .words-header {
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--color-accent); }
+  .back-link svg { transition: transform 0.2s; }
+  .back-link:hover svg { transform: translateX(-2px); }
+
+  .meta-divider { opacity: 0.5; }
+  .meta-cat { color: var(--words-accent); font-weight: var(--weight-medium); }
+
+  .words-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: var(--text-3xl);
+    font-weight: var(--weight-regular);
+    line-height: 1.05;
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+    margin: 0 0 0.75rem;
+  }
+
+  .words-tagline {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: var(--text-lg);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    max-width: 56ch;
+    margin: 0 0 clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .words-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    background: transparent;
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 25%, transparent);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .action-btn:hover {
+    border-color: var(--words-accent);
+    color: var(--words-accent);
+    transform: translateY(-1px);
+  }
+
+  .action-btn.primary {
+    color: var(--color-bg);
+    background: var(--words-accent);
+    border-color: var(--words-accent);
+  }
+  .action-btn.primary:hover {
+    color: var(--color-bg);
+    background: color-mix(in oklab, var(--words-accent) 90%, white);
+  }
+
+  .action-meta {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-left: auto;
+  }
+
+  .action-num {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: var(--text-md);
+    color: var(--words-accent);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .word-group + .word-group {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .group-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--words-accent);
+    margin: 0 0 clamp(1.25rem, 2.5vw, 1.75rem);
+  }
+
+  .group-rule {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--words-accent), transparent);
+    max-width: 64px;
+  }
+
+  .word-list {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+  }
+
+  .word-entry {
+    padding-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+  }
+
+  .word-entry:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .word-term {
+    font-family: 'Instrument Serif', serif;
+    font-size: var(--text-xl);
+    font-weight: var(--weight-regular);
+    line-height: 1.2;
+    color: var(--color-text);
+    margin: 0 0 0.45rem;
+  }
+
+  .word-def {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-md);
+    line-height: 1.7;
+    color: var(--color-text);
+    margin: 0;
+    max-width: 64ch;
+  }
+
+  .words-footer {
+    margin-top: clamp(3rem, 6vw, 4rem);
+    padding-top: 2rem;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+  }
+
+  .footer-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .footer-link {
+    color: var(--words-accent);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklab, var(--words-accent) 40%, transparent);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.2s;
+  }
+  .footer-link:hover { text-decoration-color: var(--words-accent); }
+
+  /* ─── Print stylesheet — gives a clean PDF from browser "Save as PDF" ─── */
+  @media print {
+    .no-print { display: none !important; }
+    body { background: white !important; color: black !important; }
+    .words-page { padding: 0; background: white; }
+    .words-inner { max-width: none; }
+    .words-title { color: #14110e !important; font-size: 32pt !important; }
+    .words-tagline { color: #5a5048 !important; font-size: 13pt !important; }
+    .group-heading { color: #b59059 !important; font-size: 10pt !important; }
+    .group-rule { background: #b59059 !important; }
+    .word-term { color: #14110e !important; font-size: 14pt !important; }
+    .word-def { color: #2a2520 !important; font-size: 11pt !important; }
+    .word-entry { border-bottom-color: #d8cfc1 !important; page-break-inside: avoid; }
+    .word-group { page-break-inside: auto; }
+  }
+</style>
