@@ -137,13 +137,18 @@ const formattedDate = asset.publishedAt
 <script>
   import jsPDF from 'jspdf';
 
-  // Cache assets across multiple clicks
+  // Cache assets + loaded fonts across multiple clicks
   let assetsPromise: Promise<{
     serif: string;
     serifItalic: string;
     sans: string;
     avatar: string;
   }> | null = null;
+
+  let fontsReadyPromise: Promise<void> | null = null;
+  const PDF_SERIF = 'PDFSerif';
+  const PDF_SERIF_ITALIC = 'PDFSerifItalic';
+  const PDF_SANS = 'PDFSans';
 
   async function fetchBase64(url: string): Promise<string> {
     const res = await fetch(url);
@@ -174,6 +179,53 @@ const formattedDate = asset.publishedAt
     return assetsPromise;
   }
 
+  // Load the exact same TTF files into the browser's font cache so the canvas
+  // can measure text widths with the *same* metrics jsPDF will use to draw it.
+  function ensurePdfFontsLoaded() {
+    if (!fontsReadyPromise) {
+      fontsReadyPromise = Promise.all([
+        new FontFace(PDF_SERIF, 'url(/fonts/InstrumentSerif-Regular-Latin.ttf)').load().then(f => document.fonts.add(f)),
+        new FontFace(PDF_SERIF_ITALIC, 'url(/fonts/InstrumentSerif-Italic-Latin.ttf)', { style: 'italic' }).load().then(f => document.fonts.add(f)),
+        new FontFace(PDF_SANS, 'url(/fonts/DMSans-Regular.ttf)').load().then(f => document.fonts.add(f)),
+      ]).then(() => { /* discard FontFace refs */ });
+    }
+    return fontsReadyPromise;
+  }
+
+  // Pre-wrap text using canvas measurements with the *actual PDF font*.
+  // Canvas font-size is interpreted as CSS px; PDF font-size is in pt.
+  // The ratio between glyph widths and font-size is invariant, so as long as
+  // we use the same number for both ("10.5") and compare against the same
+  // unit for maxWidth, the wrap is exact.
+  const measureCanvas = typeof document !== 'undefined' ? document.createElement('canvas') : null;
+  const measureCtx = measureCanvas ? measureCanvas.getContext('2d') : null;
+
+  function wrapText(text: string, maxWidth: number, family: string, sizePt: number): string[] {
+    if (!measureCtx) return [text];
+    measureCtx.font = `${sizePt}px "${family}"`;
+    const words = text.split(/\s+/);
+    const lines: string[] = [];
+    let current = '';
+    for (const word of words) {
+      const candidate = current ? current + ' ' + word : word;
+      const w = measureCtx.measureText(candidate).width;
+      if (w <= maxWidth) {
+        current = candidate;
+      } else {
+        if (current) {
+          lines.push(current);
+          current = word;
+        } else {
+          // Single word longer than maxWidth — break by character as a last resort
+          lines.push(word);
+          current = '';
+        }
+      }
+    }
+    if (current) lines.push(current);
+    return lines;
+  }
+
   function bindWordsActions() {
     const pdfBtn = document.getElementById('download-pdf');
     if (!pdfBtn) return;
@@ -194,19 +246,16 @@ const formattedDate = asset.publishedAt
         const contactUrl = 'https://www.devin.vc/contact';
         const groups = Array.from(document.querySelectorAll('.word-group'));
 
-        const assets = await loadAssets();
+        const [assets] = await Promise.all([loadAssets(), ensurePdfFontsLoaded()]);
 
         // ─── A4: 595.28 × 841.89 pt (210 × 297 mm). 25mm margins ≈ 71pt ───
         const doc = new jsPDF({ unit: 'pt', format: 'a4' });
         const pageW = doc.internal.pageSize.getWidth();
         const pageH = doc.internal.pageSize.getHeight();
         const marginX = 71;
-        const marginYTop = 64;
-        const marginYBottom = 64;
+        const marginYTop = 71;
+        const marginYBottom = 71;
         const contentW = pageW - marginX * 2;
-        // Custom-embedded fonts can have imprecise width metrics in jsPDF.
-        // Apply a small safety margin to line-wrapping so text never overruns.
-        const wrapW = contentW - 4;
 
         // ─── Register site fonts ───
         doc.addFileToVFS('InstrumentSerif-Regular.ttf', assets.serif);
@@ -222,33 +271,55 @@ const formattedDate = asset.publishedAt
         const dim = [160, 148, 136] as const;     // very muted for footer
         const accent = [196, 164, 124] as const;  // warm gold (--color-accent)
 
+        // Line heights
+        const TITLE_SIZE = 32;
+        const TAGLINE_SIZE = 11; const TAGLINE_LH = 16;
+        const NAME_SIZE = 14;
+        const HEADING_SIZE = 9;
+        const TERM_SIZE = 17; const TERM_LH = 21;
+        const DEF_SIZE = 10.5; const DEF_LH = 15;
+        const SIGNOFF_SIZE = 11; const SIGNOFF_LH = 16;
+
         let y = marginYTop;
 
         // ─── Title ───
         doc.setFont('InstrumentSerif', 'normal');
-        doc.setFontSize(36);
+        doc.setFontSize(TITLE_SIZE);
         doc.setTextColor(...text);
-        doc.text(title, marginX, y);
-        y += 38;
+        doc.text(title, marginX, y + TITLE_SIZE * 0.8);
+        y += TITLE_SIZE + 6;
 
         // ─── Tagline ───
         if (tagline) {
+          const taglineLines = wrapText(tagline, contentW, PDF_SANS, TAGLINE_SIZE);
           doc.setFont('DMSans', 'normal');
-          doc.setFontSize(11);
+          doc.setFontSize(TAGLINE_SIZE);
           doc.setTextColor(...muted);
-          const taglineLines = doc.splitTextToSize(tagline, wrapW);
-          doc.text(taglineLines, marginX, y);
-          y += taglineLines.length * 16 + 14;
+          let ty = y + TAGLINE_SIZE;
+          for (const line of taglineLines) {
+            doc.text(line, marginX, ty);
+            ty += TAGLINE_LH;
+          }
+          y = ty - TAGLINE_LH + TAGLINE_LH + 6;
         }
 
-        // ─── Author block (below tagline): circular avatar + Devin Alexander ───
-        const avatarSize = 28;
-        doc.addImage(assets.avatar, 'PNG', marginX, y, avatarSize, avatarSize);
+        // ─── Author block (below tagline): avatar + name, vertically centered ───
+        // Avatar height matches the name's cap-height visually (NAME_SIZE * 1.2)
+        const avatarSize = 20;
+        const authorY = y + 10;  // start avatar a bit below the tagline
+        doc.addImage(assets.avatar, 'PNG', marginX, authorY, avatarSize, avatarSize);
         doc.setFont('InstrumentSerif', 'italic');
-        doc.setFontSize(16);
+        doc.setFontSize(NAME_SIZE);
         doc.setTextColor(...text);
-        doc.text('Devin Alexander', marginX + avatarSize + 10, y + avatarSize / 2 + 5, { baseline: 'middle' });
-        y += avatarSize + 28;
+        // Set text baseline so cap-height middle aligns with avatar center
+        // Cap-height for serif ~0.7em; visual middle = baseline - 0.35em
+        const nameBaselineOffset = NAME_SIZE * 0.35;
+        doc.text(
+          'Devin Alexander',
+          marginX + avatarSize + 10,
+          authorY + avatarSize / 2 + nameBaselineOffset,
+        );
+        y = authorY + avatarSize + 28;
 
         // ─── Groups + entries ───
         function ensureRoom(needed: number) {
@@ -268,103 +339,133 @@ const formattedDate = asset.publishedAt
             let firstHeight = 60;
             if (firstEntry) {
               const def = firstEntry.querySelector('.word-def')?.textContent?.trim() || '';
-              const lines = doc.splitTextToSize(def, wrapW);
-              firstHeight = 20 + lines.length * 14 + 14;
+              const lines = wrapText(def, contentW, PDF_SANS, DEF_SIZE);
+              firstHeight = TERM_LH + lines.length * DEF_LH + 16;
             }
-            ensureRoom(46 + firstHeight);
+            ensureRoom(36 + firstHeight);
 
             doc.setFont('DMSans', 'normal');
-            doc.setFontSize(9);
+            doc.setFontSize(HEADING_SIZE);
             doc.setTextColor(...accent);
-            doc.text(heading.toUpperCase(), marginX, y);
-            y += 6;
+            doc.text(heading.toUpperCase(), marginX, y + HEADING_SIZE);
+            const ruleY = y + HEADING_SIZE + 6;
             doc.setDrawColor(220, 195, 155);
             doc.setLineWidth(0.5);
-            doc.line(marginX, y, marginX + contentW, y);
-            y += 22;
+            doc.line(marginX, ruleY, marginX + contentW, ruleY);
+            y = ruleY + 18;
           }
 
           for (const entry of entries) {
             const term = entry.querySelector('.word-term')?.textContent?.trim() || '';
             const def = entry.querySelector('.word-def')?.textContent?.trim() || '';
-            const defLines = doc.splitTextToSize(def, wrapW);
-            const blockHeight = 22 + defLines.length * 14 + 16;
+            const defLines = wrapText(def, contentW, PDF_SANS, DEF_SIZE);
+            const blockHeight = TERM_LH + defLines.length * DEF_LH + 16;
 
             ensureRoom(blockHeight);
 
             // Term in serif (matches site .word-term)
             doc.setFont('InstrumentSerif', 'normal');
-            doc.setFontSize(17);
+            doc.setFontSize(TERM_SIZE);
             doc.setTextColor(...text);
-            doc.text(term, marginX, y);
-            y += 20;
+            doc.text(term, marginX, y + TERM_SIZE * 0.78);
+            y += TERM_LH;
 
             // Definition in DM Sans (matches site .word-def)
             doc.setFont('DMSans', 'normal');
-            doc.setFontSize(10.5);
+            doc.setFontSize(DEF_SIZE);
             doc.setTextColor(...muted);
-            doc.text(defLines, marginX, y);
-            y += defLines.length * 14 + 16;
+            let defY = y + DEF_SIZE * 0.95;
+            for (const line of defLines) {
+              doc.text(line, marginX, defY);
+              defY += DEF_LH;
+            }
+            y = defY - DEF_LH + 16;
           }
         }
 
         // ─── Closing block: avatar + sign-off + contact CTA ───
-        const closingHeight = 30 + 14 + 16 + 14 + 32;
-        ensureRoom(closingHeight + 24);
-        y += 24;
-
-        // Hairline rule above the closing block
-        doc.setDrawColor(220, 195, 155);
-        doc.setLineWidth(0.5);
-        doc.line(marginX, y, marginX + contentW, y);
-        y += 28;
-
-        const closeAvatarSize = 32;
-        doc.addImage(assets.avatar, 'PNG', marginX, y, closeAvatarSize, closeAvatarSize);
-        doc.setFont('InstrumentSerif', 'italic');
-        doc.setFontSize(16);
-        doc.setTextColor(...text);
-        doc.text('Devin Alexander', marginX + closeAvatarSize + 12, y + closeAvatarSize / 2 + 5, { baseline: 'middle' });
-        y += closeAvatarSize + 14;
-
-        // Sign-off message
-        doc.setFont('DMSans', 'normal');
-        doc.setFontSize(11);
-        doc.setTextColor(...text);
-        const signoffLines = doc.splitTextToSize('This document was written by Devin Alexander.', wrapW);
-        doc.text(signoffLines, marginX, y);
-        y += signoffLines.length * 16 + 4;
-
-        doc.setTextColor(...muted);
         const ctaPrefix = 'If you need more in-depth marketing advice or help, feel free to reach out ';
         const ctaWord = 'here';
         const ctaSuffix = '.';
-        // Print the static prefix, then "here" in gold + underlined as a real link
-        const prefixLines = doc.splitTextToSize(ctaPrefix + ctaWord + ctaSuffix, wrapW);
-        // Render the prefix lines normally first to position them
-        // Then we overlay a clickable link on the rendered "here" position.
-        doc.text(prefixLines, marginX, y);
+        const signoffText = 'This document was written by Devin Alexander.';
+        const signoffLines = wrapText(signoffText, contentW, PDF_SANS, SIGNOFF_SIZE);
+        const ctaLines = wrapText(ctaPrefix + ctaWord + ctaSuffix, contentW, PDF_SANS, SIGNOFF_SIZE);
 
-        // To get the link to align with the rendered "here", compute the
-        // width of the last line's content up to (and including) "here".
-        const lastLine = prefixLines[prefixLines.length - 1] as string;
-        const hereIdx = lastLine.lastIndexOf(ctaWord);
-        if (hereIdx >= 0) {
-          const beforeHere = lastLine.slice(0, hereIdx);
-          const beforeWidth = doc.getTextWidth(beforeHere);
-          const hereWidth = doc.getTextWidth(ctaWord);
-          const linkX = marginX + beforeWidth;
-          const linkY = y + (prefixLines.length - 1) * 16;
+        const closeAvatarSize = 22;
+        const closingHeight = 24 + closeAvatarSize + 14 +
+          signoffLines.length * SIGNOFF_LH + 4 +
+          ctaLines.length * SIGNOFF_LH;
+        ensureRoom(closingHeight + 24);
 
-          // Cover original "here" with a gold accented version and underline
-          doc.setTextColor(...accent);
-          doc.text(ctaWord, linkX, linkY);
-          // Underline
-          doc.setDrawColor(...accent);
-          doc.setLineWidth(0.6);
-          doc.line(linkX, linkY + 1.5, linkX + hereWidth, linkY + 1.5);
-          // Clickable link region
-          doc.link(linkX, linkY - 10, hereWidth, 14, { url: contactUrl });
+        y += 18;
+        doc.setDrawColor(220, 195, 155);
+        doc.setLineWidth(0.5);
+        doc.line(marginX, y, marginX + contentW, y);
+        y += 24;
+
+        // Avatar + name
+        doc.addImage(assets.avatar, 'PNG', marginX, y, closeAvatarSize, closeAvatarSize);
+        doc.setFont('InstrumentSerif', 'italic');
+        doc.setFontSize(NAME_SIZE);
+        doc.setTextColor(...text);
+        doc.text(
+          'Devin Alexander',
+          marginX + closeAvatarSize + 10,
+          y + closeAvatarSize / 2 + NAME_SIZE * 0.35,
+        );
+        y += closeAvatarSize + 16;
+
+        // Sign-off line
+        doc.setFont('DMSans', 'normal');
+        doc.setFontSize(SIGNOFF_SIZE);
+        doc.setTextColor(...text);
+        let sy = y + SIGNOFF_SIZE;
+        for (const line of signoffLines) {
+          doc.text(line, marginX, sy);
+          sy += SIGNOFF_LH;
+        }
+        y = sy - SIGNOFF_LH + SIGNOFF_LH + 4;
+
+        // CTA paragraph with hyperlinked "here" rendered as three segments:
+        // [prefix muted] [here accent + underline + link] [suffix muted]
+        // Use jsPDF's own width for positioning so segments line up with what
+        // PDF actually renders (matches the cursor advance, including spaces).
+        doc.setFont('DMSans', 'normal');
+        doc.setFontSize(SIGNOFF_SIZE);
+
+        let lineY = y + SIGNOFF_SIZE;
+        for (let i = 0; i < ctaLines.length; i++) {
+          const line = ctaLines[i];
+          const idx = (i === ctaLines.length - 1) ? line.lastIndexOf(ctaWord) : -1;
+          if (idx < 0) {
+            doc.setTextColor(...muted);
+            doc.text(line, marginX, lineY);
+          } else {
+            const before = line.slice(0, idx);
+            const after = line.slice(idx + ctaWord.length);
+            const beforeWidth = doc.getTextWidth(before);
+            const hereWidth = doc.getTextWidth(ctaWord);
+
+            // Prefix (muted)
+            doc.setTextColor(...muted);
+            doc.text(before, marginX, lineY);
+
+            // "here" in accent
+            const hereX = marginX + beforeWidth;
+            doc.setTextColor(...accent);
+            doc.text(ctaWord, hereX, lineY);
+            // Underline
+            doc.setDrawColor(...accent);
+            doc.setLineWidth(0.6);
+            doc.line(hereX, lineY + 1.5, hereX + hereWidth, lineY + 1.5);
+            // Clickable area
+            doc.link(hereX, lineY - SIGNOFF_SIZE * 0.85, hereWidth, SIGNOFF_SIZE * 1.2, { url: contactUrl });
+
+            // Suffix (muted)
+            doc.setTextColor(...muted);
+            doc.text(after, hereX + hereWidth, lineY);
+          }
+          lineY += SIGNOFF_LH;
         }
 
         // ─── Footer on every page ───
