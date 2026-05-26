@@ -17,7 +17,7 @@ const json = (body: object, status = 200) =>
 
 const isValidEmail = (s: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   let body: any;
   try {
     body = await request.json();
@@ -100,30 +100,30 @@ export const POST: APIRoute = async ({ request }) => {
 
   const resend = getResend();
 
-  // Fire-and-forget side effects
-  Promise.allSettled([
-    // Add to optional training audience for nurture sequences
-    RESEND_TRAINING_AUDIENCE_ID
-      ? resend.contacts.create({
+  // The user-facing email is required for success — await it so we can
+  // surface a real error if delivery fails. The audience add and Devin
+  // notification are non-blocking; we hand them to ctx.waitUntil() so the
+  // Cloudflare Worker keeps them alive after we've returned the response.
+  // (Without waitUntil the Worker terminates and these promises get
+  // cancelled — which is exactly what was silently dropping emails.)
+  const ctx = (locals as any)?.runtime?.ctx as
+    | { waitUntil?: (p: Promise<unknown>) => void }
+    | undefined;
+
+  const audienceTask = RESEND_TRAINING_AUDIENCE_ID
+    ? resend.contacts
+        .create({
           audienceId: RESEND_TRAINING_AUDIENCE_ID,
           email,
           firstName,
           lastName: name.split(' ').slice(1).join(' ') || undefined,
           unsubscribed: false,
         })
-      : Promise.resolve(),
-    // Deliver the asset to the requester
-    resend.emails.send({
-      from: SENDER,
-      to: email,
-      replyTo: 'me@devin.vc',
-      subject: `${firstName}, your ${asset.title}`,
-      html: emailHtml,
-      text: emailText,
-      headers: { 'X-Entity-Ref-ID': `training-${asset.slug}-${Date.now()}` },
-    }),
-    // Notify Devin
-    resend.emails.send({
+        .catch((err) => console.error('[training-lead] audience failed:', err))
+    : Promise.resolve();
+
+  const notifyTask = resend.emails
+    .send({
       from: SENDER,
       to: 'me@devin.vc',
       subject: `Training lead: ${name} (${company}) - ${asset.title}`,
@@ -136,15 +136,32 @@ Company: ${company}
 Job Title: ${jobTitle}
 `,
       headers: { 'X-Entity-Ref-ID': `training-notify-${asset.slug}-${Date.now()}` },
-    }),
-  ]).then((settled) => {
-    settled.forEach((r, i) => {
-      if (r.status === 'rejected') {
-        const labels = ['audience', 'delivery email', 'notification'];
-        console.error(`[training-lead] ${labels[i]} failed:`, r.reason);
-      }
+    })
+    .catch((err) => console.error('[training-lead] notification failed:', err));
+
+  if (ctx?.waitUntil) {
+    ctx.waitUntil(audienceTask);
+    ctx.waitUntil(notifyTask);
+  }
+
+  try {
+    const delivery = await resend.emails.send({
+      from: SENDER,
+      to: email,
+      replyTo: 'me@devin.vc',
+      subject: `${firstName}, your ${asset.title}`,
+      html: emailHtml,
+      text: emailText,
+      headers: { 'X-Entity-Ref-ID': `training-${asset.slug}-${Date.now()}` },
     });
-  });
+    if ((delivery as any)?.error) {
+      console.error('[training-lead] delivery email failed:', (delivery as any).error);
+      return json({ error: 'Could not send the email. Please try again or email me@devin.vc directly.' }, 502);
+    }
+  } catch (err) {
+    console.error('[training-lead] delivery email threw:', err);
+    return json({ error: 'Could not send the email. Please try again or email me@devin.vc directly.' }, 502);
+  }
 
   return json({ ok: true, assetUrl });
 };
