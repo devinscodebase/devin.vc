@@ -30,12 +30,16 @@ export const POST: APIRoute = async ({ request }) => {
   const company = String(body.company || '').trim();
   const jobTitle = String(body.jobTitle || '').trim();
   const assetSlug = String(body.assetSlug || '').trim();
+  const consent = body.consent === true || body.consent === 'on' || body.consent === 'true';
 
   if (!name || !email || !company || !jobTitle || !assetSlug) {
     return json({ error: 'All fields are required' }, 400);
   }
   if (!isValidEmail(email)) {
     return json({ error: 'Please enter a valid email address' }, 400);
+  }
+  if (!consent) {
+    return json({ error: 'You must agree to the Privacy Policy and Terms of Use to continue.' }, 400);
   }
 
   // Resolve asset details from Sanity (so we know the title + can build the URL)
