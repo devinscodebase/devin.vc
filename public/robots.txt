@@ -1,0 +1,21 @@
+# robots.txt for devin.vc
+# Allow general crawlers; block private and transactional surfaces.
+
+User-agent: *
+Allow: /
+
+# Internal APIs, admin, CMS, and OG image endpoints
+Disallow: /api/
+Disallow: /studio
+Disallow: /dashboard
+Disallow: /og/
+
+# Transactional and gated content
+Disallow: /confirm
+Disallow: /unsubscribe
+Disallow: /proposals/
+
+# Gated word-list content (the landing pages above remain crawlable)
+Disallow: /training/*/words
+
+Sitemap: https://www.devin.vc/sitemap-index.xml
