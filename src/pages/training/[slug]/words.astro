@@ -145,14 +145,20 @@ const formattedDate = asset.publishedAt
 <script>
   import jsPDF from 'jspdf';
 
-  const printBtn = document.getElementById('print-page');
-  const pdfBtn = document.getElementById('download-pdf');
+  function bindWordsActions() {
+    const printBtn = document.getElementById('print-page');
+    const pdfBtn = document.getElementById('download-pdf');
+    if (!printBtn || !pdfBtn) return;
+    // Guard against double-binding under view transitions
+    if ((printBtn as any)._bound) return;
+    (printBtn as any)._bound = true;
+    (pdfBtn as any)._bound = true;
 
-  printBtn?.addEventListener('click', () => {
-    window.print();
-  });
+    printBtn.addEventListener('click', () => {
+      window.print();
+    });
 
-  pdfBtn?.addEventListener('click', () => {
+    pdfBtn.addEventListener('click', () => {
     const title = document.querySelector('.words-title')?.textContent?.trim() || 'Word List';
     const tagline = document.querySelector('.words-tagline')?.textContent?.trim() || '';
     const groups = Array.from(document.querySelectorAll('.word-group'));
@@ -251,9 +257,14 @@ const formattedDate = asset.publishedAt
       );
     }
 
-    const safeName = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-    doc.save(`${safeName}.pdf`);
-  });
+      const safeName = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+      doc.save(`${safeName}.pdf`);
+    });
+  }
+
+  // Bind on initial load and on every view-transition navigation
+  bindWordsActions();
+  document.addEventListener('astro:page-load', bindWordsActions);
 </script>
 
 <style>
