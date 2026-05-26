@@ -137,126 +137,205 @@ const formattedDate = asset.publishedAt
 <script>
   import jsPDF from 'jspdf';
 
+  // Cache assets across multiple clicks
+  let assetsPromise: Promise<{
+    serif: string;
+    serifItalic: string;
+    sans: string;
+    avatar: string;
+  }> | null = null;
+
+  async function fetchBase64(url: string): Promise<string> {
+    const res = await fetch(url);
+    const buf = await res.arrayBuffer();
+    const bytes = new Uint8Array(buf);
+    let bin = '';
+    const chunk = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunk) {
+      bin += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk) as unknown as number[]);
+    }
+    return btoa(bin);
+  }
+
+  function loadAssets() {
+    if (!assetsPromise) {
+      assetsPromise = Promise.all([
+        fetchBase64('/fonts/InstrumentSerif-Regular-Latin.ttf'),
+        fetchBase64('/fonts/InstrumentSerif-Italic-Latin.ttf'),
+        fetchBase64('/fonts/DMSans-Variable-Latin.ttf'),
+        fetchBase64('/images/avatar-round.png'),
+      ]).then(([serif, serifItalic, sans, avatar]) => ({
+        serif,
+        serifItalic,
+        sans,
+        avatar: `data:image/png;base64,${avatar}`,
+      }));
+    }
+    return assetsPromise;
+  }
+
   function bindWordsActions() {
     const pdfBtn = document.getElementById('download-pdf');
     if (!pdfBtn) return;
-    // Guard against double-binding under view transitions
     if ((pdfBtn as any)._bound) return;
     (pdfBtn as any)._bound = true;
 
-    pdfBtn.addEventListener('click', () => {
-      const title = document.querySelector('.words-title')?.textContent?.trim() || 'Word List';
-      const tagline = document.querySelector('.words-tagline')?.textContent?.trim() || '';
-      const groups = Array.from(document.querySelectorAll('.word-group'));
+    pdfBtn.addEventListener('click', async () => {
+      const labelEl = pdfBtn.querySelector('span, .btn-label') as HTMLElement | null;
+      const originalLabel = pdfBtn.textContent;
+      try {
+        (pdfBtn as HTMLButtonElement).disabled = true;
+        if (labelEl) labelEl.textContent = 'Generating…';
 
-      // ─── A4: 595.28 × 841.89 pt (210 × 297 mm) ───
-      // 25mm margins ≈ 71pt — standard business document margins
-      const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-      const pageW = doc.internal.pageSize.getWidth();
-      const pageH = doc.internal.pageSize.getHeight();
-      const marginX = 71;        // 25mm side margins
-      const marginYTop = 71;     // 25mm top margin
-      const marginYBottom = 64;  // ~22.6mm bottom margin (footer sits in this zone)
-      const contentW = pageW - marginX * 2;
-      let y = marginYTop;
+        const title = document.querySelector('.words-title')?.textContent?.trim() || 'Word List';
+        const tagline = document.querySelector('.words-tagline')?.textContent?.trim() || '';
+        const groups = Array.from(document.querySelectorAll('.word-group'));
 
-      function ensureRoom(needed: number) {
-        if (y + needed > pageH - marginYBottom) {
-          doc.addPage();
-          y = marginYTop;
+        const assets = await loadAssets();
+
+        // ─── A4: 595.28 × 841.89 pt (210 × 297 mm). 25mm margins ≈ 71pt ───
+        const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+        const pageW = doc.internal.pageSize.getWidth();
+        const pageH = doc.internal.pageSize.getHeight();
+        const marginX = 71;
+        const marginYTop = 64;
+        const marginYBottom = 64;
+        const contentW = pageW - marginX * 2;
+
+        // ─── Register site fonts ───
+        doc.addFileToVFS('InstrumentSerif-Regular.ttf', assets.serif);
+        doc.addFont('InstrumentSerif-Regular.ttf', 'InstrumentSerif', 'normal');
+        doc.addFileToVFS('InstrumentSerif-Italic.ttf', assets.serifItalic);
+        doc.addFont('InstrumentSerif-Italic.ttf', 'InstrumentSerif', 'italic');
+        doc.addFileToVFS('DMSans-Variable.ttf', assets.sans);
+        doc.addFont('DMSans-Variable.ttf', 'DMSans', 'normal');
+
+        // ─── Site palette in light mode ───
+        const text = [20, 18, 16] as const;       // near-black
+        const muted = [110, 100, 90] as const;    // muted brown
+        const dim = [160, 148, 136] as const;     // very muted for footer
+        const accent = [196, 164, 124] as const;  // warm gold (--color-accent)
+
+        let y = marginYTop;
+
+        // ─── Author block: circular avatar + "by Devin Alexander" ───
+        const avatarSize = 32;
+        doc.addImage(assets.avatar, 'PNG', marginX, y, avatarSize, avatarSize);
+
+        doc.setFont('DMSans', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(...muted);
+        doc.text('BY', marginX + avatarSize + 12, y + avatarSize / 2 - 5, { baseline: 'middle' });
+
+        doc.setFont('InstrumentSerif', 'italic');
+        doc.setFontSize(16);
+        doc.setTextColor(...text);
+        doc.text('Devin Alexander', marginX + avatarSize + 12, y + avatarSize / 2 + 10, { baseline: 'middle' });
+
+        y += avatarSize + 28;
+
+        // ─── Title ───
+        doc.setFont('InstrumentSerif', 'normal');
+        doc.setFontSize(36);
+        doc.setTextColor(...text);
+        doc.text(title, marginX, y);
+        y += 38;
+
+        // ─── Tagline ───
+        if (tagline) {
+          doc.setFont('DMSans', 'normal');
+          doc.setFontSize(11);
+          doc.setTextColor(...muted);
+          const taglineLines = doc.splitTextToSize(tagline, contentW);
+          doc.text(taglineLines, marginX, y);
+          y += taglineLines.length * 16 + 28;
+        } else {
+          y += 12;
         }
-      }
 
-      // ─── Title block ───
-      doc.setFont('times', 'normal');
-      doc.setFontSize(28);
-      doc.setTextColor(20, 18, 16);
-      doc.text(title, marginX, y);
-      y += 36;
-
-      if (tagline) {
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(11);
-        doc.setTextColor(100, 90, 80);
-        const taglineLines = doc.splitTextToSize(tagline, contentW);
-        doc.text(taglineLines, marginX, y);
-        y += taglineLines.length * 15 + 10;
-      }
-
-      // Accent line
-      doc.setDrawColor(196, 164, 124);
-      doc.setLineWidth(1.5);
-      doc.line(marginX, y, marginX + 56, y);
-      y += 28;
-
-      // ─── Groups + entries ───
-      for (const groupEl of groups) {
-        const heading = groupEl.querySelector('.group-heading')?.textContent?.trim();
-        const entries = Array.from(groupEl.querySelectorAll('.word-entry'));
-
-        if (heading && groups.length > 1) {
-          // Reserve room for heading + first entry to avoid orphan headings
-          const firstEntry = entries[0];
-          let firstHeight = 60;
-          if (firstEntry) {
-            const def = firstEntry.querySelector('.word-def')?.textContent?.trim() || '';
-            const lines = doc.splitTextToSize(def, contentW);
-            firstHeight = 18 + lines.length * 14 + 14;
+        // ─── Groups + entries ───
+        function ensureRoom(needed: number) {
+          if (y + needed > pageH - marginYBottom) {
+            doc.addPage();
+            y = marginYTop;
           }
-          ensureRoom(46 + firstHeight);
-
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(9.5);
-          doc.setTextColor(180, 150, 110);
-          doc.text(heading.toUpperCase(), marginX, y);
-          y += 6;
-          doc.setDrawColor(220, 195, 155);
-          doc.setLineWidth(0.5);
-          doc.line(marginX, y, marginX + contentW, y);
-          y += 20;
         }
 
-        for (const entry of entries) {
-          const term = entry.querySelector('.word-term')?.textContent?.trim() || '';
-          const def = entry.querySelector('.word-def')?.textContent?.trim() || '';
-          const defLines = doc.splitTextToSize(def, contentW);
-          const blockHeight = 20 + defLines.length * 14 + 14;
+        for (const groupEl of groups) {
+          const heading = groupEl.querySelector('.group-heading')?.textContent?.trim();
+          const entries = Array.from(groupEl.querySelectorAll('.word-entry'));
 
-          ensureRoom(blockHeight);
+          if (heading && groups.length > 1) {
+            // Reserve room for heading + first entry to prevent orphan headings
+            const firstEntry = entries[0];
+            let firstHeight = 60;
+            if (firstEntry) {
+              const def = firstEntry.querySelector('.word-def')?.textContent?.trim() || '';
+              const lines = doc.splitTextToSize(def, contentW);
+              firstHeight = 20 + lines.length * 14 + 14;
+            }
+            ensureRoom(46 + firstHeight);
 
-          // Term
-          doc.setFont('times', 'bold');
-          doc.setFontSize(12.5);
-          doc.setTextColor(20, 18, 16);
-          doc.text(term, marginX, y);
-          y += 18;
+            doc.setFont('DMSans', 'normal');
+            doc.setFontSize(9);
+            doc.setTextColor(...accent);
+            doc.text(heading.toUpperCase(), marginX, y);
+            y += 6;
+            doc.setDrawColor(220, 195, 155);
+            doc.setLineWidth(0.5);
+            doc.line(marginX, y, marginX + contentW, y);
+            y += 22;
+          }
 
-          // Definition
-          doc.setFont('helvetica', 'normal');
-          doc.setFontSize(10.5);
-          doc.setTextColor(70, 65, 60);
-          doc.text(defLines, marginX, y);
-          y += defLines.length * 14 + 14;
+          for (const entry of entries) {
+            const term = entry.querySelector('.word-term')?.textContent?.trim() || '';
+            const def = entry.querySelector('.word-def')?.textContent?.trim() || '';
+            const defLines = doc.splitTextToSize(def, contentW);
+            const blockHeight = 22 + defLines.length * 14 + 16;
+
+            ensureRoom(blockHeight);
+
+            // Term in serif (matches site .word-term)
+            doc.setFont('InstrumentSerif', 'normal');
+            doc.setFontSize(17);
+            doc.setTextColor(...text);
+            doc.text(term, marginX, y);
+            y += 20;
+
+            // Definition in DM Sans (matches site .word-def)
+            doc.setFont('DMSans', 'normal');
+            doc.setFontSize(10.5);
+            doc.setTextColor(...muted);
+            doc.text(defLines, marginX, y);
+            y += defLines.length * 14 + 16;
+          }
         }
-      }
 
-      // ─── Footer on every page ───
-      const pageCount = doc.getNumberOfPages();
-      for (let i = 1; i <= pageCount; i++) {
-        doc.setPage(i);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8);
-        doc.setTextColor(160, 148, 136);
-        doc.text(
-          `${title}  ·  devin.vc/training  ·  Page ${i} of ${pageCount}`,
-          pageW / 2,
-          pageH - 36,
-          { align: 'center' }
-        );
-      }
+        // ─── Footer on every page ───
+        const pageCount = doc.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+          doc.setPage(i);
+          doc.setFont('DMSans', 'normal');
+          doc.setFontSize(8);
+          doc.setTextColor(...dim);
+          doc.text(
+            `${title}  ·  devin.vc/training  ·  Page ${i} of ${pageCount}`,
+            pageW / 2,
+            pageH - 36,
+            { align: 'center' }
+          );
+        }
 
-      const safeName = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-      doc.save(`${safeName}.pdf`);
+        const safeName = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+        doc.save(`${safeName}.pdf`);
+      } catch (err) {
+        console.error('[words] PDF generation failed:', err);
+        alert('Sorry, the PDF could not be generated. Please try again.');
+      } finally {
+        (pdfBtn as HTMLButtonElement).disabled = false;
+        if (labelEl && originalLabel) labelEl.textContent = originalLabel;
+        else if (originalLabel) pdfBtn.textContent = originalLabel;
+      }
     });
   }
 
