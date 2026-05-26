@@ -96,14 +96,6 @@ const formattedDate = asset.publishedAt
               </svg>
               Download PDF
             </button>
-            <button type="button" id="print-page" class="action-btn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 6 2 18 2 18 9"/>
-                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-                <rect x="6" y="14" width="12" height="8"/>
-              </svg>
-              Print
-            </button>
             <span class="action-meta">
               <span class="action-num">{terms.length}</span> terms
             </span>
@@ -146,116 +138,122 @@ const formattedDate = asset.publishedAt
   import jsPDF from 'jspdf';
 
   function bindWordsActions() {
-    const printBtn = document.getElementById('print-page');
     const pdfBtn = document.getElementById('download-pdf');
-    if (!printBtn || !pdfBtn) return;
+    if (!pdfBtn) return;
     // Guard against double-binding under view transitions
-    if ((printBtn as any)._bound) return;
-    (printBtn as any)._bound = true;
+    if ((pdfBtn as any)._bound) return;
     (pdfBtn as any)._bound = true;
 
-    printBtn.addEventListener('click', () => {
-      window.print();
-    });
-
     pdfBtn.addEventListener('click', () => {
-    const title = document.querySelector('.words-title')?.textContent?.trim() || 'Word List';
-    const tagline = document.querySelector('.words-tagline')?.textContent?.trim() || '';
-    const groups = Array.from(document.querySelectorAll('.word-group'));
+      const title = document.querySelector('.words-title')?.textContent?.trim() || 'Word List';
+      const tagline = document.querySelector('.words-tagline')?.textContent?.trim() || '';
+      const groups = Array.from(document.querySelectorAll('.word-group'));
 
-    const doc = new jsPDF({ unit: 'pt', format: 'letter' });
-    const pageW = doc.internal.pageSize.getWidth();
-    const pageH = doc.internal.pageSize.getHeight();
-    const marginX = 56;
-    const marginY = 64;
-    const contentW = pageW - marginX * 2;
-    let y = marginY;
+      // ─── A4: 595.28 × 841.89 pt (210 × 297 mm) ───
+      // 25mm margins ≈ 71pt — standard business document margins
+      const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+      const pageW = doc.internal.pageSize.getWidth();
+      const pageH = doc.internal.pageSize.getHeight();
+      const marginX = 71;        // 25mm side margins
+      const marginYTop = 71;     // 25mm top margin
+      const marginYBottom = 64;  // ~22.6mm bottom margin (footer sits in this zone)
+      const contentW = pageW - marginX * 2;
+      let y = marginYTop;
 
-    function ensureRoom(needed: number) {
-      if (y + needed > pageH - marginY) {
-        doc.addPage();
-        y = marginY;
-      }
-    }
-
-    // Title block
-    doc.setFont('times', 'normal');
-    doc.setFontSize(26);
-    doc.setTextColor(20, 18, 16);
-    doc.text(title, marginX, y);
-    y += 32;
-
-    if (tagline) {
-      doc.setFont('times', 'italic');
-      doc.setFontSize(13);
-      doc.setTextColor(100, 90, 80);
-      const taglineLines = doc.splitTextToSize(tagline, contentW);
-      doc.text(taglineLines, marginX, y);
-      y += taglineLines.length * 16 + 8;
-    }
-
-    // Accent line
-    doc.setDrawColor(196, 164, 124);
-    doc.setLineWidth(1.5);
-    doc.line(marginX, y, marginX + 48, y);
-    y += 24;
-
-    // Groups + entries
-    for (const groupEl of groups) {
-      const heading = groupEl.querySelector('.group-heading')?.textContent?.trim();
-      const entries = Array.from(groupEl.querySelectorAll('.word-entry'));
-
-      if (heading && groups.length > 1) {
-        ensureRoom(40);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(10);
-        doc.setTextColor(180, 150, 110);
-        doc.text(heading.toUpperCase(), marginX, y);
-        y += 6;
-        doc.setDrawColor(220, 195, 155);
-        doc.setLineWidth(0.5);
-        doc.line(marginX, y, marginX + contentW, y);
-        y += 16;
+      function ensureRoom(needed: number) {
+        if (y + needed > pageH - marginYBottom) {
+          doc.addPage();
+          y = marginYTop;
+        }
       }
 
-      for (const entry of entries) {
-        const term = entry.querySelector('.word-term')?.textContent?.trim() || '';
-        const def = entry.querySelector('.word-def')?.textContent?.trim() || '';
-        const defLines = doc.splitTextToSize(def, contentW);
-        const blockHeight = 18 + defLines.length * 14 + 12;
+      // ─── Title block ───
+      doc.setFont('times', 'normal');
+      doc.setFontSize(28);
+      doc.setTextColor(20, 18, 16);
+      doc.text(title, marginX, y);
+      y += 36;
 
-        ensureRoom(blockHeight);
-
-        // Term
-        doc.setFont('times', 'bold');
-        doc.setFontSize(13);
-        doc.setTextColor(20, 18, 16);
-        doc.text(term, marginX, y);
-        y += 16;
-
-        // Definition
+      if (tagline) {
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10.5);
-        doc.setTextColor(70, 65, 60);
-        doc.text(defLines, marginX, y);
-        y += defLines.length * 14 + 12;
+        doc.setFontSize(11);
+        doc.setTextColor(100, 90, 80);
+        const taglineLines = doc.splitTextToSize(tagline, contentW);
+        doc.text(taglineLines, marginX, y);
+        y += taglineLines.length * 15 + 10;
       }
-    }
 
-    // Footer on last page
-    const pageCount = doc.getNumberOfPages();
-    for (let i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8);
-      doc.setTextColor(160, 148, 136);
-      doc.text(
-        `${title}  ·  devin.vc/training  ·  Page ${i} of ${pageCount}`,
-        pageW / 2,
-        pageH - 32,
-        { align: 'center' }
-      );
-    }
+      // Accent line
+      doc.setDrawColor(196, 164, 124);
+      doc.setLineWidth(1.5);
+      doc.line(marginX, y, marginX + 56, y);
+      y += 28;
+
+      // ─── Groups + entries ───
+      for (const groupEl of groups) {
+        const heading = groupEl.querySelector('.group-heading')?.textContent?.trim();
+        const entries = Array.from(groupEl.querySelectorAll('.word-entry'));
+
+        if (heading && groups.length > 1) {
+          // Reserve room for heading + first entry to avoid orphan headings
+          const firstEntry = entries[0];
+          let firstHeight = 60;
+          if (firstEntry) {
+            const def = firstEntry.querySelector('.word-def')?.textContent?.trim() || '';
+            const lines = doc.splitTextToSize(def, contentW);
+            firstHeight = 18 + lines.length * 14 + 14;
+          }
+          ensureRoom(46 + firstHeight);
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(9.5);
+          doc.setTextColor(180, 150, 110);
+          doc.text(heading.toUpperCase(), marginX, y);
+          y += 6;
+          doc.setDrawColor(220, 195, 155);
+          doc.setLineWidth(0.5);
+          doc.line(marginX, y, marginX + contentW, y);
+          y += 20;
+        }
+
+        for (const entry of entries) {
+          const term = entry.querySelector('.word-term')?.textContent?.trim() || '';
+          const def = entry.querySelector('.word-def')?.textContent?.trim() || '';
+          const defLines = doc.splitTextToSize(def, contentW);
+          const blockHeight = 20 + defLines.length * 14 + 14;
+
+          ensureRoom(blockHeight);
+
+          // Term
+          doc.setFont('times', 'bold');
+          doc.setFontSize(12.5);
+          doc.setTextColor(20, 18, 16);
+          doc.text(term, marginX, y);
+          y += 18;
+
+          // Definition
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(10.5);
+          doc.setTextColor(70, 65, 60);
+          doc.text(defLines, marginX, y);
+          y += defLines.length * 14 + 14;
+        }
+      }
+
+      // ─── Footer on every page ───
+      const pageCount = doc.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8);
+        doc.setTextColor(160, 148, 136);
+        doc.text(
+          `${title}  ·  devin.vc/training  ·  Page ${i} of ${pageCount}`,
+          pageW / 2,
+          pageH - 36,
+          { align: 'center' }
+        );
+      }
 
       const safeName = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
       doc.save(`${safeName}.pdf`);
