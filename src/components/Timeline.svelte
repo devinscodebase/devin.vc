@@ -248,8 +248,7 @@
   }
 
   .tag-number {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     line-height: 1;
     color: var(--color-accent);
@@ -262,7 +261,7 @@
   }
 
   .tag-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -300,7 +299,7 @@
   }
 
   .year-big {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-2xl);
     font-weight: var(--weight-regular);
     line-height: 1;
@@ -309,7 +308,7 @@
   }
 
   .year-range {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
@@ -353,7 +352,7 @@
   }
 
   .role {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-xl);
     font-weight: var(--weight-regular);
     line-height: 1.25;
@@ -362,7 +361,7 @@
   }
 
   .company {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -372,7 +371,7 @@
   }
 
   .detail {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-base);
     line-height: 1.65;
     color: var(--color-text-muted);

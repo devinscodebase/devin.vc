@@ -387,14 +387,14 @@ const ogImage = post.ogImage
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
     text-decoration: none;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo);
   }
 
   .back-link:hover {
@@ -402,7 +402,7 @@ const ogImage = post.ogImage
   }
 
   .back-link svg {
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform var(--duration-fast) var(--ease-out-expo);
   }
 
   .back-link:hover svg {
@@ -418,7 +418,7 @@ const ogImage = post.ogImage
     align-items: center;
     gap: 0.75rem;
     margin-top: 2rem;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
@@ -438,7 +438,7 @@ const ogImage = post.ogImage
   }
 
   .post-title {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-2xl);
     font-weight: var(--weight-regular);
     line-height: 1.1;
@@ -448,8 +448,7 @@ const ogImage = post.ogImage
   }
 
   .post-description {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     line-height: 1.55;
     color: var(--color-text-muted);
@@ -478,14 +477,14 @@ const ogImage = post.ogImage
 
   /* Prose typography for post body */
   .prose {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-lg);
     line-height: 1.75;
     color: var(--color-text);
   }
 
   .prose :global(h2) {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-xl);
     font-weight: var(--weight-regular);
     line-height: 1.2;
@@ -495,7 +494,7 @@ const ogImage = post.ogImage
   }
 
   .prose :global(h3) {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-xl);
     font-weight: var(--weight-regular);
     line-height: 1.3;
@@ -521,7 +520,7 @@ const ogImage = post.ogImage
     text-decoration: underline;
     text-underline-offset: 3px;
     text-decoration-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
-    transition: text-decoration-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: text-decoration-color var(--duration-fast) var(--ease-out-expo);
   }
 
   .prose :global(a:hover) {
@@ -539,8 +538,8 @@ const ogImage = post.ogImage
     position: relative;
     top: -0.05em;
     opacity: 0.5;
-    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-fast) var(--ease-out-expo),
+                transform var(--duration-fast) var(--ease-out-expo);
   }
 
   .prose :global(.external-link:hover .ext-icon) {
@@ -570,8 +569,7 @@ const ogImage = post.ogImage
     background: color-mix(in oklab, var(--color-accent-teal) 4%, transparent);
     border-radius: 0 6px 6px 0;
     color: var(--color-text-muted);
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: 1.15em;
     line-height: 1.6;
   }
@@ -581,7 +579,7 @@ const ogImage = post.ogImage
     position: absolute;
     top: -0.15rem;
     left: 0.75rem;
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: 3.5rem;
     line-height: 1;
     color: var(--color-accent-teal);
@@ -691,14 +689,14 @@ const ogImage = post.ogImage
   }
 
   .author-name {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-lg);
     color: var(--color-text);
     line-height: 1;
   }
 
   .author-bio {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     color: var(--color-text-muted);
     line-height: 1.4;
@@ -720,8 +718,8 @@ const ogImage = post.ogImage
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 20%, transparent);
     color: var(--color-text-muted);
     text-decoration: none;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo),
+                border-color var(--duration-fast) var(--ease-out-expo);
   }
 
   .author-social:hover {
@@ -731,7 +729,7 @@ const ogImage = post.ogImage
 
   .author-social svg {
     opacity: 0.6;
-    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-fast) var(--ease-out-expo);
   }
 
   .author-social:hover svg {
@@ -763,7 +761,7 @@ const ogImage = post.ogImage
 
   .keep-reading-label {
     display: block;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
@@ -786,9 +784,9 @@ const ogImage = post.ogImage
     background: color-mix(in oklab, var(--color-text-muted) 3%, transparent);
     border-radius: 0 6px 6px 0;
     text-decoration: none;
-    transition: border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color var(--duration-normal) var(--ease-out-expo),
+                background var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
   }
 
   .kr-card:hover {
@@ -801,7 +799,7 @@ const ogImage = post.ogImage
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
@@ -817,11 +815,11 @@ const ogImage = post.ogImage
 
   .kr-title {
     display: block;
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-lg);
     line-height: 1.3;
     color: var(--color-text);
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo);
   }
 
   .kr-card:hover .kr-title {
@@ -835,8 +833,8 @@ const ogImage = post.ogImage
     transform: translateY(-50%);
     color: var(--color-text-muted);
     opacity: 0;
-    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-fast) var(--ease-out-expo),
+                transform var(--duration-fast) var(--ease-out-expo);
   }
 
   .kr-card:hover .kr-arrow {
@@ -862,13 +860,13 @@ const ogImage = post.ogImage
     border: none;
     cursor: pointer;
     padding: 0;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo);
   }
 
   .toc-toggle:hover {
@@ -876,7 +874,7 @@ const ogImage = post.ogImage
   }
 
   .toc-chevron {
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform var(--duration-normal) var(--ease-out-expo);
   }
 
   .toc:not(.collapsed) .toc-chevron {
@@ -898,13 +896,13 @@ const ogImage = post.ogImage
 
   .toc-link {
     display: block;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-base);
     color: var(--color-text-muted);
     text-decoration: none;
     padding: 0.35rem 0;
     line-height: 1.35;
-    transition: color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo);
   }
 
   .toc-link:hover {
@@ -952,7 +950,7 @@ const ogImage = post.ogImage
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 18%, transparent);
     border-radius: 999px;
     background: none;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
@@ -961,8 +959,8 @@ const ogImage = post.ogImage
     text-decoration: none;
     cursor: pointer;
     line-height: 1;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo),
+                border-color var(--duration-fast) var(--ease-out-expo);
   }
 
   .share-btn:hover {
@@ -1009,10 +1007,10 @@ const ogImage = post.ogImage
     align-items: center;
     justify-content: center;
     z-index: 50;
-    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo),
+                color var(--duration-fast) var(--ease-out-expo),
+                border-color var(--duration-fast) var(--ease-out-expo);
   }
 
   .scroll-top:hover {

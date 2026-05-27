@@ -135,8 +135,7 @@
   }
 
   .tag-number {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     line-height: 1;
     color: var(--color-accent-amber);
@@ -149,7 +148,7 @@
   }
 
   .tag-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -158,7 +157,7 @@
   }
 
   .section-heading {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-2xl);
     font-weight: var(--weight-regular);
     line-height: 1.1;
@@ -181,7 +180,7 @@
     padding: clamp(1rem, 2vw, 1.35rem) 0;
     border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
     text-decoration: none;
-    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color var(--duration-fast) var(--ease-out-expo);
   }
 
   .project-row:last-child {
@@ -201,8 +200,7 @@
   }
 
   .row-index {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     line-height: 1;
     color: var(--color-text-muted);
@@ -224,14 +222,14 @@
   }
 
   .row-name {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     font-weight: var(--weight-regular);
     line-height: 1.2;
     color: var(--color-text);
     letter-spacing: var(--tracking-tight);
     white-space: nowrap;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo);
   }
 
   .project-row:hover .row-name {
@@ -239,7 +237,7 @@
   }
 
   .row-category {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -289,7 +287,7 @@
   }
 
   .row-tag {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -303,7 +301,7 @@
     color: var(--color-accent);
     opacity: 0;
     flex-shrink: 0;
-    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-fast) var(--ease-out-expo);
   }
 
   .project-row:hover .row-arrow {
@@ -321,14 +319,14 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
     text-decoration: none;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo);
   }
 
   .view-all:hover {
@@ -336,7 +334,7 @@
   }
 
   .view-all svg {
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform var(--duration-fast) var(--ease-out-expo);
   }
 
   .view-all:hover svg {

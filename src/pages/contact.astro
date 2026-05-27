@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import BookingCalendar from '../components/BookingCalendar.svelte';
+import ContactForm from '../components/ContactForm.svelte';
 ---
 
 <Layout title="Contact — Devin Alexander" description="Get in touch about consulting, collaboration, or interesting problems worth solving." image="/og/contact.png">
@@ -14,18 +15,15 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
           <div class="title-rule" aria-hidden="true"></div>
         </header>
 
-        <div class="contact-switcher">
-          <div class="tab-track">
-            <div class="tab-indicator" id="tab-indicator"></div>
-            <button class="tab-btn active" id="tab-message" type="button">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-              Message
-            </button>
-            <button class="tab-btn" id="tab-booking" type="button">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-              Book a call
-            </button>
-          </div>
+        <div class="contact-switcher" role="tablist" aria-label="Choose how to get in touch">
+          <button class="tab-btn active" id="tab-message" type="button" role="tab" aria-selected="true" aria-controls="panel-message">
+            <span class="tab-num">01</span>
+            <span class="tab-label">Message</span>
+          </button>
+          <button class="tab-btn" id="tab-booking" type="button" role="tab" aria-selected="false" aria-controls="panel-booking">
+            <span class="tab-num">02</span>
+            <span class="tab-label">Book a call</span>
+          </button>
         </div>
 
         <div class="contact-card" id="contact-card">
@@ -34,35 +32,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
 
           <div class="panel active" id="panel-message">
             <p class="panel-hint">I'll get back to you within a day or two.</p>
-            <form class="contact-form" id="contact-form">
-              <div class="form-field">
-                <input type="text" name="name" placeholder="Name" required class="form-input" autocomplete="name" aria-label="Your name" />
-                <div class="input-line"></div>
-              </div>
-              <div class="form-field">
-                <input type="email" name="email" placeholder="Email" required class="form-input" autocomplete="email" aria-label="Your email address" />
-                <div class="input-line"></div>
-              </div>
-              <div class="form-field">
-                <textarea name="message" placeholder="What's on your mind?" required class="form-input form-textarea" rows="4" aria-label="Your message"></textarea>
-              </div>
-              <label class="consent-label">
-                <input type="checkbox" name="consent" required class="consent-checkbox" id="consent-checkbox" />
-                <span class="consent-check" aria-hidden="true">
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3L4.5 8.5 2 6"/></svg>
-                </span>
-                <span class="consent-text">I agree to the <a href="/privacy" target="_blank">Privacy Policy</a> and <a href="/terms" target="_blank">Terms of Use</a>.</span>
-              </label>
-              <button type="submit" class="form-submit" id="form-submit">
-                <span class="btn-label">Send message</span>
-                <span class="btn-sending" hidden>Sending<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></span>
-              </button>
-              <p class="form-status" id="form-status" aria-live="polite"></p>
-            </form>
-            <div class="form-success" id="form-success" hidden>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-              <p class="success-text">Message sent, I'll be in touch.</p>
-            </div>
+            <ContactForm client:load />
           </div>
 
           <div class="panel" id="panel-booking">
@@ -91,7 +61,6 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   // ---- Tab switching ----
   const tabMessage = document.getElementById('tab-message');
   const tabBooking = document.getElementById('tab-booking');
-  const indicator = document.getElementById('tab-indicator');
   const panelMessage = document.getElementById('panel-message');
   const panelBooking = document.getElementById('panel-booking');
   const card = document.getElementById('contact-card');
@@ -101,7 +70,8 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
 
     tabMessage.classList.toggle('active', !isBooking);
     tabBooking.classList.toggle('active', isBooking);
-    indicator.classList.toggle('right', isBooking);
+    tabMessage.setAttribute('aria-selected', String(!isBooking));
+    tabBooking.setAttribute('aria-selected', String(isBooking));
     card.classList.toggle('booking', isBooking);
 
     panelMessage.classList.toggle('active', !isBooking);
@@ -154,67 +124,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     }
   }
 
-  // ---- Spring hover on submit button ----
-  const submitBtnEl = document.querySelector('.form-submit');
-  if (submitBtnEl) {
-    submitBtnEl.addEventListener('mouseenter', () => {
-      animate(submitBtnEl, { scale: 1.04 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
-    });
-    submitBtnEl.addEventListener('mouseleave', () => {
-      animate(submitBtnEl, { scale: 1 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
-    });
-  }
-
-  // ---- Contact form handling ----
-  const form = document.getElementById('contact-form');
-  const submitBtn = document.getElementById('form-submit');
-  const statusEl = document.getElementById('form-status');
-  const successEl = document.getElementById('form-success');
-  const btnLabel = submitBtn?.querySelector('.btn-label');
-  const btnSending = submitBtn?.querySelector('.btn-sending');
-
-  if (form && submitBtn && statusEl && successEl) {
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      submitBtn.disabled = true;
-      btnLabel.hidden = true;
-      btnSending.hidden = false;
-      statusEl.textContent = '';
-      statusEl.className = 'form-status';
-
-      const data = new FormData(form);
-      const body = {
-        name: data.get('name'),
-        email: data.get('email'),
-        message: data.get('message'),
-      };
-
-      try {
-        const res = await fetch('/api/contact', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        });
-
-        if (!res.ok) {
-          const d = await res.json();
-          throw new Error(d.error || 'Something went wrong');
-        }
-
-        // Show success state — swap form for confirmation
-        const hint = form.parentElement?.querySelector('.panel-hint');
-        if (hint) hint.hidden = true;
-        form.hidden = true;
-        successEl.hidden = false;
-      } catch (err) {
-        statusEl.textContent = err.message;
-        statusEl.className = 'form-status error';
-        submitBtn.disabled = false;
-        btnLabel.hidden = false;
-        btnSending.hidden = true;
-      }
-    });
-  }
+  // Contact form: handled by <ContactForm /> Svelte island (state, fetch, success/error live there).
   });
 </script>
 
@@ -254,8 +164,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   }
 
   .tag-number {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     line-height: 1;
     color: var(--color-accent-teal);
@@ -268,7 +177,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   }
 
   .tag-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -285,7 +194,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   }
 
   .page-title {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-3xl);
     font-weight: var(--weight-regular);
     line-height: 1.05;
@@ -295,8 +204,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   }
 
   .page-subtitle {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-lg);
     line-height: 1.5;
     color: var(--color-text-muted);
@@ -316,69 +224,62 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     margin-top: clamp(1.5rem, 3vw, 2rem);
   }
 
-  /* ---- Tab switcher ---- */
+  /* ---- Tab switcher — editorial underline tabs ---- */
   .contact-switcher {
-    margin-bottom: clamp(1.5rem, 3vw, 2rem);
-  }
-
-  .tab-track {
-    position: relative;
     display: inline-flex;
-    border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
-    border-radius: 999px;
-    padding: 3px;
-  }
-
-  .tab-indicator {
-    position: absolute;
-    top: 3px;
-    bottom: 3px;
-    left: 3px;
-    width: calc(50% - 3px);
-    border-radius: 999px;
-    background: color-mix(in oklab, var(--color-accent-teal) 10%, transparent);
-    transition: left 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .tab-indicator.right {
-    left: 50%;
-    background: color-mix(in oklab, var(--color-accent-amber) 10%, transparent);
+    gap: clamp(2rem, 4vw, 3rem);
+    margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
   }
 
   .tab-btn {
     position: relative;
-    z-index: 1;
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.45rem;
-    font-family: 'DM Sans', sans-serif;
+    align-items: baseline;
+    gap: 0.65rem;
+    font-family: var(--font-body);
+    background: none;
+    border: none;
+    padding: 0.85rem 0;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+
+  /* Animated underline for active state */
+  .tab-btn::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 0;
+    height: 1px;
+    background: var(--color-accent);
+    transition: width var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .tab-btn:hover { color: var(--color-text); }
+  .tab-btn.active { color: var(--color-text); }
+  .tab-btn.active::after { width: 100%; }
+
+  /* Editorial 01/02 numerals */
+  .tab-num {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-subtle);
+    letter-spacing: 0;
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .tab-btn.active .tab-num { color: var(--color-accent); }
+
+  .tab-label {
     font-size: var(--text-sm);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
-    color: var(--color-text-muted);
-    background: none;
-    border: none;
-    padding: 0.65rem 1.4rem;
-    cursor: pointer;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    border-radius: 999px;
     white-space: nowrap;
-  }
-
-  .tab-btn.active {
-    color: var(--color-text);
-  }
-
-  .tab-btn svg {
-    opacity: 0.5;
-    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .tab-btn.active svg {
-    opacity: 0.8;
   }
 
   /* ---- Contact card ---- */
@@ -389,8 +290,8 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     overflow: hidden;
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
     padding: clamp(1.75rem, 4vw, 2.75rem);
-    transition: border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color var(--duration-normal) var(--ease-out-expo),
+                box-shadow var(--duration-normal) var(--ease-out-expo);
     box-shadow: 0 0 60px color-mix(in oklab, var(--color-accent) 4%, transparent),
                 0 0 120px color-mix(in oklab, var(--color-accent-teal) 3%, transparent);
     text-align: left;
@@ -409,7 +310,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     right: 0;
     height: 2px;
     z-index: 1;
-    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-normal) var(--ease-out-expo);
   }
 
   .card-accent.teal {
@@ -447,7 +348,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
 
   .panel.active {
     display: block;
-    animation: panel-enter 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: panel-enter var(--duration-normal) var(--ease-out-expo) forwards;
   }
 
   @keyframes panel-enter {
@@ -456,8 +357,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   }
 
   .panel-hint {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-base);
     color: var(--color-text-muted);
     margin: 0 0 clamp(1.25rem, 2.5vw, 1.75rem);
@@ -475,130 +375,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     position: relative;
   }
 
-  .form-input {
-    width: 100%;
-    font-family: 'DM Sans', sans-serif;
-    font-size: var(--text-base);
-    color: var(--color-text);
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 20%, transparent);
-    padding: 0.85rem 0;
-    outline: none;
-    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .input-line {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: linear-gradient(90deg, var(--color-accent-teal), var(--color-accent-amber));
-    transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .form-input:focus ~ .input-line {
-    width: 100%;
-  }
-
-  .form-input:focus {
-    border-color: var(--color-accent);
-  }
-
-  .form-input::placeholder {
-    color: var(--color-text-muted);
-    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .form-input:focus::placeholder {
-    opacity: 0.4;
-  }
-
-  .form-textarea {
-    resize: vertical;
-    min-height: 90px;
-    border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
-    padding: 0.85rem;
-  }
-
-  .form-textarea:focus {
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 8%, transparent);
-  }
-
-  .form-submit {
-    font-family: 'DM Sans', sans-serif;
-    font-size: var(--text-sm);
-    font-weight: var(--weight-medium);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    background-color: var(--color-accent);
-    background-image: linear-gradient(90deg, var(--color-accent-teal) 50%, transparent 50%);
-    background-size: 200% 100%;
-    background-position: 100% 0;
-    color: var(--color-bg);
-    border: 1px solid var(--color-accent);
-    padding: 0.85rem 2rem;
-    cursor: pointer;
-    transition: background-position 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-    margin-top: 0.25rem;
-    align-self: center;
-  }
-
-  .form-submit:hover {
-    background-position: 0% 0;
-    border-color: var(--color-accent-teal);
-  }
-
-  .form-submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .form-status {
-    font-family: 'DM Sans', sans-serif;
-    font-size: var(--text-base);
-    margin: 0.75rem 0 0;
-    min-height: 1.2em;
-    text-align: center;
-  }
-
-  .form-status.success {
-    color: var(--color-accent);
-  }
-
-  .form-status.error {
-    color: var(--color-error);
-  }
-
-  .btn-sending {
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
-  }
-
-  .form-success {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-    padding: clamp(2rem, 4vw, 3rem) 0;
-    animation: panel-enter 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  .form-success svg {
-    color: var(--color-accent-teal);
-  }
-
-  .success-text {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    font-size: var(--text-lg);
-    color: var(--color-text);
-    margin: 0;
-  }
+  /* Form styling lives inside the ContactForm Svelte component (scoped). */
 
   /* ---- Booking panel overrides ---- */
   #panel-booking :global(.booking) {
@@ -613,7 +390,7 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
 
   /* Hide hints on success states */
   #panel-booking:has(:global(.booking-success)) .panel-hint,
-  #panel-message:has(.form-success:not([hidden])) .panel-hint {
+  #panel-message:has(:global(.success)) .panel-hint {
     display: none;
   }
 
@@ -632,14 +409,14 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
     text-decoration: none;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo);
   }
 
   .back-link:hover {
@@ -647,78 +424,19 @@ import BookingCalendar from '../components/BookingCalendar.svelte';
   }
 
   .back-link svg {
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform var(--duration-fast) var(--ease-out-expo);
   }
 
   .back-link:hover svg {
     transform: translateX(-3px);
   }
 
-  /* ---- Consent checkbox ---- */
-  .consent-label {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.6rem;
-    cursor: pointer;
-    margin: 0.25rem 0 1rem;
-    user-select: none;
-  }
-
-  .consent-checkbox {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-    pointer-events: none;
-  }
-
-  .consent-check {
-    flex-shrink: 0;
-    width: 16px;
-    height: 16px;
-    border: 1px solid color-mix(in oklab, var(--color-text-muted) 30%, transparent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 2px;
-    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .consent-check svg {
-    opacity: 0;
-    transform: scale(0.5);
-    transition: opacity 0.15s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  .consent-checkbox:checked + .consent-check {
-    border-color: var(--color-accent);
-    background: color-mix(in oklab, var(--color-accent) 12%, transparent);
-  }
-
-  .consent-checkbox:checked + .consent-check svg {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  .consent-checkbox:focus-visible + .consent-check {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-  }
-
-  .consent-text {
-    font-family: 'DM Sans', sans-serif;
-    font-size: var(--text-sm);
-    line-height: 1.5;
-    color: var(--color-text-muted);
-  }
 
   .consent-text a {
     color: var(--color-accent);
     text-decoration: none;
     border-bottom: 1px solid color-mix(in oklab, var(--color-accent) 30%, transparent);
-    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color var(--duration-fast) var(--ease-out-expo);
   }
 
   .consent-text a:hover {

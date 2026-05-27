@@ -104,7 +104,7 @@
   }
 
   .cta-heading {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-3xl);
     font-weight: var(--weight-regular);
     line-height: 1.05;
@@ -114,7 +114,7 @@
   }
 
   .email {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -126,8 +126,8 @@
     position: relative;
     overflow: hidden;
     z-index: 0;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo),
+                border-color var(--duration-fast) var(--ease-out-expo);
   }
 
   .email::after {
@@ -137,7 +137,7 @@
     background: var(--color-accent-teal);
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform var(--duration-normal) var(--ease-out-expo);
     z-index: -1;
   }
 
@@ -151,7 +151,7 @@
   }
 
   .cta-body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-base);
     line-height: 1.65;
     color: var(--color-text-muted);
@@ -167,13 +167,13 @@
   }
 
   .social-link {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
     color: var(--color-text-muted);
     text-decoration: none;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo);
   }
 
   .social-link:hover {
@@ -199,8 +199,7 @@
   }
 
   .tag-number {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     line-height: 1;
     color: var(--color-accent-rust);
@@ -213,7 +212,7 @@
   }
 
   .tag-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);

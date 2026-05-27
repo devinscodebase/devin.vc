@@ -142,8 +142,7 @@
   }
 
   .tag-number {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     line-height: 1;
     color: var(--color-accent-teal);
@@ -156,7 +155,7 @@
   }
 
   .tag-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -173,7 +172,7 @@
   }
 
   .section-heading {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-2xl);
     font-weight: var(--weight-regular);
     line-height: 1.1;
@@ -186,20 +185,20 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
     text-decoration: none;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo);
   }
 
   .view-all:hover { color: var(--color-accent); }
 
   .view-all svg {
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform var(--duration-fast) var(--ease-out-expo);
   }
 
   .view-all:hover svg { transform: translateX(3px); }
@@ -222,7 +221,7 @@
     position: relative;
     overflow: hidden;
     background: color-mix(in oklab, var(--color-text-muted) 3%, transparent);
-    transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background var(--duration-normal) var(--ease-out-expo);
   }
 
   .tool-entry.accent-teal { --entry-accent: var(--color-accent-teal); }
@@ -244,7 +243,7 @@
       transparent 45%
     );
     opacity: 0;
-    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-normal) var(--ease-out-expo);
     pointer-events: none;
   }
 
@@ -260,15 +259,14 @@
     border-radius: 0 2px 2px 0;
     background: var(--entry-accent);
     transform-origin: center;
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform var(--duration-normal) var(--ease-out-expo);
   }
 
   .tool-entry:hover .entry-bar { transform: scaleY(1.15); }
 
   /* ---- Ghost number — CSS transition, no JS ---- */
   .entry-number {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: clamp(2.5rem, 5vw, 3.5rem);
     line-height: 1;
     color: var(--entry-accent);
@@ -279,7 +277,7 @@
     pointer-events: none;
     position: relative;
     z-index: 1;
-    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-normal) var(--ease-out-expo);
   }
 
   .tool-entry:hover .entry-number { opacity: 0.12; }
@@ -293,7 +291,7 @@
   }
 
   .entry-tag {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -304,20 +302,20 @@
   }
 
   .entry-name {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-lg);
     font-weight: var(--weight-regular);
     line-height: 1.2;
     letter-spacing: var(--tracking-tight);
     color: var(--color-text);
     margin: 0 0 0.3rem;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo);
   }
 
   .tool-entry:hover .entry-name { color: var(--color-accent); }
 
   .entry-desc {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     line-height: 1.55;
     color: var(--color-text-muted);
@@ -329,9 +327,9 @@
     flex-shrink: 0;
     color: var(--color-text-muted);
     opacity: 0.4;
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform var(--duration-fast) var(--ease-out-expo),
+                opacity var(--duration-fast) var(--ease-out-expo),
+                color var(--duration-fast) var(--ease-out-expo);
     position: relative;
     z-index: 1;
   }

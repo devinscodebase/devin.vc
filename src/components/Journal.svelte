@@ -162,8 +162,7 @@
   }
 
   .tag-number {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     line-height: 1;
     color: var(--color-accent-teal);
@@ -176,7 +175,7 @@
   }
 
   .tag-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -192,7 +191,7 @@
   }
 
   .section-heading {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-2xl);
     font-weight: var(--weight-regular);
     line-height: 1.1;
@@ -205,14 +204,14 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
     text-decoration: none;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo);
   }
 
   .view-all:hover {
@@ -220,7 +219,7 @@
   }
 
   .view-all svg {
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform var(--duration-fast) var(--ease-out-expo);
   }
 
   .view-all:hover svg {
@@ -248,7 +247,7 @@
     text-decoration: none;
     position: relative;
     overflow: hidden;
-    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color var(--duration-fast) var(--ease-out-expo);
   }
 
   /* Cursor-following spotlight */
@@ -262,7 +261,7 @@
       transparent 40%
     );
     opacity: 0;
-    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-fast) var(--ease-out-expo);
     pointer-events: none;
   }
 
@@ -293,7 +292,7 @@
   }
 
   .post-tag {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -305,12 +304,12 @@
   }
 
   .post-title {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-weight: var(--weight-regular);
     line-height: 1.2;
     color: var(--color-text);
     margin: 0 0 0.75rem;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo);
     position: relative;
     z-index: 1;
   }
@@ -330,7 +329,7 @@
   }
 
   .post-excerpt {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-base);
     line-height: 1.6;
     color: var(--color-text-muted);
@@ -344,7 +343,7 @@
   }
 
   .post-date {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);

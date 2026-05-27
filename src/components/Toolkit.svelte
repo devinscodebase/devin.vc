@@ -199,8 +199,7 @@
   }
 
   .tag-number {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     line-height: 1;
     color: var(--color-accent-teal);
@@ -213,7 +212,7 @@
   }
 
   .tag-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -231,7 +230,7 @@
   }
 
   .section-heading {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-2xl);
     font-weight: var(--weight-regular);
     line-height: 1.1;
@@ -252,8 +251,8 @@
     opacity: 0;
     transform: translateY(4px);
     transition:
-      opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+      opacity 200ms var(--ease-out-expo),
+      transform 200ms var(--ease-out-expo);
   }
 
   .detail-panel.is-visible {
@@ -266,7 +265,7 @@
     align-items: flex-start;
     gap: 0.75rem;
     max-width: 100%;
-    animation: detail-swap 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: detail-swap 220ms var(--ease-out-expo) both;
   }
 
   @keyframes detail-swap {
@@ -299,7 +298,7 @@
   }
 
   .detail-name {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     font-weight: var(--weight-regular);
     color: var(--color-text);
@@ -312,7 +311,7 @@
   }
 
   .detail-desc {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: var(--weight-regular);
     line-height: 1.45;
@@ -385,10 +384,10 @@
     white-space: nowrap;
     cursor: default;
     transition:
-      border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-      background 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-      opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      border-color var(--duration-normal) var(--ease-out-expo),
+      background var(--duration-normal) var(--ease-out-expo),
+      opacity var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-normal) var(--ease-out-expo);
   }
 
   /* When browsing, subtly dim non-active chips */
@@ -409,7 +408,7 @@
     height: 24px;
     object-fit: contain;
     filter: grayscale(1) opacity(0.45);
-    transition: filter 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: filter var(--duration-normal) var(--ease-out-expo);
   }
 
   :global([data-theme='light']) .chip-logo {
@@ -425,13 +424,13 @@
   }
 
   .chip-name {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
-    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-normal) var(--ease-out-expo);
   }
 
   .is-browsing .chip.is-active .chip-name {

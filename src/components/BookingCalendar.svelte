@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
-  import { animate } from 'motion';
+  import Field from './ui/Field.svelte';
+  import Button from './ui/Button.svelte';
 
   let step = $state(1); // 1 = date, 2 = slots + form
   let selectedDate = $state(null);
@@ -25,12 +26,7 @@
   const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-  function btnEnter(e) {
-    animate(e.currentTarget, { scale: 1.04 }, { duration: 0.12, easing: [0.34, 1.56, 0.64, 1] });
-  }
-  function btnLeave(e) {
-    animate(e.currentTarget, { scale: 1 }, { duration: 0.18, easing: [0.16, 1, 0.3, 1] });
-  }
+  // Button hover scale is handled by the Button primitive's CSS.
 
   onMount(() => {
     timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -263,10 +259,10 @@
           {#if selectedSlot}
             <form class="confirm-form" onsubmit={confirmBooking}>
               <p class="confirm-label">{formatDateShort(selectedDate)} at {selectedSlot.label}</p>
-              <input type="text" bind:value={name} placeholder="Name" required class="form-input" aria-label="Your name" />
-              <input type="email" bind:value={email} placeholder="Email" required class="form-input" aria-label="Your email address" />
-              <input type="text" inputmode="tel" bind:value={phone} placeholder="Phone (optional)" class="form-input" aria-label="Your phone number" />
-              <textarea bind:value={notes} placeholder="Anything I should know? (optional)" class="form-input form-textarea" rows="2" aria-label="Additional notes"></textarea>
+              <Field type="text" ariaLabel="Your name" placeholder="Name" required bind:value={name} />
+              <Field type="email" ariaLabel="Your email address" placeholder="Email" required bind:value={email} />
+              <Field type="tel" ariaLabel="Your phone number" placeholder="Phone (optional)" bind:value={phone} />
+              <Field type="textarea" ariaLabel="Additional notes" placeholder="Anything I should know? (optional)" rows={2} bind:value={notes} />
               <label class="consent-label">
                 <input type="checkbox" bind:checked={consent} class="consent-checkbox" />
                 <span class="consent-check" aria-hidden="true">
@@ -274,19 +270,15 @@
                 </span>
                 <span class="consent-text">I agree to the <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a> and <a href="/terms" target="_blank" rel="noopener">Terms of Use</a>.</span>
               </label>
-              <button
+              <Button
                 type="submit"
-                class="confirm-btn"
-                disabled={bookingStatus === 'submitting' || !canConfirm}
-                onmouseenter={btnEnter}
-                onmouseleave={btnLeave}
+                variant="primary"
+                size="md"
+                loading={bookingStatus === 'submitting'}
+                disabled={!canConfirm}
               >
-                {#if bookingStatus === 'submitting'}
-                  <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
-                {:else}
-                  Confirm booking
-                {/if}
-              </button>
+                {bookingStatus === 'submitting' ? 'Confirming' : 'Confirm booking'}
+              </Button>
               {#if bookingStatus === 'error'}
                 <p class="form-error">{errorMsg}</p>
               {/if}
@@ -306,7 +298,7 @@
   }
 
   .booking-heading {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-xl);
     font-weight: var(--weight-regular);
     line-height: 1.2;
@@ -315,7 +307,7 @@
   }
 
   .booking-pitch {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-md);
     line-height: 1.6;
     color: var(--color-text-muted);
@@ -326,7 +318,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
@@ -337,7 +329,7 @@
     cursor: pointer;
     padding: 0;
     margin-bottom: 1.25rem;
-    transition: color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo);
   }
 
   .back-btn:hover {
@@ -349,7 +341,7 @@
   }
 
   .back-btn svg {
-    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform var(--duration-fast) var(--ease-out-expo);
   }
 
   /* Calendar */
@@ -365,7 +357,7 @@
   }
 
   .cal-month {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-base);
     font-weight: var(--weight-medium);
     color: var(--color-text);
@@ -377,7 +369,7 @@
     cursor: pointer;
     color: var(--color-text-muted);
     padding: 0.5rem;
-    transition: color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo);
   }
 
   .cal-arrow:hover {
@@ -396,7 +388,7 @@
   }
 
   .cal-day-header {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -407,7 +399,7 @@
   }
 
   .cal-day {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     color: var(--color-text);
     background: none;
@@ -415,9 +407,9 @@
     padding: 0.5rem;
     text-align: center;
     cursor: pointer;
-    transition: border-color 0.15s cubic-bezier(0.16, 1, 0.3, 1),
-                background-color 0.15s cubic-bezier(0.16, 1, 0.3, 1),
-                color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color var(--duration-fast) var(--ease-out-expo),
+                background-color var(--duration-fast) var(--ease-out-expo),
+                color var(--duration-fast) var(--ease-out-expo);
     aspect-ratio: 1;
     display: flex;
     align-items: center;
@@ -451,7 +443,7 @@
   }
 
   .tz-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     color: var(--color-text-muted);
     margin: 0;
@@ -459,7 +451,7 @@
 
   /* Step 2: slots + inline form */
   .step-2 {
-    animation: step-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: step-enter var(--duration-fast) var(--ease-out-expo) forwards;
   }
 
   @keyframes step-enter {
@@ -468,7 +460,7 @@
   }
 
   .step-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: var(--weight-medium);
     color: var(--color-text);
@@ -476,7 +468,7 @@
   }
 
   .loading-text, .no-slots {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-base);
     color: var(--color-text-muted);
     margin: 0;
@@ -506,7 +498,7 @@
   }
 
   .slot {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: var(--weight-regular);
     color: var(--color-text);
@@ -515,9 +507,9 @@
     padding: 0.6rem 0.75rem;
     cursor: pointer;
     text-align: center;
-    transition: border-color 0.12s cubic-bezier(0.16, 1, 0.3, 1),
-                background-color 0.12s cubic-bezier(0.16, 1, 0.3, 1),
-                color 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color var(--duration-fast) var(--ease-out-expo),
+                background-color var(--duration-fast) var(--ease-out-expo),
+                color var(--duration-fast) var(--ease-out-expo);
   }
 
   .slot:hover {
@@ -539,11 +531,11 @@
     margin-top: 1.25rem;
     padding-top: 1.25rem;
     border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
-    animation: step-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: step-enter var(--duration-fast) var(--ease-out-expo) forwards;
   }
 
   .confirm-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -552,95 +544,10 @@
     margin: 0;
   }
 
-  .form-input {
-    font-family: 'DM Sans', sans-serif;
-    font-size: var(--text-base);
-    color: var(--color-text);
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 20%, transparent);
-    padding: 0.65rem 0;
-    outline: none;
-    transition: border-color 0.15s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .form-input:focus {
-    border-color: var(--color-accent);
-    box-shadow: 0 1px 0 0 var(--color-accent);
-  }
-
-  .form-input::placeholder {
-    color: var(--color-text-muted);
-    transition: opacity 0.15s;
-  }
-
-  .form-input:focus::placeholder {
-    opacity: 0.4;
-  }
-
-  .form-textarea {
-    resize: vertical;
-    min-height: 48px;
-    border: 1px solid color-mix(in oklab, var(--color-text-muted) 20%, transparent);
-    padding: 0.65rem;
-  }
-
-  .form-textarea:focus {
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-accent) 10%, transparent);
-  }
-
-  .confirm-btn {
-    font-family: 'DM Sans', sans-serif;
-    font-size: var(--text-sm);
-    font-weight: var(--weight-medium);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    background-color: var(--color-accent);
-    background-image: linear-gradient(90deg, var(--color-accent-teal) 50%, transparent 50%);
-    background-size: 200% 100%;
-    background-position: 100% 0;
-    color: var(--color-bg);
-    border: 1px solid var(--color-accent);
-    padding: 0.85rem 1.5rem;
-    cursor: pointer;
-    transition: background-position 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.15s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.15s;
-    margin-top: 0.25rem;
-  }
-
-  .confirm-btn:hover:not(:disabled) {
-    background-position: 0% 0;
-    border-color: var(--color-accent-teal);
-  }
-
-  .confirm-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-
-  .loading-dots {
-    display: inline-flex;
-    gap: 2px;
-  }
-
-  .loading-dots span {
-    animation: dot-pulse 1s infinite;
-    opacity: 0;
-  }
-
-  .loading-dots span:nth-child(2) { animation-delay: 0.15s; }
-  .loading-dots span:nth-child(3) { animation-delay: 0.3s; }
-
-  @keyframes dot-pulse {
-    0%, 80%, 100% { opacity: 0; }
-    40% { opacity: 1; }
-  }
+  /* Form inputs and confirm button now provided by Field + Button primitives. */
 
   .form-error {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     color: var(--color-error);
     margin: 0;
@@ -650,7 +557,7 @@
   .booking-success {
     text-align: center;
     padding: clamp(1.5rem, 3vw, 2.5rem) 0;
-    animation: step-enter 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: step-enter var(--duration-normal) var(--ease-out-expo) forwards;
   }
 
   .success-check {
@@ -660,21 +567,21 @@
   }
 
   .success-msg {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-xl);
     color: var(--color-text);
     margin: 0 0 0.35rem;
   }
 
   .success-detail {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-base);
     color: var(--color-accent);
     margin: 0 0 0.25rem;
   }
 
   .success-hint {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     color: var(--color-text-muted);
     margin: 0;
@@ -706,15 +613,15 @@
     align-items: center;
     justify-content: center;
     margin-top: 2px;
-    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color var(--duration-fast) var(--ease-out-expo),
+                background-color var(--duration-fast) var(--ease-out-expo);
   }
 
   .consent-check svg {
     opacity: 0;
     transform: scale(0.5);
-    transition: opacity 0.15s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: opacity var(--duration-fast) var(--ease-out-expo),
+                transform var(--duration-fast) var(--ease-spring);
   }
 
   .consent-checkbox:checked + .consent-check {
@@ -733,7 +640,7 @@
   }
 
   .consent-text {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     line-height: 1.5;
     color: var(--color-text-muted);
@@ -743,7 +650,7 @@
     color: var(--color-accent);
     text-decoration: none;
     border-bottom: 1px solid color-mix(in oklab, var(--color-accent) 30%, transparent);
-    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color var(--duration-fast) var(--ease-out-expo);
   }
 
   .consent-text a:hover {

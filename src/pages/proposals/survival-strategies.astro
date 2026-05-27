@@ -74,11 +74,6 @@ const tCol1Track = [...tCol1, ...tCol1];
 const tCol2Track = [...tCol2, ...tCol2];
 
 // Render "W1" → "Week 1" and "W2–3" → "Weeks 2–3" for clearer phase labels.
-function formatWeeks(w: string): string {
-  const range = w.replace(/^W/, '');
-  return range.includes('–') || range.includes('-') ? `Weeks ${range}` : `Week ${range}`;
-}
-
 const tiers = [
   {
     accent: 'teal',
@@ -149,7 +144,7 @@ const tiers = [
         items: [
           'A purpose-built multi-step intake for the F.A.T. (your free consultation, currently your weakest lead-capture surface). Calibrated questions that pre-qualify owners before a consultant ever picks up the phone. Practice Analysis and Contact intakes rebuilt to the same standard.',
           'The Programs page redesigned as a visible curriculum: Practice Analysis through the seven specialized programs to Power of Choice.',
-          'Email capture into your existing platform (Mailchimp, HubSpot, or ConvertKit).',
+          'Email capture into your existing platform (Mailchimp, HubSpot, ConvertKit, or GoHighLevel).',
         ],
       },
       {
@@ -182,10 +177,13 @@ const tiers = [
       {
         label: 'Owned infrastructure',
         items: [
+          'Zero plug-ins. Webflow, Turso, PostHog, and Resend are all first-party platforms — no plug-in maintenance, no version conflicts, no surprise costs, no Qual Sec pulled off post to fix a broken update.',
           'Turso database, spun up under SSI ownership and handed over with the keys. Stores every form submission, lead, F.A.T. completion, owner-tools result, and subscriber record. Your team controls it day-to-day, and the Loom library (further down this list) walks them through every common task.',
           'Resend integration for transactional and automated email, hooked into the Resend account SSI already runs. Transactional confirmations for every form and download. Automated drip sequences for new leads and owner-tools completions. Internal notifications to your team when high-value inquiries land.',
           'PostHog integration for full site analytics: per-page heatmaps, session replays, custom event tracking on every form, CTA, and scroll event, plus conversion funnels for the paths that matter. You see what visitors actually do, not what we guess they do.',
-          'A custom /admin dashboard SSI logs into. Real-time lead activity feed, form submission inbox, subscriber lists, owner-tools completion stats, and PostHog analytics embedded inline. The data your business runs on, in one place, behind your own login.',
+          'A custom /admin dashboard SSI logs into. Real-time lead activity feed, form submission inbox, subscriber lists, owner-tools completion stats, and PostHog analytics embedded inline. The single source of truth your marketing team runs on, behind your own login.',
+          'Google Sheets integration: every form submission and lead capture mirrors into the spreadsheets your team already lives in. No tool switching required.',
+          'Ready for GoHighLevel migration. When SSI moves over, the same form, lead, and subscriber data routes directly into the new platform — no rebuild, no data lift.',
         ],
       },
       {
@@ -919,36 +917,24 @@ const tiers = [
                   <div class="tier-identity">
                     <span class="tier-eyebrow-label">{tier.label}</span>
                     <h3 class="tier-name">{tier.name}</h3>
-                    <p class="tier-tagline">{tier.tagline}</p>
                   </div>
-
-                  <div class="tier-pricing">
-                    <span class="tier-pricing-value">
-                      <span class="tier-pricing-dollar">$</span>{tier.price.toLocaleString()}
-                    </span>
-                  </div>
+                  <span class="tier-pricing-value">
+                    <span class="tier-pricing-dollar">$</span>{tier.price.toLocaleString()}
+                  </span>
                 </header>
 
-                <div class="tier-meta-row">
-                  <div class="tier-meta-item">
-                    <span class="tier-meta-label">Timeline</span>
-                    <span class="tier-meta-value">{tier.timeline}</span>
-                  </div>
-                  <div class="tier-meta-item tier-meta-item--pay">
-                    <span class="tier-meta-label">Payment</span>
-                    <span class="tier-meta-value">{tier.payment}</span>
-                  </div>
-                </div>
+                <p class="tier-tagline">{tier.tagline}</p>
 
-                <div class="tier-divider" aria-hidden="true"></div>
+                <p class="tier-meta">
+                  <span>{tier.timeline}</span>
+                  <span class="tier-meta-sep" aria-hidden="true">·</span>
+                  <span class="tier-meta-pay">{tier.payment}</span>
+                </p>
 
                 {tier.builds_on && (
-                  <div class="tier-builds-on">
-                    <span class="tier-builds-on-mark" aria-hidden="true">+</span>
-                    <span class="tier-builds-on-text">
-                      Everything in <strong>{tier.builds_on}</strong>, plus:
-                    </span>
-                  </div>
+                  <p class="tier-builds-on">
+                    Everything in <strong>{tier.builds_on}</strong>, plus:
+                  </p>
                 )}
 
                 <div class="tier-groups">
@@ -964,25 +950,7 @@ const tiers = [
                   ))}
                 </div>
 
-                <div class="tier-divider" aria-hidden="true"></div>
-
-                <div class="tier-phases">
-                  <span class="tier-phases-label">Phases</span>
-                  <ul class="tier-phases-list">
-                    {tier.phases.map((phase: any) => (
-                      <li class="tier-phase">
-                        <span class="tier-phase-name">{phase.name}</span>
-                        <span class="tier-phase-range">{formatWeeks(phase.week)}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div class="tier-divider" aria-hidden="true"></div>
-
-                <div class="tier-outcome">
-                  <p class="tier-outcome-text">{tier.outcome}</p>
-                </div>
+                <p class="tier-outcome-text">{tier.outcome}</p>
               </article>
             ))}
           </div>
@@ -1319,7 +1287,7 @@ const tiers = [
   }
 
   .gate-title {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: clamp(2.25rem, 5vw, 3rem);
     font-weight: var(--weight-regular);
     line-height: 1.05;
@@ -1329,8 +1297,7 @@ const tiers = [
   }
 
   .gate-subtitle {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-lg);
     line-height: 1.5;
     color: var(--color-text-muted);
@@ -1338,13 +1305,13 @@ const tiers = [
   }
 
   .gate-page .title-rule {
-    margin-top: clamp(1.5rem, 3vw, 2rem);
+    margin-top: var(--space-card);
   }
 
   .gate-form {
     display: flex;
     flex-direction: column;
-    gap: clamp(1.5rem, 3vw, 2rem);
+    gap: var(--space-card);
     margin-top: clamp(2rem, 4vw, 3rem);
   }
 
@@ -1369,7 +1336,7 @@ const tiers = [
   }
 
   .gate-field-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -1384,12 +1351,12 @@ const tiers = [
     background: transparent;
     border: 0;
     border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 30%, transparent);
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-lg);
     letter-spacing: 0.1em;
     color: var(--color-text);
     outline: none;
-    transition: border-color 0.3s var(--ease-out-expo), letter-spacing 0.3s var(--ease-out-expo);
+    transition: border-color var(--duration-normal) var(--ease-out-expo), letter-spacing var(--duration-normal) var(--ease-out-expo);
   }
 
   .gate-input:focus {
@@ -1402,7 +1369,7 @@ const tiers = [
   }
 
   .gate-inner[data-state="error"] .gate-input {
-    border-bottom-color: var(--color-error, #c47c7c);
+    border-bottom-color: var(--color-error);
   }
 
   /* Submit — pill-style accent button with state changes */
@@ -1412,19 +1379,19 @@ const tiers = [
     align-items: center;
     gap: 0.6rem;
     padding: 0.7rem 1.4rem;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: var(--weight-medium);
     letter-spacing: 0.02em;
     color: var(--color-bg);
     background: var(--color-accent);
     border: 0;
-    border-radius: 999px;
+    border-radius: var(--radius-full);
     cursor: pointer;
     position: relative;
-    transition: transform 0.2s var(--ease-out-expo),
-                box-shadow 0.2s var(--ease-out-expo),
-                opacity 0.2s var(--ease-out-expo);
+    transition: transform var(--duration-fast) var(--ease-out-expo),
+                box-shadow var(--duration-fast) var(--ease-out-expo),
+                opacity var(--duration-fast) var(--ease-out-expo);
   }
 
   .gate-submit:hover:not(:disabled) {
@@ -1438,7 +1405,7 @@ const tiers = [
   }
 
   .gate-submit-arrow {
-    transition: transform 0.2s var(--ease-out-expo);
+    transition: transform var(--duration-fast) var(--ease-out-expo);
   }
 
   .gate-submit:hover:not(:disabled) .gate-submit-arrow {
@@ -1465,13 +1432,13 @@ const tiers = [
 
   /* Message (error or status) */
   .gate-message {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
-    color: var(--color-error, #c47c7c);
+    color: var(--color-error);
     margin: 0;
     min-height: 1.4em;
     opacity: 0;
-    transition: opacity 0.25s var(--ease-out-expo);
+    transition: opacity var(--duration-normal) var(--ease-out-expo);
   }
 
   .gate-inner[data-state="error"] .gate-message {
@@ -1489,7 +1456,7 @@ const tiers = [
     gap: 1.25rem;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.5s var(--ease-out-expo) 0.1s;
+    transition: opacity var(--duration-slow) var(--ease-out-expo) 0.1s;
   }
 
   .gate-inner[data-state="success"] .gate-success-wrap {
@@ -1517,7 +1484,7 @@ const tiers = [
   }
 
   .gate-inner[data-state="success"] .gate-check-path {
-    animation: gate-draw 0.4s var(--ease-out-expo) 0.55s forwards;
+    animation: gate-draw var(--duration-normal) var(--ease-out-expo) 0.55s forwards;
   }
 
   @keyframes gate-draw {
@@ -1525,9 +1492,8 @@ const tiers = [
   }
 
   .gate-success-text {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-family: var(--font-display);
+    font-size: var(--space-card);
     color: var(--color-text);
     margin: 0;
     text-align: center;
@@ -1536,11 +1502,11 @@ const tiers = [
   }
 
   .gate-inner[data-state="success"] .gate-success-text {
-    animation: gate-fade-up 0.5s var(--ease-out-expo) 0.85s forwards;
+    animation: gate-fade-up var(--duration-slow) var(--ease-out-expo) 0.85s forwards;
   }
 
   .gate-success-sub {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     color: var(--color-text-muted);
     letter-spacing: 0.02em;
@@ -1551,7 +1517,7 @@ const tiers = [
   }
 
   .gate-inner[data-state="success"] .gate-success-sub {
-    animation: gate-fade-up 0.5s var(--ease-out-expo) 1.05s forwards;
+    animation: gate-fade-up var(--duration-slow) var(--ease-out-expo) 1.05s forwards;
   }
 
   @keyframes gate-fade-up {
@@ -1630,8 +1596,7 @@ const tiers = [
   }
 
   .tag-number {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     line-height: 1;
     color: var(--color-accent-teal);
@@ -1652,7 +1617,7 @@ const tiers = [
   .tag--gold .tag-dash { background: linear-gradient(90deg, var(--color-accent), transparent); }
 
   .tag-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -1662,7 +1627,7 @@ const tiers = [
 
   /* ───── Title + subtitle + rule ───── */
   .page-title {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-3xl);
     font-weight: var(--weight-regular);
     line-height: 1.05;
@@ -1672,8 +1637,7 @@ const tiers = [
   }
 
   .page-subtitle {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-lg);
     line-height: 1.5;
     color: var(--color-text-muted);
@@ -1692,12 +1656,12 @@ const tiers = [
     width: 48px;
     height: 2px;
     background: linear-gradient(90deg, var(--color-accent-teal), var(--color-accent-amber));
-    margin-top: clamp(1.5rem, 3vw, 2rem);
+    margin-top: var(--space-card);
   }
 
   /* ─── Cover intro (one short paragraph below the page header) ─── */
   .cover-intro {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-lg);
     line-height: 1.55;
     color: var(--color-text);
@@ -1707,7 +1671,7 @@ const tiers = [
 
   /* ─── Section subhead (sub-heading inside a section, between h2 and beat-marker) ─── */
   .section-subhead {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-xl);
     font-weight: var(--weight-regular);
     line-height: 1.15;
@@ -1724,7 +1688,7 @@ const tiers = [
   .section-title {
     position: relative;
     z-index: 1;
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-2xl);
     font-weight: var(--weight-regular);
     line-height: 1.1;
@@ -1748,7 +1712,7 @@ const tiers = [
   }
 
   .showcase-lead {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-md);
     line-height: 1.6;
     color: var(--color-text-muted);
@@ -1757,7 +1721,7 @@ const tiers = [
   }
 
   .showcase-footer {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     color: var(--color-text-muted);
     margin: clamp(1.75rem, 3.5vw, 2.5rem) 0 0;
@@ -1814,7 +1778,7 @@ const tiers = [
     flex: 0 0 auto;
     text-decoration: none;
     color: inherit;
-    transition: transform 0.4s var(--ease-out-expo);
+    transition: transform var(--duration-normal) var(--ease-out-expo);
   }
 
   .marquee-card:hover {
@@ -1824,13 +1788,13 @@ const tiers = [
   /* ─── Browser chrome frame ─── */
   .browser-frame {
     position: relative;
-    border-radius: 6px;
+    border-radius: var(--radius-md);
     overflow: hidden;
     background: color-mix(in oklab, var(--color-text) 4%, transparent);
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 14%, transparent);
     box-shadow: var(--shadow-md);
-    transition: box-shadow 0.4s var(--ease-out-expo),
-                border-color 0.4s var(--ease-out-expo);
+    transition: box-shadow var(--duration-normal) var(--ease-out-expo),
+                border-color var(--duration-normal) var(--ease-out-expo);
   }
 
   .marquee-card:hover .browser-frame {
@@ -1900,7 +1864,7 @@ const tiers = [
   }
 
   .caption-name {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-lg);
     line-height: 1.1;
     color: var(--color-text);
@@ -1908,7 +1872,7 @@ const tiers = [
   }
 
   .caption-category {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -1941,7 +1905,7 @@ const tiers = [
   }
 
   .testimonials-lead {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-md);
     line-height: 1.6;
     color: var(--color-text-muted);
@@ -2014,13 +1978,13 @@ const tiers = [
     position: relative;
     margin: 0;
     padding: clamp(1.25rem, 2.5vw, 1.75rem);
-    padding-top: clamp(1.5rem, 3vw, 2rem);
+    padding-top: var(--space-card);
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
     display: flex;
     flex-direction: column;
     background: color-mix(in oklab, var(--color-text) 2%, transparent);
-    transition: border-color 0.4s var(--ease-out-expo),
-                background 0.4s var(--ease-out-expo);
+    transition: border-color var(--duration-normal) var(--ease-out-expo),
+                background var(--duration-normal) var(--ease-out-expo);
   }
 
   .tmnl::before {
@@ -2042,7 +2006,7 @@ const tiers = [
   }
 
   .tmnl-mark {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: clamp(2rem, 3.5vw, 2.75rem);
     line-height: 0.7;
     color: var(--tmnl-accent);
@@ -2053,7 +2017,7 @@ const tiers = [
   }
 
   .tmnl-quote {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-style: normal;
     font-size: var(--text-sm);
     line-height: 1.6;
@@ -2070,7 +2034,7 @@ const tiers = [
   }
 
   .tmnl-name {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -2086,7 +2050,7 @@ const tiers = [
   }
 
   .tmnl-detail {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
@@ -2144,7 +2108,7 @@ const tiers = [
 
   /* ═══════════ PROSE ═══════════ */
   .prose {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-md);
     line-height: 1.65;
     color: var(--color-text);
@@ -2165,8 +2129,7 @@ const tiers = [
 
   /* Inline numerals (matches about.astro .story-stat pattern) */
   .num-inline {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     color: var(--color-accent);
     font-size: 1.05em;
   }
@@ -2178,7 +2141,7 @@ const tiers = [
     text-decoration-thickness: 1px;
     text-underline-offset: 4px;
     text-decoration-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
-    transition: text-decoration-color 0.25s var(--ease-out-expo);
+    transition: text-decoration-color var(--duration-normal) var(--ease-out-expo);
   }
 
   .prose-link:hover {
@@ -2212,8 +2175,7 @@ const tiers = [
   }
 
   .beat-num {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     color: var(--beat-accent);
     line-height: 1;
@@ -2228,7 +2190,7 @@ const tiers = [
   }
 
   .beat-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -2238,8 +2200,7 @@ const tiers = [
 
   /* ─── Pull quote (matches about.astro pattern) ─── */
   .pull-quote {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: clamp(1.25rem, 2.5vw, 1.65rem);
     line-height: 1.35;
     color: var(--color-text);
@@ -2257,17 +2218,21 @@ const tiers = [
     display: flex;
     flex-direction: column;
     gap: clamp(2rem, 4vw, 3rem);
-    margin-top: clamp(1.5rem, 3vw, 2rem);
+    margin-top: var(--space-card);
   }
 
+  /* Each tier is a flex column. Sections are spaced by a single gap rhythm
+     instead of explicit dividers + section borders. One accent rule at the top
+     identifies the tier. That's it. */
   .tier {
     position: relative;
+    display: flex;
+    flex-direction: column;
     padding: clamp(2rem, 4vw, 3rem);
-    border-top: 2px solid color-mix(in oklab, var(--tier-accent, var(--color-accent)) 40%, transparent);
-    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    border-top: 2px solid color-mix(in oklab, var(--tier-accent, var(--color-accent)) 50%, transparent);
     background: color-mix(in oklab, var(--tier-accent, var(--color-accent)) 2%, transparent);
     overflow: hidden;
-    transition: border-top-color 0.4s var(--ease-out-expo), background 0.4s var(--ease-out-expo);
+    transition: border-top-color var(--duration-normal) var(--ease-out-expo), background var(--duration-normal) var(--ease-out-expo);
   }
 
   .tier--teal { --tier-accent: var(--color-accent-teal); }
@@ -2275,36 +2240,35 @@ const tiers = [
   .tier--rust { --tier-accent: var(--color-accent-rust); }
 
   .tier:hover {
-    border-top-color: color-mix(in oklab, var(--tier-accent) 70%, transparent);
+    border-top-color: var(--tier-accent);
     background: color-mix(in oklab, var(--tier-accent) 4%, transparent);
   }
 
-  /* ─── Tier head ─── */
+  /* Header: identity (left) | price (right), single row, baseline-aligned */
   .tier-head {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: start;
-    gap: clamp(1rem, 2vw, 2rem);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
   }
 
   .tier-identity {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.4rem;
     min-width: 0;
   }
 
   .tier-eyebrow-label {
-    display: inline-block;
     color: var(--tier-accent);
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     letter-spacing: 0;
   }
 
   .tier-name {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: clamp(2.25rem, 4.5vw, 3.25rem);
     font-weight: var(--weight-regular);
     line-height: 0.95;
@@ -2313,39 +2277,19 @@ const tiers = [
     margin: 0;
   }
 
-  .tier-tagline {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    font-size: var(--text-lg);
-    line-height: 1.35;
-    color: var(--color-text-muted);
-    margin: 0;
-    max-width: 40ch;
-  }
-
-  /* ─── Tier pricing block (right side of head row) ─── */
-  .tier-pricing {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    text-align: right;
-    gap: 0.25rem;
-    flex-shrink: 0;
-  }
-
   .tier-pricing-value {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(2.5rem, 5.5vw, 3.75rem);
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 5vw, 3.25rem);
     line-height: 0.95;
     letter-spacing: -0.03em;
     color: var(--color-text);
     display: inline-flex;
     align-items: baseline;
+    flex-shrink: 0;
   }
 
   .tier-pricing-dollar {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: 0.55em;
     color: var(--tier-accent);
     margin-right: 0.05em;
@@ -2354,108 +2298,76 @@ const tiers = [
     margin-top: 0.15em;
   }
 
-  /* ─── Meta row (Timeline + Payment, beneath the head row) ─── */
-  .tier-meta-row {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: clamp(1.5rem, 3vw, 2.5rem);
-    margin-top: clamp(1.5rem, 3vw, 2rem);
-    padding-top: 1.25rem;
-    border-top: 1px solid color-mix(in oklab, var(--tier-accent) 18%, transparent);
-  }
-
-  .tier-meta-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    min-width: 0;
-  }
-
-  .tier-meta-label {
-    font-family: 'DM Sans', sans-serif;
-    font-size: var(--text-xs);
-    font-weight: var(--weight-medium);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
-
-  .tier-meta-value {
-    font-family: 'DM Sans', sans-serif;
-    font-size: var(--text-sm);
-    line-height: 1.5;
-    color: var(--color-text);
-  }
-
-  .tier-meta-item--pay .tier-meta-value {
-    color: var(--tier-accent);
-    font-weight: var(--weight-medium);
-  }
-
-  /* ─── Tier dividers ─── */
-  .tier-divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--tier-accent) 25%, transparent), transparent);
-    margin: var(--space-element) 0;
-  }
-
-  /* ─── Builds-on callout (Tier 2 and 3) ─── */
-  .tier-builds-on {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
-    padding: 0.75rem 1rem;
-    background: color-mix(in oklab, var(--tier-accent) 6%, transparent);
-    border-left: 2px solid var(--tier-accent);
-  }
-
-  .tier-builds-on-mark {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+  /* Tagline beneath header */
+  .tier-tagline {
+    margin: 1rem 0 0;
+    font-family: var(--font-display);
     font-size: var(--text-lg);
-    color: var(--tier-accent);
-    line-height: 1;
+    line-height: 1.35;
+    color: var(--color-text-muted);
+    max-width: 52ch;
   }
 
-  .tier-builds-on-text {
-    font-family: 'DM Sans', sans-serif;
+  /* Inline meta: timeline · payment */
+  .tier-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin: 1.5rem 0 0;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
-    color: var(--color-text);
-    line-height: 1.4;
+    color: var(--color-text-muted);
+    line-height: 1.5;
   }
 
-  .tier-builds-on-text strong {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    font-weight: var(--weight-regular);
+  .tier-meta-sep {
+    color: color-mix(in oklab, var(--color-text-muted) 50%, transparent);
+  }
+
+  .tier-meta-pay {
     color: var(--tier-accent);
-    font-size: 1.1em;
+    font-weight: var(--weight-medium);
   }
 
-  /* ─── Tier groups (categorized includes) ─── */
+  /* Builds-on: single italic line, no box */
+  .tier-builds-on {
+    margin: 2rem 0 0;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  .tier-builds-on strong {
+    font-family: var(--font-display);
+    font-weight: var(--weight-regular);
+    font-size: 1.1em;
+    color: var(--tier-accent);
+  }
+
+  /* Groups: label + bullets, spacing-only separation */
   .tier-groups {
     display: flex;
     flex-direction: column;
-    gap: clamp(1.5rem, 3vw, 2rem);
+    gap: var(--space-card);
+    margin-top: var(--space-card);
   }
 
   .tier-group {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.85rem;
   }
 
   .tier-group-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--tier-accent);
     margin: 0;
-    padding-bottom: 0.4rem;
-    border-bottom: 1px solid color-mix(in oklab, var(--tier-accent) 18%, transparent);
   }
 
   .tier-list {
@@ -2464,11 +2376,11 @@ const tiers = [
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.85rem;
   }
 
   .tier-list li {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-base);
     line-height: 1.55;
     color: var(--color-text);
@@ -2486,65 +2398,14 @@ const tiers = [
     background: var(--tier-accent);
   }
 
-  /* ─── Phases (vertical labeled list) ─── */
-  .tier-phases {
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-  }
-
-  .tier-phases-label {
-    font-family: 'DM Sans', sans-serif;
-    font-size: var(--text-xs);
-    font-weight: var(--weight-medium);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
-
-  .tier-phases-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.55rem;
-  }
-
-  .tier-phase {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: baseline;
-    gap: 1rem;
-  }
-
-  .tier-phase-name {
-    font-family: 'DM Sans', sans-serif;
-    font-size: var(--text-sm);
-    font-weight: var(--weight-medium);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--color-text);
-  }
-
-  .tier-phase-range {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    font-size: var(--text-md);
-    color: var(--tier-accent);
-    line-height: 1;
-    white-space: nowrap;
-  }
-
-  /* ─── Outcome line ─── */
+  /* Outcome — closing display line, generous space above */
   .tier-outcome-text {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    margin: var(--space-card) 0 0;
+    font-family: var(--font-display);
     font-size: var(--text-lg);
     line-height: 1.4;
     color: var(--color-text);
-    margin: 0;
-    max-width: 50ch;
+    max-width: 56ch;
   }
 
   /* ═══════════ CLOSE ═══════════ */
@@ -2556,8 +2417,8 @@ const tiers = [
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    margin-top: clamp(1.5rem, 3vw, 2rem);
-    padding: clamp(1.25rem, 2.5vw, 1.75rem) clamp(1.5rem, 3vw, 2rem);
+    margin-top: var(--space-card);
+    padding: clamp(1.25rem, 2.5vw, 1.75rem) var(--space-card);
     border-top: 1px solid color-mix(in oklab, var(--color-accent) 25%, transparent);
     border-bottom: 1px solid color-mix(in oklab, var(--color-accent) 25%, transparent);
     width: fit-content;
@@ -2572,7 +2433,7 @@ const tiers = [
   }
 
   .close-contact-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -2581,12 +2442,12 @@ const tiers = [
   }
 
   .close-contact-value {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: clamp(1.35rem, 2.5vw, 1.75rem);
     color: var(--color-text);
     text-decoration: none;
     letter-spacing: -0.005em;
-    transition: color 0.25s var(--ease-out-expo);
+    transition: color var(--duration-normal) var(--ease-out-expo);
   }
 
   .close-contact-value:hover {
@@ -2607,7 +2468,7 @@ const tiers = [
     gap: 0.7rem;
     margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
     padding: 0.85rem 1.25rem 0.85rem 1.1rem;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: var(--weight-medium);
     letter-spacing: 0.01em;
@@ -2615,10 +2476,10 @@ const tiers = [
     text-decoration: none;
     background: color-mix(in oklab, var(--color-accent) 8%, transparent);
     border: 1px solid color-mix(in oklab, var(--color-accent) 40%, transparent);
-    transition: background 0.3s var(--ease-out-expo),
-                border-color 0.3s var(--ease-out-expo),
-                gap 0.3s var(--ease-out-expo),
-                transform 0.3s var(--ease-out-expo);
+    transition: background var(--duration-normal) var(--ease-out-expo),
+                border-color var(--duration-normal) var(--ease-out-expo),
+                gap var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
   }
 
   .close-book-cta:hover {
@@ -2641,7 +2502,7 @@ const tiers = [
     align-items: center;
     line-height: 0;
     margin-left: 0.15rem;
-    transition: transform 0.3s var(--ease-out-expo);
+    transition: transform var(--duration-normal) var(--ease-out-expo);
   }
 
   .close-book-cta:hover .close-book-cta-arrow {
@@ -2652,7 +2513,7 @@ const tiers = [
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: var(--weight-medium);
     letter-spacing: 0.01em;
@@ -2661,7 +2522,7 @@ const tiers = [
     text-decoration-thickness: 1px;
     text-underline-offset: 5px;
     text-decoration-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
-    transition: text-decoration-color 0.25s var(--ease-out-expo), gap 0.25s var(--ease-out-expo);
+    transition: text-decoration-color var(--duration-normal) var(--ease-out-expo), gap var(--duration-normal) var(--ease-out-expo);
   }
 
   .cta-link:hover {
@@ -2670,7 +2531,7 @@ const tiers = [
   }
 
   .cta-link svg {
-    transition: transform 0.25s var(--ease-out-expo);
+    transition: transform var(--duration-normal) var(--ease-out-expo);
   }
 
   .cta-link:hover svg {
@@ -2682,7 +2543,7 @@ const tiers = [
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
   }
 
   .signoff-dash {
@@ -2691,7 +2552,6 @@ const tiers = [
   }
 
   .signoff-name {
-    font-style: italic;
     font-size: var(--text-xl);
     color: var(--color-text);
   }

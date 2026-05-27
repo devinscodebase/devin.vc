@@ -73,7 +73,7 @@
     display: flex;
     justify-content: flex-end;
     opacity: 0;
-    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-slow) var(--ease-out-expo);
     pointer-events: none;
   }
 
@@ -130,8 +130,8 @@
     border-radius: 4px;
     background: var(--color-accent-teal);
     opacity: 0.85;
-    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
   }
 
   .scrollbar.hovering .thumb {
@@ -140,15 +140,15 @@
   }
 
   .percent {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
     color: var(--color-text-muted);
     opacity: 0;
     transform: translateX(4px);
-    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
     min-width: 1.4em;
     text-align: right;
   }

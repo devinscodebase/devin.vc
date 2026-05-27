@@ -54,7 +54,7 @@
 <header class="navbar" class:open class:scrolled>
   <a href="/" class="logo">
     <img src="/images/avatar.png" alt="" class="logo-avatar" width="28" height="28" />
-    Devin
+    Devin Alexander
   </a>
 
   <div class="nav-actions">
@@ -160,10 +160,10 @@
     padding: 1.75rem clamp(1.5rem, 5vw, 3.5rem);
     pointer-events: none;
     opacity: 0;
-    animation: nav-enter 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+    animation: nav-enter 0.8s var(--ease-out-expo) 0.6s forwards;
     background: transparent;
     border-bottom: 1px solid transparent;
-    transition: background 0.4s, border-color 0.4s, backdrop-filter 0.4s, padding 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background 0.4s, border-color 0.4s, backdrop-filter 0.4s, padding var(--duration-normal) var(--ease-out-expo);
   }
 
   .navbar.scrolled {
@@ -188,7 +188,7 @@
 
   /* ---- logo ---- */
   .logo {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     color: var(--color-text);
     text-decoration: none;
@@ -197,7 +197,7 @@
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-normal) var(--ease-out-expo);
   }
 
   .logo-avatar {
@@ -207,9 +207,9 @@
     object-fit: cover;
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
     opacity: 0.85;
-    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+                border-color var(--duration-normal) var(--ease-out-expo),
+                box-shadow var(--duration-normal) var(--ease-out-expo);
   }
 
   .logo:hover .logo-avatar {
@@ -253,8 +253,8 @@
     opacity: 0;
     transform: rotate(-90deg) scale(0.7);
     transition:
-      opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-normal) var(--ease-out-expo);
   }
 
   .icon.active {
@@ -293,8 +293,8 @@
     right: 0;
     border-radius: 1px;
     transition:
-      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-      width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      transform var(--duration-slow) var(--ease-out-expo),
+      width var(--duration-normal) var(--ease-out-expo),
       background-color 0.5s ease,
       opacity 0.3s;
   }
@@ -337,8 +337,10 @@
     align-items: center;
     justify-content: center;
     clip-path: circle(0% at calc(100% - clamp(2rem, 5vw, 4rem)) 2.5rem);
-    transition: clip-path 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: clip-path 0.75s var(--ease-out-expo);
     pointer-events: none;
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .overlay.open {
@@ -350,6 +352,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: clamp(3.5rem, 8vh, 5rem) 1.5rem clamp(2rem, 5vh, 3rem);
+    width: 100%;
+    max-width: 640px;
   }
 
   /* ---- nav links ---- */
@@ -357,8 +362,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: clamp(1.25rem, 3.5vh, 2rem);
+    gap: clamp(1rem, 2.5vh, 1.75rem);
     position: relative;
+    width: 100%;
   }
 
   .nav-link {
@@ -385,7 +391,7 @@
     width: 0;
     height: 1.5px;
     background: var(--link-accent);
-    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: width var(--duration-normal) var(--ease-out-expo);
     flex-shrink: 0;
   }
 
@@ -398,8 +404,8 @@
     opacity: 1;
     transform: translateY(0);
     transition:
-      opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.6s var(--ease-out-expo),
+      transform 0.6s var(--ease-out-expo),
       color 0.3s;
   }
   .overlay.open .nav-link:nth-child(1) { transition-delay: 0.2s, 0.2s, 0s; }
@@ -409,12 +415,18 @@
   .overlay.open .nav-link:nth-child(5) { transition-delay: 0.48s, 0.48s, 0s; }
 
   .nav-label {
-    font-family: 'Instrument Serif', serif;
-    font-size: var(--text-3xl);
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
     color: var(--color-text);
     letter-spacing: var(--tracking-tight);
-    line-height: 1;
-    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    line-height: 1.05;
+    transition: color var(--duration-normal) var(--ease-out-expo);
+  }
+
+  /* Tight viewports: step down again so 6 items + tools fit comfortably */
+  @media (max-height: 700px), (max-width: 480px) {
+    .overlay-nav { gap: clamp(0.85rem, 2vh, 1.25rem); }
+    .nav-label { font-size: var(--text-xl); }
   }
 
   .nav-link:hover .nav-label {
@@ -430,14 +442,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: clamp(2rem, 5vh, 3.5rem);
+    margin-top: clamp(1.75rem, 4.5vh, 3rem);
     opacity: 0;
     transition: opacity 0.2s;
   }
 
   .overlay.open .tools-section {
     opacity: 1;
-    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.5s;
+    transition: opacity 0.6s var(--ease-out-expo) 0.5s;
   }
 
   .tools-divider {
@@ -452,7 +464,7 @@
   }
 
   .tools-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -474,13 +486,13 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
     color: var(--color-text-muted);
     text-decoration: none;
-    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-normal) var(--ease-out-expo);
   }
 
   .tool-link.accent-teal { --tool-accent: var(--color-accent-teal); }
@@ -493,15 +505,15 @@
     border-radius: 50%;
     background: var(--tool-accent);
     opacity: 0.6;
-    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
   }
 
   .tool-arrow {
     opacity: 0;
     transform: translateX(-4px);
-    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
   }
 
   .tool-link:hover {
@@ -527,14 +539,14 @@
   }
 
   .tools-view-all {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: color-mix(in oklab, var(--color-text-muted) 50%, transparent);
     text-decoration: none;
     margin-top: 0.85rem;
-    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-normal) var(--ease-out-expo);
   }
 
   .tools-view-all:hover,
@@ -558,12 +570,12 @@
 
   .overlay.open .overlay-footer {
     opacity: 1;
-    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.55s;
+    transition: opacity 0.6s var(--ease-out-expo) 0.55s;
   }
 
   .footer-domain,
   .footer-tagline {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
@@ -571,8 +583,7 @@
   }
 
   .footer-tagline {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     text-transform: none;
     letter-spacing: 0;
     font-size: var(--text-base);

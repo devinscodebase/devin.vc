@@ -1,0 +1,1793 @@
+---
+import InternalLayout from '../../layouts/InternalLayout.astro';
+import Heading from '../../components/ui/Heading.svelte';
+import Text from '../../components/ui/Text.svelte';
+import Tag from '../../components/ui/Tag.svelte';
+import Button from '../../components/ui/Button.svelte';
+import Card from '../../components/ui/Card.svelte';
+import Stack from '../../components/ui/Stack.svelte';
+import Field from '../../components/ui/Field.svelte';
+import CardCompositionDemo from '../../components/ui/showcase/CardCompositionDemo.svelte';
+
+const toc = [
+  { id: 'overview', label: 'Overview', no: '01' },
+  { id: 'color', label: 'Color', no: '02' },
+  { id: 'typography', label: 'Typography', no: '03' },
+  { id: 'spacing', label: 'Spacing', no: '04' },
+  { id: 'motion', label: 'Motion', no: '05' },
+  { id: 'surface', label: 'Radius & Shadow', no: '06' },
+  { id: 'heading', label: 'Heading', no: '07' },
+  { id: 'text', label: 'Text', no: '08' },
+  { id: 'tag', label: 'Tag', no: '09' },
+  { id: 'button', label: 'Button', no: '10' },
+  { id: 'card', label: 'Card', no: '11' },
+  { id: 'field', label: 'Field', no: '12' },
+  { id: 'stack', label: 'Stack', no: '13' },
+  { id: 'section', label: 'Section', no: '14' },
+];
+
+const colorTokens = [
+  { name: '--color-bg', desc: 'Page background' },
+  { name: '--color-surface', desc: 'Elevated surface' },
+  { name: '--color-text', desc: 'Primary text' },
+  { name: '--color-text-muted', desc: 'Secondary text' },
+  { name: '--color-text-subtle', desc: 'Tertiary text' },
+  { name: '--color-accent', desc: 'Warm gold accent' },
+  { name: '--color-accent-teal', desc: 'Cool accent' },
+  { name: '--color-accent-amber', desc: 'Warm secondary' },
+  { name: '--color-accent-rust', desc: 'Saturated accent' },
+  { name: '--color-error', desc: 'Error / destructive' },
+  { name: '--color-success', desc: 'Confirmation' },
+];
+
+const typeScale = [
+  { name: '--text-4xl', value: 'clamp(4rem, 9vw + 1.5rem, 7.5rem)', sample: 'Quiet capital', display: true },
+  { name: '--text-3xl', value: 'clamp(3rem, 5.5vw + 1.4rem, 4.75rem)', sample: 'Selected work', display: true },
+  { name: '--text-2xl', value: 'clamp(2.125rem, 3.5vw + 1.2rem, 3rem)', sample: 'A founder’s partner', display: true },
+  { name: '--text-xl',  value: 'clamp(1.625rem, 2vw + 1.1rem, 2.125rem)', sample: 'Section heading', display: true },
+  { name: '--text-lg',  value: 'clamp(1.25rem, 0.9vw + 1.05rem, 1.5rem)', sample: 'Leading paragraph for emphasis at the top of long passages.' },
+  { name: '--text-md',  value: 'clamp(1.0625rem, 0.45vw + 0.95rem, 1.1875rem)', sample: 'Body emphasis sits a step above the baseline.' },
+  { name: '--text-base', value: '1rem', sample: 'Body. The neutral default for prose, set in DM Sans at 1rem with 1.55 line-height.' },
+  { name: '--text-sm',  value: '0.875rem', sample: 'Caption and metadata copy lives here.' },
+  { name: '--text-xs',  value: '0.75rem', sample: 'Eyebrow and label text, uppercase, tracked wide.' },
+];
+
+const spacingTokens = [
+  { name: '--space-section', value: 'clamp(8rem, 20vh, 14rem)', desc: 'Between major sections' },
+  { name: '--space-page-top', value: 'clamp(8rem, 18vh, 12rem)', desc: 'Top of every page' },
+  { name: '--space-page-bottom', value: 'clamp(4rem, 10vh, 8rem)', desc: 'Bottom of every page' },
+  { name: '--space-block-lg', value: 'clamp(4rem, 8vw, 6rem)', desc: 'Large block padding' },
+  { name: '--space-block', value: 'clamp(3rem, 6vw, 5rem)', desc: 'Standard block padding' },
+  { name: '--space-element', value: 'clamp(1.5rem, 3vw, 2.5rem)', desc: 'Between elements in a stack' },
+  { name: '--space-card', value: 'clamp(1.5rem, 3vw, 2rem)', desc: 'Card interior padding' },
+  { name: '--space-page-x', value: 'clamp(1.5rem, 5vw, 3.5rem)', desc: 'Horizontal page gutter' },
+];
+
+const easingTokens = [
+  { name: '--ease-out-expo', value: 'var(--ease-out-expo)', curve: 'M 0 100 C 16 0, 30 0, 100 0', use: 'Default. Entrances, hovers, micro-interactions.' },
+  { name: '--ease-in-out-smooth', value: 'var(--ease-in-out-smooth)', curve: 'M 0 100 C 65 100, 35 0, 100 0', use: 'Symmetrical transitions, view transitions, scroll.' },
+];
+
+const durationTokens = [
+  { name: '--duration-fast', value: '200ms', use: 'Hovers, focus, color shifts' },
+  { name: '--duration-normal', value: '350ms', use: 'Entrances, layout changes' },
+  { name: '--duration-slow', value: '500ms', use: 'Heroes, emphasized moments' },
+];
+
+const selectOptions = [
+  { value: 'pre-seed', label: 'Pre-seed' },
+  { value: 'seed', label: 'Seed' },
+  { value: 'series-a', label: 'Series A' },
+  { value: 'series-b', label: 'Series B+' },
+];
+---
+
+<InternalLayout
+  title="Design System · Internal"
+  description="Component primitives and design tokens for devin.vc"
+>
+  <a href="#main" class="ds__skip">Skip to content</a>
+
+  <div class="ds">
+    <aside class="ds__sidebar" aria-label="Design system navigation">
+      <details class="ds__sidebar-collapse">
+        <summary class="ds__sidebar-toggle">
+          <div class="ds__mark-row">
+            <a class="ds__mark" href="/">
+              <svg class="ds__mark-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M10 3H4.5a3 3 0 0 0 0 6H7M6 7l-2 2 2 2" />
+              </svg>
+              <span>devin.vc</span>
+            </a>
+            <span class="ds__sidebar-chevron" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 4.5L6 7.5L9 4.5" />
+              </svg>
+            </span>
+          </div>
+        </summary>
+
+        <div class="ds__sidebar-inner">
+          <div class="ds__context">
+            <span class="ds__chip">Internal</span>
+            <span class="ds__version">v0.2 · 2026.05</span>
+          </div>
+
+          <nav class="ds__nav" aria-label="Sections">
+            <ul>
+              {toc.map((item) => (
+                <li>
+                  <a href={`#${item.id}`} data-nav={item.id}>
+                    <span class="ds__nav-no">{item.no}</span>
+                    <span class="ds__nav-label">{item.label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <p class="ds__sidebar-foot">
+            Edit primitives at<br />
+            <code>src/components/ui/</code>
+          </p>
+        </div>
+      </details>
+    </aside>
+
+    <main id="main" class="ds__main" tabindex="-1">
+      <!-- THEME TOGGLE -->
+      <div class="ds__toolbar">
+        <button class="ds__theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme" title="Toggle theme">
+          <span class="ds__theme-icons" aria-hidden="true">
+            <svg class="ds__theme-icon ds__theme-icon--sun" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="8" r="3" />
+              <path d="M8 1v1.5M8 13.5V15M3.05 3.05l1.06 1.06M11.89 11.89l1.06 1.06M1 8h1.5M13.5 8H15M3.05 12.95l1.06-1.06M11.89 4.11l1.06-1.06" />
+            </svg>
+            <svg class="ds__theme-icon ds__theme-icon--moon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13.5 9.5A6 6 0 0 1 6.5 2.5 6 6 0 1 0 13.5 9.5z" />
+            </svg>
+          </span>
+          <span class="ds__theme-label" data-theme-label>Dark</span>
+        </button>
+      </div>
+
+      <!-- HERO -->
+      <header class="ds__hero">
+        <Stack gap="5">
+          <div class="ds__hero-eyebrow">
+            <span aria-hidden="true">—</span>
+            <span>Design System</span>
+            <span class="ds__hero-eyebrow-date">2026.05.27</span>
+          </div>
+
+          <Heading level={1} size="3xl" class="ds__hero-title">
+            A system, <span class="ds__hero-accent">not a collection</span> of one-offs.
+          </Heading>
+
+          <Text size="md" tone="muted" leading="relaxed" measure>
+            The canonical foundation for devin.vc. Every typographic decision, every color, every animation curve lives here. Build with these primitives. Resist the urge to make new ones.
+          </Text>
+
+          <div class="ds__hero-meta">
+            <div>
+              <span class="ds__hero-meta-no">08</span>
+              <Text size="xs" tone="muted" as="span">Foundation tokens</Text>
+            </div>
+            <div>
+              <span class="ds__hero-meta-no">09</span>
+              <Text size="xs" tone="muted" as="span">Primitives</Text>
+            </div>
+            <div>
+              <span class="ds__hero-meta-no">∞</span>
+              <Text size="xs" tone="muted" as="span">Composable surfaces</Text>
+            </div>
+          </div>
+        </Stack>
+      </header>
+
+      <!-- 01 OVERVIEW -->
+      <section id="overview" class="ds__sec">
+        <div class="ds__sec-head">
+          <Tag index={1} size="md">Overview</Tag>
+          <Heading level={2} size="2xl">The discipline.</Heading>
+        </div>
+        <Stack gap="5">
+          <Text size="lg" tone="default" leading="relaxed" measure>
+            This system replaces the dozens of bespoke styles scattered through page sections with a small set of primitives whose variants are sufficient. If you find yourself reaching for a custom <code>font-size</code>, a raw hex value, or a one-off <code>clamp()</code> — stop. Open this page. Find the variant. Or extend the system <em>here</em>, not in the consuming component.
+          </Text>
+          <Text size="base" tone="muted" leading="relaxed" measure>
+            The rules are blunt. No <code>font-family</code> declarations in components — use <code>var(--font-display)</code>, <code>var(--font-body)</code>, or <code>var(--font-mono)</code>. No raw hex outside <code>global.css</code>. No fresh <code>clamp()</code> values for spacing — pick from the eight scale tokens. Animation timing comes from the three duration tokens and two easing curves, nothing else.
+          </Text>
+        </Stack>
+      </section>
+
+      <!-- 02 COLOR -->
+      <section id="color" class="ds__sec">
+        <div class="ds__sec-head">
+          <Tag index={2} size="md">Color</Tag>
+          <Heading level={2} size="2xl">Warm, restrained, theme-aware.</Heading>
+          <Text size="md" tone="muted" measure leading="relaxed">
+            All color flows through CSS custom properties defined in <code>global.css</code>. Dark theme is default; light theme swaps via <code>[data-theme="light"]</code>. Toggle above to compare. Never write raw hex values in components.
+          </Text>
+        </div>
+
+        <div class="ds__swatches">
+          {colorTokens.map((tok) => (
+            <div class="ds__swatch">
+              <div class="ds__swatch-chip" style={`background: var(${tok.name});`}></div>
+              <div class="ds__swatch-meta">
+                <code class="ds__swatch-name">{tok.name}</code>
+                <span class="ds__swatch-desc">{tok.desc}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- 03 TYPOGRAPHY -->
+      <section id="typography" class="ds__sec">
+        <div class="ds__sec-head">
+          <Tag index={3} size="md">Typography</Tag>
+          <Heading level={2} size="2xl">Two voices.</Heading>
+          <Text size="md" tone="muted" measure leading="relaxed">
+            <strong>Funnel Display</strong> variable for headlines — a technical, architectural sans-serif. <strong>DM Sans</strong> variable for body. <code>var(--font-mono)</code> for code and metadata. No fourth font. Ever.
+          </Text>
+        </div>
+
+        <Stack gap="5">
+          <Card variant="outlined" padding="lg">
+            <div class="ds__type-pair">
+              <div class="ds__type-pair-col">
+                <Text size="xs" tone="muted" weight="medium" as="span" class="ds__type-pair-label">Display · serif</Text>
+                <Heading level={3} size="2xl">A quiet partner</Heading>
+                <code class="ds__type-pair-token">var(--font-display)</code>
+              </div>
+              <div class="ds__type-pair-col">
+                <Text size="xs" tone="muted" weight="medium" as="span" class="ds__type-pair-label">Body · sans</Text>
+                <Heading level={3} size="xl" family="sans">Capital, placed carefully.</Heading>
+                <code class="ds__type-pair-token">var(--font-body)</code>
+              </div>
+            </div>
+          </Card>
+
+          <div class="ds__type-scale">
+            <div class="ds__type-scale-head">
+              <span>Token</span>
+              <span>Value</span>
+              <span>Sample</span>
+            </div>
+            {typeScale.map((step) => (
+              <div class="ds__type-scale-row">
+                <code class="ds__type-scale-token">{step.name}</code>
+                <code class="ds__type-scale-value">{step.value}</code>
+                <span
+                  class={`ds__type-scale-sample ${step.display ? 'ds__type-scale-sample--display' : ''}`}
+                  style={`font-size: var(${step.name});`}
+                >
+                  {step.sample}
+                </span>
+              </div>
+            ))}
+          </div>
+        </Stack>
+      </section>
+
+      <!-- 04 SPACING -->
+      <section id="spacing" class="ds__sec">
+        <div class="ds__sec-head">
+          <Tag index={4} size="md">Spacing</Tag>
+          <Heading level={2} size="2xl">Eight scales. No more.</Heading>
+          <Text size="md" tone="muted" measure leading="relaxed">
+            Every padding, margin, and gap pulls from one of these tokens. If a layout needs something between two scales — fix the scale, not the layout.
+          </Text>
+        </div>
+
+        <Stack gap="4">
+          {spacingTokens.map((tok) => (
+            <div class="ds__spacing-row">
+              <div class="ds__spacing-meta">
+                <code class="ds__spacing-name">{tok.name}</code>
+                <span class="ds__spacing-desc">{tok.desc}</span>
+                <code class="ds__spacing-value">{tok.value}</code>
+              </div>
+              <div class="ds__spacing-bar-wrap">
+                <div class="ds__spacing-bar" style={`width: var(${tok.name});`}></div>
+              </div>
+            </div>
+          ))}
+        </Stack>
+      </section>
+
+      <!-- 05 MOTION -->
+      <section id="motion" class="ds__sec">
+        <div class="ds__sec-head">
+          <Tag index={5} size="md">Motion</Tag>
+          <Heading level={2} size="2xl">Two curves. Three speeds.</Heading>
+          <Text size="md" tone="muted" measure leading="relaxed">
+            Each curve is rendered as a position-vs-time graph. The trailing dot demonstrates the curve in motion. Static SVG ensures the comparison is visible even with <code>prefers-reduced-motion</code>.
+          </Text>
+        </div>
+
+        <Stack gap="5">
+          <div class="ds__motion-grid">
+            {easingTokens.map((ez) => (
+              <Card variant="outlined" padding="md">
+                <Stack gap="3">
+                  <div class="ds__motion-head">
+                    <code class="ds__motion-name">{ez.name}</code>
+                    <code class="ds__motion-value">{ez.value}</code>
+                  </div>
+                  <svg class="ds__motion-curve" viewBox="-4 -4 108 108" aria-hidden="true">
+                    <defs>
+                      <pattern id={`grid-${ez.name.replace(/--/g, '')}`} width="20" height="20" patternUnits="userSpaceOnUse">
+                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.08" />
+                      </pattern>
+                    </defs>
+                    <rect x="0" y="0" width="100" height="100" fill={`url(#grid-${ez.name.replace(/--/g, '')})`} />
+                    <line x1="0" y1="100" x2="100" y2="100" stroke="currentColor" stroke-width="0.6" opacity="0.25" />
+                    <line x1="0" y1="0" x2="0" y2="100" stroke="currentColor" stroke-width="0.6" opacity="0.25" />
+                    <path d={ez.curve} fill="none" stroke="var(--color-accent)" stroke-width="1.6" stroke-linecap="round" />
+                  </svg>
+                  <div class="ds__motion-track" data-motion-track>
+                    <span class="ds__motion-dot" style={`--ez: ${ez.value};`}></span>
+                  </div>
+                  <Text size="sm" tone="muted">{ez.use}</Text>
+                </Stack>
+              </Card>
+            ))}
+          </div>
+
+          <div class="ds__duration-grid">
+            {durationTokens.map((d) => (
+              <Card variant="outlined" padding="md">
+                <Stack gap="2">
+                  <code class="ds__duration-name">{d.name}</code>
+                  <Heading level={3} size="lg">{d.value}</Heading>
+                  <Text size="sm" tone="muted">{d.use}</Text>
+                </Stack>
+              </Card>
+            ))}
+          </div>
+        </Stack>
+      </section>
+
+      <!-- 06 RADIUS & SHADOW -->
+      <section id="surface" class="ds__sec">
+        <div class="ds__sec-head">
+          <Tag index={6} size="md">Surface</Tag>
+          <Heading level={2} size="2xl">Edges and depth.</Heading>
+          <Text size="md" tone="muted" measure leading="relaxed">
+            Radius is small and restrained — 2px on buttons, 4px on cards. Sharp edges read editorial; round edges read consumer-app. Shadows are layered, color-aware, and reserved for genuine elevation.
+          </Text>
+        </div>
+
+        <div class="ds__shadow-grid">
+          <div class="ds__shadow-card" style="box-shadow: var(--shadow-sm);">
+            <code>--shadow-sm</code>
+            <Text size="sm" tone="muted">Hairline lift</Text>
+          </div>
+          <div class="ds__shadow-card" style="box-shadow: var(--shadow-md);">
+            <code>--shadow-md</code>
+            <Text size="sm" tone="muted">Card elevation</Text>
+          </div>
+          <div class="ds__shadow-card" style="box-shadow: var(--shadow-lg);">
+            <code>--shadow-lg</code>
+            <Text size="sm" tone="muted">Modal / overlay</Text>
+          </div>
+        </div>
+      </section>
+
+      <!-- 07 HEADING -->
+      <section id="heading" class="ds__sec">
+        <div class="ds__sec-head">
+          <Tag index={7} size="md">Heading</Tag>
+          <Heading level={2} size="2xl">The voice of the page.</Heading>
+          <Text size="md" tone="muted" measure leading="relaxed">
+            Semantic level decoupled from visual size. Use <code>level</code> for HTML semantics, <code>size</code> for visual weight. Default family is serif; switch to sans for utility headings.
+          </Text>
+        </div>
+
+        <Stack gap="5">
+          <div class="ds__variant-grid">
+            <div class="ds__variant">
+              <code class="ds__variant-label">size="4xl"</code>
+              <Heading level={3} size="4xl">Quiet capital</Heading>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">size="3xl"</code>
+              <Heading level={3} size="3xl">Selected work</Heading>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">size="2xl"</code>
+              <Heading level={3} size="2xl">A founder's partner</Heading>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">size="xl"</code>
+              <Heading level={3} size="xl">Section heading</Heading>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">size="lg"</code>
+              <Heading level={3} size="lg">A softer note</Heading>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">size="md" · family="sans"</code>
+              <Heading level={3} size="md" family="sans">Utility heading</Heading>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">size="sm" · family="sans"</code>
+              <Heading level={3} size="sm" family="sans">Small label heading</Heading>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">tone="muted"</code>
+              <Heading level={3} size="lg" tone="muted">Recessed heading</Heading>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">tone="accent"</code>
+              <Heading level={3} size="lg" tone="accent">Highlighted</Heading>
+            </div>
+          </div>
+
+          <pre class="ds__code"><code class="language-svelte">{`<Heading level={1} size="4xl">Quiet capital</Heading>
+<Heading level={2} size="3xl">A founder’s partner</Heading>
+<Heading level={3} size="md" family="sans">Utility heading</Heading>
+
+// Props
+//   level:   1..6                            (semantic)
+//   size:    '4xl' | '3xl' | '2xl' | 'xl' | 'lg' | 'md' | 'sm'
+//   family:  'serif' | 'sans'                (default: serif)
+//   tone:    'default' | 'muted' | 'accent'
+//   balance: boolean                         (default: true)
+//
+// Headings never render italic. Nested <em> tags are normalized.`}</code></pre>
+        </Stack>
+      </section>
+
+      <!-- 08 TEXT -->
+      <section id="text" class="ds__sec">
+        <div class="ds__sec-head">
+          <Tag index={8} size="md">Text</Tag>
+          <Heading level={2} size="2xl">Every paragraph, every label.</Heading>
+          <Text size="md" tone="muted" measure leading="relaxed">
+            One component for all non-heading copy. Variants cover size, weight, tone, family, and leading. <code>measure</code> caps line length at 62ch — use it for long-form prose.
+          </Text>
+        </div>
+
+        <Stack gap="5">
+          <div class="ds__variant-grid ds__variant-grid--2">
+            <div class="ds__variant">
+              <code class="ds__variant-label">size="lg" · leading="relaxed"</code>
+              <Text size="lg" leading="relaxed">
+                A leading paragraph that sets up the section with a slightly larger, looser feel.
+              </Text>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">size="base" · default</code>
+              <Text>
+                Body copy. Neutral, readable, set at 1rem with 1.55 line-height. The workhorse.
+              </Text>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">tone="muted"</code>
+              <Text tone="muted">
+                Muted body for secondary information, captions under primary content, supporting prose.
+              </Text>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">size="sm" · tone="subtle"</code>
+              <Text size="sm" tone="subtle">
+                Quiet metadata. Dates, byline, footnotes.
+              </Text>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">family="serif" · italic</code>
+              <Text family="serif" italic size="lg">
+                "Pulled quotes and emphasized prose use the display serif in italic."
+              </Text>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">family="mono" · tone="accent"</code>
+              <Text family="mono" size="sm" tone="accent">
+                $ deploy --quiet 2026-05-27
+              </Text>
+            </div>
+          </div>
+
+          <pre class="ds__code"><code class="language-svelte">{`<Text size="lg" leading="relaxed" measure>...</Text>
+<Text tone="muted">...</Text>
+<Text family="serif" italic>...</Text>
+
+// Props
+//   as:      'p' | 'span' | 'div'           (default: p)
+//   size:    'xs' | 'sm' | 'base' | 'md' | 'lg'
+//   tone:    'default' | 'muted' | 'subtle' | 'accent'
+//   weight:  'light' | 'regular' | 'medium'
+//   family:  'sans' | 'serif' | 'mono'
+//   italic:  boolean
+//   leading: 'tight' | 'normal' | 'relaxed'
+//   measure: boolean                         (caps at 62ch)`}</code></pre>
+        </Stack>
+      </section>
+
+      <!-- 09 TAG -->
+      <section id="tag" class="ds__sec">
+        <div class="ds__sec-head">
+          <Tag index={9} size="md">Tag</Tag>
+          <Heading level={2} size="2xl">Eyebrows and status.</Heading>
+          <Text size="md" tone="muted" measure leading="relaxed">
+            The repeated <code>section-tag</code> pattern, formalized. Optional numeric index, rule, uppercase tracked. Status tones for success/warning/danger.
+          </Text>
+        </div>
+
+        <Stack gap="5">
+          <div class="ds__variant-grid ds__variant-grid--3">
+            <div class="ds__variant">
+              <code class="ds__variant-label">index + rule</code>
+              <Tag index={5}>Projects</Tag>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">tone="accent"</code>
+              <Tag index={5} tone="accent">In progress</Tag>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">no index</code>
+              <Tag>Featured</Tag>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">tone="muted"</code>
+              <Tag index="—" tone="muted">Archive</Tag>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">size="md"</code>
+              <Tag index={2} size="md">Now reading</Tag>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">tone="inverse"</code>
+              <Tag tone="inverse">Highlighted</Tag>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">tone="success"</code>
+              <Tag tone="success">Confirmed</Tag>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">tone="warning"</code>
+              <Tag tone="warning">Pending</Tag>
+            </div>
+            <div class="ds__variant">
+              <code class="ds__variant-label">tone="danger"</code>
+              <Tag tone="danger">Action required</Tag>
+            </div>
+          </div>
+
+          <pre class="ds__code"><code class="language-svelte">{`<Tag index={5}>Projects</Tag>
+<Tag tone="accent">In progress</Tag>
+<Tag tone="success">Confirmed</Tag>
+<Tag tone="danger">Action required</Tag>
+
+// Props
+//   index: string | number | undefined
+//   tone:  'default' | 'accent' | 'muted' | 'inverse'
+//          | 'success' | 'warning' | 'danger'
+//   size:  'sm' | 'md'
+//   rule:  boolean                           (default: true)`}</code></pre>
+        </Stack>
+      </section>
+
+      <!-- 10 BUTTON -->
+      <section id="button" class="ds__sec">
+        <div class="ds__sec-head">
+          <Tag index={10} size="md">Button</Tag>
+          <Heading level={2} size="2xl">Five variants, three sizes.</Heading>
+          <Text size="md" tone="muted" measure leading="relaxed">
+            Renders as a <code>&lt;button&gt;</code> by default; pass <code>href</code> to render as an anchor with identical styling. Full state coverage: hover, active, focus-visible, disabled, loading.
+          </Text>
+        </div>
+
+        <Stack gap="5">
+          <div class="ds__btn-grid">
+            <div class="ds__btn-row">
+              <code class="ds__btn-row-label">primary</code>
+              <Button variant="primary" size="sm">Sign in</Button>
+              <Button variant="primary" size="md">Sign in</Button>
+              <Button variant="primary" size="lg" arrow>Continue</Button>
+            </div>
+            <div class="ds__btn-row">
+              <code class="ds__btn-row-label">secondary</code>
+              <Button variant="secondary" size="sm">View work</Button>
+              <Button variant="secondary" size="md">View work</Button>
+              <Button variant="secondary" size="lg" arrow>Read thesis</Button>
+            </div>
+            <div class="ds__btn-row">
+              <code class="ds__btn-row-label">ghost</code>
+              <Button variant="ghost" size="sm">Cancel</Button>
+              <Button variant="ghost" size="md">Cancel</Button>
+              <Button variant="ghost" size="lg" arrow>Skip</Button>
+            </div>
+            <div class="ds__btn-row">
+              <code class="ds__btn-row-label">link</code>
+              <Button variant="link" size="sm">Read more</Button>
+              <Button variant="link" size="md">Read more</Button>
+              <Button variant="link" size="lg" arrow>Read the journal</Button>
+            </div>
+            <div class="ds__btn-row">
+              <code class="ds__btn-row-label">danger</code>
+              <Button variant="danger" size="sm">Delete</Button>
+              <Button variant="danger" size="md">Remove access</Button>
+              <Button variant="danger" size="lg">Confirm removal</Button>
+            </div>
+            <div class="ds__btn-row">
+              <code class="ds__btn-row-label">states</code>
+              <Button variant="secondary" disabled>Disabled</Button>
+              <Button variant="primary" loading client:visible>Submitting</Button>
+              <Button variant="secondary" arrow href="#button">As anchor</Button>
+            </div>
+          </div>
+
+          <pre class="ds__code"><code class="language-svelte">{`<Button variant="primary" size="lg" arrow>Continue</Button>
+<Button variant="secondary" href="/work">View work</Button>
+<Button variant="link" arrow>Read more</Button>
+<Button variant="danger">Delete</Button>
+<Button variant="primary" loading>Submitting</Button>
+
+// Props
+//   variant:   'primary' | 'secondary' | 'ghost' | 'link' | 'danger'
+//   size:      'sm' | 'md' | 'lg'
+//   href:      string                        (renders as <a>)
+//   target:    '_self' | '_blank'
+//   type:      'button' | 'submit' | 'reset'
+//   disabled:  boolean
+//   loading:   boolean
+//   arrow:     boolean
+//   fullWidth: boolean`}</code></pre>
+        </Stack>
+      </section>
+
+      <!-- 11 CARD -->
+      <section id="card" class="ds__sec">
+        <div class="ds__sec-head">
+          <Tag index={11} size="md">Card</Tag>
+          <Heading level={2} size="2xl">Surfaces with intent.</Heading>
+          <Text size="md" tone="muted" measure leading="relaxed">
+            Default is <code>flat</code> — soft tinted surface, the workhorse for grouping content. Use <code>outlined</code> when you need a hairline boundary, <code>elevated</code> when something genuinely lifts off the page, <code>grain</code> when texture earns its keep.
+          </Text>
+        </div>
+
+        <Stack gap="5">
+          <div class="ds__card-grid">
+            <Card variant="flat" padding="md">
+              <Stack gap="3">
+                <Tag index={1} size="sm" tone="accent">Default</Tag>
+                <Heading level={3} size="md" family="sans">Flat surface</Heading>
+                <Text size="sm" tone="muted">Soft background tint, no border. The neutral workhorse for grouping content blocks.</Text>
+              </Stack>
+            </Card>
+
+            <Card variant="outlined" padding="md">
+              <Stack gap="3">
+                <Tag index={2} size="sm">Outlined</Tag>
+                <Heading level={3} size="md" family="sans">Hairline border</Heading>
+                <Text size="sm" tone="muted">Transparent surface with hairline boundary. Use for definition without lift.</Text>
+              </Stack>
+            </Card>
+
+            <Card variant="elevated" padding="md">
+              <Stack gap="3">
+                <Tag index={3} size="sm">Elevated</Tag>
+                <Heading level={3} size="md" family="sans">Genuinely lifted</Heading>
+                <Text size="sm" tone="muted">Tinted surface plus layered drop shadow. Restrained, never neon — in dark mode the surface tint carries most of the lift.</Text>
+              </Stack>
+            </Card>
+
+            <Card variant="grain" padding="md" href="#card">
+              <Stack gap="3">
+                <Tag index={4} size="sm">Grain</Tag>
+                <Heading level={3} size="md" family="sans">Textured surface ↗</Heading>
+                <Text size="sm" tone="muted">Film grain overlay. Intensifies on hover. Interactive.</Text>
+              </Stack>
+            </Card>
+          </div>
+
+          <div class="ds__card-composition">
+            <CardCompositionDemo />
+          </div>
+
+          <pre class="ds__code"><code class="language-svelte">{`<Card padding="md">...</Card>                       <!-- default: flat -->
+<Card variant="outlined" padding="md">...</Card>
+<Card variant="elevated" padding="lg" href="/journal">...</Card>
+
+<Card variant="elevated" padding="lg">
+  {#snippet header()}<Tag>Header</Tag>{/snippet}
+  {#snippet footer()}<Button variant="link" arrow>Action</Button>{/snippet}
+  <Heading>Body content</Heading>
+</Card>
+
+// Props
+//   variant: 'flat' | 'outlined' | 'elevated' | 'grain'  (default: flat)
+//   padding: 'none' | 'sm' | 'md' | 'lg'
+//   href:    string                          (renders as <a>)
+//   target:  '_self' | '_blank'
+//   header / media / footer:  Snippet`}</code></pre>
+        </Stack>
+      </section>
+
+      <!-- 12 FIELD -->
+      <section id="field" class="ds__sec">
+        <div class="ds__sec-head">
+          <Tag index={12} size="md">Field</Tag>
+          <Heading level={2} size="2xl">Input, with a line animation.</Heading>
+          <Text size="md" tone="muted" measure leading="relaxed">
+            No boxes, no chrome — just an underline that grows on focus from a teal-to-amber gradient. <code>md</code> is the default form scale; <code>lg</code> is the tool-wizard scale, big and editorial, for marquee questions that deserve the spotlight.
+          </Text>
+        </div>
+
+        <Stack gap="5">
+          <!-- LG variant — the marquee, tool-wizard scale -->
+          <Card variant="flat" padding="lg">
+            <Stack gap="4">
+              <Tag index="LG" size="sm" tone="accent">Large variant — tool-wizard scale</Tag>
+              <Field
+                client:visible
+                id="ds-field-lg-name"
+                label="What's your name?"
+                name="lg-name"
+                placeholder="Type your name…"
+                size="lg"
+              />
+              <Field
+                client:visible
+                id="ds-field-lg-email"
+                label="And your email?"
+                name="lg-email"
+                type="email"
+                placeholder="founder@example.com"
+                size="lg"
+                helper="Press Enter to continue."
+              />
+            </Stack>
+          </Card>
+
+          <!-- MD variant — default form scale -->
+          <Card variant="flat" padding="lg">
+            <Stack gap="4">
+              <Tag size="sm" tone="muted">Default (md) — form scale</Tag>
+              <div class="ds__field-grid">
+                <Field
+                  client:visible
+                  id="ds-field-email"
+                  label="Email"
+                  name="email"
+                  type="email"
+                  placeholder="founder@example.com"
+                  helper="We'll never share this."
+                  autocomplete="email"
+                />
+                <Field
+                  client:visible
+                  id="ds-field-fullname"
+                  label="Name"
+                  name="fullname"
+                  placeholder="Your name"
+                  required
+                />
+                <Field
+                  client:visible
+                  id="ds-field-stage"
+                  label="Stage"
+                  name="stage"
+                  type="select"
+                  placeholder="Choose a stage…"
+                  options={selectOptions}
+                />
+                <Field
+                  client:visible
+                  id="ds-field-search"
+                  label="Search"
+                  name="q"
+                  type="search"
+                  placeholder="Find a tool"
+                />
+                <Field
+                  client:visible
+                  id="ds-field-disabled"
+                  label="Disabled"
+                  name="locked"
+                  placeholder="Read-only"
+                  disabled
+                  value="Locked value"
+                />
+                <Field
+                  client:visible
+                  id="ds-field-error"
+                  label="With error"
+                  name="bad"
+                  type="email"
+                  value="not-an-email"
+                  error="Please enter a valid email address."
+                />
+              </div>
+              <Field
+                client:visible
+                id="ds-field-notes"
+                label="Notes"
+                name="notes"
+                type="textarea"
+                placeholder="Anything we should know?"
+                rows={4}
+              />
+            </Stack>
+          </Card>
+
+          <pre class="ds__code"><code class="language-svelte">{`<Field label="Email" name="email" type="email" required />
+<Field label="Stage" name="stage" type="select" options={[
+  { value: 'seed', label: 'Seed' },
+  { value: 'a',    label: 'Series A' },
+]} />
+<Field label="Notes" name="notes" type="textarea" rows={4} />
+<Field label="Email" name="bad" error="Invalid address" />
+
+// Props
+//   type:         'text' | 'email' | 'tel' | 'url' | 'password'
+//                 | 'search' | 'number' | 'textarea' | 'select'
+//   name:         string                     (required for forms)
+//   id:           string                     (required for label/control link)
+//   label:        string
+//   placeholder:  string
+//   value:        string                     (bindable)
+//   helper:       string
+//   error:        string                     (replaces helper, sets aria-invalid)
+//   required:     boolean
+//   disabled:     boolean
+//   size:         'md' | 'lg'
+//   rows:         number                     (textarea)
+//   options:      { value, label }[]         (select)
+//   autocomplete: string`}</code></pre>
+        </Stack>
+      </section>
+
+      <!-- 13 STACK -->
+      <section id="stack" class="ds__sec">
+        <div class="ds__sec-head">
+          <Tag index={13} size="md">Stack</Tag>
+          <Heading level={2} size="2xl">Rhythm, made obvious.</Heading>
+          <Text size="md" tone="muted" measure leading="relaxed">
+            The vertical-rhythm primitive. Numeric gaps (<code>1</code>–<code>6</code>) for component-internal spacing on a 4pt scale; token-named gaps for layout-level rhythm.
+          </Text>
+        </div>
+
+        <Stack gap="5">
+          <Card variant="outlined" padding="lg">
+            <Stack gap="4">
+              <Tag size="sm" tone="muted">vertical · gap="4"</Tag>
+              <Stack gap="4">
+                <Heading level={3} size="md" family="sans">First child</Heading>
+                <Text tone="muted">Second child. Spacing comes from the Stack, never the children. Margins on Heading/Text remain zero.</Text>
+                <Button variant="secondary" size="sm" arrow>Third child</Button>
+              </Stack>
+            </Stack>
+          </Card>
+
+          <Card variant="outlined" padding="lg">
+            <Stack gap="3">
+              <Tag size="sm" tone="muted">horizontal · gap="3" · align="center"</Tag>
+              <Stack direction="horizontal" gap="3" align="center" wrap>
+                <Button variant="primary" size="sm">Save</Button>
+                <Button variant="ghost" size="sm">Cancel</Button>
+                <Tag tone="accent">Draft</Tag>
+              </Stack>
+            </Stack>
+          </Card>
+
+          <pre class="ds__code"><code class="language-svelte">{`<Stack gap="4">
+  <Heading>Title</Heading>
+  <Text>Body</Text>
+  <Button>Action</Button>
+</Stack>
+
+<Stack direction="horizontal" gap="3" align="center">
+  <Button>Save</Button>
+  <Button variant="ghost">Cancel</Button>
+</Stack>
+
+// Props
+//   direction: 'vertical' | 'horizontal'
+//   gap:       '0'..'6' (4pt scale)
+//              | 'element' | 'card' | 'block' | 'block-lg' | 'section' (tokens)
+//   align:     'start' | 'center' | 'end' | 'stretch' | 'baseline'
+//   justify:   'start' | 'center' | 'end' | 'between' | 'around'
+//   wrap:      boolean`}</code></pre>
+        </Stack>
+      </section>
+
+      <!-- 14 SECTION -->
+      <section id="section" class="ds__sec">
+        <div class="ds__sec-head">
+          <Tag index={14} size="md">Section</Tag>
+          <Heading level={2} size="2xl">Page-level containers.</Heading>
+          <Text size="md" tone="muted" measure leading="relaxed">
+            The container primitive. Handles horizontal page gutter, max-width, and vertical block spacing in one place. Use it instead of writing <code>padding-inline</code> on every page section.
+          </Text>
+        </div>
+
+        <pre class="ds__code"><code class="language-astro">{`---
+import Section from '../components/ui/Section.astro';
+---
+
+<Section spacing="loose" width="normal">
+  <Heading level={1} size="4xl">Quiet capital</Heading>
+</Section>
+
+<Section spacing="normal" width="narrow">
+  <Text measure>Long-form prose at narrow width.</Text>
+</Section>
+
+// Props
+//   spacing: 'compact' | 'normal' | 'loose'
+//   width:   'narrow' | 'normal' | 'wide' | 'full'
+//   bleed:   boolean                         (no horizontal padding)
+//   as:      string                          (default: 'section')`}</code></pre>
+      </section>
+
+      <footer class="ds__foot">
+        <Stack gap="3">
+          <Tag tone="muted">— End of system</Tag>
+          <Text size="sm" tone="muted">
+            Extend primitives at <code>src/components/ui/</code>. Add tokens at <code>src/styles/global.css</code>. This page is auto-rendered from those sources.
+          </Text>
+        </Stack>
+      </footer>
+    </main>
+  </div>
+</InternalLayout>
+
+<script>
+  // ──────────────────────────────────────────────────────
+  // Theme toggle (persists to localStorage.theme)
+  // ──────────────────────────────────────────────────────
+  const themeBtn = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  const themeLabel = document.querySelector<HTMLElement>('[data-theme-label]');
+  const syncThemeUi = () => {
+    const cur = document.documentElement.getAttribute('data-theme') ?? 'dark';
+    if (themeLabel) themeLabel.textContent = cur === 'light' ? 'Light' : 'Dark';
+    themeBtn?.setAttribute('aria-pressed', cur === 'light' ? 'true' : 'false');
+  };
+  themeBtn?.addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme') ?? 'dark';
+    const next = cur === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch {}
+    syncThemeUi();
+  });
+  syncThemeUi();
+
+  // ──────────────────────────────────────────────────────
+  // Sidebar scroll-spy (sets aria-current="location" + class)
+  // ──────────────────────────────────────────────────────
+  const navLinks = document.querySelectorAll<HTMLAnchorElement>('.ds__nav a[data-nav]');
+  const sections = Array.from(navLinks).map((link) => {
+    const id = link.dataset.nav!;
+    return { id, link, el: document.getElementById(id) };
+  });
+
+  const setActive = (id: string | null) => {
+    navLinks.forEach((l) => {
+      const active = l.dataset.nav === id;
+      l.classList.toggle('is-active', active);
+      if (active) l.setAttribute('aria-current', 'location');
+      else l.removeAttribute('aria-current');
+    });
+  };
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      const visible = entries
+        .filter((e) => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+      if (visible) setActive(visible.target.id);
+    },
+    { rootMargin: '-30% 0px -60% 0px', threshold: 0 }
+  );
+
+  sections.forEach((s) => s.el && io.observe(s.el));
+
+  // ──────────────────────────────────────────────────────
+  // Sidebar collapse: open by default on desktop, closed on mobile
+  // ──────────────────────────────────────────────────────
+  const sidebarCollapse = document.querySelector<HTMLDetailsElement>('.ds__sidebar-collapse');
+  const mq = window.matchMedia('(min-width: 901px)');
+  const syncOpen = () => { if (sidebarCollapse) sidebarCollapse.open = mq.matches; };
+  syncOpen();
+  mq.addEventListener('change', syncOpen);
+  // Auto-close on nav click (mobile only)
+  navLinks.forEach((l) => l.addEventListener('click', () => { if (!mq.matches && sidebarCollapse) sidebarCollapse.open = false; }));
+</script>
+
+<style>
+  /* ============================================
+     SKIP LINK (a11y)
+     ============================================ */
+  .ds__skip {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    background: var(--color-text);
+    color: var(--color-bg);
+    padding: 0.75rem 1.25rem;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    text-decoration: none;
+    border-radius: 0 0 4px 0;
+  }
+  .ds__skip:focus { left: 0; }
+
+  /* ============================================
+     LAYOUT
+     ============================================ */
+  .ds {
+    display: grid;
+    grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
+    min-height: 100dvh;
+    background: var(--color-bg);
+  }
+
+  @media (max-width: 900px) {
+    .ds { grid-template-columns: 1fr; }
+  }
+
+  /* ============================================
+     SIDEBAR — uses native <details> for mobile collapse
+     ============================================ */
+  .ds__sidebar {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    border-right: var(--border-subtle);
+    background: var(--color-surface);
+    z-index: 10;
+  }
+
+  @media (max-width: 900px) {
+    .ds__sidebar {
+      position: sticky;
+      top: 0;
+      height: auto;
+      border-right: 0;
+      border-bottom: var(--border-subtle);
+    }
+  }
+
+  .ds__sidebar-collapse {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Hide the disclosure triangle, force open visual on desktop */
+  .ds__sidebar-collapse summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+  }
+  .ds__sidebar-collapse summary::-webkit-details-marker { display: none; }
+
+  .ds__sidebar-toggle {
+    padding: var(--space-card) 1.75rem;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+  }
+
+  @media (min-width: 901px) {
+    .ds__sidebar-toggle { border-bottom: none; padding-bottom: 0; }
+    .ds__sidebar-chevron { display: none; }
+  }
+
+  .ds__mark-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .ds__mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-display);
+    font-weight: var(--weight-medium);
+    font-size: var(--text-md);
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+  .ds__mark:hover { color: var(--color-accent); }
+
+  .ds__mark-arrow { color: var(--color-text-muted); transition: transform var(--duration-fast) var(--ease-out-expo); }
+  .ds__mark:hover .ds__mark-arrow { transform: translateX(-3px); }
+
+  .ds__sidebar-chevron {
+    color: var(--color-text-muted);
+    transition: transform var(--duration-fast) var(--ease-out-expo);
+    display: inline-flex;
+  }
+  .ds__sidebar-collapse[open] .ds__sidebar-chevron { transform: rotate(180deg); }
+
+  .ds__sidebar-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.25rem 1.75rem var(--space-card);
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  @media (min-width: 901px) {
+    .ds__sidebar-inner { padding-top: 0.5rem; }
+  }
+
+  .ds__context {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    flex-wrap: wrap;
+  }
+
+  .ds__chip {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-bg);
+    background: var(--color-accent);
+    padding: 0.3rem 0.55rem;
+    border-radius: 2px;
+    line-height: 1;
+  }
+
+  .ds__version {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .ds__nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .ds__nav a {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.5rem 0.6rem;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    text-decoration: none;
+    color: var(--color-text-muted);
+    border-left: 1px solid transparent;
+    transition:
+      color var(--duration-fast) var(--ease-out-expo),
+      background-color var(--duration-fast) var(--ease-out-expo),
+      border-color var(--duration-fast) var(--ease-out-expo);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .ds__nav a:hover {
+    color: var(--color-text);
+    background: color-mix(in oklab, var(--color-text) 4%, transparent);
+  }
+
+  .ds__nav a.is-active {
+    color: var(--color-text);
+    border-left-color: var(--color-accent);
+    background: color-mix(in oklab, var(--color-accent) 8%, transparent);
+  }
+
+  .ds__nav-no {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ds__sidebar-foot {
+    margin: 0;
+    margin-top: auto;
+    padding-top: 1rem;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+  .ds__sidebar-foot code {
+    font-family: var(--font-mono);
+    color: var(--color-accent);
+  }
+
+  /* ============================================
+     MAIN
+     ============================================ */
+  .ds__main {
+    min-width: 0;
+    padding: var(--space-card) var(--space-page-x) var(--space-block-lg);
+    outline: none;
+  }
+
+  /* ============================================
+     TOOLBAR (theme toggle)
+     ============================================ */
+  .ds__toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: var(--space-element);
+  }
+
+  .ds__theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    background: transparent;
+    border: var(--border-subtle);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    padding: 0.55rem 0.85rem;
+    cursor: pointer;
+    border-radius: 2px;
+    line-height: 1;
+    transition:
+      background-color var(--duration-fast) var(--ease-out-expo),
+      border-color var(--duration-fast) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo);
+  }
+
+  .ds__theme-toggle:hover {
+    background: color-mix(in oklab, var(--color-text) 5%, transparent);
+    border-color: color-mix(in oklab, var(--color-accent) 50%, transparent);
+  }
+
+  .ds__theme-toggle:active { transform: scale(0.98); }
+
+  /* Icon container: fixed-size box so absolute-positioned icons can crossfade
+     without causing layout shift. */
+  .ds__theme-icons {
+    position: relative;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  .ds__theme-icon {
+    position: absolute;
+    inset: 0;
+    color: var(--color-accent);
+    transition:
+      opacity var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-normal) var(--ease-spring);
+  }
+
+  /* Icons show CURRENT theme (matching the label below).
+     Default = dark theme: moon visible, sun hidden + rotated out. */
+  .ds__theme-icon--sun {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+  }
+  .ds__theme-icon--moon {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+
+  /* Light theme: sun visible, moon hidden. */
+  :global([data-theme="light"]) .ds__theme-icon--sun {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+  :global([data-theme="light"]) .ds__theme-icon--moon {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.5);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ds__theme-icon { transition: opacity 0ms; transform: none !important; }
+  }
+
+  /* ============================================
+     HERO
+     ============================================ */
+  .ds__hero {
+    padding-block: var(--space-element) var(--space-block);
+    border-bottom: var(--border-subtle);
+    margin-bottom: var(--space-block);
+  }
+
+  .ds__hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+  }
+
+  .ds__hero-eyebrow-date {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    color: var(--color-text-subtle);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  /* Hero heading inherits Heading--3xl; the accent span colors a phrase */
+  .ds__hero-title :global(.ds__hero-accent) {
+    color: var(--color-accent);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 500px) {
+    .ds__hero-title :global(.ds__hero-accent) { white-space: normal; }
+  }
+
+  .ds__hero-meta {
+    margin-top: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: var(--border-subtle);
+  }
+
+  .ds__hero-meta > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .ds__hero-meta-no {
+    font-family: var(--font-display);
+    font-weight: var(--weight-regular);
+    font-size: var(--text-2xl);
+    color: var(--color-accent);
+    line-height: 1;
+    letter-spacing: -0.025em;
+  }
+
+  /* ============================================
+     SECTION
+     ============================================ */
+  .ds__sec {
+    padding-block: var(--space-block);
+    border-bottom: var(--border-subtle);
+    scroll-margin-top: var(--space-card);
+  }
+
+  .ds__sec:last-of-type { border-bottom: 0; }
+
+  .ds__sec-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-bottom: var(--space-element);
+    max-width: 800px;
+  }
+
+  .ds__sec-head code,
+  .ds__sec :global(p) code,
+  .ds__foot code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--color-accent);
+    background: color-mix(in oklab, var(--color-accent) 8%, transparent);
+    padding: 0.1em 0.35em;
+    border-radius: 2px;
+  }
+
+  /* ============================================
+     COLOR SWATCHES
+     ============================================ */
+  .ds__swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1px;
+    background: color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+    border: var(--border-subtle);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .ds__swatch {
+    background: var(--color-bg);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .ds__swatch-chip {
+    width: 44px;
+    height: 44px;
+    border-radius: 4px;
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-text-muted) 35%, transparent);
+    flex-shrink: 0;
+  }
+
+  .ds__swatch-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  .ds__swatch-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ds__swatch-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* ============================================
+     TYPOGRAPHY
+     ============================================ */
+  .ds__type-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-element);
+  }
+
+  @media (max-width: 640px) {
+    .ds__type-pair { grid-template-columns: 1fr; }
+  }
+
+  .ds__type-pair-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .ds__type-pair-token {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+  }
+
+  .ds__type-scale {
+    border: var(--border-subtle);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .ds__type-scale-head,
+  .ds__type-scale-row {
+    display: grid;
+    grid-template-columns: 110px 1.2fr 2fr;
+    gap: 1rem;
+    align-items: baseline;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+  }
+
+  .ds__type-scale-row:last-child { border-bottom: 0; }
+
+  .ds__type-scale-head {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+    background: color-mix(in oklab, var(--color-text) 3%, transparent);
+  }
+
+  .ds__type-scale-token,
+  .ds__type-scale-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+
+  .ds__type-scale-token { color: var(--color-accent); }
+  .ds__type-scale-value { color: var(--color-text-muted); }
+
+  .ds__type-scale-sample {
+    font-family: var(--font-body);
+    color: var(--color-text);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .ds__type-scale-sample--display {
+    font-family: var(--font-display);
+    line-height: 1;
+    letter-spacing: -0.025em;
+  }
+
+  @media (max-width: 720px) {
+    .ds__type-scale-head { display: none; }
+    .ds__type-scale-row {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+      padding: 1.25rem;
+    }
+  }
+
+  /* ============================================
+     SPACING
+     ============================================ */
+  .ds__spacing-row {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  @media (max-width: 700px) {
+    .ds__spacing-row { grid-template-columns: 1fr; gap: 0.5rem; }
+  }
+
+  .ds__spacing-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .ds__spacing-name { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-accent); }
+  .ds__spacing-desc { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text); }
+  .ds__spacing-value { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); }
+
+  .ds__spacing-bar-wrap {
+    background: color-mix(in oklab, var(--color-text) 3%, transparent);
+    border: var(--border-subtle);
+    border-radius: 2px;
+    height: 28px;
+    overflow: hidden;
+    max-width: 100%;
+  }
+
+  .ds__spacing-bar {
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      var(--color-accent) 0%,
+      color-mix(in oklab, var(--color-accent) 70%, transparent) 100%
+    );
+    max-width: 100%;
+  }
+
+  /* ============================================
+     MOTION
+     ============================================ */
+  .ds__motion-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .ds__motion-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .ds__motion-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+  }
+
+  .ds__motion-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .ds__motion-curve {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    max-height: 180px;
+    color: var(--color-text-muted);
+  }
+
+  .ds__motion-track {
+    position: relative;
+    height: 6px;
+    background: color-mix(in oklab, var(--color-text-muted) 18%, transparent);
+    border-radius: 999px;
+  }
+
+  .ds__motion-dot {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    transform: translateY(-50%);
+    animation: ds-motion-dot 2.8s var(--ez, ease) infinite;
+  }
+
+  @keyframes ds-motion-dot {
+    0%   { left: 0; }
+    45%  { left: calc(100% - 14px); }
+    55%  { left: calc(100% - 14px); }
+    100% { left: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ds__motion-dot { animation: none; left: calc(100% - 14px); opacity: 0.6; }
+  }
+
+  .ds__duration-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .ds__duration-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+  }
+
+  /* ============================================
+     SHADOWS
+     ============================================ */
+  .ds__shadow-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-element);
+  }
+
+  .ds__shadow-card {
+    background: var(--color-surface);
+    border: var(--border-subtle);
+    border-radius: 4px;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .ds__shadow-card code {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+  }
+
+  /* ============================================
+     VARIANT GRIDS
+     ============================================ */
+  .ds__variant-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    background: color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+    border: var(--border-subtle);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .ds__variant-grid--2 { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+  .ds__variant-grid--3 { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+
+  .ds__variant {
+    background: var(--color-bg);
+    padding: 1.5rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    min-height: 100px;
+  }
+
+  .ds__variant-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+  }
+
+  /* ============================================
+     BUTTONS
+     ============================================ */
+  .ds__btn-grid {
+    border: var(--border-subtle);
+    border-radius: 4px;
+  }
+
+  .ds__btn-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    flex-wrap: wrap;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+  }
+
+  .ds__btn-row:first-child { border-radius: 4px 4px 0 0; }
+  .ds__btn-row:last-child  { border-radius: 0 0 4px 4px; border-bottom: 0; }
+
+  .ds__btn-row-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+    flex-basis: 6rem;
+    flex-shrink: 0;
+  }
+
+  /* ============================================
+     CARDS
+     ============================================ */
+  .ds__card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+
+  .ds__card-composition {
+    max-width: 720px;
+  }
+
+  /* ============================================
+     FIELDS
+     ============================================ */
+  .ds__field-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-element);
+    padding: var(--space-card);
+    border: var(--border-subtle);
+    border-radius: 4px;
+  }
+
+  /* ============================================
+     CODE BLOCK
+     ============================================ */
+  .ds__code {
+    margin: 0;
+    padding: 1.25rem 1.5rem;
+    background: var(--color-surface);
+    border: var(--border-subtle);
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    line-height: 1.65;
+    color: var(--color-text);
+  }
+
+  .ds__code code {
+    background: none;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  /* ============================================
+     FOOTER
+     ============================================ */
+  .ds__foot {
+    margin-top: var(--space-element);
+    padding-top: var(--space-card);
+    border-top: var(--border-subtle);
+  }
+</style>

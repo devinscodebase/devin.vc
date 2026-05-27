@@ -93,8 +93,7 @@
   }
 
   .tag-number {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     line-height: 1;
     color: var(--color-accent-amber);
@@ -107,7 +106,7 @@
   }
 
   .tag-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -156,7 +155,7 @@
   }
 
   .quote-mark {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: clamp(2.5rem, 4vw, 3.5rem);
     line-height: 0.7;
     color: var(--color-accent-teal);
@@ -171,7 +170,7 @@
   }
 
   .quote-text {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-style: normal;
     font-size: var(--text-sm);
     line-height: 1.65;
@@ -188,7 +187,7 @@
   }
 
   .attr-name {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -208,7 +207,7 @@
   }
 
   .attr-detail {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
@@ -231,8 +230,7 @@
   }
 
   .cta-text {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-xl);
     line-height: 1.3;
     color: var(--color-text);
@@ -243,7 +241,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -252,7 +250,7 @@
     text-decoration: none;
     white-space: nowrap;
     flex-shrink: 0;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo);
   }
 
   .cta-link:hover {
@@ -260,7 +258,7 @@
   }
 
   .cta-link svg {
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform var(--duration-fast) var(--ease-out-expo);
   }
 
   .cta-link:hover svg {

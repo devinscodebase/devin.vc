@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import Button from './ui/Button.svelte';
 
   const STORAGE_KEY = 'cookie-consent';
 
@@ -71,13 +72,8 @@
         </p>
 
         <div class="actions">
-          <button class="btn-decline" onclick={decline}>No thanks</button>
-          <button class="btn-accept" onclick={accept}>
-            <span>Sounds good</span>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M2.5 7h9M8 3.5L11.5 7 8 10.5" />
-            </svg>
-          </button>
+          <Button variant="ghost" size="sm" onclick={decline}>No thanks</Button>
+          <Button variant="primary" size="sm" arrow onclick={accept}>Sounds good</Button>
         </div>
       </div>
     </div>
@@ -90,11 +86,11 @@
     bottom: clamp(1rem, 3vw, 1.75rem);
     left: clamp(1rem, 3vw, 1.75rem);
     z-index: 50;
-    animation: card-in 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: card-in 600ms var(--ease-out-expo) forwards;
   }
 
   .consent.dismissing {
-    animation: card-out 450ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+    animation: card-out 450ms var(--ease-in-out-smooth) forwards;
   }
 
   @keyframes card-in {
@@ -126,7 +122,7 @@
     backdrop-filter: blur(24px) saturate(1.4);
     -webkit-backdrop-filter: blur(24px) saturate(1.4);
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
-    border-radius: 14px;
+    border-radius: var(--radius-xl);
     overflow: hidden;
     box-shadow:
       0 4px 24px color-mix(in oklab, var(--color-bg) 60%, transparent),
@@ -159,8 +155,8 @@
     opacity: 0;
     transform: translateY(6px);
     transition:
-      opacity 500ms cubic-bezier(0.16, 1, 0.3, 1) 150ms,
-      transform 500ms cubic-bezier(0.16, 1, 0.3, 1) 150ms;
+      opacity 500ms var(--ease-out-expo) 150ms,
+      transform 500ms var(--ease-out-expo) 150ms;
   }
 
   .content.entered {
@@ -175,7 +171,7 @@
   }
 
   .label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -186,8 +182,7 @@
   }
 
   .title {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     color: var(--color-text);
     margin: 0;
@@ -196,7 +191,7 @@
   }
 
   .body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     line-height: 1.6;
     color: var(--color-text-muted);
@@ -210,70 +205,8 @@
     padding-top: 0.25rem;
   }
 
-  /* ---- Buttons ---- */
-  .btn-decline,
-  .btn-accept {
-    font-family: 'DM Sans', sans-serif;
-    font-size: var(--text-sm);
-    font-weight: var(--weight-medium);
-    border: none;
-    cursor: pointer;
-    border-radius: 8px;
-    transition:
-      background 200ms cubic-bezier(0.16, 1, 0.3, 1),
-      color 200ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 120ms cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .btn-decline {
-    background: transparent;
-    color: var(--color-text-muted);
-    padding: 0.5rem 0.875rem;
-  }
-
-  .btn-decline:hover {
-    color: var(--color-text);
-    background: color-mix(in oklab, var(--color-text-muted) 8%, transparent);
-  }
-
-  .btn-decline:active {
-    transform: scale(0.97);
-  }
-
-  .btn-accept {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    background: var(--color-accent);
-    color: var(--color-bg);
-    padding: 0.5rem 1rem;
-    box-shadow: 0 1px 8px color-mix(in oklab, var(--color-accent) 20%, transparent);
-  }
-
-  .btn-accept svg {
-    transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .btn-accept:hover {
-    filter: brightness(1.08);
-    box-shadow: 0 2px 16px color-mix(in oklab, var(--color-accent) 30%, transparent);
-  }
-
-  .btn-accept:hover svg {
-    transform: translateX(2px);
-  }
-
-  .btn-accept:active {
-    transform: scale(0.97);
-  }
-
-  /* Focus-visible */
-  .btn-decline:focus-visible,
-  .btn-accept:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-  }
+  /* Buttons now provided by Button primitive (variants: ghost + primary).
+     Focus, hover, active states all come from the primitive. */
 
   /* ---- Responsive ---- */
   @media (max-width: 480px) {

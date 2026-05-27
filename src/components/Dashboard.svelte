@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import Button from './ui/Button.svelte';
 
   let activeTab = $state('notifications');
 
@@ -166,8 +167,8 @@
         </div>
         {#if selectedIds.size > 0}
           <div class="bulk-actions">
-            <button class="action-btn" onclick={() => updateNotifStatus(selectedIds, 'read')}>Mark read</button>
-            <button class="action-btn" onclick={() => updateNotifStatus(selectedIds, 'archived')}>Archive</button>
+            <Button variant="ghost" size="sm" onclick={() => updateNotifStatus(selectedIds, 'read')}>Mark read</Button>
+            <Button variant="ghost" size="sm" onclick={() => updateNotifStatus(selectedIds, 'archived')}>Archive</Button>
           </div>
         {/if}
       </div>
@@ -234,10 +235,10 @@
                   </div>
                   <div class="detail-actions">
                     {#if n.status === 'new'}
-                      <button class="action-btn" onclick={() => updateNotifStatus([n.id], 'read')}>Mark read</button>
+                      <Button variant="ghost" size="sm" onclick={() => updateNotifStatus([n.id], 'read')}>Mark read</Button>
                     {/if}
                     {#if n.status !== 'archived'}
-                      <button class="action-btn" onclick={() => updateNotifStatus([n.id], 'archived')}>Archive</button>
+                      <Button variant="ghost" size="sm" onclick={() => updateNotifStatus([n.id], 'archived')}>Archive</Button>
                     {/if}
                   </div>
                 </div>
@@ -249,9 +250,9 @@
         <!-- Pagination -->
         {#if notifPages > 1}
           <div class="pagination">
-            <button disabled={notifPage <= 1} onclick={() => { notifPage--; fetchNotifications(); }}>&larr; Prev</button>
+            <Button variant="link" size="sm" disabled={notifPage <= 1} onclick={() => { notifPage--; fetchNotifications(); }}>← Prev</Button>
             <span class="page-info">{notifPage} / {notifPages}</span>
-            <button disabled={notifPage >= notifPages} onclick={() => { notifPage++; fetchNotifications(); }}>Next &rarr;</button>
+            <Button variant="link" size="sm" disabled={notifPage >= notifPages} onclick={() => { notifPage++; fetchNotifications(); }}>Next →</Button>
           </div>
         {/if}
       {/if}
@@ -329,9 +330,9 @@
 
         {#if subPages > 1}
           <div class="pagination">
-            <button disabled={subPage <= 1} onclick={() => { subPage--; fetchSubscribers(); }}>&larr; Prev</button>
+            <Button variant="link" size="sm" disabled={subPage <= 1} onclick={() => { subPage--; fetchSubscribers(); }}>← Prev</Button>
             <span class="page-info">{subPage} / {subPages}</span>
-            <button disabled={subPage >= subPages} onclick={() => { subPage++; fetchSubscribers(); }}>Next &rarr;</button>
+            <Button variant="link" size="sm" disabled={subPage >= subPages} onclick={() => { subPage++; fetchSubscribers(); }}>Next →</Button>
           </div>
         {/if}
       {/if}
@@ -341,7 +342,7 @@
 
 <style>
   .dashboard {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
   }
 
   /* ---- Tabs ---- */
@@ -357,7 +358,7 @@
     background: none;
     border: none;
     padding: 0.75rem 1.25rem;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     font-weight: var(--weight-medium);
     color: var(--color-text-muted);
@@ -366,7 +367,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    transition: color 0.2s;
+    transition: color var(--duration-fast) var(--ease-out-expo);
   }
 
   .tab:hover {
@@ -393,7 +394,7 @@
     background: color-mix(in oklab, var(--color-accent) 15%, transparent);
     color: var(--color-accent);
     padding: 0.1rem 0.45rem;
-    border-radius: 9999px;
+    border-radius: var(--radius-full);
   }
 
   /* ---- Toolbar ---- */
@@ -417,13 +418,13 @@
     appearance: none;
     background: color-mix(in oklab, var(--color-text-muted) 8%, transparent);
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
-    border-radius: 6px;
+    border-radius: var(--radius-md);
     padding: 0.4rem 0.75rem;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     color: var(--color-text);
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color var(--duration-fast) var(--ease-out-expo);
   }
 
   select:focus,
@@ -444,25 +445,6 @@
     gap: 0.375rem;
   }
 
-  .action-btn {
-    appearance: none;
-    background: color-mix(in oklab, var(--color-text-muted) 10%, transparent);
-    border: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
-    border-radius: 6px;
-    padding: 0.35rem 0.75rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: var(--text-sm);
-    font-weight: var(--weight-medium);
-    color: var(--color-text-muted);
-    cursor: pointer;
-    transition: color 0.2s, border-color 0.2s;
-  }
-
-  .action-btn:hover {
-    color: var(--color-text);
-    border-color: var(--color-text-muted);
-  }
-
   /* ---- Stats bar ---- */
   .stats-bar {
     display: flex;
@@ -470,7 +452,7 @@
     margin-bottom: 1.5rem;
     padding: 1rem 1.25rem;
     background: color-mix(in oklab, var(--color-text-muted) 5%, transparent);
-    border-radius: 10px;
+    border-radius: var(--radius-lg);
     border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
   }
 
@@ -717,7 +699,8 @@
     color: var(--color-text-muted);
     opacity: 0;
     padding: 4px;
-    transition: opacity 0.15s, color 0.15s;
+    transition: opacity var(--duration-fast) var(--ease-out-expo),
+                color var(--duration-fast) var(--ease-out-expo);
   }
 
   .sub-row:hover .remove-btn {
@@ -728,36 +711,13 @@
     color: var(--color-error);
   }
 
-  /* ---- Pagination ---- */
+  /* ---- Pagination — Buttons provided by Button primitive (link variant) ---- */
   .pagination {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
+    gap: 1.5rem;
     margin-top: 1.25rem;
-  }
-
-  .pagination button {
-    appearance: none;
-    background: none;
-    border: 1px solid color-mix(in oklab, var(--color-text-muted) 20%, transparent);
-    border-radius: 6px;
-    padding: 0.35rem 0.75rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
-    cursor: pointer;
-    transition: color 0.2s, border-color 0.2s;
-  }
-
-  .pagination button:hover:not(:disabled) {
-    color: var(--color-text);
-    border-color: var(--color-text-muted);
-  }
-
-  .pagination button:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
   }
 
   .page-info {

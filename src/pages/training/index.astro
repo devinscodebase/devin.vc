@@ -161,7 +161,7 @@ const categoryLabels: Record<string, string> = {
   }
 
   .tag-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -172,7 +172,7 @@ const categoryLabels: Record<string, string> = {
   .page-header { margin-bottom: var(--space-block-lg); }
 
   .page-title {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-3xl);
     font-weight: var(--weight-regular);
     line-height: 1.05;
@@ -182,8 +182,7 @@ const categoryLabels: Record<string, string> = {
   }
 
   .page-subtitle {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-lg);
     line-height: 1.5;
     color: var(--color-text-muted);
@@ -197,7 +196,7 @@ const categoryLabels: Record<string, string> = {
   }
 
   .empty {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-md);
     line-height: 1.6;
     color: var(--color-text-muted);
@@ -221,7 +220,7 @@ const categoryLabels: Record<string, string> = {
     background: color-mix(in oklab, var(--color-text-muted) 3%, transparent);
     padding: clamp(2rem, 4vw, 2.75rem) clamp(1.5rem, 3vw, 2.5rem);
     gap: clamp(1.5rem, 3vw, 2.5rem);
-    transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background var(--duration-normal) var(--ease-out-expo);
   }
 
   .asset-card.accent-gold { --card-accent: var(--color-accent); }
@@ -243,7 +242,7 @@ const categoryLabels: Record<string, string> = {
       transparent 45%
     );
     opacity: 0;
-    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-normal) var(--ease-out-expo);
     pointer-events: none;
   }
 
@@ -258,14 +257,13 @@ const categoryLabels: Record<string, string> = {
     border-radius: 0 2px 2px 0;
     background: var(--card-accent);
     transform-origin: center;
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform var(--duration-normal) var(--ease-out-expo);
   }
 
   .asset-card:hover .card-bar { transform: scaleY(1.1); }
 
   .card-number {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: clamp(4rem, 8vw, 6rem);
     line-height: 1;
     color: var(--card-accent);
@@ -275,7 +273,7 @@ const categoryLabels: Record<string, string> = {
     position: relative;
     z-index: 1;
     align-self: center;
-    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-normal) var(--ease-out-expo);
   }
 
   .asset-card:hover .card-number { opacity: 0.1; }
@@ -291,7 +289,7 @@ const categoryLabels: Record<string, string> = {
   }
 
   .card-tag {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -301,7 +299,7 @@ const categoryLabels: Record<string, string> = {
   }
 
   .card-name {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-2xl);
     font-weight: var(--weight-regular);
     line-height: 1.15;
@@ -311,7 +309,7 @@ const categoryLabels: Record<string, string> = {
   }
 
   .card-description {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-md);
     line-height: 1.55;
     color: var(--color-text);
@@ -319,7 +317,7 @@ const categoryLabels: Record<string, string> = {
   }
 
   .card-detail {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-sm);
     line-height: 1.6;
     color: var(--color-text-muted);
@@ -339,7 +337,7 @@ const categoryLabels: Record<string, string> = {
   }
 
   .action-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -347,7 +345,7 @@ const categoryLabels: Record<string, string> = {
   }
 
   .action-arrow {
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform var(--duration-normal) var(--ease-out-expo);
   }
 
   .asset-card:hover .action-arrow {
@@ -364,20 +362,20 @@ const categoryLabels: Record<string, string> = {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
     text-decoration: none;
-    transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-fast) var(--ease-out-expo);
   }
 
   .back-link:hover { color: var(--color-accent); }
 
   .back-link svg {
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform var(--duration-fast) var(--ease-out-expo);
   }
 
   .back-link:hover svg { transform: translateX(-3px); }

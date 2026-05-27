@@ -1349,7 +1349,7 @@ Generated at devin.vc/tools/gtm-planner`;
 
   .tag-label {
     display: block;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -1370,7 +1370,6 @@ Generated at devin.vc/tools/gtm-planner`;
 
   .wizard-subtitle {
     font-family: var(--font-display);
-    font-style: italic;
     font-size: var(--text-lg);
     color: var(--color-text-muted);
     line-height: 1.35;
@@ -1707,7 +1706,7 @@ Generated at devin.vc/tools/gtm-planner`;
     color: var(--color-accent-rust);
     margin: 0.5rem 0 0;
     opacity: 0;
-    animation: hint-enter 0.3s var(--ease-out-expo) forwards;
+    animation: hint-enter var(--duration-normal) var(--ease-out-expo) forwards;
   }
 
   @keyframes hint-enter {
@@ -1994,7 +1993,6 @@ Generated at devin.vc/tools/gtm-planner`;
 
   .results-hero-context {
     font-family: var(--font-display);
-    font-style: italic;
     font-size: var(--text-lg);
     color: var(--color-text-muted);
     line-height: 1.35;
@@ -2050,8 +2048,7 @@ Generated at devin.vc/tools/gtm-planner`;
   }
 
   .results-section-number {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-lg);
     line-height: 1;
     color: var(--color-accent-teal);
@@ -2332,7 +2329,6 @@ Generated at devin.vc/tools/gtm-planner`;
 
   .results-cta-text {
     font-family: var(--font-display);
-    font-style: italic;
     font-size: var(--text-md);
     color: var(--color-text);
     line-height: 1.35;
@@ -2480,7 +2476,6 @@ Generated at devin.vc/tools/gtm-planner`;
 
   .lead-subheading {
     font-family: var(--font-display);
-    font-style: italic;
     font-size: var(--text-base);
     color: var(--color-text-muted);
     line-height: 1.4;

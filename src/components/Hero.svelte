@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { animate, stagger } from 'motion';
+  import Button from './ui/Button.svelte';
 
   let kinetic;
   let hero;
@@ -49,7 +50,7 @@
     const divider = hero.querySelector('.divider');
     const tagline = hero.querySelector('.tagline');
     const descriptors = hero.querySelector('.descriptors');
-    const heroCta = hero.querySelector('.hero-cta');
+    const heroCta = hero.querySelector('.hero-cta-wrap');
     const kineticEl = hero.querySelector('.kinetic');
     const scrollInd = hero.querySelector('.scroll-indicator');
 
@@ -104,13 +105,7 @@
       easing: [0.25, 1, 0.5, 1],
     });
 
-    // Spring hover on CTA
-    heroCta.addEventListener('mouseenter', () => {
-      animate(heroCta, { scale: 1.04 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
-    });
-    heroCta.addEventListener('mouseleave', () => {
-      animate(heroCta, { scale: 1 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
-    });
+    // Hover spring is handled by Button primitive's own CSS (1.02 scale).
 
     return () => { if (rafId) cancelAnimationFrame(rafId); };
   });
@@ -156,7 +151,9 @@
       <span>GTM</span>
     </p>
 
-    <a href="/contact" class="hero-cta" style="opacity: 0;">Open to Consulting Projects</a>
+    <div class="hero-cta-wrap" style="opacity: 0;">
+      <Button href="/contact" variant="primary" size="lg">Open to Consulting Projects</Button>
+    </div>
   </div>
 
   <div class="scroll-fade" aria-hidden="true">
@@ -206,7 +203,7 @@
   .kinetic-row {
     display: flex;
     white-space: nowrap;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: clamp(2.5rem, 5vw, 4.5rem);
     font-weight: var(--weight-light);
     letter-spacing: var(--tracking-wide);
@@ -225,8 +222,7 @@
 
   /* typographic variants */
   .kinetic-row.serif {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: clamp(3rem, 5.5vw, 5rem);
     letter-spacing: 0.04em;
     opacity: 0.045;
@@ -289,7 +285,7 @@
   }
 
   .name {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     line-height: 0.95;
     letter-spacing: var(--tracking-tight);
     display: flex;
@@ -315,15 +311,14 @@
   }
 
   .tagline {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-lg);
     color: var(--color-text);
     margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
   }
 
   .descriptors {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-regular);
     letter-spacing: var(--tracking-wide);
@@ -342,29 +337,8 @@
     line-height: 1;
   }
 
-  .hero-cta {
-    font-family: 'DM Sans', sans-serif;
-    font-size: var(--text-sm);
-    font-weight: var(--weight-medium);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--color-bg);
-    background-color: var(--color-accent);
-    background-image: linear-gradient(90deg, var(--color-accent-teal) 50%, transparent 50%);
-    background-size: 200% 100%;
-    background-position: 100% 0;
-    text-decoration: none;
+  .hero-cta-wrap {
     margin-top: clamp(2.5rem, 5vw, 3.5rem);
-    padding: 0.85rem 2.5rem;
-    border: 1px solid var(--color-accent);
-    cursor: pointer;
-    transition: background-position 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .hero-cta:hover {
-    background-position: 0% 0;
-    border-color: var(--color-accent-teal);
   }
 
   .scroll-fade {
@@ -379,7 +353,7 @@
     width: 1px;
     height: 40px;
     background: linear-gradient(180deg, var(--color-text-muted) 0%, transparent 100%);
-    animation: pulse-height 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    animation: pulse-height 2.4s var(--ease-in-out-smooth) infinite;
     animation-delay: 2s;
   }
 

@@ -133,8 +133,7 @@
   }
 
   .tag-number {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     line-height: 1;
     color: var(--color-accent-teal);
@@ -147,7 +146,7 @@
   }
 
   .tag-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -156,7 +155,7 @@
   }
 
   .section-heading {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-2xl);
     font-weight: var(--weight-regular);
     line-height: 1.1;
@@ -185,7 +184,7 @@
     flex-direction: column;
     position: relative;
     overflow: hidden;
-    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color var(--duration-fast) var(--ease-out-expo);
     text-decoration: none;
     color: inherit;
   }
@@ -201,7 +200,7 @@
       transparent 40%
     );
     opacity: 0;
-    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-fast) var(--ease-out-expo);
     pointer-events: none;
   }
 
@@ -241,7 +240,7 @@
 
   /* Watermark numbers — oversized ghost typography */
   .project-number {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: clamp(5rem, 12vw, 8rem);
     font-weight: var(--weight-regular);
     line-height: 0.8;
@@ -289,7 +288,7 @@
   }
 
   .project-status {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
@@ -298,7 +297,7 @@
   }
 
   .project-name {
-    font-family: 'Instrument Serif', serif;
+    font-family: var(--font-display);
     font-size: var(--text-md);
     font-weight: var(--weight-regular);
     line-height: 1.3;
@@ -313,7 +312,7 @@
   }
 
   .project-desc {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     font-size: var(--text-base);
     line-height: 1.65;
     color: var(--color-text-muted);

@@ -1,0 +1,57 @@
+---
+type Spacing = 'compact' | 'normal' | 'loose';
+type Width = 'narrow' | 'normal' | 'wide' | 'full';
+
+interface Props {
+  spacing?: Spacing;
+  width?: Width;
+  bleed?: boolean;
+  id?: string;
+  as?: string;
+  class?: string;
+}
+
+const {
+  spacing = 'normal',
+  width = 'normal',
+  bleed = false,
+  id,
+  as = 'section',
+  class: className = '',
+} = Astro.props;
+
+const Element = as;
+const classes = [
+  'section',
+  `section--spacing-${spacing}`,
+  `section--width-${width}`,
+  bleed ? 'section--bleed' : '',
+  className,
+]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<Element id={id} class={classes}>
+  <slot />
+</Element>
+
+<style>
+  .section {
+    position: relative;
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--space-page-x);
+  }
+
+  .section--bleed { padding-inline: 0; }
+
+  .section--width-narrow { max-width: 720px; }
+  .section--width-normal { max-width: 1080px; }
+  .section--width-wide   { max-width: 1320px; }
+  .section--width-full   { max-width: none; }
+
+  .section--spacing-compact { padding-block: var(--space-block); }
+  .section--spacing-normal  { padding-block: var(--space-block-lg); }
+  .section--spacing-loose   { padding-block: var(--space-section); }
+</style>
