@@ -60,7 +60,7 @@ const body: React.CSSProperties = {
 };
 
 const card: React.CSSProperties = {
-  backgroundColor: '#141210',
+  backgroundColor: '#1a1612',
   borderRadius: '10px',
   padding: '18px 20px',
   border: '1px solid #1e1a14',
@@ -98,8 +98,7 @@ const ctaButton: React.CSSProperties = {
 };
 
 const signoff: React.CSSProperties = {
-  fontFamily: "Georgia, 'Times New Roman', serif",
-  fontStyle: 'italic',
+  fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
   fontSize: '15px',
   color: '#c4a47c',
   margin: '0',

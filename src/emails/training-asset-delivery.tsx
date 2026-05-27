@@ -90,9 +90,9 @@ export default function TrainingAssetDelivery({
 const COLOR_TEXT = '#ede8df';
 const COLOR_MUTED = '#a09488';
 const COLOR_DIM = '#6d5c48';
-const COLOR_BG_ELEVATED = '#141210';
+const COLOR_BG_ELEVATED = '#1a1612';
 const COLOR_ACCENT = '#c4a47c';
-const COLOR_ACCENT_TEAL = '#5ba3a3';
+const COLOR_ACCENT_TEAL = '#5a8b85';
 
 const eyebrow: React.CSSProperties = {
   fontSize: '10px',
@@ -105,7 +105,7 @@ const eyebrow: React.CSSProperties = {
 };
 
 const heroTitle: React.CSSProperties = {
-  fontFamily: "Georgia, 'Times New Roman', serif",
+  fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
   fontSize: '34px',
   fontWeight: 400,
   letterSpacing: '-0.02em',
@@ -115,8 +115,7 @@ const heroTitle: React.CSSProperties = {
 };
 
 const tagline: React.CSSProperties = {
-  fontFamily: "Georgia, 'Times New Roman', serif",
-  fontStyle: 'italic',
+  fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
   fontSize: '16px',
   lineHeight: '1.4',
   color: COLOR_MUTED,
@@ -205,8 +204,7 @@ const signoffDash: React.CSSProperties = {
 };
 
 const signoffName: React.CSSProperties = {
-  fontFamily: "Georgia, 'Times New Roman', serif",
-  fontStyle: 'italic',
+  fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
   fontSize: '18px',
   color: COLOR_TEXT,
 };

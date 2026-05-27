@@ -38,8 +38,7 @@ const body: React.CSSProperties = {
 };
 
 const signoff: React.CSSProperties = {
-  fontFamily: "Georgia, 'Times New Roman', serif",
-  fontStyle: 'italic',
+  fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
   fontSize: '15px',
   color: '#c4a47c',
   margin: '0',

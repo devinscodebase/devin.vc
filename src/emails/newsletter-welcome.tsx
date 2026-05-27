@@ -142,5 +142,4 @@ const muted: React.CSSProperties = {
   fontSize: '12px',
   color: '#6d5c48',
   margin: '18px 0 0 0',
-  fontStyle: 'italic',
 };

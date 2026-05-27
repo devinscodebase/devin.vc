@@ -9,26 +9,36 @@ import {
   PageTemplate,
 } from './og-templates';
 
-const INSTRUMENT_SERIF_URL =
-  'https://github.com/google/fonts/raw/main/ofl/instrumentserif/InstrumentSerif-Regular.ttf';
+// DM Sans only needs to be fetched once — Google's gstatic TTF URL is stable.
 const DM_SANS_URL =
   'https://fonts.gstatic.com/s/dmsans/v17/rP2tp2ywxg089UriI5-g4vlH9VoD8CmcqZG40F9JadbnoEwAopxhTg.ttf';
 
 // Module-scope caches
 let wasmInitialized = false;
-let instrumentSerifData: ArrayBuffer | null = null;
+let funnelRegularData: Buffer | null = null;
+let funnelSemiBoldData: Buffer | null = null;
 let dmSansData: ArrayBuffer | null = null;
 
+/**
+ * Funnel Display: bundled from @fontsource/funnel-display via createRequire.
+ * Same pattern as the WASM module below. The Google Fonts variable TTF has an
+ * fvar table that Satori's opentype.js fork can't parse, so we use static
+ * weight files (Regular + SemiBold) from @fontsource instead.
+ *
+ * DM Sans: fetched from gstatic once and cached.
+ */
 async function loadFonts() {
-  if (!instrumentSerifData) {
-    instrumentSerifData = await fetch(INSTRUMENT_SERIF_URL).then((r) =>
-      r.arrayBuffer()
-    );
+  if (!funnelRegularData || !funnelSemiBoldData) {
+    const require = createRequire(import.meta.url);
+    const regularPath = require.resolve('@fontsource/funnel-display/files/funnel-display-latin-400-normal.woff');
+    const semiBoldPath = require.resolve('@fontsource/funnel-display/files/funnel-display-latin-600-normal.woff');
+    funnelRegularData = readFileSync(regularPath);
+    funnelSemiBoldData = readFileSync(semiBoldPath);
   }
   if (!dmSansData) {
     dmSansData = await fetch(DM_SANS_URL).then((r) => r.arrayBuffer());
   }
-  return [instrumentSerifData, dmSansData] as const;
+  return [funnelRegularData, funnelSemiBoldData, dmSansData] as const;
 }
 
 export interface OgImageParams {
@@ -47,7 +57,7 @@ export async function generateOgImage(params: OgImageParams): Promise<Uint8Array
     await initWasm(wasmBuffer);
     wasmInitialized = true;
   }
-  const [instrumentSerif, dmSans] = await loadFonts();
+  const [funnelRegular, funnelSemiBold, dmSans] = await loadFonts();
 
   // Build the React element based on type
   let element: React.ReactElement;
@@ -79,9 +89,15 @@ export async function generateOgImage(params: OgImageParams): Promise<Uint8Array
     height: 630,
     fonts: [
       {
-        name: 'Instrument Serif',
-        data: instrumentSerif,
+        name: 'Funnel Display',
+        data: funnelRegular,
         weight: 400,
+        style: 'normal',
+      },
+      {
+        name: 'Funnel Display',
+        data: funnelSemiBold,
+        weight: 600,
         style: 'normal',
       },
       {

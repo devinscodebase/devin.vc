@@ -1,19 +1,21 @@
 import React from 'react';
 
-// Design tokens (hex for Satori compatibility)
+// Design tokens — hex equivalents of the live dark-mode CSS tokens.
+// Satori requires concrete colors (no CSS custom properties).
 const colors = {
-  bg: '#0a0a08',
-  bgSubtle: '#111110',
-  text: '#ede8df',
-  muted: '#a09488',
-  accent: '#c4a47c',
-  teal: '#5ba3a3',
-  amber: '#d4a24a',
-  rust: '#a04030',
+  bg: '#0a0a08',           // --color-bg
+  surface: '#1a1612',      // --color-surface
+  text: '#ede8df',         // --color-text
+  muted: '#a09488',        // --color-text-muted
+  subtle: '#8a7d6e',       // --color-text-subtle
+  accent: '#c4a47c',       // --color-accent (warm gold)
+  teal: '#5a8b85',         // --color-accent-teal — desaturated teal for warm palette
+  amber: '#dba85b',        // --color-accent-amber
+  rust: '#c87045',         // --color-accent-rust — lifted to match amber band
 };
 
 const fonts = {
-  serif: 'Instrument Serif',
+  display: 'Funnel Display',
   sans: 'DM Sans',
 };
 
@@ -27,17 +29,26 @@ const tagColors: Record<string, string> = {
 };
 
 function getTagColor(tag?: string): string {
-  if (!tag) return colors.teal;
-  return tagColors[tag.toLowerCase()] || colors.teal;
+  if (!tag) return colors.accent;
+  return tagColors[tag.toLowerCase()] || colors.accent;
 }
 
-// Shared wrapper: dark bg with radial glow, gradient top bar, branding bottom
+/**
+ * Shared wrapper for every OG image.
+ *
+ * Aesthetic: single accent hairline at the top, one subtle warm radial in
+ * the corner for depth, "devin.vc" wordmark at bottom-left, accent-colored
+ * tag chip at bottom-right (if provided). No rainbow gradient bar, no
+ * 3-dot decoration. Editorial precision, not template kit.
+ */
 function OgWrapper({
   children,
-  accentColor = colors.teal,
+  accentColor = colors.accent,
+  cornerLabel,
 }: {
   children: React.ReactNode;
   accentColor?: string;
+  cornerLabel?: string;
 }) {
   return (
     <div
@@ -51,49 +62,37 @@ function OgWrapper({
         overflow: 'hidden',
       }}
     >
-      {/* Radial glow for depth */}
+      {/* Single subtle warm radial — depth without gimmickry */}
       <div
         style={{
           display: 'flex',
           position: 'absolute',
-          top: '-200px',
-          right: '-100px',
-          width: '700px',
-          height: '700px',
+          top: '-220px',
+          right: '-160px',
+          width: '720px',
+          height: '720px',
           borderRadius: '50%',
-          background: `radial-gradient(circle, ${accentColor}18 0%, transparent 70%)`,
-        }}
-      />
-      <div
-        style={{
-          display: 'flex',
-          position: 'absolute',
-          bottom: '-300px',
-          left: '-200px',
-          width: '800px',
-          height: '800px',
-          borderRadius: '50%',
-          background: `radial-gradient(circle, ${colors.accent}12 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${accentColor}1a 0%, transparent 65%)`,
         }}
       />
 
-      {/* Gradient top bar */}
+      {/* Accent hairline at top */}
       <div
         style={{
           display: 'flex',
           width: '100%',
-          height: '6px',
-          background: `linear-gradient(to right, ${colors.teal}, ${colors.accent}, ${colors.amber})`,
+          height: '2px',
+          backgroundColor: accentColor,
         }}
       />
 
-      {/* Content area */}
+      {/* Content */}
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
           flex: 1,
-          padding: '56px 72px',
+          padding: '64px 72px',
           justifyContent: 'center',
           position: 'relative',
         }}
@@ -101,65 +100,53 @@ function OgWrapper({
         {children}
       </div>
 
-      {/* Bottom bar: branding + accent dots */}
+      {/* Bottom row: wordmark + optional corner label */}
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '0 72px 36px',
+          alignItems: 'baseline',
+          padding: '0 72px 44px',
         }}
       >
         <span
           style={{
-            fontFamily: fonts.sans,
-            fontSize: 20,
-            color: colors.muted,
-            letterSpacing: '0.02em',
+            fontFamily: fonts.display,
+            fontWeight: 600,
+            fontSize: 22,
+            color: colors.text,
+            letterSpacing: '-0.015em',
           }}
         >
           devin.vc
         </span>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <div
+        {cornerLabel && (
+          <span
             style={{
-              width: 8,
-              height: 8,
-              borderRadius: '50%',
-              backgroundColor: colors.teal,
+              fontFamily: fonts.sans,
+              fontSize: 14,
+              color: colors.subtle,
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
             }}
-          />
-          <div
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: '50%',
-              backgroundColor: colors.accent,
-            }}
-          />
-          <div
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: '50%',
-              backgroundColor: colors.amber,
-            }}
-          />
-        </div>
+          >
+            {cornerLabel}
+          </span>
+        )}
       </div>
     </div>
   );
 }
 
-// Gradient horizontal rule with accent color
-function GradientRule({ color = colors.teal }: { color?: string }) {
+// Short accent rule used under headlines
+function AccentRule({ color = colors.accent }: { color?: string }) {
   return (
     <div
       style={{
         display: 'flex',
-        width: '80px',
+        width: '64px',
         height: '2px',
-        background: `linear-gradient(to right, ${color}, ${colors.accent})`,
+        backgroundColor: color,
         marginTop: '32px',
       }}
     />
@@ -169,15 +156,16 @@ function GradientRule({ color = colors.teal }: { color?: string }) {
 // Homepage / default OG
 export function DefaultTemplate() {
   return (
-    <OgWrapper>
+    <OgWrapper cornerLabel="Marketing · Operations · Design · GTM">
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <span
           style={{
-            fontFamily: fonts.serif,
-            fontSize: 72,
+            fontFamily: fonts.display,
+            fontWeight: 600,
+            fontSize: 96,
             color: colors.text,
-            lineHeight: 1.1,
-            letterSpacing: '-0.02em',
+            lineHeight: 1.0,
+            letterSpacing: '-0.035em',
           }}
         >
           Devin Alexander
@@ -185,15 +173,17 @@ export function DefaultTemplate() {
         <span
           style={{
             fontFamily: fonts.sans,
-            fontSize: 28,
+            fontWeight: 400,
+            fontSize: 30,
             color: colors.muted,
-            marginTop: '20px',
-            lineHeight: 1.4,
+            marginTop: '24px',
+            lineHeight: 1.35,
+            maxWidth: '900px',
           }}
         >
-          Marketing, Operations, Design & Development
+          A decade of marketing work across four countries and thirteen industries.
         </span>
-        <GradientRule />
+        <AccentRule />
       </div>
     </OgWrapper>
   );
@@ -215,81 +205,51 @@ export function JournalTemplate({
   const fontSize = len > 60 ? 64 : len > 40 ? 76 : 88;
   const accentColor = getTagColor(tag);
 
-  const displaySubtitle = subtitle;
-
   return (
-    <OgWrapper accentColor={accentColor}>
+    <OgWrapper accentColor={accentColor} cornerLabel={date}>
       <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
-        {/* Accent side stripe */}
-        <div
-          style={{
-            display: 'flex',
-            position: 'absolute',
-            left: '-72px',
-            top: '0',
-            width: '4px',
-            height: '100%',
-            background: `linear-gradient(to bottom, ${accentColor}, ${colors.accent}, transparent)`,
-          }}
-        />
-
-        {/* Tag + date row */}
-        {(tag || date) && (
+        {/* Tag chip */}
+        {tag && (
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              marginBottom: '24px',
-              gap: '16px',
+              marginBottom: '28px',
             }}
           >
-            {tag && (
-              <span
-                style={{
-                  fontFamily: fonts.sans,
-                  fontSize: 18,
-                  color: colors.bg,
-                  backgroundColor: accentColor,
-                  padding: '4px 14px',
-                  borderRadius: '4px',
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                }}
-              >
-                {tag.charAt(0).toUpperCase() + tag.slice(1)}
-              </span>
-            )}
-            {date && (
-              <span
-                style={{
-                  fontFamily: fonts.sans,
-                  fontSize: 18,
-                  color: colors.muted,
-                  letterSpacing: '0.04em',
-                  textTransform: 'uppercase',
-                }}
-              >
-                {date}
-              </span>
-            )}
+            <span
+              style={{
+                fontFamily: fonts.sans,
+                fontSize: 16,
+                fontWeight: 500,
+                color: colors.bg,
+                backgroundColor: accentColor,
+                padding: '6px 14px',
+                letterSpacing: '0.16em',
+                textTransform: 'uppercase',
+              }}
+            >
+              {tag.charAt(0).toUpperCase() + tag.slice(1)}
+            </span>
           </div>
         )}
 
         {/* Title */}
         <span
           style={{
-            fontFamily: fonts.serif,
+            fontFamily: fonts.display,
+            fontWeight: 600,
             fontSize,
             color: colors.text,
-            lineHeight: 1.1,
-            letterSpacing: '-0.02em',
+            lineHeight: 1.02,
+            letterSpacing: '-0.035em',
           }}
         >
           {title}
         </span>
 
-        {/* Description / subtitle */}
-        {displaySubtitle && (
+        {/* Subtitle */}
+        {subtitle && (
           <span
             style={{
               fontFamily: fonts.sans,
@@ -297,14 +257,14 @@ export function JournalTemplate({
               color: colors.muted,
               marginTop: '24px',
               lineHeight: 1.4,
-              maxWidth: '900px',
+              maxWidth: '960px',
             }}
           >
-            {displaySubtitle}
+            {subtitle}
           </span>
         )}
 
-        <GradientRule color={accentColor} />
+        <AccentRule color={accentColor} />
       </div>
     </OgWrapper>
   );
@@ -313,17 +273,18 @@ export function JournalTemplate({
 // Projects page OG
 export function ProjectsTemplate() {
   return (
-    <OgWrapper accentColor={colors.amber}>
+    <OgWrapper accentColor={colors.amber} cornerLabel="Selected work">
       <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
-        {/* Background number */}
+        {/* Large background numeral — editorial touch */}
         <span
           style={{
             position: 'absolute',
-            top: '-80px',
-            right: '-20px',
-            fontFamily: fonts.serif,
+            top: '-90px',
+            right: '-30px',
+            fontFamily: fonts.display,
+            fontWeight: 600,
             fontSize: 280,
-            color: `${colors.muted}08`,
+            color: `${colors.amber}0d`,
             lineHeight: 1,
             letterSpacing: '-0.04em',
           }}
@@ -333,11 +294,12 @@ export function ProjectsTemplate() {
 
         <span
           style={{
-            fontFamily: fonts.serif,
-            fontSize: 72,
+            fontFamily: fonts.display,
+            fontWeight: 600,
+            fontSize: 80,
             color: colors.text,
-            lineHeight: 1.1,
-            letterSpacing: '-0.02em',
+            lineHeight: 1.0,
+            letterSpacing: '-0.035em',
           }}
         >
           Selected Work
@@ -347,13 +309,13 @@ export function ProjectsTemplate() {
             fontFamily: fonts.sans,
             fontSize: 26,
             color: colors.muted,
-            marginTop: '20px',
+            marginTop: '22px',
             lineHeight: 1.4,
           }}
         >
-          Platforms and brands I've helped build
+          Platforms and brands I've helped build.
         </span>
-        <GradientRule color={colors.amber} />
+        <AccentRule color={colors.amber} />
       </div>
     </OgWrapper>
   );
@@ -372,11 +334,12 @@ export function PageTemplate({
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <span
           style={{
-            fontFamily: fonts.serif,
-            fontSize: 80,
+            fontFamily: fonts.display,
+            fontWeight: 600,
+            fontSize: 88,
             color: colors.text,
-            lineHeight: 1.1,
-            letterSpacing: '-0.02em',
+            lineHeight: 1.0,
+            letterSpacing: '-0.035em',
           }}
         >
           {title}
@@ -387,14 +350,15 @@ export function PageTemplate({
               fontFamily: fonts.sans,
               fontSize: 26,
               color: colors.muted,
-              marginTop: '20px',
+              marginTop: '24px',
               lineHeight: 1.4,
+              maxWidth: '960px',
             }}
           >
             {subtitle}
           </span>
         )}
-        <GradientRule />
+        <AccentRule />
       </div>
     </OgWrapper>
   );

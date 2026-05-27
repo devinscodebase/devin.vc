@@ -110,22 +110,31 @@ export function Layout({ preview, children, unsubscribeUrl, minimal }: LayoutPro
   );
 }
 
-// ── Colors ──
+// ── Colors — hex equivalents of the live dark-mode CSS tokens ──
 const colors = {
-  bg: '#0a0a08',
-  bgElevated: '#141210',
-  text: '#ede8df',
-  textMuted: '#a09488',
-  textDim: '#6d5c48',
-  accent: '#c4a47c',
-  accentTeal: '#5ba3a3',
+  bg: '#0a0a08',           // --color-bg
+  surface: '#1a1612',      // --color-surface
+  text: '#ede8df',         // --color-text
+  textMuted: '#a09488',    // --color-text-muted
+  textSubtle: '#8a7d6e',   // --color-text-subtle
+  accent: '#c4a47c',       // --color-accent
+  accentTeal: '#5a8b85',   // --color-accent-teal (warmer hue, joins warm system)
   border: '#2a2018',
   borderSubtle: '#1e1a14',
 };
 
+// Email clients can't reliably load web fonts. System sans stack ensures the
+// brand voice (Funnel Display sans) is approximated everywhere — Apple Mail
+// gets SF Pro, Outlook gets Segoe UI, Android gets Roboto. The DM Sans body
+// stack stays as-is for prose since the variable Funnel Display can't ship.
+const SANS_DISPLAY =
+  "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
+const SANS_BODY =
+  "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+
 const body: React.CSSProperties = {
   backgroundColor: colors.bg,
-  fontFamily: "'DM Sans', 'Segoe UI', sans-serif",
+  fontFamily: SANS_BODY,
   margin: 0,
   padding: 0,
 };
@@ -141,29 +150,29 @@ const header: React.CSSProperties = {
 };
 
 const logoText: React.CSSProperties = {
-  fontFamily: "Georgia, 'Times New Roman', serif",
-  fontSize: '18px',
+  fontFamily: SANS_DISPLAY,
+  fontSize: '17px',
+  fontWeight: 600,
   color: colors.text,
-  letterSpacing: '-0.02em',
+  letterSpacing: '-0.015em',
   margin: '0',
   lineHeight: '1',
 };
 
 const headerLink: React.CSSProperties = {
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: SANS_BODY,
   fontSize: '11px',
-  fontWeight: 400,
-  letterSpacing: '0.12em',
+  fontWeight: 500,
+  letterSpacing: '0.14em',
   textTransform: 'uppercase' as const,
-  color: colors.textDim,
+  color: colors.textSubtle,
   textDecoration: 'none',
 };
 
 const accentLine: React.CSSProperties = {
-  height: '2px',
-  background: `linear-gradient(90deg, ${colors.accent}, ${colors.accentTeal})`,
+  height: '1px',
+  background: colors.accent,
   margin: '0 32px',
-  borderRadius: '1px',
 };
 
 const content: React.CSSProperties = {
@@ -192,10 +201,11 @@ const socialLink: React.CSSProperties = {
   textDecoration: 'none',
   fontSize: '12px',
   fontWeight: 500,
+  fontFamily: SANS_BODY,
 };
 
 const dot: React.CSSProperties = {
-  color: colors.textDim,
+  color: colors.textSubtle,
   fontSize: '11px',
 };
 
@@ -209,15 +219,17 @@ const navLink: React.CSSProperties = {
   color: colors.textMuted,
   textDecoration: 'none',
   fontSize: '11px',
-  letterSpacing: '0.08em',
+  letterSpacing: '0.14em',
   textTransform: 'uppercase' as const,
+  fontFamily: SANS_BODY,
 };
 
 const copyright: React.CSSProperties = {
   fontSize: '11px',
-  color: colors.textDim,
+  color: colors.textSubtle,
   margin: '0 0 8px 0',
   letterSpacing: '0.02em',
+  fontFamily: SANS_BODY,
 };
 
 const unsubText: React.CSSProperties = {
@@ -226,6 +238,7 @@ const unsubText: React.CSSProperties = {
 };
 
 const unsubLink: React.CSSProperties = {
-  color: colors.textDim,
+  color: colors.textSubtle,
   textDecoration: 'underline',
+  fontFamily: SANS_BODY,
 };

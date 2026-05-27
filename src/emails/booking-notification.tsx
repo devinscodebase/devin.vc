@@ -93,7 +93,7 @@ const heading: React.CSSProperties = {
 };
 
 const card: React.CSSProperties = {
-  backgroundColor: '#141210',
+  backgroundColor: '#1a1612',
   borderRadius: '10px',
   padding: '20px',
   border: '1px solid #1e1a14',
@@ -130,6 +130,5 @@ const rowDivider: React.CSSProperties = {
 const hint: React.CSSProperties = {
   fontSize: '12px',
   color: '#6d5c48',
-  fontStyle: 'italic',
   margin: '18px 0 0 0',
 };

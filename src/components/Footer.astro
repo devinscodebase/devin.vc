@@ -6,8 +6,16 @@ const currentPath = Astro.url.pathname;
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-name" aria-hidden="true">
-      <svg class="name-svg" viewBox="0 -5 555 105" preserveAspectRatio="xMidYMid meet" width="100%">
-        <text x="0" y="85" font-family="var(--font-display)" font-size="105" letter-spacing="-2" fill="currentColor">Devin Alexander</text>
+      <svg class="name-svg" viewBox="0 -5 720 110" preserveAspectRatio="xMidYMid meet" width="100%">
+        <text
+          x="0"
+          y="88"
+          font-size="105"
+          letter-spacing="-3"
+          textLength="720"
+          lengthAdjust="spacingAndGlyphs"
+          fill="currentColor"
+        >Devin Alexander</text>
       </svg>
     </div>
 
@@ -47,7 +55,7 @@ const currentPath = Astro.url.pathname;
   .site-footer {
     position: relative;
     background: var(--color-bg);
-    padding: 0 clamp(1.5rem, 5vw, 3.5rem);
+    padding: 0 var(--space-page-x);
     overflow: hidden;
   }
 
@@ -69,13 +77,22 @@ const currentPath = Astro.url.pathname;
     user-select: none;
     pointer-events: none;
     line-height: 0;
+    overflow: hidden;
   }
 
   .name-svg {
     display: block;
     width: 100%;
     height: auto;
-    overflow: visible;
+    /* No overflow:visible — text is now sized via textLength to fit the
+       viewBox exactly regardless of which font renders. */
+  }
+
+  /* SVG presentation attributes don't reliably resolve var() in all browsers.
+     Apply font-family via CSS so Funnel Display actually renders. */
+  .name-svg text {
+    font-family: var(--font-display);
+    font-weight: 500;
   }
 
   /* ---- Meta row ---- */

@@ -236,14 +236,14 @@ export default function GtmResultsEmail({
 // ── Colors ──
 const colors = {
   bg: '#0a0a08',
-  bgElevated: '#141210',
+  bgElevated: '#1a1612',
   text: '#ede8df',
   textMuted: '#a09488',
   textDim: '#6d5c48',
   accent: '#c4a47c',
-  teal: '#5ba3a3',
-  rust: '#b06a52',
-  amber: '#c49a3c',
+  teal: '#5a8b85',
+  rust: '#c87045',
+  amber: '#dba85b',
   border: '#1e1a14',
 };
 
@@ -318,7 +318,6 @@ const funnelRate: React.CSSProperties = {
   fontSize: '11px',
   color: colors.textDim,
   margin: '0',
-  fontStyle: 'italic',
 };
 
 const metricCell: React.CSSProperties = {
@@ -344,7 +343,6 @@ const warning: React.CSSProperties = {
   fontSize: '12px',
   color: colors.rust,
   margin: '12px 0 0 0',
-  fontStyle: 'italic',
 };
 
 const divider: React.CSSProperties = {

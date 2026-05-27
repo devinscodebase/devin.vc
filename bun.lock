@@ -11,6 +11,7 @@
         "@astrojs/svelte": "^7.2.5",
         "@clerk/astro": "^3.0.1",
         "@fontsource-variable/funnel-display": "^5.2.8",
+        "@fontsource/funnel-display": "^5.2.8",
         "@libsql/client": "^0.17.0",
         "@react-email/components": "^1.0.8",
         "@resvg/resvg-wasm": "^2.6.2",
@@ -433,6 +434,8 @@
     "@floating-ui/utils": ["@floating-ui/utils@0.2.10", "", {}, "sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ=="],
 
     "@fontsource-variable/funnel-display": ["@fontsource-variable/funnel-display@5.2.8", "", {}, "sha512-krvlZmy6EoFdmCKldTHpAzxxt5gFRXebueyDZ7DUIQ37YRAD8SrH0ljwoLOL/ZSCD5jHqKS6EhFPXLuhuJrOGA=="],
+
+    "@fontsource/funnel-display": ["@fontsource/funnel-display@5.2.8", "", {}, "sha512-B8T3S22P1j19z7UAbfiVhgP2ygghhA8kzVwb6mBYcuQLwXJIM/xdRGwagimJDXsuRX3Cg+bnkM4JGHTc4WCYxg=="],
 
     "@img/colour": ["@img/colour@1.0.0", "", {}, "sha512-A5P/LfWGFSl6nsckYtjw9da+19jB8hkJ6ACTGcDfEJ0aE+l2n2El7dsVM7UVHZQ9s2lmYMWlrS21YLy2IR1LUw=="],
 

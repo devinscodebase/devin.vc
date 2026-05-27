@@ -59,7 +59,7 @@ const badge: React.CSSProperties = {
   fontWeight: 500,
   letterSpacing: '0.15em',
   textTransform: 'uppercase' as const,
-  color: '#5ba3a3',
+  color: '#5a8b85',
   backgroundColor: '#142222',
   padding: '4px 10px',
   borderRadius: '4px',
@@ -75,7 +75,7 @@ const heading: React.CSSProperties = {
 };
 
 const card: React.CSSProperties = {
-  backgroundColor: '#141210',
+  backgroundColor: '#1a1612',
   borderRadius: '10px',
   padding: '20px',
   border: '1px solid #1e1a14',
@@ -142,6 +142,5 @@ const messageBody: React.CSSProperties = {
 const hint: React.CSSProperties = {
   fontSize: '12px',
   color: '#6d5c48',
-  fontStyle: 'italic',
   margin: '18px 0 0 0',
 };
