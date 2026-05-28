@@ -79,7 +79,7 @@ const tiers = [
     accent: 'teal',
     label: 'Tier 01',
     name: 'Rebuild',
-    tagline: 'A rebuild on Webflow. Same site, much better design.',
+    tagline: 'The foundation: a new Webflow site on a real design system, no plug-ins, Core Web Vitals green.',
     price: 7500,
     timeline: '5–6 weeks',
     payment: '50% on signing · 50% at launch',
@@ -87,27 +87,28 @@ const tiers = [
     builds_on: null,
     groups: [
       {
-        label: 'Pages & design',
+        label: 'Platform & design system',
         items: [
           'Full rebuild of ~20 core marketing pages: Home, About (+ Founder, Philosophy, Advisory Board, FAQs, Awards), Services + four service pages, Programs, Who We Serve (PT, OT/SLP, Audiology, SMB), Results, Communities, Resources, Contact.',
-          'A custom design system built natively in Webflow: typography, color, spacing, motion.',
+          'A tokenized design system in Webflow — typography, color, spacing, motion, and shared components — so Marketing can spin up new pages later without breaking the brand.',
+          'Zero plug-ins for basic functionality. Forms, search, SEO controls, image optimization, and CDN are part of the platform, not bolted on.',
           'Photography direction and asset sourcing to replace stock-feeling imagery.',
         ],
       },
       {
         label: 'Content & products',
         items: [
-          'Blog CMS with 188 existing posts migrated via CSV and a redesigned article template.',
-          'Products CMS with 20 items, each linked to a Stripe Payment Link. No cart, no WooCommerce.',
-          'Five to eight testimonials placed by hand across the site.',
+          'Blog CMS with 188 existing posts migrated via CSV and a redesigned article template Marketing can publish to directly.',
+          'Products CMS with 20 items, each linked to a Stripe Payment Link. WooCommerce decommissioned. No cart, no checkout pages, no plug-ins.',
+          'Five to eight testimonials placed by hand across the site (the full Testimonials CMS arrives in Engine).',
         ],
       },
       {
-        label: 'Forms, quality & handoff',
+        label: 'Performance, accessibility & handoff',
         items: [
           'A single intake form rebuilt in Webflow, wired to your existing CRM.',
-          'Mobile-first, WCAG AA accessible, Core Web Vitals green.',
-          'A 60-minute Webflow training session and a written handoff doc.',
+          'Mobile-first, WCAG AA accessible, all Core Web Vitals green (LCP, INP, CLS) on every core page.',
+          'A 60-minute Webflow training session and a written handoff doc so Marketing can publish, edit, and ship without a developer.',
         ],
       },
     ],
@@ -118,13 +119,13 @@ const tiers = [
       { week: 'W5', name: 'QA' },
       { week: 'W6', name: 'Launch' },
     ],
-    outcome: 'A site that finally looks like your business built it.',
+    outcome: 'A site that finally looks like your business built it — and one your Marketing team can run without me.',
   },
   {
     accent: 'amber',
     label: 'Tier 02',
     name: 'Engine',
-    tagline: 'Same rebuild, plus the site does real work for you between consultations.',
+    tagline: 'Rebuild + the content and lead-capture machinery: more CMSes, a multi-step F.A.T., real measurement.',
     price: 11500,
     timeline: '7–9 weeks',
     payment: '40% on signing · 30% at design approval · 30% at launch',
@@ -132,17 +133,17 @@ const tiers = [
     builds_on: 'Rebuild',
     groups: [
       {
-        label: 'New content engines',
+        label: 'Case studies & testimonials system',
         items: [
-          'Case Studies CMS: a proper editorial template with narrative, before-and-after data, pull quotes, practice-type taxonomy, and a filterable index.',
-          'Owner Tools CMS: two interactive self-assessments at launch (a Practice Profitability Snapshot and a Hiring Scorecard), each ending in a lead capture. The CMS structure lets your team publish more later.',
-          'Testimonials CMS: all 47 existing reviews structured for reuse across the site with practice-type filtering.',
+          'Case Studies CMS: an editorial template with narrative, before-and-after data, pull quotes, practice-type taxonomy, and a filterable index. New ones go live the day they arrive.',
+          'Testimonials CMS: all 47 existing reviews structured for reuse across the site with practice-type filtering, plus a Marketing-side workflow for adding new ones as you collect them.',
         ],
       },
       {
-        label: 'Lead capture & qualification',
+        label: 'Lead capture, qualification & content tools',
         items: [
-          'A purpose-built multi-step intake for the F.A.T. (your free consultation, currently your weakest lead-capture surface). Calibrated questions that pre-qualify owners before a consultant ever picks up the phone. Practice Analysis and Contact intakes rebuilt to the same standard.',
+          'A purpose-built multi-step F.A.T. (your free consultation, currently your weakest lead-capture surface). Calibrated questions that pre-qualify owners before a consultant ever picks up the phone. Practice Analysis and Contact intakes rebuilt to the same standard.',
+          'Owner Tools CMS: two interactive self-assessments at launch (a Practice Profitability Snapshot and a Hiring Scorecard), each ending in a lead capture. The CMS structure lets your team publish more later.',
           'The Programs page redesigned as a visible curriculum: Practice Analysis through the seven specialized programs to Power of Choice.',
           'Email capture into your existing platform (Mailchimp, HubSpot, ConvertKit, or GoHighLevel).',
         ],
@@ -150,7 +151,7 @@ const tiers = [
       {
         label: 'Measurement',
         items: [
-          'Analytics and event tracking on every form, scroll, and CTA, so you can see what is and isn’t working after launch.',
+          'Analytics and event tracking on every form, scroll, and CTA, so you can see what is and isn\'t working after launch (full heat maps, session replays, and the /admin dashboard live in Authority).',
         ],
       },
     ],
@@ -161,13 +162,13 @@ const tiers = [
       { week: 'W6–8', name: 'CMS + integrations' },
       { week: 'W8–9', name: 'QA + launch' },
     ],
-    outcome: 'Better leads, fewer junk calls, content your team can publish without me.',
+    outcome: 'Better leads, fewer junk calls, and content your team can publish without me.',
   },
   {
     accent: 'rust',
     label: 'Tier 03',
     name: 'Authority',
-    tagline: 'Everything in Engine, plus the data, email, and analytics infrastructure to actually own your marketing operation.',
+    tagline: 'Engine + the data, dashboards, integrations, and training material your Marketing team needs to fully own the site.',
     price: 15000,
     timeline: '11–14 weeks',
     payment: '30% on signing · 35% at design approval · 35% at launch',
@@ -175,22 +176,37 @@ const tiers = [
     builds_on: 'Engine',
     groups: [
       {
-        label: 'Owned infrastructure',
+        label: 'Platform & control',
         items: [
-          'Zero plug-ins. Webflow, Turso, PostHog, and Resend are all first-party platforms — no plug-in maintenance, no version conflicts, no surprise costs, no Qual Sec pulled off post to fix a broken update.',
-          'Turso database, spun up under SSI ownership and handed over with the keys. Stores every form submission, lead, F.A.T. completion, owner-tools result, and subscriber record. Your team controls it day-to-day, and the Loom library (further down this list) walks them through every common task.',
-          'Resend integration for transactional and automated email, hooked into the Resend account SSI already runs. Transactional confirmations for every form and download. Automated drip sequences for new leads and owner-tools completions. Internal notifications to your team when high-value inquiries land.',
-          'PostHog integration for full site analytics: per-page heatmaps, session replays, custom event tracking on every form, CTA, and scroll event, plus conversion funnels for the paths that matter. You see what visitors actually do, not what we guess they do.',
-          'A custom /admin dashboard SSI logs into. Real-time lead activity feed, form submission inbox, subscriber lists, owner-tools completion stats, and PostHog analytics embedded inline. The single source of truth your marketing team runs on, behind your own login.',
-          'Google Sheets integration: every form submission and lead capture mirrors into the spreadsheets your team already lives in. No tool switching required.',
-          'Ready for GoHighLevel migration. When SSI moves over, the same form, lead, and subscriber data routes directly into the new platform — no rebuild, no data lift.',
+          'Zero plug-ins for any functionality. Webflow, Turso, PostHog, and Resend are all first-party platforms — no plug-in maintenance, no version conflicts, no surprise costs, no Qual Sec pulled off post to fix a broken update.',
+          'Marketing controls the site end to end. Copy edits, image swaps, new pages, redirects, meta tags, A/B tests — all done by your team in the Webflow Editor, the same hour they\'re requested. No tickets, no developer in the loop.',
+          'A custom /admin dashboard SSI logs into. Real-time lead activity feed, form submission inbox, subscriber lists, owner-tools completion stats, and PostHog analytics embedded inline. The single source of truth your Marketing team runs on, behind your own login.',
+          'Turso database, spun up under SSI ownership and handed over with the keys. Stores every form submission, lead, F.A.T. completion, owner-tools result, and subscriber record.',
         ],
       },
       {
-        label: 'Lead magnet machinery',
+        label: 'The complete content engine',
         items: [
+          'Seven CMSes covering everything Marketing publishes: Blog (articles), Owner Tools (interactive tools), Free Downloads & Ebooks, Webinars (replays + upcoming), Case Studies, Testimonials, and Products. Each has structured fields, an approved template, and SEO defaults so a new piece of content publishes in minutes, in the right place, formatted to the brand.',
           'Free Downloads / Ebooks CMS: gated lead magnets (your existing 8, with room to grow), each with a hero, preview pages, and a capture form.',
           'Webinars CMS: on-demand replays and upcoming sessions in a real content hub. Strong top-of-funnel for owners not yet ready for a call.',
+          'Every new piece of content auto-publishes to the right index, sitemap entry, and RSS feed — no developer step.',
+        ],
+      },
+      {
+        label: 'One source of truth: heat maps + analytics',
+        items: [
+          'PostHog wired in from day one: per-page heat maps (scroll depth + click maps), session replays, custom event tracking on every form, CTA, and scroll event, plus conversion funnels for the paths that matter.',
+          'All of it embedded inside the /admin dashboard so Marketing reads the data without a separate tool and without a data analyst.',
+          'Optimization loop built in: see where visitors drop off, fix it in Webflow the same week, watch the number move.',
+        ],
+      },
+      {
+        label: 'Integrations: Sheets, email, GoHighLevel-ready',
+        items: [
+          'Google Sheets integration: every form submission and lead capture mirrors into the spreadsheets your team already lives in. No tool switching.',
+          'Resend integration for transactional and automated email, hooked into the Resend account SSI already runs. Confirmations on every form and download, drip sequences for new leads and owner-tools completions, internal notifications when high-value inquiries land.',
+          'Architected for the future GoHighLevel rollout: when SSI moves over, the same form, lead, and subscriber data routes directly into GHL via its native webhook + API — a swap, not a rebuild.',
         ],
       },
       {
@@ -202,10 +218,17 @@ const tiers = [
         ],
       },
       {
-        label: 'Handoff & support',
+        label: 'Performance & accessibility',
         items: [
-          'A complete library of screen-recorded Loom walkthroughs covering every part of the website ecosystem. How to publish in each of the seven CMSes, how to work the admin dashboard, how to read PostHog analytics and interpret heatmaps, how to configure Resend workflows, how to back up the Turso database. Each video is topic-tagged and shareable, so any new team member can ramp up without my involvement.',
-          '30 days of post-launch support: bug fixes, copy tweaks, performance tuning, and a measurement readout pulled directly from PostHog and the admin dashboard once real traffic hits.',
+          'All Core Web Vitals green (LCP, INP, CLS) on every core page. Mobile load under 2.5 seconds. WCAG AA accessible. Built in from page one, not patched after launch.',
+        ],
+      },
+      {
+        label: 'Training material the Marketing team owns',
+        items: [
+          'A written training handbook covering every part of the website ecosystem: how to publish in each of the seven CMSes, how to work the /admin dashboard, how to read PostHog analytics and interpret heat maps, how to configure Resend workflows, how to back up the Turso database, and how to ship a new page from the design system.',
+          'A matching library of screen-recorded Loom walkthroughs, topic-tagged and shareable, so a new Marketing hire can ramp in an afternoon — without my involvement.',
+          '30 days of post-launch support: bug fixes, copy tweaks, performance tuning, and a measurement readout pulled directly from PostHog and the /admin dashboard once real traffic hits.',
         ],
       },
     ],
@@ -217,7 +240,7 @@ const tiers = [
       { week: 'W9–13', name: 'Integrations + admin' },
       { week: 'W12–14', name: 'Handoff + launch' },
     ],
-    outcome: 'When a practice owner Googles "how to grow my PT practice," your site is the one they keep coming back to, and you can see exactly when they did it, what they read, and what they signed up for.',
+    outcome: 'When a practice owner Googles "how to grow my PT practice," your site is the one they keep coming back to — and your Marketing team can see exactly when they did, what they read, what they signed up for, and ship the next optimization that same week without ever calling a developer.',
   },
 ];
 ---
@@ -285,7 +308,7 @@ const tiers = [
       <div class="proposal-inner">
 
         <!-- ═══════════ HEADER ═══════════ -->
-        <header class="page-header">
+        <header class="page-header reveal">
           <div class="section-tag">
             <span class="tag-number">00</span>
             <span class="tag-dash" aria-hidden="true"></span>
@@ -302,7 +325,7 @@ const tiers = [
         </header>
 
         <!-- ═══════════ 01: WHAT I SEE ═══════════ -->
-        <section class="section">
+        <section class="section reveal">
           <div class="section-tag">
             <span class="tag-number">01</span>
             <span class="tag-dash" aria-hidden="true"></span>
@@ -348,47 +371,100 @@ const tiers = [
 
             <p>
               A rebuild without measurable goals is a redesign with no way to know if it worked.
-              Four things define success.
+              Nine things define success — and here's what each one looks like when it's actually
+              shipped.
             </p>
 
             <h4 class="beat-marker">
               <span class="beat-num">1</span>
               <span class="beat-dash" aria-hidden="true"></span>
-              <span class="beat-label">The intake form qualifies leads</span>
+              <span class="beat-label">No plug-ins for basic functionality</span>
             </h4>
             <p>
-              Within 60 days of launch, at least 60% of intake submissions arrive with practice
-              type, pain point, and visit volume pre-identified.
+              Forms, search, SEO, image optimization, and analytics are part of the platform,
+              not bolted on. Nothing breaks at the next WordPress update because there is no
+              WordPress.
             </p>
 
             <h4 class="beat-marker">
               <span class="beat-num">2</span>
               <span class="beat-dash" aria-hidden="true"></span>
-              <span class="beat-label">The site performs</span>
+              <span class="beat-label">Marketing controls the site without dev intervention</span>
             </h4>
             <p>
-              Core Web Vitals green across the board. Mobile load under 2.5 seconds. WCAG AA
-              accessible.
+              Edits, publishing, and routine optimization happen inside a content editor your team
+              already understands. No tickets. No waiting on a developer to push a button.
             </p>
 
             <h4 class="beat-marker">
               <span class="beat-num">3</span>
               <span class="beat-dash" aria-hidden="true"></span>
-              <span class="beat-label">Your team publishes without me</span>
+              <span class="beat-label">A CMS built for fast content output</span>
             </h4>
             <p>
-              Within 30 days of launch, your team adds at least one piece of content (case study,
-              blog post, ebook) without involving me.
+              Articles, free tools, downloadables, e-books, and webinar recordings each have their
+              own structured templates. Marketing adds a new one in minutes, not days.
             </p>
 
             <h4 class="beat-marker">
               <span class="beat-num">4</span>
               <span class="beat-dash" aria-hidden="true"></span>
-              <span class="beat-label">The shop works on Stripe</span>
+              <span class="beat-label">A design system that scales to new pages</span>
             </h4>
             <p>
-              WooCommerce decommissioned. Stripe Payment Links handle 100% of product transactions.
-              No transaction failures in the first 30 days.
+              Type, color, spacing, and components are tokenized. New pages assemble from the same
+              approved blocks, so a page built six months from now still looks like SSI.
+            </p>
+
+            <h4 class="beat-marker">
+              <span class="beat-num">5</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">One source of truth for heat maps and analytics</span>
+            </h4>
+            <p>
+              Page-level analytics, scroll depth, and click maps live in one dashboard Marketing
+              can read without a data analyst. See what works, fix what doesn't, same week.
+            </p>
+
+            <h4 class="beat-marker">
+              <span class="beat-num">6</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">A case study and testimonial system</span>
+            </h4>
+            <p>
+              A dedicated content type for case studies and testimonials with publish-ready
+              templates. New ones go live the day they arrive, not the quarter they arrive.
+            </p>
+
+            <h4 class="beat-marker">
+              <span class="beat-num">7</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Integrations with Sheets, email, and GoHighLevel</span>
+            </h4>
+            <p>
+              Form submissions flow into the existing Google Sheets workflow and email system on
+              day one, and the integration layer is ready for the future GoHighLevel rollout.
+            </p>
+
+            <h4 class="beat-marker">
+              <span class="beat-num">8</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Training material the Marketing team owns</span>
+            </h4>
+            <p>
+              Written guides and short walkthrough videos for publishing articles, adding case
+              studies, swapping copy, and reading analytics. New Marketing hires get up to speed
+              without outside help.
+            </p>
+
+            <h4 class="beat-marker">
+              <span class="beat-num">9</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Core Web Vitals: all green</span>
+            </h4>
+            <p>
+              LCP, INP, and CLS pass on every core page. Mobile load under 2.5 seconds. WCAG AA
+              accessible. The performance Google rewards in search, on day one.
             </p>
           </div>
         </section>
@@ -396,7 +472,7 @@ const tiers = [
         <hr class="chapter-divider" aria-hidden="true" />
 
         <!-- ═══════════ 02: THE PAGES ═══════════ -->
-        <section class="section">
+        <section class="section reveal">
           <div class="section-tag tag--amber">
             <span class="tag-number">02</span>
             <span class="tag-dash" aria-hidden="true"></span>
@@ -532,7 +608,7 @@ const tiers = [
         <hr class="chapter-divider" aria-hidden="true" />
 
         <!-- ═══════════ 03: THE PATTERNS ═══════════ -->
-        <section class="section">
+        <section class="section reveal">
           <div class="section-tag tag--rust">
             <span class="tag-number">03</span>
             <span class="tag-dash" aria-hidden="true"></span>
@@ -598,7 +674,7 @@ const tiers = [
         <hr class="chapter-divider" aria-hidden="true" />
 
         <!-- ═══════════ 04: THE COST ═══════════ -->
-        <section class="section">
+        <section class="section reveal">
           <div class="section-tag tag--gold">
             <span class="tag-number">04</span>
             <span class="tag-dash" aria-hidden="true"></span>
@@ -672,7 +748,7 @@ const tiers = [
         <hr class="chapter-divider" aria-hidden="true" />
 
         <!-- ═══════════ 05: THE RECOMMENDATION ═══════════ -->
-        <section class="section">
+        <section class="section reveal">
           <div class="section-tag">
             <span class="tag-number">05</span>
             <span class="tag-dash" aria-hidden="true"></span>
@@ -683,83 +759,154 @@ const tiers = [
 
           <div class="prose">
             <p>
-              A new website on Webflow. Same brand, same logo, same name. The site looks like a firm that's
-              been around for 30 years instead of one that's been around for two.
+              Same brand, same logo, same name. The site looks like a firm that's been around for 30
+              years instead of one that's been around for two — and the team behind it can run it
+              without ever opening a developer ticket.
             </p>
 
             <h3 class="beat-marker">
               <span class="beat-num">1</span>
               <span class="beat-dash" aria-hidden="true"></span>
-              <span class="beat-label">Design</span>
+              <span class="beat-label">Platform — Webflow, no plug-ins</span>
             </h3>
 
             <p>
-              The current site is fine, but it's interchangeable with every other consultancy site out
-              there. The rebuild fixes that. The <span class="num-inline">65%</span> and
-              <span class="num-inline">70%</span> numbers from your results page get treated like the
-              proof points they are, not subheadings on a generic stats block. Case studies read like the
-              narratives they are. The thirty-year history gets a moment on the homepage instead of a
-              footnote on About.
+              Forms, search, SEO controls, image optimization, and CDN delivery are part of the
+              platform, not duct-taped on. No annual "why is the site broken?" panic with a
+              developer. No Qual Sec pulled off post to fix a broken plug-in update.
             </p>
 
             <h3 class="beat-marker">
               <span class="beat-num">2</span>
               <span class="beat-dash" aria-hidden="true"></span>
-              <span class="beat-label">Lead capture</span>
+              <span class="beat-label">Marketing controls the site, end to end</span>
             </h3>
 
             <p>
-              Start with the F.A.T. (your Free Financial Assessment Tool, the free consultation that's
-              meant to be your top-of-funnel lead source). Today, it's a single-page form with a long
-              list of questions. Few owners finish it, and the ones who do come through cold. The new
-              F.A.T. intake is a multi-step form that asks 5 to 8 calibrated questions one at a time:
-              practice type, what's broken, monthly visits, current staff size. Each step is short.
-              The visitor sees progress. By the time the form is submitted, your consultant already
-              knows whether this is a real lead and which program is the right entry point. We rebuild
-              the Practice Analysis and Contact forms to the same standard.
+              The Webflow Editor is built for marketers, not engineers. Copy edits, image swaps,
+              new sections, A/B tests, redirects, meta tags — all done by your team, in the
+              browser, the same hour they're requested.
             </p>
 
             <h3 class="beat-marker">
               <span class="beat-num">3</span>
               <span class="beat-dash" aria-hidden="true"></span>
-              <span class="beat-label">Content</span>
+              <span class="beat-label">A content engine, not a blog</span>
             </h3>
 
             <p>
-              Blogs, case studies, ebooks, owner tools, webinars. All in proper CMSes your team can publish
-              to without calling me. Every new piece of content auto-formats to match the site's design,
-              gets indexed by Google, and surfaces in the right place across the rest of the site. The
-              more your team publishes, the more leads the site pulls in on its own.
+              Separate CMS Collections for articles, free tools, downloadables, e-books, and
+              webinar recordings. Each has its own template, structured fields, and SEO defaults.
+              Your team adds new pieces in minutes — and every new item auto-publishes to the
+              right index, the right RSS feed, and the right sitemap entry.
             </p>
 
             <h3 class="beat-marker">
               <span class="beat-num">4</span>
               <span class="beat-dash" aria-hidden="true"></span>
-              <span class="beat-label">Platform</span>
+              <span class="beat-label">A design system that scales to new pages</span>
             </h3>
 
             <p>
-              Webflow is the right call. WordPress works, but it costs you time. Security updates, plugin
-              conflicts, the annual "why is the site broken?" panic with your developer. Webflow is a
-              modern CMS that your team uses directly. No middleman.
+              Type, color, spacing, motion, and components are tokenized in Webflow's Style Manager.
+              New pages assemble from approved blocks, so a landing page built six months from now
+              still looks like SSI. The <span class="num-inline">65%</span> and
+              <span class="num-inline">70%</span> proof points get treated like the wins they are.
+              Case studies read like narratives. The thirty-year history gets a moment on the
+              homepage instead of a footnote on About.
             </p>
 
             <h3 class="beat-marker">
               <span class="beat-num">5</span>
               <span class="beat-dash" aria-hidden="true"></span>
-              <span class="beat-label">Shop</span>
+              <span class="beat-label">One source of truth for analytics + heat maps</span>
             </h3>
 
             <p>
-              You have 20 products on WooCommerce, most of them digital downloads in the $50 to $1,500
-              range. That's not a use case for a full ecommerce platform.
+              PostHog wired in from day one: page-level analytics, scroll depth, click maps, and
+              session recordings in a single dashboard your team reads without a data analyst. See
+              where visitors drop off, fix it the same week, watch the number move.
             </p>
 
+            <h3 class="beat-marker">
+              <span class="beat-num">6</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">A case study and testimonial system</span>
+            </h3>
+
             <p>
-              A Products CMS in Webflow plus a Stripe Payment Link per item handles checkout, tax,
-              receipts, and digital delivery. WordPress disappears. So do the cart, checkout, and
-              my-account pages clogging the sitemap. Stripe takes 2.9% + 30¢. That's what WooCommerce's
-              gateway already charges you anyway.
+              Dedicated CMS Collections for both. Publish-ready templates. New case studies and
+              testimonials go live the day they arrive — not the quarter they arrive. Every one of
+              them shows up automatically on the homepage, the relevant service page, and its own
+              detail page.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">7</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Integrations — Sheets, email, and GoHighLevel-ready</span>
+            </h3>
+
+            <p>
+              Every form submission flows into your existing Google Sheets workflow and email
+              system on day one, via Webflow's native Logic + a managed Zapier or Make pipeline.
+              The integration layer is architected so the future GoHighLevel rollout is a swap,
+              not a rebuild.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">8</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Lead capture, rebuilt</span>
+            </h3>
+
+            <p>
+              Start with the F.A.T. (your Free Financial Assessment Tool, your top-of-funnel
+              consultation). Today, it's a single-page form with a long list of questions. Few
+              owners finish it, and the ones who do come through cold. The new F.A.T. is a
+              multi-step form asking 5 to 8 calibrated questions one at a time: practice type,
+              what's broken, monthly visits, current staff size. By the time it's submitted, your
+              consultant already knows whether this is a real lead and which program fits.
+              Practice Analysis and Contact forms get rebuilt to the same standard.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">9</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Shop — WooCommerce out, Stripe in</span>
+            </h3>
+
+            <p>
+              Twenty products, mostly digital downloads in the $50 to $1,500 range. That's not a
+              full-ecommerce use case. A Products CMS in Webflow plus a Stripe Payment Link per
+              item handles checkout, tax, receipts, and digital delivery. WordPress disappears,
+              and so do the cart, checkout, and my-account pages clogging the sitemap. Stripe
+              takes 2.9% + 30¢ — exactly what WooCommerce's gateway already charges.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">10</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Training the Marketing team owns</span>
+            </h3>
+
+            <p>
+              Written guides plus short walkthrough videos for publishing articles, adding case
+              studies, swapping copy, and reading the analytics dashboard. Stored in your
+              workspace, not mine. A future Marketing hire gets up to speed in an afternoon,
+              without outside help.
+            </p>
+
+            <h3 class="beat-marker">
+              <span class="beat-num">11</span>
+              <span class="beat-dash" aria-hidden="true"></span>
+              <span class="beat-label">Core Web Vitals: all green</span>
+            </h3>
+
+            <p>
+              LCP, INP, and CLS pass on every core page. Mobile load under 2.5 seconds. WCAG AA
+              accessible. The performance Google rewards in search — built in from the first page,
+              not patched in after launch.
             </p>
 
             <blockquote class="pull-quote">
@@ -772,7 +919,7 @@ const tiers = [
         <hr class="chapter-divider" aria-hidden="true" />
 
         <!-- ═══════════ 06: SELECTED WORK ═══════════ -->
-        <section class="section section--showcase">
+        <section class="section section--showcase reveal">
           <div class="section-tag tag--amber">
             <span class="tag-number">06</span>
             <span class="tag-dash" aria-hidden="true"></span>
@@ -834,7 +981,7 @@ const tiers = [
         <hr class="chapter-divider" aria-hidden="true" />
 
         <!-- ═══════════ 07: KIND WORDS ═══════════ -->
-        <section class="section section--testimonials">
+        <section class="section section--testimonials reveal">
           <div class="section-tag tag--rust">
             <span class="tag-number">07</span>
             <span class="tag-dash" aria-hidden="true"></span>
@@ -901,7 +1048,7 @@ const tiers = [
         <hr class="chapter-divider" aria-hidden="true" />
 
         <!-- ═══════════ 08: THE TIERS ═══════════ -->
-        <section class="section">
+        <section class="section reveal">
           <div class="section-tag tag--gold">
             <span class="tag-number">08</span>
             <span class="tag-dash" aria-hidden="true"></span>
@@ -912,7 +1059,7 @@ const tiers = [
 
           <div class="tiers-list">
             {tiers.map((tier) => (
-              <article class={`tier tier--${tier.accent}`}>
+              <article class={`tier tier--${tier.accent} reveal`}>
                 <header class="tier-head">
                   <div class="tier-identity">
                     <span class="tier-eyebrow-label">{tier.label}</span>
@@ -959,7 +1106,7 @@ const tiers = [
         <hr class="chapter-divider" aria-hidden="true" />
 
         <!-- ═══════════ 09: OUT OF SCOPE ═══════════ -->
-        <section class="section">
+        <section class="section reveal">
           <div class="section-tag">
             <span class="tag-number">09</span>
             <span class="tag-dash" aria-hidden="true"></span>
@@ -990,7 +1137,7 @@ const tiers = [
         <hr class="chapter-divider" aria-hidden="true" />
 
         <!-- ═══════════ 10: HOW WE'D WORK ═══════════ -->
-        <section class="section">
+        <section class="section reveal">
           <div class="section-tag tag--amber">
             <span class="tag-number">10</span>
             <span class="tag-dash" aria-hidden="true"></span>
@@ -1050,7 +1197,7 @@ const tiers = [
         <hr class="chapter-divider" aria-hidden="true" />
 
         <!-- ═══════════ 11: ABOUT ═══════════ -->
-        <section class="section">
+        <section class="section reveal">
           <div class="section-tag tag--rust">
             <span class="tag-number">11</span>
             <span class="tag-dash" aria-hidden="true"></span>
@@ -1079,7 +1226,7 @@ const tiers = [
         <hr class="chapter-divider" aria-hidden="true" />
 
         <!-- ═══════════ 12: THE DECISION ═══════════ -->
-        <section class="section section--close">
+        <section class="section section--close reveal">
           <div class="section-tag tag--gold">
             <span class="tag-number">12</span>
             <span class="tag-dash" aria-hidden="true"></span>
@@ -1131,8 +1278,6 @@ const tiers = [
 </Layout>
 
 <script>
-  import { animate, inView } from 'motion';
-
   // ─── Password gate handling ───
   const gateForm = document.querySelector<HTMLFormElement>('.gate-form');
   const gateInner = document.querySelector<HTMLElement>('.gate-inner');
@@ -1197,43 +1342,11 @@ const tiers = [
     });
   }
 
-  const isVtNav = (window as any).__vtNav;
-  if (!isVtNav) {
-    // Initial opacity:0 is set via CSS (html.js-ready selector) so the elements
-    // never paint visible — no FOUC, no inline style means no global fallback
-    // animation conflict. motion animates from CSS-applied opacity:0 to 1.
-    const header = document.querySelector('.page-header') as HTMLElement | null;
-    if (header) {
-      inView(header, () => {
-        animate(header, { opacity: [0, 1], y: [12, 0] }, {
-          duration: 0.5,
-          easing: [0.25, 1, 0.5, 1],
-        });
-      }, { amount: 0.3 });
-    }
-
-    const sections = document.querySelectorAll<HTMLElement>('.section');
-    sections.forEach((section, i) => {
-      inView(section, () => {
-        animate(section, { opacity: [0, 1], y: [10, 0] }, {
-          duration: 0.5,
-          delay: 0.05,
-          easing: [0.25, 1, 0.5, 1],
-        });
-      }, { amount: 0.15 });
-    });
-
-    const tiers = document.querySelectorAll<HTMLElement>('.tier');
-    tiers.forEach((tier, i) => {
-      inView(tier, () => {
-        animate(tier, { opacity: [0, 1], y: [12, 0] }, {
-          duration: 0.5,
-          delay: i * 0.06,
-          easing: [0.25, 1, 0.5, 1],
-        });
-      }, { amount: 0.1 });
-    });
-  }
+  // Entrance fades handled by the global .reveal utility on markup.
+  // Tiers get sequential --reveal-i so they stagger together.
+  document.querySelectorAll<HTMLElement>('.tier').forEach((tier, i) => {
+    tier.style.setProperty('--reveal-i', String(i));
+  });
 </script>
 
 <style>
@@ -1551,24 +1664,7 @@ const tiers = [
     }
   }
 
-  /* ═══════════ FOUC PREVENTION ═══════════
-     Pre-hide elements that JS will fade in.
-     Only applies when JS is ready (set in Layout.astro).
-     This eliminates the visible→invisible flash before animations run. */
-  html.js-ready .page-header,
-  html.js-ready .section,
-  html.js-ready .tier {
-    opacity: 0;
-    /* Safety-net CSS reveal in case motion's inView fails to fire (e.g., very
-       tall sections or IntersectionObserver quirks). Motion's WAAPI animation
-       with fill:both takes precedence when it runs, so this only kicks in if
-       the JS animation never fires. */
-    animation: proposal-fallback-reveal 0.4s ease 3s forwards;
-  }
-
-  @keyframes proposal-fallback-reveal {
-    to { opacity: 1; }
-  }
+  /* Entrance fades handled by the global .reveal utility. */
 
   /* ═══════════ PAGE ═══════════ */
   .proposal-page {
