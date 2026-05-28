@@ -1,76 +1,21 @@
 <script>
-  import { onMount } from 'svelte';
-  import { animate, inView, stagger } from 'motion';
+  /*
+    Entrance animations handled by the global .reveal utility (CSS rules in
+    global.css, observer in Layout.astro). This component is now CSS-only
+    apart from the row-arrow hover (pure CSS — moved into the style block).
+  */
 
   let { projects = [] } = $props();
-  let section;
-
-  onMount(() => {
-    const rows = section.querySelectorAll('.project-row');
-
-    // Spring hover on rows (always active)
-    rows.forEach(row => {
-      const arrow = row.querySelector('.row-arrow');
-      if (arrow) {
-        row.addEventListener('mouseenter', () => {
-          animate(arrow, { x: 3, opacity: 1 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
-        });
-        row.addEventListener('mouseleave', () => {
-          animate(arrow, { x: 0, opacity: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
-        });
-      }
-    });
-
-    if (window.__vtNav) {
-      section.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
-      return;
-    }
-
-    const tag = section.querySelector('.section-tag');
-    const heading = section.querySelector('.section-heading');
-    const footer = section.querySelector('.section-footer');
-
-    const stop = inView(section, () => {
-      animate(tag, { opacity: 1, y: 0 }, {
-        duration: 0.35,
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      animate(heading, { opacity: 1, y: 0 }, {
-        duration: 0.4,
-        delay: 0.05,
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      animate(rows, { opacity: 1, y: 0 }, {
-        duration: 0.35,
-        delay: stagger(0.05, { start: 0.1 }),
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      if (footer) {
-        animate(footer, { opacity: 1 }, {
-          duration: 0.4,
-          delay: 0.4,
-          easing: [0.25, 1, 0.5, 1],
-        });
-      }
-
-      stop();
-    }, { amount: 0.15 });
-
-    return () => stop();
-  });
 </script>
 
-<section class="projects-section" bind:this={section}>
+<section class="projects-section">
   <div class="projects-inner">
-    <div class="section-tag" style="opacity: 0; transform: translateY(8px);"><span class="tag-number">05</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Projects</span></div>
-    <h2 class="section-heading" style="opacity: 0; transform: translateY(12px);">Selected Work</h2>
+    <div class="section-tag reveal" style="--reveal-i: 0"><span class="tag-number">05</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Projects</span></div>
+    <h2 class="section-heading reveal" style="--reveal-i: 1">Selected Work</h2>
 
     <div class="project-list">
       {#each projects as project, i (project.name)}
-        <a href={project.url} target="_blank" rel="noopener" class="project-row project-row--{project.accent}" style="opacity: 0; transform: translateY(10px);">
+        <a href={project.url} target="_blank" rel="noopener" class="project-row project-row--{project.accent} reveal" style="--reveal-i: {i + 2}">
           <div class="row-left">
             <span class="row-index">{String(i + 1).padStart(2, '0')}</span>
             <div class="row-info">
@@ -104,7 +49,7 @@
       {/each}
     </div>
 
-    <div class="section-footer" style="opacity: 0;">
+    <div class="section-footer reveal" style="--reveal-i: {projects.length + 3}">
       <a href="/projects" class="view-all">
         View all projects
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -301,11 +246,15 @@
     color: var(--color-accent);
     opacity: 0;
     flex-shrink: 0;
-    transition: opacity var(--duration-fast) var(--ease-out-expo);
+    transform: translateX(-3px);
+    transition:
+      opacity var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-spring);
   }
 
   .project-row:hover .row-arrow {
     opacity: 1;
+    transform: translateX(0);
   }
 
   /* ---- Section footer ---- */

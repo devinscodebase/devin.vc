@@ -89,7 +89,7 @@ const ogImage = post.ogImage
   <main>
     <article class="post">
       <div class="post-inner">
-        <header class="post-header">
+        <header class="post-header reveal">
           <a href="/journal" class="back-link">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M13 7H1M6 2L1 7l5 5" />
@@ -109,7 +109,7 @@ const ogImage = post.ogImage
         </header>
 
         {post.heroImage && (
-          <figure class="hero-image">
+          <figure class="hero-image reveal" style="--reveal-i: 1">
             <img src={urlFor(post.heroImage).width(1200).url()} alt={post.heroAlt || ''} loading="eager" />
           </figure>
         )}
@@ -229,48 +229,16 @@ const ogImage = post.ogImage
 </Layout>
 
 <script>
-  import { animate, inView } from 'motion';
-
-  const isVtNav = window.__vtNav;
-
-  if (!isVtNav) {
-    // Initial opacity:0 is set via CSS (html.js-ready selector) so elements
-    // never paint visible.
-    const header = document.querySelector('.post-header');
-    if (header) {
-      inView(header, () => {
-        animate(header, { opacity: [0, 1], y: [12, 0] }, {
-          duration: 0.4,
-          easing: [0.25, 1, 0.5, 1],
-        });
-      }, { amount: 0.3 });
-    }
-
-    const hero = document.querySelector('.hero-image');
-    if (hero) {
-      inView(hero, () => {
-        animate(hero, { opacity: [0, 1] }, {
-          duration: 0.35,
-          delay: 0.1,
-          easing: [0.25, 1, 0.5, 1],
-        });
-      }, { amount: 0.2 });
-    }
-
-    // Body paragraph entrance animations (first 5 direct children)
-    const postBody = document.querySelector('.post-body');
-    if (postBody) {
-      const children = Array.from(postBody.children).slice(0, 5) as HTMLElement[];
-      children.forEach((el, i) => {
-        inView(el, () => {
-          animate(el, { opacity: [0, 1], y: [8, 0] }, {
-            duration: 0.35,
-            delay: i * 0.04,
-            easing: [0.25, 1, 0.5, 1],
-          });
-        }, { amount: 0.2 });
-      });
-    }
+  // Entrance fades handled by the global .reveal utility.
+  // Apply .reveal to the first 5 body children once at load (article DOM
+  // comes from rendered portable text so we can't author them with .reveal).
+  const postBody = document.querySelector('.post-body');
+  if (postBody) {
+    const children = Array.from(postBody.children).slice(0, 5) as HTMLElement[];
+    children.forEach((el, i) => {
+      el.classList.add('reveal');
+      el.style.setProperty('--reveal-i', String(i));
+    });
   }
 
   // TOC toggle
@@ -365,12 +333,7 @@ const ogImage = post.ogImage
 </script>
 
 <style>
-  /* Pre-hide elements JS will fade in (Layout.astro adds .js-ready before paint). */
-  html.js-ready .post-header,
-  html.js-ready .hero-image,
-  html.js-ready .post-body > *:nth-child(-n+5) {
-    opacity: 0;
-  }
+  /* Entrance fades handled by the global .reveal utility. */
 
   .post {
     min-height: 100dvh;

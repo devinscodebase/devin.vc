@@ -13,7 +13,7 @@ const projects = await sanityClient.fetch(`
   <main>
     <section class="projects-page">
       <div class="projects-inner">
-        <header class="page-header">
+        <header class="page-header reveal">
           <div class="section-tag"><span class="tag-number">01</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Projects</span></div>
           <h1 class="page-title">Selected work</h1>
           <p class="page-subtitle">A look at some of the <span class="sub-accent teal">platforms</span> and <span class="sub-accent amber">brands</span> I've helped build.</p>
@@ -22,7 +22,7 @@ const projects = await sanityClient.fetch(`
 
         <div class="project-list">
           {projects.map((project: any, i: number) => (
-            <article class={`project project--${project.accent}`}>
+            <article class={`project project--${project.accent} reveal`} style={`--reveal-i: ${i}`}>
               {project.screenshot ? (
                 <a href={project.url} target="_blank" rel="noopener" class="project-screenshot-link">
                   <div class={`project-screenshot project-screenshot--${project.accent}`}>
@@ -83,59 +83,9 @@ const projects = await sanityClient.fetch(`
   </main>
 </Layout>
 
-<script>
-  import { animate, inView, stagger } from 'motion';
-
-  const isVtNav = window.__vtNav;
-  const header = document.querySelector('.page-header');
-  const projects = document.querySelectorAll('.project');
-
-  if (!isVtNav) {
-    // Initial opacity:0 is set via CSS (html.js-ready selector) so elements
-    // never paint visible. No inline style means the global fallback animation
-    // doesn't fire and conflict with motion's entrance.
-    if (header) {
-      inView(header, () => {
-        animate(header, { opacity: [0, 1], y: [12, 0] }, {
-          duration: 0.4,
-          easing: [0.25, 1, 0.5, 1],
-        });
-      }, { amount: 0.3 });
-    }
-
-    projects.forEach((project, i) => {
-      inView(project, () => {
-        animate(project, { opacity: [0, 1], y: [15, 0] }, {
-          duration: 0.4,
-          delay: 0.05,
-          easing: [0.25, 1, 0.5, 1],
-        });
-      }, { amount: 0.15 });
-    });
-  }
-
-  // Spring hover on project cards
-  projects.forEach(project => {
-    const link = project.querySelector('.project-link');
-    if (link) {
-      project.addEventListener('mouseenter', () => {
-        animate(link, { x: 3 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
-      });
-      project.addEventListener('mouseleave', () => {
-        animate(link, { x: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
-      });
-    }
-  });
-</script>
-
 <style>
-  /* Pre-hide elements that JS will fade in. The js-ready class is set in Layout.astro
-     during head parsing, so this rule applies before first paint and prevents
-     the visible→invisible flash from setting opacity:0 in JS post-render. */
-  html.js-ready .page-header,
-  html.js-ready .project {
-    opacity: 0;
-  }
+  /* Entrance fades handled by the global .reveal utility.
+     Project-link hover slide is now a pure CSS transition. */
 
   .projects-page {
     min-height: 100dvh;
@@ -406,6 +356,14 @@ const projects = await sanityClient.fetch(`
   .project-link:hover svg {
     transform: translate(2px, -2px);
   }
+
+  .project-link {
+    transition:
+      color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-spring);
+  }
+
+  .project:hover .project-link { transform: translateX(3px); }
 
   /* ---- Page footer ---- */
   .page-footer {

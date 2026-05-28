@@ -1,7 +1,14 @@
 <script>
   import { onMount } from 'svelte';
-  import { animate, stagger } from 'motion';
   import Button from './ui/Button.svelte';
+
+  /*
+    Hero now uses the global .reveal scroll-fade utility (CSS + global
+    IntersectionObserver in Layout.astro) for the entrance choreography.
+    The only motion this component still owns:
+      • pointer-tracked kinetic typography offsets
+      • scroll-progress driving the vignette opacity
+  */
 
   let kinetic;
   let hero;
@@ -38,82 +45,13 @@
   onMount(() => {
     hasPointer = !matchMedia('(pointer: coarse)').matches;
     rafId = requestAnimationFrame(tick);
-
-    // On view transitions, reveal everything without entrance animations
-    if (window.__vtNav) {
-      hero.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
-      return () => { if (rafId) cancelAnimationFrame(rafId); };
-    }
-
-    // --- Motion entrance animations ---
-    const nameLines = hero.querySelectorAll('.name-line');
-    const divider = hero.querySelector('.divider');
-    const tagline = hero.querySelector('.tagline');
-    const descriptors = hero.querySelector('.descriptors');
-    const heroCta = hero.querySelector('.hero-cta-wrap');
-    const kineticEl = hero.querySelector('.kinetic');
-    const scrollInd = hero.querySelector('.scroll-indicator');
-
-    // Kinetic bg fades in
-    animate(kineticEl, { opacity: [0, 1] }, {
-      duration: 0.4,
-      easing: [0.25, 1, 0.5, 1],
-    });
-
-    // Name lines stagger in
-    animate(nameLines, {
-      opacity: [0, 1],
-      y: [15, 0],
-    }, {
-      duration: 0.35,
-      delay: stagger(0.05, { start: 0.03 }),
-      easing: [0.25, 1, 0.5, 1],
-    });
-
-    // Divider expands
-    animate(divider, { width: ['0px', '72px'] }, {
-      duration: 0.3,
-      delay: 0.12,
-      easing: [0.25, 1, 0.5, 1],
-    });
-
-    // Tagline
-    animate(tagline, { opacity: [0, 1], y: [10, 0] }, {
-      duration: 0.35,
-      delay: 0.18,
-      easing: [0.25, 1, 0.5, 1],
-    });
-
-    // Descriptors
-    animate(descriptors, { opacity: [0, 1], y: [8, 0] }, {
-      duration: 0.3,
-      delay: 0.25,
-      easing: [0.25, 1, 0.5, 1],
-    });
-
-    // CTA
-    animate(heroCta, { opacity: [0, 1], y: [8, 0] }, {
-      duration: 0.3,
-      delay: 0.32,
-      easing: [0.25, 1, 0.5, 1],
-    });
-
-    // Scroll indicator
-    animate(scrollInd, { opacity: [0, 1] }, {
-      duration: 0.3,
-      delay: 0.4,
-      easing: [0.25, 1, 0.5, 1],
-    });
-
-    // Hover spring is handled by Button primitive's own CSS (1.02 scale).
-
     return () => { if (rafId) cancelAnimationFrame(rafId); };
   });
 </script>
 
 <section class="hero" bind:this={hero} onmousemove={onMove} onmouseleave={onLeave}>
   <!-- kinetic typography field -->
-  <div class="kinetic" bind:this={kinetic} aria-hidden="true" style="opacity: 0;">
+  <div class="kinetic reveal" bind:this={kinetic} aria-hidden="true">
     <div class="kinetic-row r1 heavy"><span>MARKETING · OPERATIONS · DESIGN · GTM · MARKETING · OPERATIONS · DESIGN · GTM ·&nbsp;</span><span>MARKETING · OPERATIONS · DESIGN · GTM · MARKETING · OPERATIONS · DESIGN · GTM ·&nbsp;</span></div>
     <div class="kinetic-row r2 serif glow"><span>DESIGN · OPERATIONS · MARKETING · GTM · DESIGN · OPERATIONS · MARKETING · GTM ·&nbsp;</span><span>DESIGN · OPERATIONS · MARKETING · GTM · DESIGN · OPERATIONS · MARKETING · GTM ·&nbsp;</span></div>
     <div class="kinetic-row r3"><span>GTM · DESIGN · OPERATIONS · MARKETING · GTM · DESIGN · OPERATIONS · MARKETING ·&nbsp;</span><span>GTM · DESIGN · OPERATIONS · MARKETING · GTM · DESIGN · OPERATIONS · MARKETING ·&nbsp;</span></div>
@@ -133,15 +71,15 @@
 
   <div class="content">
     <h1 class="name">
-      <span class="name-line" style="opacity: 0;">Devin</span>
-      <span class="name-line" style="opacity: 0;">Alexander</span>
+      <span class="name-line reveal" style="--reveal-i: 1">Devin</span>
+      <span class="name-line reveal" style="--reveal-i: 2">Alexander</span>
     </h1>
 
-    <div class="divider" aria-hidden="true" style="width: 0;"></div>
+    <div class="divider reveal" style="--reveal-i: 3" aria-hidden="true"></div>
 
-    <p class="tagline" style="opacity: 0;">Build your future with me</p>
+    <p class="tagline reveal" style="--reveal-i: 4">Build your future with me</p>
 
-    <p class="descriptors" style="opacity: 0;">
+    <p class="descriptors reveal" style="--reveal-i: 5">
       <span>Marketing</span>
       <span class="dot" aria-hidden="true">&middot;</span>
       <span>Operations</span>
@@ -151,13 +89,13 @@
       <span>GTM</span>
     </p>
 
-    <div class="hero-cta-wrap" style="opacity: 0;">
+    <div class="hero-cta-wrap reveal" style="--reveal-i: 6">
       <Button href="/contact" variant="primary" size="lg">Open to Consulting Projects</Button>
     </div>
   </div>
 
   <div class="scroll-fade" aria-hidden="true">
-    <div class="scroll-indicator" style="opacity: 0;">
+    <div class="scroll-indicator reveal" style="--reveal-i: 8">
       <div class="scroll-line"></div>
     </div>
   </div>

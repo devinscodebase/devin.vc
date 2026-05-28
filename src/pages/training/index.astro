@@ -33,19 +33,19 @@ const categoryLabels: Record<string, string> = {
 >
   <main>
     <section class="training-page">
-      <div class="training-inner will-animate">
-        <header class="page-header">
+      <div class="training-inner">
+        <header class="page-header reveal">
           <div class="section-tag"><span class="tag-label">Training</span></div>
           <h1 class="page-title">Training</h1>
           <p class="page-subtitle">Free word lists, playbooks, and references built from <em>real</em> work. Grab what you need.</p>
         </header>
 
         {assets.length === 0 ? (
-          <p class="empty">More assets are on the way. Check back soon.</p>
+          <p class="empty reveal" style="--reveal-i: 1">More assets are on the way. Check back soon.</p>
         ) : (
           <div class="asset-cards">
             {assets.map((asset: any, i: number) => (
-              <a href={`/training/${asset.slug}`} class={`asset-card accent-${asset.accent || 'gold'}`}>
+              <a href={`/training/${asset.slug}`} class={`asset-card accent-${asset.accent || 'gold'} reveal`} style={`--reveal-i: ${i + 1}`}>
                 <div class="card-bar" aria-hidden="true" />
                 <span class="card-number" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
                 <div class="card-content">
@@ -79,36 +79,13 @@ const categoryLabels: Record<string, string> = {
 </Layout>
 
 <script>
-  import { animate, inView } from 'motion';
-
-  const inner = document.querySelector('.training-inner');
-  const section = document.querySelector('.training-page');
-
-  if ((window as any).__vtNav) {
-    inner?.classList.remove('will-animate');
-  } else if (inner && section) {
-    const stop = inView(section, () => {
-      inner.classList.remove('will-animate');
-      inner.classList.add('revealed');
-      stop();
-    }, { amount: 0.1 });
-  }
-
+  // Entrance fades handled by the global .reveal utility. Script owns
+  // only the cursor-following spotlight; hover lift/shift are CSS.
   document.querySelectorAll<HTMLElement>('.asset-card').forEach(card => {
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
-      card.style.setProperty('--glow-x', `${e.clientX - rect.left}px`);
-      card.style.setProperty('--glow-y', `${e.clientY - rect.top}px`);
-    });
-    card.addEventListener('mouseenter', () => {
-      const name = card.querySelector('.card-name') as HTMLElement | null;
-      animate(card, { y: -5 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
-      if (name) animate(name, { x: 4 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
-    });
-    card.addEventListener('mouseleave', () => {
-      const name = card.querySelector('.card-name') as HTMLElement | null;
-      animate(card, { y: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
-      if (name) animate(name, { x: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
+      card.style.setProperty('--glow-x', `${(e as MouseEvent).clientX - rect.left}px`);
+      card.style.setProperty('--glow-y', `${(e as MouseEvent).clientY - rect.top}px`);
     });
   });
 </script>
@@ -125,33 +102,18 @@ const categoryLabels: Record<string, string> = {
     margin: 0 auto;
   }
 
-  .will-animate .page-header,
-  .will-animate .asset-card,
-  .will-animate .page-footer,
-  .will-animate .empty {
-    opacity: 0;
-    transform: translateY(16px);
+  /* Entrance fades handled by the global .reveal utility.
+     Hover lift + name shift are pure CSS transitions. */
+  .asset-card {
+    transition:
+      background var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-spring);
   }
-
-  .revealed .page-header { animation: fadeSlideUp 0.4s cubic-bezier(0.25, 1, 0.5, 1) both; }
-  .revealed .asset-card { animation: fadeSlideUp 0.45s cubic-bezier(0.25, 1, 0.5, 1) both; }
-  .revealed .asset-card:nth-child(1) { animation-delay: 80ms; }
-  .revealed .asset-card:nth-child(2) { animation-delay: 180ms; }
-  .revealed .asset-card:nth-child(3) { animation-delay: 280ms; }
-  .revealed .asset-card:nth-child(4) { animation-delay: 380ms; }
-  .revealed .empty { animation: fadeSlideUp 0.45s cubic-bezier(0.25, 1, 0.5, 1) 100ms both; }
-  .revealed .page-footer { animation: fadeSlideUp 0.35s cubic-bezier(0.25, 1, 0.5, 1) 350ms both; }
-
-  @keyframes fadeSlideUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: none; }
+  .asset-card:hover { transform: translateY(-5px); }
+  .asset-card .card-name {
+    transition: transform var(--duration-fast) var(--ease-spring);
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    .revealed .page-header, .revealed .asset-card, .revealed .page-footer, .revealed .empty {
-      animation: none; opacity: 1; transform: none;
-    }
-  }
+  .asset-card:hover .card-name { transform: translateX(4px); }
 
   .section-tag {
     display: flex;

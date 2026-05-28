@@ -18,46 +18,30 @@ const images = [
 
 <section class="gallery">
   <div class="gallery-grid" id="gallery-grid">
-    <div class="gallery-item item-1" role="button" tabindex="0" aria-label={images[0].alt}>
+    <div class="gallery-item item-1 reveal" style="--reveal-i: 0" role="button" tabindex="0" aria-label={images[0].alt}>
       <Image src={images[0].src} alt={images[0].alt} widths={images[0].widths} format="webp" quality={80} loading="lazy" />
     </div>
-    <div class="gallery-item item-2" role="button" tabindex="0" aria-label={images[1].alt}>
+    <div class="gallery-item item-2 reveal" style="--reveal-i: 1" role="button" tabindex="0" aria-label={images[1].alt}>
       <Image src={images[1].src} alt={images[1].alt} widths={images[1].widths} format="webp" quality={80} loading="lazy" />
     </div>
-    <div class="gallery-item item-3" role="button" tabindex="0" aria-label={images[2].alt}>
+    <div class="gallery-item item-3 reveal" style="--reveal-i: 2" role="button" tabindex="0" aria-label={images[2].alt}>
       <Image src={images[2].src} alt={images[2].alt} widths={images[2].widths} format="webp" quality={80} loading="lazy" />
     </div>
-    <div class="gallery-item item-4" role="button" tabindex="0" aria-label={images[3].alt}>
+    <div class="gallery-item item-4 reveal" style="--reveal-i: 3" role="button" tabindex="0" aria-label={images[3].alt}>
       <Image src={images[3].src} alt={images[3].alt} widths={images[3].widths} format="webp" quality={80} loading="lazy" />
     </div>
-    <div class="gallery-item item-5" role="button" tabindex="0" aria-label={images[4].alt}>
+    <div class="gallery-item item-5 reveal" style="--reveal-i: 4" role="button" tabindex="0" aria-label={images[4].alt}>
       <Image src={images[4].src} alt={images[4].alt} widths={images[4].widths} format="webp" quality={80} loading="lazy" />
     </div>
   </div>
 </section>
 
 <script>
-  import { animate, inView, stagger } from 'motion';
-
-  const isVtNav = window.__vtNav;
+  // Entrance fades handled by the global .reveal utility. This script
+  // only owns the lightbox click/keyboard interaction.
   const grid = document.getElementById('gallery-grid');
   if (grid) {
     const items = grid.querySelectorAll('.gallery-item');
-
-    if (!isVtNav) {
-      // Initial opacity:0 is set via CSS (html.js-ready selector).
-      inView(grid, () => {
-        animate(items, {
-          opacity: [0, 1],
-          y: [30, 0],
-          scale: [0.97, 1],
-        }, {
-          duration: 0.7,
-          easing: [0.25, 1, 0.5, 1],
-          delay: stagger(0.12),
-        });
-      }, { amount: 0.2 });
-    }
 
     // Lightbox
     items.forEach(item => {
@@ -117,10 +101,7 @@ const images = [
 </script>
 
 <style>
-  /* Pre-hide gallery items so JS fade-in doesn't flash visible→invisible. */
-  html.js-ready .gallery-item {
-    opacity: 0;
-  }
+  /* Entrance hidden state is provided by the global .reveal utility. */
 
   .gallery {
     background: var(--color-bg);

@@ -1,48 +1,18 @@
 <script>
-  import { onMount } from 'svelte';
-  import { animate, inView, stagger } from 'motion';
+  /* Entrance fades handled by the global .reveal utility. */
 
   let { testimonials = [] } = $props();
 
   const accents = ['teal', 'amber', 'teal', 'amber'];
-
-  let section;
-
-  onMount(() => {
-    if (window.__vtNav) {
-      section.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
-      return;
-    }
-
-    const tag = section.querySelector('.section-tag');
-    const cards = section.querySelectorAll('.card');
-
-    const stop = inView(section, () => {
-      animate(tag, { opacity: 1, y: 0 }, {
-        duration: 0.35,
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      animate(cards, { opacity: 1, y: 0 }, {
-        duration: 0.4,
-        delay: stagger(0.1, { start: 0.08 }),
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      stop();
-    }, { amount: 0.15 });
-
-    return () => stop();
-  });
 </script>
 
-<section class="proof" bind:this={section}>
+<section class="proof">
   <div class="proof-inner">
-    <div class="section-tag" style="opacity: 0; transform: translateY(8px);"><span class="tag-number">07</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Kind Words</span></div>
+    <div class="section-tag reveal" style="--reveal-i: 0"><span class="tag-number">07</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Kind Words</span></div>
 
     <div class="grid">
       {#each testimonials.slice(0, 4) as t, i}
-        <blockquote class="card testimonial" class:accent-amber={accents[i] === 'amber'} style="opacity: 0; transform: translateY(15px);">
+        <blockquote class="card testimonial reveal" class:accent-amber={accents[i] === 'amber'} style="--reveal-i: {i + 1}">
           <div class="accent-bar" class:amber={accents[i] === 'amber'} aria-hidden="true"></div>
           <span class="quote-mark" class:amber={accents[i] === 'amber'} aria-hidden="true">&ldquo;</span>
           <p class="quote-text">{t.quote}</p>
@@ -56,7 +26,7 @@
         </blockquote>
       {/each}
 
-      <div class="card cta-card" style="opacity: 0; transform: translateY(15px);">
+      <div class="card cta-card reveal" style="--reveal-i: {testimonials.slice(0, 4).length + 1}">
         <div class="accent-bar gold" aria-hidden="true"></div>
         <div class="cta-content">
           <p class="cta-text">You could be here.</p>

@@ -1,11 +1,16 @@
 <script>
   import { onMount } from 'svelte';
-  import { animate, inView, stagger } from 'motion';
+
+  /*
+    Entrance fades handled by the global .reveal utility. Component owns
+    only the cursor-following spotlight on post cards — pure DOM event,
+    no motion lib needed. Hover lift + title shift are CSS transitions
+    (moved into the style block).
+  */
 
   let { posts = [] } = $props();
-
   let section;
-  // Separate featured post and stack posts
+
   const featuredPost = $derived(posts.find(p => p.featured) || posts[0]);
   const stackPosts = $derived(posts.filter(p => p !== featuredPost));
 
@@ -19,23 +24,7 @@
     return tag.charAt(0).toUpperCase() + tag.slice(1);
   }
 
-  // Spring hover — lift card + shift title
-  function postEnter(e) {
-    const card = e.currentTarget;
-    const title = card.querySelector('.post-title');
-    animate(card, { y: -4 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
-    if (title) animate(title, { x: 4 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
-  }
-
-  function postLeave(e) {
-    const card = e.currentTarget;
-    const title = card.querySelector('.post-title');
-    animate(card, { y: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
-    if (title) animate(title, { x: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
-  }
-
   onMount(() => {
-    // Cursor-following spotlight (always active)
     const postCards = section.querySelectorAll('.post');
     postCards.forEach(card => {
       card.addEventListener('mousemove', (e) => {
@@ -44,65 +33,13 @@
         card.style.setProperty('--glow-y', `${e.clientY - rect.top}px`);
       });
     });
-
-    if (window.__vtNav) {
-      section.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
-      return;
-    }
-
-    const tag = section.querySelector('.section-tag');
-    const header = section.querySelector('.journal-header');
-    const featured = section.querySelector('.post.featured');
-    const accentBar = section.querySelector('.post-accent');
-    const stackEls = section.querySelectorAll('.post-stack .post');
-
-    const stop = inView(section, () => {
-      animate(tag, { opacity: 1, y: 0 }, {
-        duration: 0.35,
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      animate(header, { opacity: 1, y: 0 }, {
-        duration: 0.4,
-        delay: 0.05,
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      if (featured) {
-        animate(featured, { opacity: 1, y: 0 }, {
-          duration: 0.4,
-          delay: 0.1,
-          easing: [0.25, 1, 0.5, 1],
-        });
-      }
-
-      if (accentBar) {
-        animate(accentBar, { scaleX: 1 }, {
-          duration: 0.35,
-          delay: 0.35,
-          easing: [0.25, 1, 0.5, 1],
-        });
-      }
-
-      if (stackEls.length) {
-        animate(stackEls, { opacity: 1, y: 0 }, {
-          duration: 0.4,
-          delay: stagger(0.06, { start: 0.15 }),
-          easing: [0.25, 1, 0.5, 1],
-        });
-      }
-
-      stop();
-    }, { amount: 0.15 });
-
-    return () => stop();
   });
 </script>
 
 <section class="journal" bind:this={section}>
   <div class="journal-inner">
-    <div class="section-tag" style="opacity: 0; transform: translateY(8px);"><span class="tag-number">08</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Journal</span></div>
-    <div class="journal-header" style="opacity: 0; transform: translateY(12px);">
+    <div class="section-tag reveal" style="--reveal-i: 0"><span class="tag-number">08</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Journal</span></div>
+    <div class="journal-header reveal" style="--reveal-i: 1">
       <h2 class="section-heading">Latest Thinking</h2>
       <a href="/journal" class="view-all">
         View all
@@ -115,8 +52,8 @@
     {#if posts.length > 0}
       <div class="posts">
         {#if featuredPost}
-          <a href={`/journal/${featuredPost.slug}`} class="post featured" style="opacity: 0; transform: translateY(15px);" onmouseenter={postEnter} onmouseleave={postLeave}>
-            <div class="post-accent" aria-hidden="true" style="transform: scaleX(0); transform-origin: left;"></div>
+          <a href={`/journal/${featuredPost.slug}`} class="post featured reveal" style="--reveal-i: 2">
+            <div class="post-accent" aria-hidden="true"></div>
             <span class="post-tag">{capitalizeTag(featuredPost.tag)}</span>
             <h3 class="post-title">{featuredPost.title}</h3>
             <p class="post-excerpt">{featuredPost.description}</p>
@@ -126,8 +63,8 @@
 
         {#if stackPosts.length > 0}
           <div class="post-stack">
-            {#each stackPosts as post}
-              <a href={`/journal/${post.slug}`} class="post" style="opacity: 0; transform: translateY(15px);" onmouseenter={postEnter} onmouseleave={postLeave}>
+            {#each stackPosts as post, i}
+              <a href={`/journal/${post.slug}`} class="post reveal" style="--reveal-i: {i + 3}">
                 <span class="post-tag">{capitalizeTag(post.tag)}</span>
                 <h3 class="post-title">{post.title}</h3>
                 <p class="post-excerpt">{post.description}</p>
@@ -247,8 +184,12 @@
     text-decoration: none;
     position: relative;
     overflow: hidden;
-    transition: border-color var(--duration-fast) var(--ease-out-expo);
+    transition:
+      border-color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-spring);
   }
+
+  .post:hover { transform: translateY(-4px); }
 
   /* Cursor-following spotlight */
   .post::before {
@@ -309,7 +250,9 @@
     line-height: 1.2;
     color: var(--color-text);
     margin: 0 0 0.75rem;
-    transition: color var(--duration-fast) var(--ease-out-expo);
+    transition:
+      color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-spring);
     position: relative;
     z-index: 1;
   }
@@ -317,6 +260,7 @@
   .post:hover .post-title,
   .post:focus-visible .post-title {
     color: var(--color-accent-amber);
+    transform: translateX(4px);
   }
 
   .post.featured .post-title {

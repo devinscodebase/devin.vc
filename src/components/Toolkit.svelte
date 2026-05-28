@@ -1,9 +1,13 @@
 <script>
   import { onMount } from 'svelte';
-  import { animate, inView, stagger } from 'motion';
+
+  /*
+    Entrance animations handled by the global .reveal utility. Component
+    keeps the interactive bits only: touch-detect + chip/marquee hover
+    state that drives the detail panel.
+  */
 
   let { tools = [] } = $props();
-  let section;
   let activeTool = $state(null);
   let isHovering = $state(false);
   let isTouch = $state(false);
@@ -57,49 +61,18 @@
     const detectTouch = () => { isTouch = true; };
     window.addEventListener('touchstart', detectTouch, { once: true, passive: true });
 
-    if (window.__vtNav) {
-      section.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
-      return () => window.removeEventListener('touchstart', detectTouch);
-    }
-
-    const tag = section.querySelector('.section-tag');
-    const header = section.querySelector('.toolkit-header');
-    const rows = section.querySelectorAll('.marquee-row');
-
-    const stop = inView(section, () => {
-      animate(tag, { opacity: 1, y: 0 }, {
-        duration: 0.35,
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      animate(header, { opacity: 1, y: 0 }, {
-        duration: 0.4,
-        delay: 0.05,
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      animate(rows, { opacity: 1, y: 0 }, {
-        duration: 0.4,
-        delay: stagger(0.1, { start: 0.12 }),
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      stop();
-    }, { amount: 0.15 });
-
     return () => {
-      stop();
       clearTimeout(hideTimeout);
       window.removeEventListener('touchstart', detectTouch);
     };
   });
 </script>
 
-<section class="toolkit" bind:this={section}>
+<section class="toolkit">
   <div class="toolkit-inner">
-    <div class="section-tag" style="opacity: 0; transform: translateY(8px);"><span class="tag-number">04</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Toolkit</span></div>
+    <div class="section-tag reveal" style="--reveal-i: 0"><span class="tag-number">04</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Toolkit</span></div>
 
-    <div class="toolkit-header" style="opacity: 0; transform: translateY(12px);">
+    <div class="toolkit-header reveal" style="--reveal-i: 1">
       <h2 class="section-heading">Tools I Work With</h2>
 
       <div class="detail-panel" class:is-visible={activeTool}>
@@ -138,8 +111,8 @@
     {#each categories as cat, i}
       {@const items = getToolsByCategory(cat.key)}
       <div
-        class="marquee-row"
-        style="--speed: {cat.speed}; --direction: {cat.direction}; --copies: {COPIES}; opacity: 0; transform: translateY(15px);"
+        class="marquee-row reveal"
+        style="--speed: {cat.speed}; --direction: {cat.direction}; --copies: {COPIES}; --reveal-i: {i + 2}"
         role="marquee"
         aria-label="{cat.label} tools"
       >

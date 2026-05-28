@@ -1,28 +1,17 @@
 <script>
   import { onMount } from 'svelte';
-  import { animate, inView, stagger } from 'motion';
+
+  /*
+    Entrance fades handled by the global .reveal utility. Component owns
+    the cursor-following spotlight effect on each card (pure DOM/CSS
+    custom-property bridge — no motion lib needed). Hover lift + name
+    shift are now pure CSS transitions.
+  */
 
   let section;
 
-  // Spring hover — lift card + shift title
-  function cardEnter(e) {
-    const card = e.currentTarget;
-    const name = card.querySelector('.project-name');
-    animate(card, { y: -4 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
-    if (name) animate(name, { x: 4 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
-  }
-
-  function cardLeave(e) {
-    const card = e.currentTarget;
-    const name = card.querySelector('.project-name');
-    animate(card, { y: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
-    if (name) animate(name, { x: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
-  }
-
   onMount(() => {
     const cards = section.querySelectorAll('.project');
-
-    // Cursor-following spotlight (always active, not an entrance animation)
     cards.forEach(card => {
       card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
@@ -30,50 +19,16 @@
         card.style.setProperty('--glow-y', `${e.clientY - rect.top}px`);
       });
     });
-
-    if (window.__vtNav) {
-      section.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
-      return;
-    }
-
-    const tag = section.querySelector('.section-tag');
-    const heading = section.querySelector('.section-heading');
-
-    const stop = inView(section, () => {
-      // Section tag
-      animate(tag, { opacity: 1, y: 0 }, {
-        duration: 0.35,
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      // Heading
-      animate(heading, { opacity: 1, y: 0 }, {
-        duration: 0.4,
-        delay: 0.05,
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      // Cards stagger in
-      animate(cards, { opacity: 1, y: 0 }, {
-        duration: 0.4,
-        delay: stagger(0.06, { start: 0.1 }),
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      stop();
-    }, { amount: 0.2 });
-
-    return () => stop();
   });
 </script>
 
 <section class="now" bind:this={section}>
   <div class="now-inner">
-    <div class="section-tag" style="opacity: 0; transform: translateY(8px);"><span class="tag-number">03</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Now</span></div>
-    <h2 class="section-heading" style="opacity: 0; transform: translateY(12px);">What I'm Working On</h2>
+    <div class="section-tag reveal" style="--reveal-i: 0"><span class="tag-number">03</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Now</span></div>
+    <h2 class="section-heading reveal" style="--reveal-i: 1">What I'm Working On</h2>
 
     <div class="projects">
-      <a href="/contact" class="project" style="opacity: 0; transform: translateY(15px);" onmouseenter={cardEnter} onmouseleave={cardLeave}>
+      <a href="/contact" class="project reveal" style="--reveal-i: 2">
         <div class="project-top">
           <span class="project-number">01</span>
           <div class="project-header">
@@ -85,7 +40,7 @@
         <p class="project-desc">GTM strategy, marketing systems, web design, operations, and growth for companies that need senior-level thinking without a full-time hire. Let's talk.</p>
       </a>
 
-      <article class="project" style="opacity: 0; transform: translateY(15px);" onmouseenter={cardEnter} onmouseleave={cardLeave}>
+      <article class="project reveal" style="--reveal-i: 3">
         <div class="project-top">
           <span class="project-number">02</span>
           <div class="project-header">
@@ -97,7 +52,7 @@
         <p class="project-desc">A work management platform for small teams. Consolidates chats, tasks, CRM, marketing, G-Suite, and more into one place, delivering everything your team needs at a fraction of the cost of running them all separately.</p>
       </article>
 
-      <article class="project" style="opacity: 0; transform: translateY(15px);" onmouseenter={cardEnter} onmouseleave={cardLeave}>
+      <article class="project reveal" style="--reveal-i: 4">
         <div class="project-top">
           <span class="project-number">03</span>
           <div class="project-header">
@@ -184,10 +139,15 @@
     flex-direction: column;
     position: relative;
     overflow: hidden;
-    transition: border-color var(--duration-fast) var(--ease-out-expo);
+    transition:
+      border-color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-spring);
     text-decoration: none;
     color: inherit;
   }
+
+  a.project:hover { transform: translateY(-4px); }
+  article.project:hover { transform: translateY(-4px); }
 
   /* Cursor-following spotlight */
   .project::before {
@@ -305,7 +265,10 @@
     margin: 0 0 0.65rem;
     position: relative;
     z-index: 1;
+    transition: transform var(--duration-fast) var(--ease-spring);
   }
+
+  .project:hover .project-name { transform: translateX(4px); }
 
   .project:first-child .project-name {
     font-size: var(--text-xl);

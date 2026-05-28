@@ -1,84 +1,20 @@
 <script>
-  import { onMount } from 'svelte';
-  import { animate, inView } from 'motion';
-
-  let section;
-
-  onMount(() => {
-    if (window.__vtNav) {
-      section.querySelectorAll('[style]').forEach(el => el.removeAttribute('style'));
-      return;
-    }
-
-    const tag = section.querySelector('.section-tag');
-    const heading = section.querySelector('.cta-heading');
-    const email = section.querySelector('.email');
-    const body = section.querySelector('.cta-body');
-    const links = section.querySelector('.links');
-
-    const stop = inView(section, () => {
-      // Section tag
-      animate(tag, { opacity: 1, y: 0 }, {
-        duration: 0.35,
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      // Heading scales up and fades in
-      animate(heading, {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-      }, {
-        duration: 0.45,
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      // Email button
-      animate(email, { opacity: 1, y: 0 }, {
-        duration: 0.4,
-        delay: 0.15,
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      // Body text
-      animate(body, { opacity: 1, y: 0 }, {
-        duration: 0.4,
-        delay: 0.25,
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      // Social links
-      animate(links, { opacity: 1 }, {
-        duration: 0.35,
-        delay: 0.32,
-        easing: [0.25, 1, 0.5, 1],
-      });
-
-      // Spring hover on email CTA
-      email.addEventListener('mouseenter', () => {
-        animate(email, { scale: 1.04 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
-      });
-      email.addEventListener('mouseleave', () => {
-        animate(email, { scale: 1 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
-      });
-
-      stop();
-    }, { amount: 0.25 });
-
-    return () => stop();
-  });
+  /*
+    Entrance fades handled by the global .reveal utility.
+    Email CTA hover scale is now a pure CSS transition.
+  */
 </script>
 
-<section class="contact" bind:this={section}>
+<section class="contact">
   <div class="contact-inner">
-    <div class="section-tag" style="opacity: 0; transform: translateY(8px);"><span class="tag-number">09</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Contact</span></div>
-    <h2 class="cta-heading" style="opacity: 0; transform: translateY(12px) scale(0.97);">Let's build<br />something together.</h2>
+    <div class="section-tag reveal" style="--reveal-i: 0"><span class="tag-number">09</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Contact</span></div>
+    <h2 class="cta-heading reveal" style="--reveal-i: 1">Let's build<br />something together.</h2>
 
-    <a href="/contact" class="email" style="opacity: 0; transform: translateY(12px);">Get in touch</a>
+    <a href="/contact" class="email reveal" style="--reveal-i: 2">Get in touch</a>
 
-    <p class="cta-body" style="opacity: 0; transform: translateY(10px);">I'm always open to conversations about GTM strategy, design, operations, or interesting problems worth solving.</p>
+    <p class="cta-body reveal" style="--reveal-i: 4">I'm always open to conversations about GTM strategy, design, operations, or interesting problems worth solving.</p>
 
-    <div class="links" style="opacity: 0;">
+    <div class="links reveal" style="--reveal-i: 5">
       <a href="https://www.linkedin.com/in/devalexander/" target="_blank" rel="noopener" class="social-link">LinkedIn</a>
       <span class="link-dot" aria-hidden="true">&middot;</span>
       <a href="https://x.com/devinhelps" target="_blank" rel="noopener" class="social-link">X / Twitter</a>
@@ -127,8 +63,12 @@
     overflow: hidden;
     z-index: 0;
     transition: color var(--duration-fast) var(--ease-out-expo),
-                border-color var(--duration-fast) var(--ease-out-expo);
+                border-color var(--duration-fast) var(--ease-out-expo),
+                transform var(--duration-fast) var(--ease-spring);
   }
+
+  .email:hover { transform: scale(1.04); }
+  .email:active { transform: scale(0.98); }
 
   .email::after {
     content: '';

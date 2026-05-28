@@ -1,6 +1,11 @@
 <script>
   import { onMount } from 'svelte';
-  import { animate, inView } from 'motion';
+
+  /*
+    Entrance fades handled by the global .reveal utility.
+    Spring hover lift + name shift are pure CSS transitions.
+    Component owns only the cursor-following spotlight.
+  */
 
   const tools = [
     { name: 'GTM Budget Planner', tag: 'Planning', description: 'Reverse-engineer your funnel from revenue target to daily activity.', href: '/tools/gtm-planner', accent: 'teal', number: '01' },
@@ -9,21 +14,6 @@
   ];
 
   let section;
-  let inner;
-
-  function entryEnter(e) {
-    const entry = e.currentTarget;
-    const name = entry.querySelector('.entry-name');
-    animate(entry, { y: -3 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
-    if (name) animate(name, { x: 3 }, { duration: 0.15, easing: [0.34, 1.56, 0.64, 1] });
-  }
-
-  function entryLeave(e) {
-    const entry = e.currentTarget;
-    const name = entry.querySelector('.entry-name');
-    animate(entry, { y: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
-    if (name) animate(name, { x: 0 }, { duration: 0.25, easing: [0.16, 1, 0.3, 1] });
-  }
 
   onMount(() => {
     const entries = section.querySelectorAll('.tool-entry');
@@ -34,26 +24,13 @@
         entry.style.setProperty('--glow-y', `${e.clientY - rect.top}px`);
       });
     });
-
-    if (window.__vtNav) {
-      inner.classList.remove('will-animate');
-      return;
-    }
-
-    const stop = inView(section, () => {
-      inner.classList.remove('will-animate');
-      inner.classList.add('revealed');
-      stop();
-    }, { amount: 0.15 });
-
-    return () => stop();
   });
 </script>
 
 <section class="tools-preview" bind:this={section}>
-  <div class="tools-preview-inner will-animate" bind:this={inner}>
-    <div class="section-tag"><span class="tag-number">06</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Tools</span></div>
-    <div class="tools-header">
+  <div class="tools-preview-inner">
+    <div class="section-tag reveal" style="--reveal-i: 0"><span class="tag-number">06</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Tools</span></div>
+    <div class="tools-header reveal" style="--reveal-i: 1">
       <h2 class="section-heading">Free Tools</h2>
       <a href="/tools" class="view-all">
         View all
@@ -64,8 +41,8 @@
     </div>
 
     <div class="tools-showcase">
-      {#each tools as tool}
-        <a href={tool.href} class="tool-entry accent-{tool.accent}" onmouseenter={entryEnter} onmouseleave={entryLeave}>
+      {#each tools as tool, i}
+        <a href={tool.href} class="tool-entry accent-{tool.accent} reveal" style="--reveal-i: {i + 2}">
           <div class="entry-bar" aria-hidden="true"></div>
           <span class="entry-number" aria-hidden="true">{tool.number}</span>
           <div class="entry-body">
@@ -92,45 +69,6 @@
   .tools-preview-inner {
     max-width: 960px;
     margin: 0 auto;
-  }
-
-  /* ---- Entrance animation (CSS-driven) ---- */
-  .will-animate .section-tag,
-  .will-animate .tools-header,
-  .will-animate .tool-entry {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-
-  .revealed .section-tag {
-    animation: fadeSlideUp 0.35s cubic-bezier(0.25, 1, 0.5, 1) both;
-  }
-
-  .revealed .tools-header {
-    animation: fadeSlideUp 0.4s cubic-bezier(0.25, 1, 0.5, 1) 50ms both;
-  }
-
-  .revealed .tool-entry {
-    animation: fadeSlideUp 0.45s cubic-bezier(0.25, 1, 0.5, 1) both;
-  }
-
-  .revealed .tool-entry:nth-child(1) { animation-delay: 100ms; }
-  .revealed .tool-entry:nth-child(2) { animation-delay: 180ms; }
-  .revealed .tool-entry:nth-child(3) { animation-delay: 260ms; }
-
-  @keyframes fadeSlideUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: none; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .revealed .section-tag,
-    .revealed .tools-header,
-    .revealed .tool-entry {
-      animation: none;
-      opacity: 1;
-      transform: none;
-    }
   }
 
   /* ---- Section tag ---- */
@@ -221,8 +159,12 @@
     position: relative;
     overflow: hidden;
     background: color-mix(in oklab, var(--color-text-muted) 3%, transparent);
-    transition: background var(--duration-normal) var(--ease-out-expo);
+    transition:
+      background var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-spring);
   }
+
+  .tool-entry:hover { transform: translateY(-3px); }
 
   .tool-entry.accent-teal { --entry-accent: var(--color-accent-teal); }
   .tool-entry.accent-amber { --entry-accent: var(--color-accent-amber); }
@@ -309,10 +251,15 @@
     letter-spacing: var(--tracking-tight);
     color: var(--color-text);
     margin: 0 0 0.3rem;
-    transition: color var(--duration-fast) var(--ease-out-expo);
+    transition:
+      color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-spring);
   }
 
-  .tool-entry:hover .entry-name { color: var(--color-accent); }
+  .tool-entry:hover .entry-name {
+    color: var(--color-accent);
+    transform: translateX(3px);
+  }
 
   .entry-desc {
     font-family: var(--font-body);

@@ -255,6 +255,46 @@ body {
 }
 
 /* ==============================
+   SCROLL REVEAL UTILITY
+   Single source of truth for fade-in-on-scroll across the site.
+
+   Usage:
+     <div class="reveal">…</div>                 ← simple fade-up
+     <div class="reveal" style="--reveal-i:0">  ← staggered (use 0, 1, 2…)
+     <div class="reveal" style="--reveal-i:1">
+     <div class="reveal" style="--reveal-i:2">
+
+   A single global IntersectionObserver in Layout.astro adds `.is-visible`
+   when each element enters view. Animation tokens come from the design
+   system (--duration-slow + --ease-out-expo). Stagger delay = 60ms × i.
+
+   Without JS or before js-ready, content stays fully visible — the
+   initial-hidden state is gated on html.js-ready.
+   ============================== */
+html.js-ready .reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--duration-slow) var(--ease-out-expo),
+    transform var(--duration-slow) var(--ease-out-expo);
+  transition-delay: calc(var(--reveal-i, 0) * 60ms);
+  will-change: opacity, transform;
+}
+
+html.js-ready .reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js-ready .reveal {
+    transition-duration: 1ms;
+    transition-delay: 0ms;
+    transform: none;
+  }
+}
+
+/* ==============================
    GLOBAL FOCUS & INTERACTION
    ============================== */
 *:focus-visible {

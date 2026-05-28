@@ -8,14 +8,14 @@ import ContactForm from '../components/ContactForm.svelte';
   <main>
     <section class="contact-page">
       <div class="contact-inner">
-        <header class="page-header">
+        <header class="page-header reveal" style="--reveal-i: 0">
           <div class="section-tag"><span class="tag-number">01</span><span class="tag-dash" aria-hidden="true"></span><span class="tag-label">Contact</span></div>
           <h1 class="page-title">Let's talk</h1>
           <p class="page-subtitle">Whether it's <span class="sub-accent teal">consulting</span>, <span class="sub-accent amber">collaboration</span>, or an interesting problem worth <span class="sub-accent rust">solving</span>.</p>
           <div class="title-rule" aria-hidden="true"></div>
         </header>
 
-        <div class="contact-switcher" role="tablist" aria-label="Choose how to get in touch">
+        <div class="contact-switcher reveal" style="--reveal-i: 1" role="tablist" aria-label="Choose how to get in touch">
           <button class="tab-btn active" id="tab-message" type="button" role="tab" aria-selected="true" aria-controls="panel-message">
             <span class="tab-num">01</span>
             <span class="tab-label">Message</span>
@@ -26,7 +26,7 @@ import ContactForm from '../components/ContactForm.svelte';
           </button>
         </div>
 
-        <div class="contact-card" id="contact-card">
+        <div class="contact-card reveal" style="--reveal-i: 2" id="contact-card">
           <div class="card-accent teal" aria-hidden="true"></div>
           <div class="card-accent amber" aria-hidden="true"></div>
 
@@ -55,86 +55,36 @@ import ContactForm from '../components/ContactForm.svelte';
 </Layout>
 
 <script>
-  import { animate, inView } from 'motion';
-
+  // Entrance fades handled by the global .reveal utility (CSS + observer
+  // in Layout.astro). This script only owns tab switching + deep-linking.
   document.addEventListener('astro:page-load', () => {
-  // ---- Tab switching ----
-  const tabMessage = document.getElementById('tab-message');
-  const tabBooking = document.getElementById('tab-booking');
-  const panelMessage = document.getElementById('panel-message');
-  const panelBooking = document.getElementById('panel-booking');
-  const card = document.getElementById('contact-card');
+    const tabMessage = document.getElementById('tab-message');
+    const tabBooking = document.getElementById('tab-booking');
+    const panelMessage = document.getElementById('panel-message');
+    const panelBooking = document.getElementById('panel-booking');
+    const card = document.getElementById('contact-card');
 
-  function switchTab(tab) {
-    const isBooking = tab === 'booking';
-
-    tabMessage.classList.toggle('active', !isBooking);
-    tabBooking.classList.toggle('active', isBooking);
-    tabMessage.setAttribute('aria-selected', String(!isBooking));
-    tabBooking.setAttribute('aria-selected', String(isBooking));
-    card.classList.toggle('booking', isBooking);
-
-    panelMessage.classList.toggle('active', !isBooking);
-    panelBooking.classList.toggle('active', isBooking);
-  }
-
-  tabMessage?.addEventListener('click', () => switchTab('message'));
-  tabBooking?.addEventListener('click', () => switchTab('booking'));
-
-  // Deep-link support: #book opens the booking tab on load.
-  if (window.location.hash === '#book') {
-    switchTab('booking');
-  }
-
-  // ---- Entrance animations (skip on view transition nav) ----
-  const isVtNav = window.__vtNav;
-  const header = document.querySelector('.page-header');
-  const switcher = document.querySelector('.contact-switcher');
-  const cardEl = document.querySelector('.contact-card');
-
-  if (!isVtNav) {
-    // Initial opacity:0 is set via CSS (html.js-ready selector).
-    if (header) {
-      inView(header, () => {
-        animate(header, { opacity: [0, 1], y: [12, 0] }, {
-          duration: 0.4,
-          easing: [0.25, 1, 0.5, 1],
-        });
-      }, { amount: 0.3 });
+    function switchTab(tab) {
+      const isBooking = tab === 'booking';
+      tabMessage.classList.toggle('active', !isBooking);
+      tabBooking.classList.toggle('active', isBooking);
+      tabMessage.setAttribute('aria-selected', String(!isBooking));
+      tabBooking.setAttribute('aria-selected', String(isBooking));
+      card.classList.toggle('booking', isBooking);
+      panelMessage.classList.toggle('active', !isBooking);
+      panelBooking.classList.toggle('active', isBooking);
     }
 
-    if (switcher) {
-      inView(switcher, () => {
-        animate(switcher, { opacity: [0, 1], y: [10, 0] }, {
-          duration: 0.35,
-          delay: 0.05,
-          easing: [0.25, 1, 0.5, 1],
-        });
-      }, { amount: 0.3 });
-    }
+    tabMessage?.addEventListener('click', () => switchTab('message'));
+    tabBooking?.addEventListener('click', () => switchTab('booking'));
 
-    if (cardEl) {
-      inView(cardEl, () => {
-        animate(cardEl, { opacity: [0, 1], y: [15, 0] }, {
-          duration: 0.4,
-          delay: 0.1,
-          easing: [0.25, 1, 0.5, 1],
-        });
-      }, { amount: 0.1 });
-    }
-  }
-
-  // Contact form: handled by <ContactForm /> Svelte island (state, fetch, success/error live there).
+    if (window.location.hash === '#book') switchTab('booking');
   });
 </script>
 
 <style>
   /* Pre-hide elements JS will fade in (Layout.astro adds .js-ready before paint). */
-  html.js-ready .page-header,
-  html.js-ready .contact-switcher,
-  html.js-ready .contact-card {
-    opacity: 0;
-  }
+  /* Entrance hidden state provided by the global .reveal utility. */
 
   /* ---- Centered stage layout ---- */
   .contact-page {
