@@ -85,9 +85,8 @@ const doc = {
   title: 'Advertising Word List',
   slug: { _type: 'slug', current: 'advertising-word-list' },
   category: 'word-list',
-  tagline: 'The essential vocabulary of paid media, performance marketing, and creative — plain-English definitions for the words you hear in every meeting.',
-  description:
-    'A reference of the common words used in advertising and paid media, with simple definitions. Built for marketers, founders, and operators who want to talk to agencies, vendors, and teammates without nodding through unfamiliar terms.',
+  tagline: 'Every word in a creative brief, defined.',
+  description: 'Digital, paid, print, radio, TV, and out-of-home.',
   accent: 'gold',
   order: 1,
   featured: true,

@@ -145,9 +145,8 @@ const doc = {
   title: 'Website Design Word List',
   slug: { _type: 'slug', current: 'website-design-word-list' },
   category: 'word-list',
-  tagline: 'Plain-English definitions for the words used in web design — layout, typography, color, components, motion, and process.',
-  description:
-    'A reference for the vocabulary of web design. Covers CSS layout, typography, color systems, UI patterns, motion, and design process. Built for founders, marketers, and anyone briefing or reviewing design work who wants to follow along without nodding through unfamiliar terms.',
+  tagline: 'Every word in a design review, defined.',
+  description: 'Layout, typography, color, components, motion, and process.',
   accent: 'teal',
   order: 2,
   featured: true,

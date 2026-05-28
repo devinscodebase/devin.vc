@@ -170,9 +170,8 @@ const doc = {
   title: 'SEO Word List',
   slug: { _type: 'slug', current: 'seo-word-list' },
   category: 'word-list',
-  tagline: 'Plain-English definitions for the words used in search engine optimization. From crawl budget to E-E-A-T to the SERP features eating your clicks.',
-  description:
-    'A reference for the vocabulary of SEO. Covers search engine fundamentals, on-page, technical SEO, keywords and intent, content quality, links and authority, local SEO, SERP features, measurement, and the black-hat tactics worth knowing about. Built for founders, marketers, and operators briefing or reviewing SEO work who want to follow along without nodding through unfamiliar acronyms.',
+  tagline: 'Every word in an SEO audit, defined.',
+  description: 'Search fundamentals, on-page, technical, content, links, and the SERP features eating your clicks.',
   accent: 'amber',
   order: 3,
   featured: true,
