@@ -35,12 +35,12 @@ const ogImage = `${siteUrl}${ogImagePath.startsWith('/') ? ogImagePath : `/${ogI
 ---
 
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#0a0a08" />
+    <meta name="theme-color" content="#efe7d6" />
     {noIndex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
@@ -68,7 +68,7 @@ const ogImage = `${siteUrl}${ogImagePath.startsWith('/') ? ogImagePath : `/${ogI
     <script is:inline>
       (function() {
         var stored = localStorage.getItem('theme');
-        document.documentElement.setAttribute('data-theme', stored || 'dark');
+        document.documentElement.setAttribute('data-theme', stored || 'light');
         // Mark JS as ready so CSS can pre-hide animation candidates
         // before the browser paints them. Prevents the visible→invisible
         // flash that happens when JS sets opacity:0 post-render.

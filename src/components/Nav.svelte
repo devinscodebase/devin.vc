@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
 
   let open = $state(false);
-  let theme = $state('dark');
+  let theme = $state('light');
   let scrolled = $state(false);
   let currentPath = $state('/');
 
@@ -13,7 +13,7 @@
   ];
 
   onMount(() => {
-    theme = document.documentElement.getAttribute('data-theme') || 'dark';
+    theme = document.documentElement.getAttribute('data-theme') || 'light';
     currentPath = window.location.pathname;
 
     function onScroll() {

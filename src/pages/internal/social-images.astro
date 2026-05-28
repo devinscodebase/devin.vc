@@ -1,0 +1,487 @@
+---
+import InternalLayout from '../../layouts/InternalLayout.astro';
+---
+
+<InternalLayout
+  title="Social Images · Internal"
+  description="Brand-aligned banner and social image previews."
+>
+  <div class="si">
+    <header class="si__header">
+      <a class="si__back" href="/internal/design-system">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M10 6H2M5 3L2 6l3 3" />
+        </svg>
+        Design system
+      </a>
+      <span class="si__chip">Internal · 2026.05</span>
+      <h1 class="si__title">Social images.</h1>
+      <p class="si__lede">
+        Brand-aligned exports for profile banners, share previews, and the
+        next places the site shows up. Each one renders live below — screenshot
+        at the listed dimensions or use the actual-size view.
+      </p>
+    </header>
+
+    <!-- ============================================
+         LINKEDIN BANNER
+         ============================================ -->
+    <section class="si__section">
+      <div class="si__sec-head">
+        <span class="si__tag"><span>01</span><span class="si__rule" aria-hidden="true"></span><span>LinkedIn banner</span></span>
+        <h2 class="si__h2">Profile header.</h2>
+
+        <dl class="si__specs">
+          <div><dt>Dimensions</dt><dd>1584 × 396 px</dd></div>
+          <div><dt>Aspect ratio</dt><dd>4 : 1</dd></div>
+          <div><dt>Profile pic overlap</dt><dd>Bottom-left quadrant, ~280 px wide</dd></div>
+          <div><dt>File format</dt><dd>PNG · sRGB · &lt; 8 MB</dd></div>
+        </dl>
+
+        <label class="si__toggle">
+          <input type="checkbox" data-toggle-guide />
+          <span>Show LinkedIn profile photo overlay guide</span>
+        </label>
+      </div>
+
+      <!-- Scaled preview (fits container width while preserving 4:1 ratio) -->
+      <div class="si__preview si__preview--scaled" data-preview>
+        <div class="li-banner" data-banner>
+          <!-- Warm radial glow — bottom-right counterweights the content -->
+          <span class="li-banner__radial" aria-hidden="true"></span>
+
+          <!-- Content: anchored right of profile-pic overlap zone.
+               One claim + one supporting phrase. No wordmark, no rule —
+               LinkedIn shows your domain in the profile fields below. -->
+          <div class="li-banner__content">
+            <h3 class="li-banner__headline">
+              Marketing systems<br />
+              that compound.
+            </h3>
+
+            <p class="li-banner__sub">
+              <span class="li-banner__disc li-banner__disc--teal">Marketing</span>
+              <span class="li-banner__sub-dot" aria-hidden="true">·</span>
+              <span class="li-banner__disc li-banner__disc--amber">Operations</span>
+              <span class="li-banner__sub-dot" aria-hidden="true">·</span>
+              <span class="li-banner__disc li-banner__disc--rust">Design &amp; Dev</span>
+              <span class="li-banner__sub-dot" aria-hidden="true">·</span>
+              <span class="li-banner__disc li-banner__disc--gold">GTM</span>
+            </p>
+          </div>
+
+          <!-- Profile photo overlap guide (toggle-controlled) -->
+          <span class="li-banner__guide" aria-hidden="true">
+            <span class="li-banner__guide-circle"></span>
+            <span class="li-banner__guide-label">PROFILE PHOTO ZONE</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="si__actions">
+        <a class="si__btn" href="#" data-open-actual>Open at actual size (1584 × 396)</a>
+        <span class="si__hint">macOS: <code>⌘ + Shift + 4</code> then drag over the banner to capture. Save as PNG.</span>
+      </div>
+    </section>
+
+    <!-- Future sections (Twitter banner, OG variants, etc.) -->
+    <section class="si__section si__section--coming-soon">
+      <span class="si__tag si__tag--muted"><span>02</span><span class="si__rule" aria-hidden="true"></span><span>Coming next</span></span>
+      <p class="si__coming-text">
+        X/Twitter banner · Instagram banner · OG variants per page. Tell me which you want and I'll spec and render here.
+      </p>
+    </section>
+  </div>
+</InternalLayout>
+
+<script>
+  // Toggle the LinkedIn profile-photo overlay guide
+  const toggle = document.querySelector<HTMLInputElement>('[data-toggle-guide]');
+  const banner = document.querySelector<HTMLElement>('[data-banner]');
+  toggle?.addEventListener('change', () => {
+    banner?.classList.toggle('li-banner--show-guide', toggle.checked);
+  });
+
+  // "Open at actual size" — show the banner unscaled, with horizontal scroll
+  const openActual = document.querySelector<HTMLAnchorElement>('[data-open-actual]');
+  const preview = document.querySelector<HTMLElement>('[data-preview]');
+  openActual?.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (!preview) return;
+    preview.classList.toggle('si__preview--actual');
+    openActual.textContent = preview.classList.contains('si__preview--actual')
+      ? 'Return to scaled preview'
+      : 'Open at actual size (1584 × 396)';
+  });
+</script>
+
+<style>
+  /* ============================================
+     PAGE LAYOUT
+     ============================================ */
+  .si {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(3rem, 6vw, 5rem) var(--space-page-x) var(--space-block-lg);
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  .si__header {
+    margin-bottom: var(--space-block);
+  }
+
+  .si__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    margin-bottom: 1.5rem;
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+  .si__back:hover { color: var(--color-accent); }
+  .si__back svg { transition: transform var(--duration-fast) var(--ease-out-expo); }
+  .si__back:hover svg { transform: translateX(-3px); }
+
+  .si__chip {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+    margin-bottom: 1.25rem;
+  }
+
+  .si__title {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: var(--weight-regular);
+    line-height: 0.96;
+    letter-spacing: -0.035em;
+    color: var(--color-text);
+    margin: 0 0 1.25rem;
+  }
+
+  .si__lede {
+    font-family: var(--font-body);
+    font-size: var(--text-md);
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  /* ============================================
+     SECTION
+     ============================================ */
+  .si__section {
+    padding-block: var(--space-block);
+    border-top: var(--border-subtle);
+  }
+
+  .si__section--coming-soon {
+    padding-block: var(--space-card);
+  }
+
+  .si__sec-head {
+    margin-bottom: var(--space-card);
+  }
+
+  .si__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-accent);
+    margin-bottom: 1rem;
+  }
+
+  .si__tag--muted { color: var(--color-text-subtle); }
+
+  .si__tag span:first-child {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .si__rule {
+    width: 1.5rem;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.5;
+  }
+
+  .si__h2 {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-regular);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+    margin: 0 0 1.5rem;
+  }
+
+  .si__specs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.85rem 2rem;
+    margin: 0 0 1.5rem;
+    padding: 1.25rem 0;
+    border-top: var(--border-subtle);
+    border-bottom: var(--border-subtle);
+  }
+
+  .si__specs > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .si__specs dt {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .si__specs dd {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .si__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    cursor: pointer;
+    user-select: none;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+  .si__toggle:hover { color: var(--color-text); }
+  .si__toggle input {
+    accent-color: var(--color-accent);
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+  }
+
+  /* ============================================
+     PREVIEW WRAPPER
+     ============================================ */
+  .si__preview {
+    background: color-mix(in oklab, var(--color-text) 3%, transparent);
+    border: var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: clamp(1rem, 3vw, 2rem);
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+  }
+
+  /* Scaled mode: container width caps banner, aspect-ratio reserves space */
+  .si__preview--scaled .li-banner {
+    width: 100%;
+    aspect-ratio: 1584 / 396;
+    height: auto;
+  }
+
+  /* Actual-size mode: 1584×396, horizontal scroll if narrower viewport */
+  .si__preview--actual {
+    overflow-x: auto;
+  }
+  .si__preview--actual .li-banner {
+    width: 1584px;
+    height: 396px;
+    aspect-ratio: auto;
+    flex-shrink: 0;
+  }
+
+  /* ============================================
+     ACTIONS / HINTS
+     ============================================ */
+  .si__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .si__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text);
+    text-decoration: none;
+    padding: 0.7rem 1.1rem;
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 35%, transparent);
+    border-radius: var(--radius-sm);
+    transition:
+      border-color var(--duration-fast) var(--ease-out-expo),
+      background-color var(--duration-fast) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo);
+  }
+  .si__btn:hover {
+    border-color: var(--color-accent);
+    background: color-mix(in oklab, var(--color-accent) 8%, transparent);
+  }
+
+  .si__hint {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+  .si__hint code {
+    font-family: var(--font-mono);
+    background: color-mix(in oklab, var(--color-accent) 10%, transparent);
+    color: var(--color-accent);
+    padding: 0.05em 0.4em;
+    border-radius: var(--radius-sm);
+    font-size: 0.92em;
+  }
+
+  .si__coming-text {
+    font-family: var(--font-body);
+    font-size: var(--text-md);
+    line-height: 1.55;
+    color: var(--color-text-muted);
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  /* ============================================
+     LINKEDIN BANNER
+     —
+     Designed at intrinsic dimensions 1584×396 using vw-relative sizing so it
+     scales cleanly when displayed at any aspect-ratio-locked container, and
+     also renders pixel-correctly at actual size. All measurements are in
+     cqw (container-query-width) so type/spacing track the rendered width.
+     ============================================ */
+  .li-banner {
+    position: relative;
+    container-type: inline-size;
+    background: #0a0a08; /* hard-coded dark — banner ships as a render, not theme-aware */
+    overflow: hidden;
+    color: #ede8df;
+    font-family: var(--font-display);
+  }
+
+  /* Warm radial glow — bottom-right, counterweighting content on the right */
+  .li-banner__radial {
+    position: absolute;
+    bottom: -30%;
+    right: -12%;
+    width: 60%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(196, 164, 124, 0.14) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  /* Center content: claim + supporting phrase. No accent rule, no wordmark.
+     Anchored well clear of the profile-pic overlap zone (left edge at 32cqw
+     when pic occupies roughly 4–20cqw). Right edge stays inside the LinkedIn
+     mobile-crop safe zone (~85cqw). */
+  .li-banner__content {
+    position: absolute;
+    top: 50%;
+    left: 32cqw;
+    transform: translateY(-44%);   /* Optical center, slightly above true center */
+    display: flex;
+    flex-direction: column;
+    gap: 1.8cqw;
+    width: 50cqw;
+    max-width: calc(100% - 38cqw);
+  }
+
+  .li-banner__headline {
+    font-family: var(--font-display);
+    font-size: 4.8cqw;
+    font-weight: 700;                /* Heavier for social-feed stopping power */
+    line-height: 0.96;
+    letter-spacing: -0.04em;
+    color: #ede8df;
+    margin: 0;
+  }
+
+  /* Subhead — each discipline carries its own accent color, matching the
+     homepage hero's descriptor system (teal / amber / rust / gold). */
+  .li-banner__sub {
+    font-family: var(--font-body);
+    font-size: 1.3cqw;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .li-banner__disc--teal  { color: #5a8b85; }
+  .li-banner__disc--amber { color: #dba85b; }
+  .li-banner__disc--rust  { color: #c87045; }
+  .li-banner__disc--gold  { color: #c4a47c; }
+
+  .li-banner__sub-dot {
+    color: #6d5c48;                  /* Muted brown — lets discipline colors lead */
+    margin: 0 0.45em;
+    opacity: 0.7;
+  }
+
+  /* Profile photo overlay guide — toggled on by checkbox */
+  .li-banner__guide {
+    position: absolute;
+    bottom: -8cqw;   /* simulating where LinkedIn places the profile pic */
+    left: 4.5cqw;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4cqw;
+  }
+  .li-banner--show-guide .li-banner__guide { display: flex; }
+
+  .li-banner__guide-circle {
+    width: 16cqw;
+    height: 16cqw;
+    border-radius: 50%;
+    border: 2px dashed color-mix(in oklab, #c4a47c 70%, transparent);
+    background: color-mix(in oklab, #c4a47c 5%, transparent);
+  }
+
+  .li-banner__guide-label {
+    position: absolute;
+    top: 4.5cqw;
+    font-family: var(--font-body);
+    font-size: 0.7cqw;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c4a47c;
+  }
+
+  /* ============================================
+     RESPONSIVE TIGHTENING
+     ============================================ */
+  @media (max-width: 640px) {
+    .si__h2 { font-size: var(--text-xl); }
+    .si__title { font-size: var(--text-2xl); }
+  }
+</style>
