@@ -81,6 +81,18 @@
     color: var(--color-text-muted);
   }
 
+  /* On narrow screens the aspect-ratio + min-height combo transfers an
+     implied min-width (~349px) to the grid item, forcing horizontal
+     overflow. Drop both so width drives the box, and let an explicit
+     height shape it. The legend reflows to the bottom at 480px. */
+  @media (max-width: 520px) {
+    .geo {
+      aspect-ratio: auto;
+      min-height: 0;
+      height: clamp(220px, 58vw, 300px);
+    }
+  }
+
   .map { position: absolute; inset: 0; }
   .map svg { width: 100%; height: 100%; display: block; }
 
