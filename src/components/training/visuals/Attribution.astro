@@ -1,0 +1,169 @@
+---
+/*
+  Attribution visual — a customer journey across 4 touchpoints with a
+  question mark on top asking "who gets credit?"
+*/
+
+const touches = [
+  { label: 'Saw TV ad',         icon: 'tv',     day: 'Day 1'  },
+  { label: 'Saw Facebook ad',   icon: 'fb',     day: 'Day 4'  },
+  { label: 'Searched Google',   icon: 'search', day: 'Day 7'  },
+  { label: 'Clicked Google ad', icon: 'click',  day: 'Day 7'  },
+  { label: 'Bought',            icon: 'cart',   day: 'Day 7', conversion: true },
+];
+---
+
+<div class="attr">
+  <!-- Question marker -->
+  <div class="question">
+    <span class="question-mark">?</span>
+    <span class="question-text">Which ad gets the credit?</span>
+  </div>
+
+  <!-- Journey timeline -->
+  <div class="timeline">
+    {touches.map((t, i) => (
+      <>
+        <div class={`touch ${t.conversion ? 'conv' : ''}`}>
+          <div class="touch-icon" aria-hidden="true">
+            {t.icon === 'tv' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                <rect x="3" y="6" width="18" height="13" rx="1.5"/>
+                <polyline points="9 21 12 19 15 21"/>
+              </svg>
+            )}
+            {t.icon === 'fb' && (
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22 12a10 10 0 1 0-11.5 9.9v-7H8v-3h2.5V9.5C10.5 7 12 5.7 14.2 5.7c1.05 0 2.15.18 2.15.18v2.4h-1.2c-1.18 0-1.55.74-1.55 1.5V12h2.65l-.42 3h-2.23v7A10 10 0 0 0 22 12z"/>
+              </svg>
+            )}
+            {t.icon === 'search' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="11" cy="11" r="7"/>
+                <line x1="16.3" y1="16.3" x2="21" y2="21"/>
+              </svg>
+            )}
+            {t.icon === 'click' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 9l3 14 2.5-6 6-2.5z"/>
+                <path d="M3 3v3M3 12h3M12 3h-3"/>
+              </svg>
+            )}
+            {t.icon === 'cart' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="20" r="1.5"/>
+                <circle cx="19" cy="20" r="1.5"/>
+                <path d="M3 4h2l2.5 12h12L22 7H6"/>
+              </svg>
+            )}
+          </div>
+          <span class="touch-label">{t.label}</span>
+          <span class="touch-day">{t.day}</span>
+        </div>
+        {i < touches.length - 1 && <span class="connector" aria-hidden="true"></span>}
+      </>
+    ))}
+  </div>
+
+  <p class="note">A buyer might see 4 different ads before they convert. Attribution decides which one earns the credit — and the budget.</p>
+</div>
+
+<style>
+  .attr {
+    padding: 1.25rem;
+    background: color-mix(in oklab, var(--color-text-muted) 4%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    border-radius: var(--radius-lg);
+    display: flex; flex-direction: column; gap: 0.85rem;
+  }
+
+  .question {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.55rem 0.85rem;
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 9%, transparent);
+    border: 1px solid color-mix(in oklab, var(--words-accent, var(--color-accent)) 38%, transparent);
+    border-radius: var(--radius-md);
+    align-self: flex-start;
+  }
+  .question-mark {
+    width: 22px; height: 22px;
+    display: grid; place-items: center;
+    background: var(--words-accent, var(--color-accent));
+    color: var(--color-bg);
+    border-radius: var(--radius-full);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    line-height: 1;
+  }
+  .question-text {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    font-weight: var(--weight-medium);
+  }
+
+  .timeline {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+  }
+  @media (max-width: 580px) {
+    .timeline { flex-direction: column; align-items: flex-start; }
+    .connector { width: 2px !important; height: 18px !important; align-self: center; }
+  }
+
+  .touch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.6rem 0.4rem;
+    background: var(--color-surface);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 14%, transparent);
+    border-radius: var(--radius-md);
+    flex: 1;
+    text-align: center;
+    color: var(--color-text-muted);
+    min-width: 0;
+  }
+  .touch.conv {
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 9%, transparent);
+    border-color: color-mix(in oklab, var(--words-accent, var(--color-accent)) 35%, transparent);
+    color: var(--words-accent, var(--color-accent));
+  }
+
+  .touch-icon { width: 22px; height: 22px; color: inherit; }
+  .touch-icon svg { width: 100%; height: 100%; }
+
+  .touch-label {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-text);
+    line-height: 1.2;
+  }
+  .touch.conv .touch-label { color: var(--color-text); font-weight: var(--weight-medium); }
+  .touch-day {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+    letter-spacing: 0.04em;
+  }
+
+  .connector {
+    width: 16px;
+    align-self: center;
+    height: 2px;
+    background: color-mix(in oklab, var(--color-text-muted) 22%, transparent);
+    flex-shrink: 0;
+  }
+
+  .note {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,201 @@
+---
+/*
+  TermVisual — dispatch wrapper that renders the visual reference for a
+  given term, or nothing if no visual exists for it.
+
+  Term → component mapping is hard-coded here (not Sanity-driven). The
+  visuals are themselves code, so the mapping belongs with the code.
+  Adding a new visual:
+    1. Build the .svelte (interactive) or .astro (static) component
+    2. Add it to the dispatch below
+
+  Static visuals stay as Astro components (no JS shipped). Interactive
+  visuals are Svelte islands with client:visible so they hydrate when
+  scrolled into view.
+*/
+
+// Anatomy
+import AdCopy           from './visuals/AdCopy.astro';
+import Storyboard       from './visuals/Storyboard.astro';
+import UtmParameter     from './visuals/UtmParameter.astro';
+import LandingPage      from './visuals/LandingPage.astro';
+import Pod              from './visuals/Pod.astro';
+
+// Format
+import AdFormat         from './visuals/AdFormat.svelte';
+import TvSpot           from './visuals/TvSpot.astro';
+import FullPageAd       from './visuals/FullPageAd.astro';
+import Spread           from './visuals/Spread.astro';
+import Classified       from './visuals/Classified.astro';
+import Bleed            from './visuals/Bleed.astro';
+import AboveFoldPrint   from './visuals/AboveFoldPrint.astro';
+
+// Time
+import Daypart          from './visuals/Daypart.svelte';
+import Primetime        from './visuals/Primetime.astro';
+import Hook             from './visuals/Hook.svelte';
+
+// Channels
+import SearchAds        from './visuals/SearchAds.astro';
+import DisplayAds       from './visuals/DisplayAds.astro';
+import NativeAds        from './visuals/NativeAds.astro';
+import ConnectedTv      from './visuals/ConnectedTv.astro';
+import OutOfHome        from './visuals/OutOfHome.astro';
+
+// Targeting
+import Demographics       from './visuals/Demographics.astro';
+import GeoTargeting       from './visuals/GeoTargeting.astro';
+import LookalikeAudience  from './visuals/LookalikeAudience.svelte';
+import ColdWarm           from './visuals/ColdWarm.astro';
+
+// Metrics
+import Reach            from './visuals/Reach.astro';
+import Frequency        from './visuals/Frequency.astro';
+import Impression       from './visuals/Impression.astro';
+import Ctr              from './visuals/Ctr.astro';
+import Cpc              from './visuals/Cpc.astro';
+import Cpm              from './visuals/Cpm.astro';
+import ConversionRate   from './visuals/ConversionRate.astro';
+import Roas             from './visuals/Roas.svelte';
+import Cpa              from './visuals/Cpa.astro';
+
+// Journey
+import Attribution      from './visuals/Attribution.astro';
+import LastClick        from './visuals/LastClick.astro';
+import FirstClick       from './visuals/FirstClick.astro';
+import Retargeting      from './visuals/Retargeting.astro';
+import TrackingPixel    from './visuals/TrackingPixel.astro';
+import AbTest           from './visuals/AbTest.svelte';
+
+// Quality
+import Headline         from './visuals/Headline.svelte';
+import Cta              from './visuals/Cta.astro';
+import SocialProof      from './visuals/SocialProof.astro';
+
+interface Props {
+  term: string;
+}
+const { term } = Astro.props;
+
+// Terms that have any visual reference (used for the wrapper conditional).
+const termsWithVisuals = new Set([
+  // Anatomy
+  'Ad Copy', 'Storyboard', 'UTM Parameter', 'Landing Page', 'Pod',
+  // Format
+  'Ad Format', 'TV Spot', 'Full-Page Ad', 'Spread', 'Classified', 'Bleed', 'Above the Fold (Print)',
+  // Time
+  'Daypart', 'Primetime', 'Hook',
+  // Channels
+  'Search Ads', 'Display Ads', 'Native Ads', 'Connected TV (CTV)', 'Out-of-Home (OOH)',
+  // Targeting
+  'Demographics', 'Geo-Targeting', 'Lookalike Audience', 'Cold vs. Warm Audience',
+  // Metrics
+  'Reach', 'Frequency', 'Impression',
+  'Click-Through Rate (CTR)', 'Cost Per Click (CPC)', 'Cost Per Thousand (CPM)',
+  'Conversion Rate', 'Return on Ad Spend (ROAS)', 'Cost Per Acquisition (CPA)',
+  // Journey
+  'Attribution', 'Last-Click Attribution', 'First-Click Attribution',
+  'Retargeting (Remarketing)', 'Tracking Pixel', 'A/B Test',
+  // Quality
+  'Headline', 'Call to Action (CTA)', 'Social Proof',
+]);
+
+const hasVisual = termsWithVisuals.has(term);
+---
+
+{hasVisual && (
+  <figure class="term-visual no-print">
+    <span class="visual-label" aria-hidden="true">
+      <span class="visual-label-rule"></span>
+      <span class="visual-label-text">Visual</span>
+    </span>
+
+    {/* Anatomy */}
+    {term === 'Ad Copy'                       && <AdCopy />}
+    {term === 'Storyboard'                    && <Storyboard />}
+    {term === 'UTM Parameter'                 && <UtmParameter />}
+    {term === 'Landing Page'                  && <LandingPage />}
+    {term === 'Pod'                           && <Pod />}
+
+    {/* Format */}
+    {term === 'Ad Format'                     && <AdFormat client:visible />}
+    {term === 'TV Spot'                       && <TvSpot />}
+    {term === 'Full-Page Ad'                  && <FullPageAd />}
+    {term === 'Spread'                        && <Spread />}
+    {term === 'Classified'                    && <Classified />}
+    {term === 'Bleed'                         && <Bleed />}
+    {term === 'Above the Fold (Print)'        && <AboveFoldPrint />}
+
+    {/* Time */}
+    {term === 'Daypart'                       && <Daypart client:visible />}
+    {term === 'Primetime'                     && <Primetime />}
+    {term === 'Hook'                          && <Hook client:visible />}
+
+    {/* Channels */}
+    {term === 'Search Ads'                    && <SearchAds />}
+    {term === 'Display Ads'                   && <DisplayAds />}
+    {term === 'Native Ads'                    && <NativeAds />}
+    {term === 'Connected TV (CTV)'            && <ConnectedTv />}
+    {term === 'Out-of-Home (OOH)'             && <OutOfHome />}
+
+    {/* Targeting */}
+    {term === 'Demographics'                  && <Demographics />}
+    {term === 'Geo-Targeting'                 && <GeoTargeting />}
+    {term === 'Lookalike Audience'            && <LookalikeAudience client:visible />}
+    {term === 'Cold vs. Warm Audience'        && <ColdWarm />}
+
+    {/* Metrics */}
+    {term === 'Reach'                         && <Reach />}
+    {term === 'Frequency'                     && <Frequency />}
+    {term === 'Impression'                    && <Impression />}
+    {term === 'Click-Through Rate (CTR)'      && <Ctr />}
+    {term === 'Cost Per Click (CPC)'          && <Cpc />}
+    {term === 'Cost Per Thousand (CPM)'       && <Cpm />}
+    {term === 'Conversion Rate'               && <ConversionRate />}
+    {term === 'Return on Ad Spend (ROAS)'     && <Roas client:visible />}
+    {term === 'Cost Per Acquisition (CPA)'    && <Cpa />}
+
+    {/* Journey */}
+    {term === 'Attribution'                   && <Attribution />}
+    {term === 'Last-Click Attribution'        && <LastClick />}
+    {term === 'First-Click Attribution'       && <FirstClick />}
+    {term === 'Retargeting (Remarketing)'     && <Retargeting />}
+    {term === 'Tracking Pixel'                && <TrackingPixel />}
+    {term === 'A/B Test'                      && <AbTest client:visible />}
+
+    {/* Quality */}
+    {term === 'Headline'                      && <Headline client:visible />}
+    {term === 'Call to Action (CTA)'          && <Cta />}
+    {term === 'Social Proof'                  && <SocialProof />}
+  </figure>
+)}
+
+<style>
+  .term-visual {
+    margin: 1.1rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    max-width: 64ch;
+  }
+
+  .visual-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-body);
+    font-size: 0.625rem;
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+  .visual-label-rule {
+    display: inline-block;
+    width: 18px;
+    height: 1px;
+    background: var(--words-accent, var(--color-accent));
+    opacity: 0.6;
+  }
+</style>

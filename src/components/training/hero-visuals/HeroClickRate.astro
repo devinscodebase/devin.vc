@@ -1,0 +1,218 @@
+---
+/*
+  HeroClickRate — one click in a wall of ads (kinetic).
+
+  A grid of twenty identical little ad tiles: everyone who SAW the ad.
+  A cursor drifts in, wanders across a couple of them, then settles on a
+  single tile and clicks — it lights gold and keeps a slow breathing glow
+  while the rest stay dim. One click among twenty impressions IS the
+  click-through rate. The readout below ticks 0 → 1 on the click.
+
+  Grid geometry lives in the viewBox so the cursor lands exactly on the
+  hot tile; the readout sits in its own band beneath, never overlapping.
+*/
+const COLS = 5;
+const ROWS = 4;
+const X0 = 22, Y0 = 16, DX = 66, DY = 50;
+const TW = 52, TH = 40;
+const HOT_C = 2, HOT_R = 1;
+
+const tiles = [];
+for (let r = 0; r < ROWS; r++) {
+  for (let c = 0; c < COLS; c++) {
+    tiles.push({ x: X0 + c * DX, y: Y0 + r * DY, hot: c === HOT_C && r === HOT_R });
+  }
+}
+const hot = tiles.find((t) => t.hot)!;
+// Cursor tip rests just left-of-centre on the hot tile.
+const cx = hot.x + TW * 0.4;
+const cy = hot.y + TH * 0.5;
+---
+
+<div class="kv kv-ct">
+  <div class="ct-stage">
+    <svg viewBox="0 0 352 216" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      {tiles.map((t) => (
+        <g class={t.hot ? 'ct-tile ct-tile-hot' : 'ct-tile'}>
+          {/* card */}
+          <rect class="ct-card" x={t.x} y={t.y} width={TW} height={TH} rx="6" />
+          {/* mini ad: image block + caption line, so each tile reads as an ad */}
+          <rect class="ct-img" x={t.x + 6} y={t.y + 6} width={TW - 12} height={TH - 18} rx="3" />
+          <rect class="ct-cap" x={t.x + 6} y={t.y + TH - 8} width={(TW - 12) * 0.62} height="3" rx="1.5" />
+          {t.hot && <rect class="ct-ring" x={t.x} y={t.y} width={TW} height={TH} rx="6" />}
+        </g>
+      ))}
+
+      {/* the cursor that wanders in and clicks exactly one */}
+      <g class="ct-cursor" style={`--cx: ${cx}px; --cy: ${cy}px;`}>
+        <path
+          d="M0 0 L0 17 L4.4 12.8 L7.4 19 L9.6 18 L6.6 12 L12 12 Z"
+          fill="var(--color-text)"
+          stroke="var(--color-bg)"
+          stroke-width="1"
+          stroke-linejoin="round"
+        />
+      </g>
+    </svg>
+  </div>
+
+  <div class="ct-readout">
+    <span class="ct-tally" aria-hidden="true">
+      <span class="ct-num"></span><span class="ct-of">/ 20</span>
+    </span>
+    <span class="ct-key">clicked the ad</span>
+  </div>
+</div>
+
+<style>
+  @property --ct-n {
+    syntax: '<integer>';
+    inherits: false;
+    initial-value: 1;
+  }
+
+  .kv {
+    /* synced to the rotator's 7.2s dwell — one full click cycle per view */
+    --ct-loop: 7.2s;
+    position: relative;
+    width: 100%;
+    height: 340px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.6rem;
+  }
+
+  .ct-stage {
+    width: 100%;
+    max-width: 360px;
+  }
+  .ct-stage svg { width: 100%; height: auto; display: block; overflow: visible; }
+
+  /* ─── Impression tiles (each a tiny ad) ─── */
+  .ct-card {
+    fill: color-mix(in oklab, var(--color-text-muted) 9%, var(--color-bg));
+    stroke: color-mix(in oklab, var(--color-text-muted) 20%, transparent);
+    stroke-width: 1;
+  }
+  .ct-img { fill: color-mix(in oklab, var(--color-text-muted) 17%, transparent); }
+  .ct-cap { fill: color-mix(in oklab, var(--color-text-muted) 24%, transparent); }
+
+  /* the one tile that gets clicked — card + inner art shift to gold, then breathe */
+  .ct-tile-hot .ct-card {
+    animation: ct-card var(--ct-loop) var(--ease-out-expo, cubic-bezier(0.16,1,0.3,1)) infinite;
+  }
+  .ct-tile-hot .ct-img {
+    animation: ct-img var(--ct-loop) var(--ease-out-expo, cubic-bezier(0.16,1,0.3,1)) infinite;
+  }
+  .ct-tile-hot .ct-cap {
+    animation: ct-cap var(--ct-loop) var(--ease-out-expo, cubic-bezier(0.16,1,0.3,1)) infinite;
+  }
+  .ct-ring {
+    fill: none;
+    stroke: var(--words-accent, var(--color-accent));
+    stroke-width: 1.5;
+    transform-box: fill-box;
+    transform-origin: center;
+    opacity: 0;
+    animation: ct-ring var(--ct-loop) var(--ease-out-expo, cubic-bezier(0.16,1,0.3,1)) infinite;
+  }
+
+  /* ─── The cursor ─── */
+  .ct-cursor {
+    transform: translate(56px, 232px);
+    filter: drop-shadow(0 2px 3px color-mix(in oklab, var(--color-text) 24%, transparent));
+    animation: ct-cursor var(--ct-loop) var(--ease-in-out-smooth, cubic-bezier(0.65,0,0.35,1)) infinite;
+  }
+
+  /* Cursor enters, drifts over a few tiles, lands on the hot tile and clicks
+     ~56%, then holds. The wander fills the early dwell; the post-click glow
+     fills the rest — so nothing freezes. */
+  @keyframes ct-cursor {
+    0%   { transform: translate(56px, 232px); opacity: 0; }
+    7%   { opacity: 1; }
+    22%  { transform: translate(96px, 128px); opacity: 1; }
+    40%  { transform: translate(214px, 98px); opacity: 1; }
+    56%  { transform: translate(var(--cx), var(--cy)); opacity: 1; }
+    60%  { transform: translate(var(--cx), calc(var(--cy) + 3px)); }
+    64%  { transform: translate(var(--cx), var(--cy)); }
+    100% { transform: translate(var(--cx), var(--cy)); opacity: 1; }
+  }
+
+  /* card: dim → gold on click, then a slow breathing tint keeps it alive */
+  @keyframes ct-card {
+    0%, 56%  { fill: color-mix(in oklab, var(--color-text-muted) 9%, var(--color-bg)); stroke: color-mix(in oklab, var(--color-text-muted) 20%, transparent); }
+    62%      { fill: color-mix(in oklab, var(--words-accent, var(--color-accent)) 26%, var(--color-bg)); stroke: var(--words-accent, var(--color-accent)); }
+    78%      { fill: color-mix(in oklab, var(--words-accent, var(--color-accent)) 16%, var(--color-bg)); stroke: var(--words-accent, var(--color-accent)); }
+    92%      { fill: color-mix(in oklab, var(--words-accent, var(--color-accent)) 26%, var(--color-bg)); stroke: var(--words-accent, var(--color-accent)); }
+    100%     { fill: color-mix(in oklab, var(--words-accent, var(--color-accent)) 22%, var(--color-bg)); stroke: var(--words-accent, var(--color-accent)); }
+  }
+  @keyframes ct-img {
+    0%, 56%  { fill: color-mix(in oklab, var(--color-text-muted) 17%, transparent); }
+    62%      { fill: var(--words-accent, var(--color-accent)); }
+    100%     { fill: var(--words-accent, var(--color-accent)); }
+  }
+  @keyframes ct-cap {
+    0%, 56%  { fill: color-mix(in oklab, var(--color-text-muted) 24%, transparent); }
+    62%      { fill: color-mix(in oklab, var(--color-bg) 70%, transparent); }
+    100%     { fill: color-mix(in oklab, var(--color-bg) 70%, transparent); }
+  }
+  /* ring ripples out on the click, lingers, fades */
+  @keyframes ct-ring {
+    0%, 56%  { opacity: 0; transform: scale(1); }
+    62%      { opacity: 0.9; transform: scale(1.16); }
+    85%      { opacity: 0; transform: scale(1.4); }
+    100%     { opacity: 0; transform: scale(1.4); }
+  }
+
+  /* ─── Readout (its own band, never over the grid) ─── */
+  .ct-readout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .ct-tally {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    line-height: 0.9;
+    letter-spacing: var(--tracking-tight);
+    font-variant-numeric: tabular-nums;
+  }
+  .ct-num {
+    counter-reset: ct-n var(--ct-n);
+    color: var(--words-accent, var(--color-accent));
+    animation: ct-count var(--ct-loop) steps(1, end) infinite;
+  }
+  .ct-num::after { content: counter(ct-n); }
+  .ct-of {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+  }
+  .ct-key {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+  @keyframes ct-count {
+    0%, 60%  { --ct-n: 0; }
+    62%      { --ct-n: 1; }
+    100%     { --ct-n: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ct-tile-hot .ct-card, .ct-tile-hot .ct-img, .ct-tile-hot .ct-cap,
+    .ct-ring, .ct-cursor, .ct-num { animation: none; }
+    .ct-tile-hot .ct-card { fill: color-mix(in oklab, var(--words-accent, var(--color-accent)) 22%, var(--color-bg)); stroke: var(--words-accent, var(--color-accent)); }
+    .ct-tile-hot .ct-img { fill: var(--words-accent, var(--color-accent)); }
+    .ct-tile-hot .ct-cap { fill: color-mix(in oklab, var(--color-bg) 70%, transparent); }
+    .ct-cursor { transform: translate(var(--cx), var(--cy)); opacity: 1; }
+  }
+</style>

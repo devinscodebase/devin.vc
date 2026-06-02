@@ -1,0 +1,202 @@
+---
+/*
+  Tracking Pixel visual — HTML view of a webpage with the invisible 1×1
+  pixel revealed (highlighted in its actual code).
+*/
+---
+
+<div class="tp">
+  <div class="grid">
+    <!-- Code view -->
+    <div class="code-view">
+      <div class="code-header">
+        <span class="code-dots" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        <span class="code-file">checkout/success.html</span>
+      </div>
+      <pre class="code">
+<span class="code-line"><span class="tag">&lt;body&gt;</span></span>
+<span class="code-line">  <span class="tag">&lt;h1&gt;</span>Thanks for your order!<span class="tag">&lt;/h1&gt;</span></span>
+<span class="code-line">  <span class="tag">&lt;p&gt;</span>Order #4729 confirmed.<span class="tag">&lt;/p&gt;</span></span>
+<span class="code-line highlight">  <span class="tag">&lt;img</span></span>
+<span class="code-line highlight">    <span class="attr">src</span>=<span class="val">"meta.com/tr?ev=Purchase"</span></span>
+<span class="code-line highlight">    <span class="attr">width</span>=<span class="val">"1"</span> <span class="attr">height</span>=<span class="val">"1"</span></span>
+<span class="code-line highlight">    <span class="attr">style</span>=<span class="val">"display:none"</span><span class="tag"> /&gt;</span></span>
+<span class="code-line"><span class="tag">&lt;/body&gt;</span></span>
+      </pre>
+      <div class="callout" aria-hidden="true">
+        <span class="callout-dot"></span>
+        <span class="callout-text">1×1 pixel · invisible · fires on page load</span>
+      </div>
+    </div>
+
+    <!-- Live page view -->
+    <div class="page-view">
+      <div class="page-frame">
+        <div class="page-header">
+          <span class="check" aria-hidden="true">✓</span>
+        </div>
+        <div class="page-body">
+          <h5 class="page-title">Thanks for your order!</h5>
+          <p class="page-sub">Order #4729 confirmed.</p>
+        </div>
+        <!-- The pixel — actually visible here, but at 1px-style with glow -->
+        <span class="pixel" title="Tracking pixel (visualized)"></span>
+      </div>
+      <span class="page-label">What the user sees</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .tp {
+    padding: 1.25rem;
+    background: color-mix(in oklab, var(--color-text-muted) 4%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    border-radius: var(--radius-lg);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 0.85rem;
+    align-items: stretch;
+  }
+  @media (max-width: 620px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  /* ─── Code view ─── */
+  .code-view {
+    background: var(--color-surface);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 14%, transparent);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .code-header {
+    display: flex; align-items: center; gap: 0.55rem;
+    padding: 0.4rem 0.65rem;
+    background: color-mix(in oklab, var(--color-text-muted) 8%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+  }
+  .code-dots { display: flex; gap: 0.2rem; }
+  .code-dots span {
+    width: 6px; height: 6px; border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--color-text-muted) 22%, transparent);
+  }
+  .code-file {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .code {
+    margin: 0;
+    padding: 0.85rem 0.95rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1.7;
+    color: var(--color-text-muted);
+    /* Wrap long attribute values rather than overflowing horizontally */
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: hidden;
+  }
+  .code-line { display: block; padding: 0 0.15rem; border-radius: 2px; }
+  .code-line.highlight {
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 14%, transparent);
+    color: var(--color-text);
+  }
+  .tag { color: var(--color-text-subtle); }
+  .attr { color: var(--color-accent-teal); }
+  .val { color: var(--words-accent, var(--color-accent)); }
+
+  .callout {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 8%, transparent);
+    border-top: 1px solid color-mix(in oklab, var(--words-accent, var(--color-accent)) 25%, transparent);
+  }
+  .callout-dot {
+    width: 7px; height: 7px;
+    border-radius: var(--radius-full);
+    background: var(--words-accent, var(--color-accent));
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--words-accent, var(--color-accent)) 22%, transparent);
+  }
+  .callout-text {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-text);
+  }
+
+  /* ─── Page view ─── */
+  .page-view { display: flex; flex-direction: column; gap: 0.4rem; align-items: center; }
+  .page-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--color-surface);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 14%, transparent);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .page-header {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--color-success) 18%, transparent);
+    color: var(--color-success);
+    display: grid; place-items: center;
+    font-size: var(--text-md);
+    font-weight: 700;
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    margin: 0;
+  }
+  .page-sub {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+  .pixel {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 4px;
+    height: 4px;
+    background: var(--words-accent, var(--color-accent));
+    border-radius: 1px;
+    box-shadow:
+      0 0 0 2px color-mix(in oklab, var(--words-accent, var(--color-accent)) 30%, transparent),
+      0 0 0 8px color-mix(in oklab, var(--words-accent, var(--color-accent)) 12%, transparent);
+    animation: blink-pixel 2s var(--ease-in-out-smooth) infinite;
+  }
+  @keyframes blink-pixel {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  .page-label {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pixel { animation: none; }
+  }
+</style>

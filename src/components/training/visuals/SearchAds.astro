@@ -1,0 +1,238 @@
+---
+/*
+  Search Ads visual — pared-down SERP mockup.
+
+  Top: a search bar with a sample query. Below it: two "Sponsored"
+  results tinted with the accent color, then a thin divider, then two
+  organic results in standard styling. The "Sponsored" chip is the
+  payload — that's the moment of recognition.
+
+  Pure static markup, no JS. Picks up --words-accent from the parent
+  page so it re-tints by word list.
+*/
+---
+
+<div class="search-ads" aria-label="Search engine results page mockup with sponsored and organic results">
+  <!-- Search bar -->
+  <div class="search-bar">
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <circle cx="11" cy="11" r="7"/>
+      <line x1="16.3" y1="16.3" x2="21" y2="21"/>
+    </svg>
+    <span class="query">best running shoes for flat feet</span>
+    <span class="cursor" aria-hidden="true"></span>
+  </div>
+
+  <!-- Results -->
+  <div class="results">
+    <!-- Sponsored 1 -->
+    <article class="result sponsored">
+      <header class="result-head">
+        <span class="result-favicon" aria-hidden="true"></span>
+        <div class="result-meta">
+          <span class="result-site">altra-running.com</span>
+          <span class="result-tag">Sponsored</span>
+        </div>
+      </header>
+      <h4 class="result-title">Altra Provision 7 — Built for Wide, Flat Feet</h4>
+      <p class="result-snippet">Zero-drop platform with arch support guides. Free returns within 30 days. Read 1,200+ runner reviews.</p>
+    </article>
+
+    <!-- Sponsored 2 -->
+    <article class="result sponsored">
+      <header class="result-head">
+        <span class="result-favicon" aria-hidden="true"></span>
+        <div class="result-meta">
+          <span class="result-site">brooks.com</span>
+          <span class="result-tag">Sponsored</span>
+        </div>
+      </header>
+      <h4 class="result-title">Brooks Beast GTS — Flat-Foot Stability Shoe</h4>
+      <p class="result-snippet">Engineered support for low arches. Shop the bestselling stability model. Try at home for 90 days.</p>
+    </article>
+
+    <!-- Divider -->
+    <div class="results-divider" aria-hidden="true">
+      <span class="divider-line"></span>
+      <span class="divider-label">Organic results</span>
+      <span class="divider-line"></span>
+    </div>
+
+    <!-- Organic 1 -->
+    <article class="result">
+      <header class="result-head">
+        <span class="result-favicon" aria-hidden="true"></span>
+        <div class="result-meta">
+          <span class="result-site">runnersworld.com</span>
+        </div>
+      </header>
+      <h4 class="result-title">The 9 Best Running Shoes for Flat Feet, Tested</h4>
+      <p class="result-snippet">Our review team logged 600 miles in 22 stability shoes to find the ones that actually work for low arches.</p>
+    </article>
+
+    <!-- Organic 2 -->
+    <article class="result">
+      <header class="result-head">
+        <span class="result-favicon" aria-hidden="true"></span>
+        <div class="result-meta">
+          <span class="result-site">reddit.com › r/RunningShoeGeeks</span>
+        </div>
+      </header>
+      <h4 class="result-title">What did flat-footed runners switch to in 2024?</h4>
+      <p class="result-snippet">28 comments. Most upvoted: Hoka Arahi 7, Saucony Tempus, Altra Provision. Less so on Brooks Adrenaline.</p>
+    </article>
+  </div>
+</div>
+
+<style>
+  .search-ads {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 1.1rem 1.1rem 1.2rem;
+    background: color-mix(in oklab, var(--color-text-muted) 4%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    border-radius: var(--radius-lg);
+  }
+
+  /* ─── Search bar ─── */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 1rem;
+    background: color-mix(in oklab, var(--color-text-muted) 6%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 14%, transparent);
+    border-radius: var(--radius-full);
+    margin-bottom: 0.45rem;
+  }
+  .search-icon {
+    width: 14px;
+    height: 14px;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+  .query {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    flex: 1;
+  }
+  .cursor {
+    width: 1px;
+    height: 14px;
+    background: var(--words-accent, var(--color-accent));
+    animation: blink 1.2s var(--ease-in-out-smooth) infinite;
+  }
+  @keyframes blink {
+    0%, 49%   { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  /* ─── Results stack ─── */
+  .results {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .result {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.7rem 0.85rem;
+    border-radius: var(--radius-md);
+    background: transparent;
+    border: 1px solid transparent;
+  }
+
+  .result.sponsored {
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 4%, transparent);
+    border-color: color-mix(in oklab, var(--words-accent, var(--color-accent)) 22%, transparent);
+  }
+
+  .result-head {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+  .result-favicon {
+    width: 16px;
+    height: 16px;
+    border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--color-text-muted) 18%, transparent);
+    flex-shrink: 0;
+  }
+  .result.sponsored .result-favicon {
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 24%, transparent);
+  }
+  .result-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+  }
+  .result-site {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    letter-spacing: 0.005em;
+  }
+  .result-tag {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--words-accent, var(--color-accent));
+    padding: 0.12rem 0.4rem;
+    border-radius: var(--radius-sm);
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 12%, transparent);
+    border: 1px solid color-mix(in oklab, var(--words-accent, var(--color-accent)) 30%, transparent);
+  }
+
+  .result-title {
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+    font-weight: var(--weight-regular);
+    line-height: 1.3;
+    color: var(--color-text);
+    margin: 0.05rem 0 0.1rem;
+  }
+  .result-snippet {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.45;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  /* ─── Divider ─── */
+  .results-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin: 0.4rem 0 0.2rem;
+  }
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: color-mix(in oklab, var(--color-text-muted) 18%, transparent);
+  }
+  .divider-label {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; opacity: 1; }
+  }
+
+  @media print {
+    .cursor { display: none; }
+  }
+</style>

@@ -1,0 +1,241 @@
+---
+/*
+  Full-Page Ad — single page mock at proper proportions, with crop marks
+  showing it fills the entire page bleed-to-bleed. Inline caption strip
+  below names the key facts.
+*/
+import LucideIcon from "./LucideIcon.astro";
+---
+
+<div class="fp">
+  <figure class="page-wrap">
+    <!-- Crop marks at each corner -->
+    <span class="mark tl"></span>
+    <span class="mark tr"></span>
+    <span class="mark bl"></span>
+    <span class="mark br"></span>
+
+    <div class="page">
+      <div class="ad-art" aria-hidden="true">
+        <svg viewBox="0 0 220 290" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="fp-grad" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="currentColor" stop-opacity="0.55"/>
+              <stop offset="1" stop-color="currentColor" stop-opacity="0.12"/>
+            </linearGradient>
+          </defs>
+          <rect width="220" height="290" fill="url(#fp-grad)"/>
+          <circle cx="158" cy="92" r="22" fill="currentColor" opacity="0.78"/>
+          <path d="M0,238 Q55,200 110,212 T220,196 L220,290 L0,290 Z" fill="currentColor" opacity="0.55"/>
+        </svg>
+      </div>
+
+      <span class="brand-mark">TerraDrive</span>
+
+      <div class="ad-copy">
+        <span class="ad-eyebrow">Spring Collection</span>
+        <h5 class="ad-headline">Born to wander.</h5>
+        <p class="ad-sub">Discover the new TerraDrive — built for the road less paved.</p>
+        <button type="button" class="ad-cta" tabindex="-1">
+          Shop now
+          <LucideIcon name="arrow-right" />
+        </button>
+      </div>
+    </div>
+  </figure>
+
+  <!-- Caption strip — three quick facts -->
+  <div class="facts">
+    <div class="fact">
+      <span class="fact-icon"><LucideIcon name="square" /></span>
+      <span class="fact-text">
+        <span class="fact-key">Coverage</span>
+        <span class="fact-val">100% of page</span>
+      </span>
+    </div>
+    <div class="fact">
+      <span class="fact-icon"><LucideIcon name="map-pin" /></span>
+      <span class="fact-text">
+        <span class="fact-key">Position</span>
+        <span class="fact-val">Right-hand, opposite editorial</span>
+      </span>
+    </div>
+    <div class="fact">
+      <span class="fact-icon"><LucideIcon name="trending-up" /></span>
+      <span class="fact-text">
+        <span class="fact-key">Cost tier</span>
+        <span class="fact-val">Top in the issue</span>
+      </span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .fp {
+    padding: 1.5rem;
+    background: color-mix(in oklab, var(--color-text-muted) 4%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: center;
+  }
+
+  /* ─── Page mock ─── */
+  .page-wrap {
+    position: relative;
+    margin: 0;
+    padding: 14px;
+    width: 100%;
+    max-width: 280px;
+  }
+
+  /* Crop marks at the corners — only the outer L-shape, not full lines */
+  .mark {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    color: color-mix(in oklab, var(--words-accent, var(--color-accent)) 70%, transparent);
+  }
+  .mark.tl { top: 0;    left: 0;    border-top: 1px solid currentColor; border-left: 1px solid currentColor; }
+  .mark.tr { top: 0;    right: 0;   border-top: 1px solid currentColor; border-right: 1px solid currentColor; }
+  .mark.bl { bottom: 0; left: 0;    border-bottom: 1px solid currentColor; border-left: 1px solid currentColor; }
+  .mark.br { bottom: 0; right: 0;   border-bottom: 1px solid currentColor; border-right: 1px solid currentColor; }
+
+  .page {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    background: var(--color-surface);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 10px 26px color-mix(in oklab, black 12%, transparent);
+    overflow: hidden;
+    color: var(--words-accent, var(--color-accent));
+  }
+
+  .ad-art {
+    position: absolute;
+    inset: 0;
+  }
+  .ad-art svg { width: 100%; height: 100%; display: block; }
+
+  .brand-mark {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    z-index: 1;
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    letter-spacing: 0.16em;
+    color: #f5f0e7;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .ad-copy {
+    position: absolute;
+    bottom: 18px;
+    left: 18px;
+    right: 18px;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    color: #f5f0e7;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  .ad-eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--words-accent, var(--color-accent));
+  }
+  .ad-headline {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    color: #f5f0e7;
+    line-height: 1.05;
+    margin: 0;
+  }
+  .ad-sub {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    line-height: 1.4;
+    color: rgba(245, 240, 231, 0.88);
+    margin: 0;
+  }
+  .ad-cta {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.35rem;
+    padding: 0.4rem 0.75rem;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #0a0a08;
+    background: var(--words-accent, var(--color-accent));
+    border: 0;
+    border-radius: 3px;
+    cursor: default;
+    text-shadow: none;
+  }
+  .ad-cta :global(svg) { width: 12px; height: 12px; }
+
+  /* ─── Facts strip ─── */
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.85rem;
+    width: 100%;
+    max-width: 580px;
+    padding-top: 1rem;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+  }
+  @media (max-width: 580px) {
+    .facts { grid-template-columns: 1fr; }
+  }
+
+  .fact {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 0.65rem;
+    align-items: start;
+  }
+  .fact-icon {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 12%, transparent);
+    color: var(--words-accent, var(--color-accent));
+    flex-shrink: 0;
+  }
+  .fact-icon :global(svg) { width: 16px; height: 16px; }
+
+  .fact-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+  .fact-key {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+  .fact-val {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    line-height: 1.35;
+  }
+</style>

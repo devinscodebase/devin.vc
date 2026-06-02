@@ -1,10 +1,11 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { sanityClient } from '../../lib/sanity';
+import { isTrainingAssetEnabled } from '../../lib/training-leads';
 
 export const prerender = false;
 
-const assets = await sanityClient.fetch(`
+const allAssets = await sanityClient.fetch(`
   *[_type == "trainingAsset"] | order(order asc) {
     title,
     "slug": slug.current,
@@ -17,6 +18,9 @@ const assets = await sanityClient.fetch(`
   }
 `);
 
+// Only show live assets — see ENABLED_TRAINING_SLUGS in training-leads.ts.
+const assets = allAssets.filter((a: any) => isTrainingAssetEnabled(a.slug));
+
 const categoryLabels: Record<string, string> = {
   'word-list': 'Word List',
   playbook: 'Playbook',
@@ -27,7 +31,7 @@ const categoryLabels: Record<string, string> = {
 ---
 
 <Layout
-  title="Training — Devin Alexander"
+  title="Training, Devin Alexander"
   description="Free training assets for marketing operators, founders, and teams. Word lists, playbooks, and references built from real work."
   image="/og/training.png"
 >

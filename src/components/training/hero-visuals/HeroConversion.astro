@@ -1,0 +1,153 @@
+---
+/*
+  HeroConversion — the funnel that narrows (kinetic).
+
+  Three labelled bars stacked and centred: Visited (1,000) → Added to cart
+  (120) → Purchased (24). They reveal top-down, and each lower bar emerges as
+  wide as the one above it, then pinches in to its true (smaller) width — so
+  you watch the funnel narrow as people fall away. The gold "purchased" bar
+  gets a small settle-pop. No connecting lines or dots; the narrowing reads on
+  its own.
+*/
+---
+
+<div class="kv kv-cv">
+  <svg viewBox="0 0 360 268" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    {/* ── tier 1: visited ── */}
+    <g class="cv-tier cv-tier-1">
+      <rect class="cv-bar cv-bar-1" x="30" y="16" width="300" height="54" rx="11" />
+      <text class="cv-num" x="180" y="37">1,000</text>
+      <text class="cv-key" x="180" y="58">VISITED</text>
+    </g>
+
+    {/* ── tier 2: added to cart ── */}
+    <g class="cv-tier cv-tier-2">
+      <rect class="cv-bar cv-bar-2" x="82" y="108" width="196" height="54" rx="11" />
+      <text class="cv-num cv-num-sm" x="180" y="129">120</text>
+      <text class="cv-key" x="180" y="150">ADDED TO CART</text>
+    </g>
+
+    {/* ── tier 3: purchased (the gold floor) ── */}
+    <g class="cv-tier cv-tier-3">
+      <rect class="cv-bar cv-bar-3" x="122" y="200" width="116" height="54" rx="11" />
+      <text class="cv-num cv-num-sm cv-num-on" x="180" y="221">24</text>
+      <text class="cv-key cv-key-on" x="180" y="242">PURCHASED</text>
+    </g>
+  </svg>
+</div>
+
+<style>
+  .kv {
+    /* synced to the rotator's 7.2s dwell */
+    --cv-loop: 7.2s;
+    position: relative;
+    width: 100%;
+    height: 340px;
+    display: grid;
+    place-items: center;
+  }
+  .kv svg {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    display: block;
+  }
+
+  /* ─── Bars ─── */
+  .cv-bar {
+    stroke-width: 1;
+  }
+  .cv-bar-1 {
+    fill: color-mix(in oklab, var(--words-accent, var(--color-accent)) 12%, var(--color-bg));
+    stroke: color-mix(in oklab, var(--words-accent, var(--color-accent)) 30%, transparent);
+  }
+  .cv-bar-2 {
+    fill: color-mix(in oklab, var(--words-accent, var(--color-accent)) 20%, var(--color-bg));
+    stroke: color-mix(in oklab, var(--words-accent, var(--color-accent)) 46%, transparent);
+  }
+  .cv-bar-3 {
+    fill: var(--words-accent, var(--color-accent));
+    stroke: var(--words-accent, var(--color-accent));
+  }
+
+  /* ─── Labels ─── */
+  .cv-num {
+    font-family: var(--font-display);
+    font-size: 23px;
+    font-weight: var(--weight-regular);
+    letter-spacing: -0.01em;
+    fill: var(--color-text);
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+  .cv-num-sm { font-size: 20px; }
+  .cv-num-on { fill: var(--color-bg); }
+  .cv-key {
+    font-family: var(--font-body);
+    font-size: 8.5px;
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.12em;
+    fill: var(--color-text-subtle);
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+  .cv-key-on { fill: color-mix(in oklab, var(--color-bg) 78%, transparent); }
+
+  /* ─── Reveal + pinch ───
+     Each tier drops in (opacity + small translateY), sequenced top-down.
+     Lower bars start as wide as the tier above and pinch in to their true
+     width via scaleX on the <rect> only — so the funnel visibly narrows as
+     people fall away. Text is never scaled (it lives in the <g>, which only
+     translates). The gold floor gets a small settle-pop. */
+  .cv-tier {
+    transform-box: fill-box;
+    transform-origin: center;
+    opacity: 0;
+  }
+  .cv-tier-1 { animation: cv-drop1 var(--cv-loop) var(--ease-out-expo, cubic-bezier(0.16,1,0.3,1)) infinite; }
+  .cv-tier-2 { animation: cv-drop2 var(--cv-loop) var(--ease-out-expo, cubic-bezier(0.16,1,0.3,1)) infinite; }
+  .cv-tier-3 { animation: cv-drop3 var(--cv-loop) var(--ease-out-back, cubic-bezier(0.34,1.56,0.64,1)) infinite; }
+
+  .cv-bar-2, .cv-bar-3 {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .cv-bar-2 { animation: cv-pinch2 var(--cv-loop) var(--ease-out-expo, cubic-bezier(0.16,1,0.3,1)) infinite; }
+  .cv-bar-3 { animation: cv-pinch3 var(--cv-loop) var(--ease-out-expo, cubic-bezier(0.16,1,0.3,1)) infinite; }
+
+  @keyframes cv-drop1 {
+    0%   { opacity: 0; transform: translateY(-9px); }
+    9%   { opacity: 1; transform: translateY(0); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes cv-drop2 {
+    0%, 17% { opacity: 0; transform: translateY(-9px); }
+    27%     { opacity: 1; transform: translateY(0); }
+    100%    { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes cv-drop3 {
+    0%, 31% { opacity: 0; transform: translateY(-9px) scale(1); }
+    41%     { opacity: 1; transform: translateY(0) scale(1); }
+    47%     { transform: translateY(0) scale(1.045); }
+    53%     { transform: translateY(0) scale(1); }
+    100%    { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* 1.531 = 300/196 (tier-1 width / tier-2 width) */
+  @keyframes cv-pinch2 {
+    0%, 17% { transform: scaleX(1.531); }
+    30%     { transform: scaleX(1); }
+    100%    { transform: scaleX(1); }
+  }
+  /* 1.690 = 196/116 (tier-2 width / tier-3 width) */
+  @keyframes cv-pinch3 {
+    0%, 31% { transform: scaleX(1.69); }
+    44%     { transform: scaleX(1); }
+    100%    { transform: scaleX(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cv-tier { animation: none; opacity: 1; }
+    .cv-bar-2, .cv-bar-3 { animation: none; transform: none; }
+  }
+</style>

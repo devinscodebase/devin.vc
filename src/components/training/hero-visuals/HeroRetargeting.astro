@@ -1,0 +1,273 @@
+---
+/*
+  HeroRetargeting — concrete browser metaphor (kinetic).
+
+  One browser. The site keeps changing — shoe shop, then a news site, then
+  recipes — but the SAME shoe ad stays pinned in the sidebar, following the
+  visitor from page to page. The ad's persistence across unrelated sites IS
+  retargeting. Resting state: site 1 visible, ad present.
+*/
+---
+
+<div class="kv kv-rt">
+  <div class="br">
+    <div class="br-bar">
+      <span class="br-dots"><i></i><i></i><i></i></span>
+      <span class="br-url">
+        <span class="br-site br-site-1"><i class="br-fav br-fav-1"></i>shoeshop.com</span>
+        <span class="br-site br-site-2"><i class="br-fav br-fav-2"></i>dailynews.com</span>
+        <span class="br-site br-site-3"><i class="br-fav br-fav-3"></i>recipes.com</span>
+      </span>
+    </div>
+
+    <div class="br-body">
+      {/* page-load bar — sweeps each time the visitor lands on a new site */}
+      <span class="br-load" aria-hidden="true"></span>
+      <div class="br-content">
+        {/* site 1 — the shop where you eyed the shoes */}
+        <div class="br-page br-page-1">
+          <span class="sk sk-block"></span>
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line sk-short"></span>
+        </div>
+        {/* site 2 — a news site */}
+        <div class="br-page br-page-2">
+          <span class="sk sk-head"></span>
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line sk-short"></span>
+        </div>
+        {/* site 3 — recipes */}
+        <div class="br-page br-page-3">
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line sk-short"></span>
+          <span class="sk sk-block sk-block-sm"></span>
+        </div>
+      </div>
+
+      {/* the ad that follows you */}
+      <div class="br-ad" aria-hidden="true">
+        <span class="br-ad-tag">Ad</span>
+        <span class="br-ad-art">
+          <svg viewBox="0 0 32 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 13 L3 8 Q3 7 4 7 L9 7 L14 11 L26 11 Q29 11 29 13 L29 13 Q29 14 28 14 L4 14 Q3 14 3 13 Z" />
+            <path d="M9 7 L11 10" />
+          </svg>
+        </span>
+        <span class="br-ad-cta">Still want these?</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .kv {
+    /* One full 3-site cycle per slide view, synced to the rotator's
+       7.2s dwell so it plays through once before the slide crossfades out. */
+    --rt-loop: 7.2s;
+    position: relative;
+    width: 100%;
+    height: 340px;
+  }
+
+  /* ─── Browser window ─── */
+  .br {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 22%, transparent);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background: color-mix(in oklab, var(--color-text) 3%, transparent);
+  }
+
+  .br-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 16%, transparent);
+  }
+  .br-dots { display: flex; gap: 0.4rem; flex: none; }
+  .br-dots i {
+    width: 9px;
+    height: 9px;
+    border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--color-text-muted) 30%, transparent);
+  }
+  .br-url {
+    position: relative;
+    flex: 1;
+    height: 1.7rem;
+    padding: 0 0.7rem;
+    border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    overflow: hidden;
+  }
+  .br-site {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.7rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text-muted);
+  }
+  /* per-site favicon — a distinct colour for each destination */
+  .br-fav {
+    width: 11px;
+    height: 11px;
+    flex: none;
+    border-radius: var(--radius-sm);
+  }
+  .br-fav-1 { background: var(--words-accent, var(--color-accent)); }
+  .br-fav-2 { background: color-mix(in oklab, var(--color-text) 55%, transparent); }
+  .br-fav-3 { background: color-mix(in oklab, var(--color-text-muted) 60%, var(--words-accent, var(--color-accent))); }
+  .br-site-1 { animation: rt-pg1 var(--rt-loop) var(--ease-in-out-smooth, cubic-bezier(0.65,0,0.35,1)) infinite; }
+  .br-site-2 { opacity: 0; animation: rt-pg2 var(--rt-loop) var(--ease-in-out-smooth, cubic-bezier(0.65,0,0.35,1)) infinite; }
+  .br-site-3 { opacity: 0; animation: rt-pg3 var(--rt-loop) var(--ease-in-out-smooth, cubic-bezier(0.65,0,0.35,1)) infinite; }
+
+  /* ─── Body: content area + persistent ad slot ─── */
+  .br-body {
+    position: relative;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 150px;
+    gap: 1rem;
+    padding: 1.1rem;
+    min-height: 0;
+  }
+  /* loading bar pinned to the top edge of the viewport */
+  .br-load {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    transform-origin: left center;
+    transform: scaleX(0);
+    background: var(--words-accent, var(--color-accent));
+    animation: rt-load var(--rt-loop) linear infinite;
+  }
+  .br-content { position: relative; min-width: 0; }
+  .br-page {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    justify-content: center;
+  }
+  .br-page-1 { animation: rt-pg1 var(--rt-loop) var(--ease-in-out-smooth, cubic-bezier(0.65,0,0.35,1)) infinite; }
+  .br-page-2 { opacity: 0; animation: rt-pg2 var(--rt-loop) var(--ease-in-out-smooth, cubic-bezier(0.65,0,0.35,1)) infinite; }
+  .br-page-3 { opacity: 0; animation: rt-pg3 var(--rt-loop) var(--ease-in-out-smooth, cubic-bezier(0.65,0,0.35,1)) infinite; }
+
+  .sk {
+    display: block;
+    border-radius: var(--radius-sm);
+    background: color-mix(in oklab, var(--color-text-muted) 18%, transparent);
+  }
+  .sk-line { height: 10px; }
+  .sk-short { width: 55%; }
+  .sk-head { height: 16px; width: 70%; background: color-mix(in oklab, var(--color-text) 22%, transparent); }
+  .sk-block { height: 64px; background: color-mix(in oklab, var(--color-text-muted) 14%, transparent); }
+  .sk-block-sm { height: 44px; }
+
+  /* The ad — pinned, persistent, pulses each time the site changes */
+  .br-ad {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 0.7rem;
+    border: 1px solid color-mix(in oklab, var(--words-accent, var(--color-accent)) 55%, transparent);
+    border-radius: var(--radius-md);
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 8%, transparent);
+    transform-origin: center;
+    animation: rt-ad var(--rt-loop) var(--ease-out-expo, cubic-bezier(0.16,1,0.3,1)) infinite;
+  }
+  .br-ad-tag {
+    align-self: flex-start;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-bg);
+    background: var(--words-accent, var(--color-accent));
+    padding: 0.1rem 0.4rem;
+    border-radius: var(--radius-sm);
+    line-height: 1.3;
+  }
+  .br-ad-art {
+    display: grid;
+    place-items: center;
+    height: 64px;
+    border-radius: var(--radius-sm);
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 14%, transparent);
+    color: var(--words-accent, var(--color-accent));
+  }
+  .br-ad-art svg { width: 72%; height: auto; }
+  .br-ad-cta {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    line-height: 1.15;
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+  }
+
+  /* ─── Crossfade phases (3 sites across one --rt-loop cycle) ─── */
+  @keyframes rt-pg1 {
+    0%, 26%  { opacity: 1; }
+    33%, 92% { opacity: 0; }
+    100%     { opacity: 1; }
+  }
+  @keyframes rt-pg2 {
+    0%, 26%  { opacity: 0; }
+    33%, 59% { opacity: 1; }
+    66%, 100% { opacity: 0; }
+  }
+  @keyframes rt-pg3 {
+    0%, 59%  { opacity: 0; }
+    66%, 92% { opacity: 1; }
+    100%     { opacity: 0; }
+  }
+  /* sweeps full-width then vanishes, once per site change (0%, 33%, 66%) */
+  @keyframes rt-load {
+    0%   { transform: scaleX(0); opacity: 0; }
+    2%   { opacity: 1; }
+    9%   { transform: scaleX(1); opacity: 1; }
+    13%  { transform: scaleX(1); opacity: 0; }
+    14%  { transform: scaleX(0); opacity: 0; }
+    33%  { transform: scaleX(0); opacity: 0; }
+    34%  { opacity: 1; }
+    41%  { transform: scaleX(1); opacity: 1; }
+    45%  { transform: scaleX(1); opacity: 0; }
+    46%  { transform: scaleX(0); opacity: 0; }
+    66%  { transform: scaleX(0); opacity: 0; }
+    67%  { opacity: 1; }
+    74%  { transform: scaleX(1); opacity: 1; }
+    78%  { transform: scaleX(1); opacity: 0; }
+    79%  { transform: scaleX(0); opacity: 0; }
+    100% { transform: scaleX(0); opacity: 0; }
+  }
+  @keyframes rt-ad {
+    0%       { transform: scale(1.06); box-shadow: 0 0 0 3px color-mix(in oklab, var(--words-accent, var(--color-accent)) 22%, transparent); }
+    7%       { transform: scale(1); box-shadow: 0 0 0 0 transparent; }
+    33%      { transform: scale(1.06); box-shadow: 0 0 0 3px color-mix(in oklab, var(--words-accent, var(--color-accent)) 22%, transparent); }
+    40%      { transform: scale(1); box-shadow: 0 0 0 0 transparent; }
+    66%      { transform: scale(1.06); box-shadow: 0 0 0 3px color-mix(in oklab, var(--words-accent, var(--color-accent)) 22%, transparent); }
+    73%      { transform: scale(1); box-shadow: 0 0 0 0 transparent; }
+    100%     { transform: scale(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .br-site-1, .br-site-2, .br-site-3,
+    .br-page-1, .br-page-2, .br-page-3, .br-ad, .br-load { animation: none; }
+    .br-site-2, .br-site-3, .br-page-2, .br-page-3 { opacity: 0; }
+    .br-load { opacity: 0; }
+  }
+</style>

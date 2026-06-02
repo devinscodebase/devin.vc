@@ -1,0 +1,232 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { sanityClient } from '../../../lib/sanity';
+import { gateCookieName, isTrainingAssetEnabled } from '../../../lib/training-leads';
+import TrainingLeadForm from '../../../components/training/TrainingLeadForm.svelte';
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+
+// Temporarily hidden assets redirect to the index — see training-leads.ts.
+if (!isTrainingAssetEnabled(slug)) {
+  return Astro.redirect('/training');
+}
+
+// Already unlocked? Skip the gate and go straight to the list.
+if (Astro.cookies.get(gateCookieName(slug!))?.value === 'unlocked') {
+  return Astro.redirect(`/training/${slug}/words`);
+}
+
+const asset = await sanityClient.fetch(
+  `*[_type == "trainingAsset" && slug.current == $slug][0]{
+    title, "slug": slug.current, accent
+  }`,
+  { slug }
+);
+if (!asset) return Astro.redirect('/training');
+
+// What lands once they're through the gate. Concrete, benefit-first.
+const perks = [
+  'The full list online, grouped and searchable',
+  'A clean PDF to download, print, or share',
+  'Most terms drawn, not just defined',
+];
+---
+
+<Layout title={`Get the ${asset.title}, Devin Alexander`} noIndex={true}>
+  <main class={`form-page accent-${asset.accent || 'gold'}`}>
+    <div class="form-inner">
+
+      {/* ─── Left: value + trust ─── */}
+      <section class="form-aside">
+        <h1 class="aside-title reveal" style="--reveal-i: 0">
+          Get the<br /><em>{asset.title}</em>
+        </h1>
+
+        <ul class="aside-perks reveal" style="--reveal-i: 1">
+          {perks.map((perk) => (
+            <li>
+              <span class="perk-mark" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 4L5.5 10.5 2 7" />
+                </svg>
+              </span>
+              <span>{perk}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div class="aside-author reveal" style="--reveal-i: 2">
+          <img src="/images/avatar-round.png" alt="" width="40" height="40" class="author-avatar" loading="lazy" />
+          <p class="author-line">
+            Written by <span class="author-name">Devin Alexander</span>.
+            <span class="author-stat">A decade leading marketing, operations, and design for growth-stage founders.</span>
+          </p>
+        </div>
+      </section>
+
+      {/* ─── Right: the gate ─── */}
+      <section class="form-card reveal" style="--reveal-i: 3">
+        <span class="card-bar" aria-hidden="true"></span>
+        <header class="card-head">
+          <h2 class="card-title">Where should I send it?</h2>
+          <p class="card-sub">Four quick fields. The list opens the moment you submit, and a copy lands in your inbox.</p>
+        </header>
+        <TrainingLeadForm assetSlug={asset.slug} assetTitle={asset.title} client:load />
+      </section>
+
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .form-page {
+    --words-accent: var(--color-accent);
+    min-height: 100dvh;
+    padding: var(--space-page-top) var(--space-page-x) var(--space-page-bottom);
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+  .form-page.accent-gold  { --words-accent: var(--color-accent); }
+  .form-page.accent-teal  { --words-accent: var(--color-accent-teal); }
+  .form-page.accent-amber { --words-accent: var(--color-accent-amber); }
+  .form-page.accent-rust  { --words-accent: var(--color-accent-rust); }
+
+  .form-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-block);
+    align-items: start;
+  }
+  @media (min-width: 860px) {
+    .form-inner {
+      grid-template-columns: 1fr 1.05fr;
+      gap: var(--space-block-lg);
+      align-items: center;
+      min-height: min(78vh, 700px);
+    }
+  }
+
+  /* ─── Aside ─── */
+  .form-aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-element);
+  }
+
+  .aside-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: var(--weight-regular);
+    line-height: 1.02;
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+  }
+  .aside-title em { font-style: normal; color: var(--words-accent); }
+
+  .aside-perks {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .aside-perks li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    font-family: var(--font-body);
+    font-size: var(--text-md);
+    line-height: 1.45;
+    color: var(--color-text);
+  }
+  .perk-mark {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-top: 0.1rem;
+    border-radius: var(--radius-full);
+    color: var(--words-accent);
+    background: color-mix(in oklab, var(--words-accent) 12%, transparent);
+  }
+
+  .aside-author {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-top: 0.25rem;
+    padding-top: var(--space-element);
+    border-top: var(--border-subtle);
+  }
+  .author-avatar {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    border: 1px solid color-mix(in oklab, var(--words-accent) 30%, transparent);
+  }
+  .author-line {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+  .author-name { color: var(--color-text); font-weight: var(--weight-medium); }
+  .author-stat { display: block; color: var(--color-text-subtle); }
+
+  /* ─── Card — the conversion focal point ───
+     Mirrors the site's contact card: sharp corners, 1px hairline border,
+     a 2px accent rail, and a soft ambient glow (no heavy drop shadow). */
+  .form-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-md);
+    transition:
+      border-color var(--duration-normal) var(--ease-out-expo),
+      box-shadow var(--duration-normal) var(--ease-out-expo);
+  }
+  .form-card:hover {
+    border-color: color-mix(in oklab, var(--color-text-muted) 22%, transparent);
+    box-shadow: var(--shadow-lg);
+  }
+  /* Accent rail across the top — ties the card to the page accent, slides to teal. */
+  .card-bar {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--words-accent), color-mix(in oklab, var(--words-accent) 30%, transparent));
+    z-index: 1;
+  }
+  .card-head {
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
+  }
+  .card-title {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-regular);
+    line-height: 1.1;
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+  }
+  .card-sub {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--text-md);
+    line-height: 1.55;
+    color: var(--color-text-muted);
+    max-width: 42ch;
+  }
+</style>

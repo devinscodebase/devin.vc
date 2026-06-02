@@ -1,0 +1,257 @@
+---
+/*
+  Connected TV visual — clean modern TV frame with a streaming-service
+  ad rendered inside at proper proportions.
+
+  Dropped the skeuomorphic stand. Bezel is a thin frame. The ad fills
+  the 16:9 screen with a clear brand → headline → CTA hierarchy. A
+  compact "Ad · 1 of 3 · 0:18" strip sits below the bezel as a caption,
+  not eating into the screen area.
+*/
+---
+
+<div class="ctv">
+  <div class="grid">
+    <!-- TV screen -->
+    <figure class="screen-wrap">
+      <div class="screen">
+        <!-- Top corner: app logo + clock -->
+        <div class="screen-top">
+          <span class="app-logo">STREAMR</span>
+          <span class="app-time">9:47</span>
+        </div>
+
+        <!-- Ad creative -->
+        <div class="ad">
+          <div class="ad-art" aria-hidden="true">
+            <svg viewBox="0 0 200 110" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <linearGradient id="ctv-grad" x1="0" x2="1" y1="0" y2="1">
+                  <stop offset="0" stop-color="currentColor" stop-opacity="0.55"/>
+                  <stop offset="1" stop-color="currentColor" stop-opacity="0.1"/>
+                </linearGradient>
+              </defs>
+              <rect width="200" height="110" fill="url(#ctv-grad)"/>
+              <!-- Soft sun -->
+              <circle cx="148" cy="40" r="18" fill="currentColor" opacity="0.75"/>
+              <!-- Horizon -->
+              <path d="M0,86 Q60,60 120,72 T200,60 L200,110 L0,110 Z" fill="currentColor" opacity="0.55"/>
+            </svg>
+          </div>
+
+          <div class="ad-overlay">
+            <div class="ad-content">
+              <span class="ad-eyebrow">Sponsored · TerraDrive</span>
+              <h5 class="ad-headline">A car that thinks ahead.</h5>
+              <button type="button" class="ad-cta" tabindex="-1">Learn more</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Below-screen caption (status, not on the screen) -->
+      <figcaption class="status">
+        <span class="status-chip">Ad</span>
+        <span class="status-text">1 of 3</span>
+        <span class="status-divider" aria-hidden="true">·</span>
+        <span class="status-time">0:18 remaining</span>
+      </figcaption>
+    </figure>
+
+    <!-- Side notes -->
+    <div class="notes">
+      <p class="note-lead">A TV-style commercial bought and targeted like a digital ad.</p>
+      <ul class="note-list">
+        <li>
+          <span class="note-key">Bought by</span>
+          <span class="note-val">household, show, time of day</span>
+        </li>
+        <li>
+          <span class="note-key">Measured by</span>
+          <span class="note-val">completion rate, brand lift</span>
+        </li>
+        <li>
+          <span class="note-key">Skippable</span>
+          <span class="note-val">No — runs in-stream</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<style>
+  .ctv {
+    padding: 1.5rem;
+    background: color-mix(in oklab, var(--color-text-muted) 4%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    border-radius: var(--radius-lg);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 1.75rem;
+    align-items: center;
+  }
+  @media (max-width: 620px) {
+    .grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  }
+
+  /* ─── Screen frame ─── */
+  .screen-wrap { margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .screen {
+    aspect-ratio: 16 / 9;
+    background: #0a0a08;
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 22%, transparent);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    position: relative;
+    color: var(--words-accent, var(--color-accent));
+    box-shadow: 0 8px 24px color-mix(in oklab, black 12%, transparent);
+  }
+
+  .screen-top {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.85rem;
+    background: linear-gradient(180deg, rgba(0,0,0,0.55), transparent);
+  }
+  .app-logo {
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    letter-spacing: 0.2em;
+    color: var(--words-accent, var(--color-accent));
+  }
+  .app-time {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: rgba(237, 232, 223, 0.72);
+  }
+
+  /* ─── Ad layer ─── */
+  .ad {
+    position: absolute;
+    inset: 0;
+  }
+  .ad-art {
+    position: absolute;
+    inset: 0;
+  }
+  .ad-art svg { width: 100%; height: 100%; display: block; }
+  .ad-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.45) 100%);
+    display: flex;
+    align-items: flex-end;
+  }
+  .ad-content {
+    padding: 1rem 1.25rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: #f5f0e7;
+    max-width: 75%;
+  }
+  .ad-eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--words-accent, var(--color-accent));
+  }
+  .ad-headline {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-regular);
+    color: #f5f0e7;
+    line-height: 1.1;
+    margin: 0;
+  }
+  .ad-cta {
+    align-self: flex-start;
+    margin-top: 0.2rem;
+    padding: 0.45rem 0.9rem;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #0a0a08;
+    background: var(--words-accent, var(--color-accent));
+    border: 0;
+    border-radius: var(--radius-sm);
+    cursor: default;
+  }
+
+  /* ─── Status caption (below the TV) ─── */
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0 0.1rem;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  .status-chip {
+    padding: 0.18rem 0.45rem;
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 15%, transparent);
+    color: var(--words-accent, var(--color-accent));
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border-radius: var(--radius-sm);
+  }
+  .status-divider { opacity: 0.5; }
+
+  /* ─── Side notes ─── */
+  .notes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .note-lead {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.55;
+    color: var(--color-text);
+    margin: 0;
+  }
+  .note-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+  }
+  .note-list li {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    gap: 0.65rem;
+    align-items: baseline;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+  }
+  .note-key {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+  .note-val {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    line-height: 1.4;
+  }
+</style>

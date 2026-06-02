@@ -1,0 +1,109 @@
+---
+/*
+  Primetime visual — TV schedule strip across the evening with primetime highlighted.
+*/
+
+const slots = [
+  { hour: '6pm', show: 'Local news',      tier: 'mid' },
+  { hour: '7pm', show: 'Game show',       tier: 'mid' },
+  { hour: '8pm', show: 'Drama premiere',  tier: 'prime' },
+  { hour: '9pm', show: 'Sitcom',          tier: 'prime' },
+  { hour: '10pm', show: 'Crime drama',    tier: 'prime' },
+  { hour: '11pm', show: 'Late news',      tier: 'mid' },
+  { hour: '12a',  show: 'Late night',     tier: 'mid' },
+];
+---
+
+<div class="primetime">
+  <div class="strip">
+    {slots.map((s) => (
+      <div class={`slot ${s.tier === 'prime' ? 'prime' : ''}`}>
+        <span class="slot-hour">{s.hour}</span>
+        <span class="slot-show">{s.show}</span>
+      </div>
+    ))}
+  </div>
+  <div class="bracket-row" aria-hidden="true">
+    <span class="bracket bracket-prime">
+      <span class="bracket-line"></span>
+      <span class="bracket-label">Primetime (8–11pm)</span>
+      <span class="bracket-line"></span>
+    </span>
+  </div>
+  <p class="note">The 8pm–11pm block. Most viewers, most expensive spots, biggest brand budgets.</p>
+</div>
+
+<style>
+  .primetime {
+    display: flex; flex-direction: column; gap: 0.85rem;
+    padding: 1.25rem;
+    background: color-mix(in oklab, var(--color-text-muted) 4%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    border-radius: var(--radius-lg);
+  }
+  .strip {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.2rem;
+    background: color-mix(in oklab, var(--color-text-muted) 8%, transparent);
+    border-radius: var(--radius-md);
+    padding: 1px;
+  }
+  @media (max-width: 580px) {
+    .strip { grid-template-columns: repeat(4, 1fr); }
+  }
+  .slot {
+    background: var(--color-surface);
+    padding: 0.55rem 0.45rem;
+    display: flex; flex-direction: column; gap: 0.18rem;
+    align-items: center;
+    text-align: center;
+    transition: background var(--duration-fast) var(--ease-out-expo);
+  }
+  .slot.prime {
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 16%, transparent);
+  }
+  .slot-hour {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+    letter-spacing: 0.04em;
+  }
+  .slot.prime .slot-hour { color: var(--words-accent, var(--color-accent)); }
+  .slot-show {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    line-height: 1.2;
+  }
+  .slot.prime .slot-show { color: var(--color-text); font-weight: var(--weight-medium); }
+
+  .bracket-row { display: grid; grid-template-columns: 2fr 3fr 2fr; padding: 0 0.2rem; }
+  .bracket {
+    grid-column: 2;
+    display: flex; align-items: center; gap: 0.55rem;
+  }
+  .bracket-line {
+    flex: 1; height: 1px;
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 50%, transparent);
+  }
+  .bracket-label {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--words-accent, var(--color-accent));
+  }
+  @media (max-width: 580px) {
+    .bracket-row { grid-template-columns: 1fr; }
+    .bracket { grid-column: 1; }
+  }
+  .note {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+</style>

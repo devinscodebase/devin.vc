@@ -1,10 +1,25 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import { sanityClient } from '../../../lib/sanity';
+import TermVisual from '../../../components/training/TermVisual.astro';
+import { gateCookieName, isTrainingAssetEnabled } from '../../../lib/training-leads';
 
 export const prerender = false;
 
 const { slug } = Astro.params;
+
+// Temporarily hidden assets redirect to the index — see training-leads.ts.
+if (!isTrainingAssetEnabled(slug)) {
+  return Astro.redirect('/training');
+}
+
+/* Soft gate. The /form route sets this cookie after a successful lead
+   submit. If the cookie is missing we kick the visitor over there so
+   the inbox copy gets a chance to land. Bypassable — by design. */
+const gateCookie = Astro.cookies.get(gateCookieName(slug!));
+if (gateCookie?.value !== 'unlocked') {
+  return Astro.redirect(`/training/${slug}/form`);
+}
 
 const asset = await sanityClient.fetch(
   `*[_type == "trainingAsset" && slug.current == $slug][0] {
@@ -50,6 +65,11 @@ for (const key of groupOrder) {
   grouped[key].sort((a, b) => a.term.localeCompare(b.term, 'en', { sensitivity: 'base' }));
 }
 
+// Slugify group names → stable anchor IDs. The landing page's Categories
+// section links to these — keep the algorithm identical there.
+const groupSlug = (s: string) =>
+  s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
 const formattedDate = asset.publishedAt
   ? new Date(asset.publishedAt).toLocaleDateString('en-US', {
       month: 'long', year: 'numeric',
@@ -58,7 +78,7 @@ const formattedDate = asset.publishedAt
 ---
 
 <Layout
-  title={`${asset.title} — Devin Alexander`}
+  title={`${asset.title}, Devin Alexander`}
   description={asset.tagline || asset.description || `${asset.title}: a free reference.`}
   image={`/og/training/${asset.slug}.png`}
   noIndex={true}
@@ -105,7 +125,7 @@ const formattedDate = asset.publishedAt
 
         <div class="words-body" id="words-body">
           {groupOrder.map((group) => (
-            <section class="word-group">
+            <section class="word-group" id={`group-${groupSlug(group)}`}>
               {groupOrder.length > 1 && (
                 <h2 class="group-heading">
                   <span class="group-rule" aria-hidden="true"></span>
@@ -117,6 +137,7 @@ const formattedDate = asset.publishedAt
                   <div class="word-entry">
                     <dt class="word-term">{t.term}</dt>
                     <dd class="word-def">{t.definition}</dd>
+                    <TermVisual term={t.term} />
                   </div>
                 ))}
               </dl>
@@ -136,19 +157,28 @@ const formattedDate = asset.publishedAt
 </Layout>
 
 <script>
-  import jsPDF from 'jspdf';
+  // jspdf is only used on PDF download — dynamic-imported so it stays out of
+  // the initial page bundle and is fetched on user intent (pointerenter/focus
+  // on the button, see below).
+  let pdfLibsPromise: Promise<{
+    jsPDF: (typeof import('jspdf'))['default'];
+  }> | null = null;
+  function loadPdfLibs() {
+    if (!pdfLibsPromise) {
+      pdfLibsPromise = import('jspdf').then((pdf) => ({ jsPDF: pdf.default }));
+    }
+    return pdfLibsPromise;
+  }
 
   // Cache assets + loaded fonts across multiple clicks
   let assetsPromise: Promise<{
-    serif: string;
-    serifItalic: string;
+    display: string;
     sans: string;
     avatar: string;
   }> | null = null;
 
   let fontsReadyPromise: Promise<void> | null = null;
-  const PDF_SERIF = 'PDFSerif';
-  const PDF_SERIF_ITALIC = 'PDFSerifItalic';
+  const PDF_DISPLAY = 'PDFDisplay';
   const PDF_SANS = 'PDFSans';
 
   async function fetchBase64(url: string): Promise<string> {
@@ -166,13 +196,11 @@ const formattedDate = asset.publishedAt
   function loadAssets() {
     if (!assetsPromise) {
       assetsPromise = Promise.all([
-        fetchBase64('/fonts/InstrumentSerif-Regular-Latin.ttf'),
-        fetchBase64('/fonts/InstrumentSerif-Italic-Latin.ttf'),
+        fetchBase64('/fonts/FunnelDisplay-Regular.ttf'),
         fetchBase64('/fonts/DMSans-Regular.ttf'),
         fetchBase64('/images/avatar-round.png'),
-      ]).then(([serif, serifItalic, sans, avatar]) => ({
-        serif,
-        serifItalic,
+      ]).then(([display, sans, avatar]) => ({
+        display,
         sans,
         avatar: `data:image/png;base64,${avatar}`,
       }));
@@ -185,8 +213,7 @@ const formattedDate = asset.publishedAt
   function ensurePdfFontsLoaded() {
     if (!fontsReadyPromise) {
       fontsReadyPromise = Promise.all([
-        new FontFace(PDF_SERIF, 'url(/fonts/InstrumentSerif-Regular-Latin.ttf)').load().then(f => document.fonts.add(f)),
-        new FontFace(PDF_SERIF_ITALIC, 'url(/fonts/InstrumentSerif-Italic-Latin.ttf)', { style: 'italic' }).load().then(f => document.fonts.add(f)),
+        new FontFace(PDF_DISPLAY, 'url(/fonts/FunnelDisplay-Regular.ttf)').load().then(f => document.fonts.add(f)),
         new FontFace(PDF_SANS, 'url(/fonts/DMSans-Regular.ttf)').load().then(f => document.fonts.add(f)),
       ]).then(() => { /* discard FontFace refs */ });
     }
@@ -233,6 +260,12 @@ const formattedDate = asset.publishedAt
     if ((pdfBtn as any)._bound) return;
     (pdfBtn as any)._bound = true;
 
+    // Warm the PDF libs the moment the user shows intent so the click feels
+    // instant. Once-only — loadPdfLibs() caches the promise.
+    const warm = () => { loadPdfLibs(); };
+    pdfBtn.addEventListener('pointerenter', warm, { once: true });
+    pdfBtn.addEventListener('focus', warm, { once: true });
+
     pdfBtn.addEventListener('click', async () => {
       const labelEl = pdfBtn.querySelector('span, .btn-label') as HTMLElement | null;
       const originalLabel = pdfBtn.textContent;
@@ -247,7 +280,11 @@ const formattedDate = asset.publishedAt
         const contactUrl = 'https://www.devin.vc/contact';
         const groups = Array.from(document.querySelectorAll('.word-group'));
 
-        const [assets] = await Promise.all([loadAssets(), ensurePdfFontsLoaded()]);
+        const [assets, , { jsPDF }] = await Promise.all([
+          loadAssets(),
+          ensurePdfFontsLoaded(),
+          loadPdfLibs(),
+        ]);
 
         // ─── A4: 595.28 × 841.89 pt (210 × 297 mm). 25mm margins ≈ 71pt ───
         const doc = new jsPDF({ unit: 'pt', format: 'a4' });
@@ -258,19 +295,18 @@ const formattedDate = asset.publishedAt
         const marginYBottom = 71;
         const contentW = pageW - marginX * 2;
 
-        // ─── Register site fonts ───
-        doc.addFileToVFS('InstrumentSerif-Regular.ttf', assets.serif);
-        doc.addFont('InstrumentSerif-Regular.ttf', 'InstrumentSerif', 'normal');
-        doc.addFileToVFS('InstrumentSerif-Italic.ttf', assets.serifItalic);
-        doc.addFont('InstrumentSerif-Italic.ttf', 'InstrumentSerif', 'italic');
+        // ─── Register site fonts (Funnel Display + DM Sans) ───
+        doc.addFileToVFS('FunnelDisplay-Regular.ttf', assets.display);
+        doc.addFont('FunnelDisplay-Regular.ttf', 'FunnelDisplay', 'normal');
         doc.addFileToVFS('DMSans-Regular.ttf', assets.sans);
         doc.addFont('DMSans-Regular.ttf', 'DMSans', 'normal');
 
-        // ─── Site palette in light mode ───
-        const text = [20, 18, 16] as const;       // near-black
-        const muted = [110, 100, 90] as const;    // muted brown
-        const dim = [160, 148, 136] as const;     // very muted for footer
-        const accent = [196, 164, 124] as const;  // warm gold (--color-accent)
+        // ─── Site palette — light-mode tokens from global.css ───
+        const text = [42, 32, 24] as const;       // --color-text   (#2a2018)
+        const muted = [109, 92, 72] as const;     // --color-text-muted (#6d5c48)
+        const dim = [122, 106, 82] as const;      // --color-text-subtle (#7a6a52)
+        const accent = [148, 96, 40] as const;    // --color-accent (#946028 — light mode)
+        const ruleColor = [216, 186, 144] as const; // accent at 50% on cream — soft hairline
 
         // Line heights
         const TITLE_SIZE = 32;
@@ -284,7 +320,7 @@ const formattedDate = asset.publishedAt
         let y = marginYTop;
 
         // ─── Title ───
-        doc.setFont('InstrumentSerif', 'normal');
+        doc.setFont('FunnelDisplay', 'normal');
         doc.setFontSize(TITLE_SIZE);
         doc.setTextColor(...text);
         doc.text(title, marginX, y + TITLE_SIZE * 0.8);
@@ -309,18 +345,62 @@ const formattedDate = asset.publishedAt
         const avatarSize = 20;
         const authorY = y + 10;  // start avatar a bit below the tagline
         doc.addImage(assets.avatar, 'PNG', marginX, authorY, avatarSize, avatarSize);
-        doc.setFont('InstrumentSerif', 'italic');
+        // Funnel Display has no italic variant — name renders in regular weight,
+        // muted color so it reads as a byline rather than a heading.
+        doc.setFont('FunnelDisplay', 'normal');
         doc.setFontSize(NAME_SIZE);
-        doc.setTextColor(...text);
-        // Set text baseline so cap-height middle aligns with avatar center
-        // Cap-height for serif ~0.7em; visual middle = baseline - 0.35em
-        const nameBaselineOffset = NAME_SIZE * 0.35;
+        doc.setTextColor(...muted);
+        // Vertically center to the avatar by accounting for cap-height.
+        // Funnel Display cap-height ~0.71em; visual middle ≈ baseline − 0.36em
+        const nameBaselineOffset = NAME_SIZE * 0.36;
         doc.text(
           'Devin Alexander',
           marginX + avatarSize + 10,
           authorY + avatarSize / 2 + nameBaselineOffset,
         );
-        y = authorY + avatarSize + 28;
+        y = authorY + avatarSize + 24;
+
+        // ─── "View Visuals Here" button ───
+        // The PDF is text-only; the drawn visuals live on the site. Point
+        // readers there with a solid accent button (sharp corners, matching
+        // the site's primary Button) wrapped in a clickable link.
+        const visualsUrl = `https://www.devin.vc/training/${slug}/words`;
+        const btnLabel = 'View Visuals Here';
+        const cream = [255, 252, 247] as const;  // reads as white on the gold fill
+        const BTN_TEXT_SIZE = 10.5;
+        const BTN_H = 32;
+        const BTN_PAD_X = 18;
+        const arrowGap = 8;
+        const arrowW = 10;
+
+        doc.setFont('DMSans', 'normal');
+        doc.setFontSize(BTN_TEXT_SIZE);
+        const btnTextW = doc.getTextWidth(btnLabel);
+        const btnW = btnTextW + arrowGap + arrowW + BTN_PAD_X * 2;
+        const btnX = marginX;
+        const btnY = y;
+
+        // Filled accent rectangle (sharp corners, like the site button)
+        doc.setFillColor(...accent);
+        doc.rect(btnX, btnY, btnW, BTN_H, 'F');
+
+        // Label
+        doc.setTextColor(...cream);
+        doc.text(btnLabel, btnX + BTN_PAD_X, btnY + BTN_H / 2 + BTN_TEXT_SIZE * 0.36);
+
+        // Trailing arrow →
+        const arrowX = btnX + BTN_PAD_X + btnTextW + arrowGap;
+        const arrowMidY = btnY + BTN_H / 2;
+        doc.setDrawColor(...cream);
+        doc.setLineWidth(1);
+        doc.line(arrowX, arrowMidY, arrowX + arrowW, arrowMidY);
+        doc.line(arrowX + arrowW - 4, arrowMidY - 4, arrowX + arrowW, arrowMidY);
+        doc.line(arrowX + arrowW - 4, arrowMidY + 4, arrowX + arrowW, arrowMidY);
+
+        // Clickable area over the whole button
+        doc.link(btnX, btnY, btnW, BTN_H, { url: visualsUrl });
+
+        y = btnY + BTN_H + 30;
 
         // ─── Groups + entries ───
         function ensureRoom(needed: number) {
@@ -350,7 +430,7 @@ const formattedDate = asset.publishedAt
             doc.setTextColor(...accent);
             doc.text(heading.toUpperCase(), marginX, y + HEADING_SIZE);
             const ruleY = y + HEADING_SIZE + 6;
-            doc.setDrawColor(220, 195, 155);
+            doc.setDrawColor(...ruleColor);
             doc.setLineWidth(0.5);
             doc.line(marginX, ruleY, marginX + contentW, ruleY);
             y = ruleY + 18;
@@ -364,8 +444,8 @@ const formattedDate = asset.publishedAt
 
             ensureRoom(blockHeight);
 
-            // Term in serif (matches site .word-term)
-            doc.setFont('InstrumentSerif', 'normal');
+            // Term in Funnel Display (matches site .word-term)
+            doc.setFont('FunnelDisplay', 'normal');
             doc.setFontSize(TERM_SIZE);
             doc.setTextColor(...text);
             doc.text(term, marginX, y + TERM_SIZE * 0.78);
@@ -399,20 +479,20 @@ const formattedDate = asset.publishedAt
         ensureRoom(closingHeight + 24);
 
         y += 18;
-        doc.setDrawColor(220, 195, 155);
+        doc.setDrawColor(...ruleColor);
         doc.setLineWidth(0.5);
         doc.line(marginX, y, marginX + contentW, y);
         y += 24;
 
-        // Avatar + name
+        // Avatar + name (Funnel Display regular, muted byline color)
         doc.addImage(assets.avatar, 'PNG', marginX, y, closeAvatarSize, closeAvatarSize);
-        doc.setFont('InstrumentSerif', 'italic');
+        doc.setFont('FunnelDisplay', 'normal');
         doc.setFontSize(NAME_SIZE);
-        doc.setTextColor(...text);
+        doc.setTextColor(...muted);
         doc.text(
           'Devin Alexander',
           marginX + closeAvatarSize + 10,
-          y + closeAvatarSize / 2 + NAME_SIZE * 0.35,
+          y + closeAvatarSize / 2 + NAME_SIZE * 0.36,
         );
         y += closeAvatarSize + 16;
 

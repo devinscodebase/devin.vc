@@ -1,0 +1,157 @@
+---
+/*
+  Pod visual — a TV commercial break shown as 5 slots in a row.
+
+  First and last slots are tagged "Premium" with accent borders. Middle
+  three are dimmer to convey reduced attention.
+*/
+
+const slots = [
+  { num: '01', tier: 'premium', label: '30s' },
+  { num: '02', tier: 'mid',     label: '15s' },
+  { num: '03', tier: 'mid',     label: '30s' },
+  { num: '04', tier: 'mid',     label: '15s' },
+  { num: '05', tier: 'premium', label: '30s' },
+];
+---
+
+<div class="pod">
+  <div class="header">
+    <span class="header-label">Commercial break</span>
+    <span class="header-time">~2 minutes</span>
+  </div>
+  <div class="slots">
+    {slots.map((s) => (
+      <div class={`slot tier-${s.tier}`}>
+        <span class="slot-num">{s.num}</span>
+        <span class="slot-frame">
+          <svg viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="12" rx="1"/>
+            <line x1="12" y1="14" x2="12" y2="14"/>
+          </svg>
+        </span>
+        <span class="slot-len">{s.label}</span>
+        {s.tier === 'premium' && <span class="slot-tag">Premium</span>}
+      </div>
+    ))}
+  </div>
+  <div class="legend" aria-hidden="true">
+    <span class="legend-bracket"></span>
+    <span class="legend-text">Attention peaks at the first and last slot</span>
+    <span class="legend-bracket"></span>
+  </div>
+</div>
+
+<style>
+  .pod {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 1.25rem;
+    background: color-mix(in oklab, var(--color-text-muted) 4%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    border-radius: var(--radius-lg);
+  }
+
+  .header {
+    display: flex; align-items: baseline; justify-content: space-between;
+  }
+  .header-label {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+  .header-time {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .slots {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.4rem;
+  }
+
+  .slot {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.65rem 0.4rem 0.55rem;
+    background: color-mix(in oklab, var(--color-text-muted) 6%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 14%, transparent);
+    border-radius: var(--radius-md);
+  }
+  .slot.tier-premium {
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 9%, transparent);
+    border-color: color-mix(in oklab, var(--words-accent, var(--color-accent)) 38%, transparent);
+  }
+  .slot.tier-mid { opacity: 0.7; }
+
+  .slot-num {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+    letter-spacing: 0.04em;
+  }
+  .slot-frame {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    display: grid;
+    place-items: center;
+    color: color-mix(in oklab, var(--color-text-muted) 45%, transparent);
+  }
+  .slot.tier-premium .slot-frame { color: var(--words-accent, var(--color-accent)); }
+  .slot-frame svg { width: 60%; height: auto; }
+
+  .slot-len {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+  .slot.tier-premium .slot-len { color: var(--color-text); }
+
+  .slot-tag {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.1rem 0.4rem;
+    background: var(--words-accent, var(--color-accent));
+    color: var(--color-bg);
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+  }
+
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding-top: 0.55rem;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+  }
+  .legend-bracket {
+    flex: 1;
+    height: 1px;
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 30%, transparent);
+  }
+  .legend-text {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+</style>

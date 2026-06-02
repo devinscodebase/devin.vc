@@ -1,0 +1,145 @@
+---
+/*
+  UTM Parameter — a URL bar mockup with the four UTMs highlighted in
+  the accent color, paired with a clean two-column legend underneath.
+*/
+import LucideIcon from "./LucideIcon.astro";
+
+const segments = [
+  { key: 'utm_source',   value: 'facebook',    meaning: 'Where the click came from'  },
+  { key: 'utm_medium',   value: 'cpc',         meaning: 'What kind of channel'       },
+  { key: 'utm_campaign', value: 'spring_2026', meaning: 'Which campaign'             },
+  { key: 'utm_content',  value: 'video_a',     meaning: 'Which specific ad'          },
+];
+---
+
+<div class="utm">
+  <!-- URL bar -->
+  <div class="url-bar">
+    <span class="url-icon" aria-hidden="true">
+      <LucideIcon name="link" />
+    </span>
+    <span class="url-text">
+      <span class="url-base">devin.vc/training</span>
+      <span class="url-sep">?</span>
+      {segments.map((s, i) => (
+        <>
+          {i > 0 && <span class="url-sep">&amp;</span>}
+          <span class="url-param">
+            <span class="param-key">{s.key}</span>
+            <span class="param-eq">=</span>
+            <span class="param-val">{s.value}</span>
+          </span>
+        </>
+      ))}
+    </span>
+  </div>
+
+  <!-- Legend -->
+  <ul class="legend">
+    {segments.map((s) => (
+      <li>
+        <span class="legend-key">{s.key}</span>
+        <span class="legend-arrow" aria-hidden="true">
+          <LucideIcon name="arrow-right" />
+        </span>
+        <span class="legend-meaning">{s.meaning}</span>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .utm {
+    padding: 1.5rem;
+    background: color-mix(in oklab, var(--color-text-muted) 4%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* ─── URL bar ─── */
+  .url-bar {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 0.85rem;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+    border-radius: var(--radius-md);
+  }
+  .url-icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    background: color-mix(in oklab, var(--color-text-muted) 8%, transparent);
+    color: var(--color-text-muted);
+  }
+  .url-icon :global(svg) { width: 18px; height: 18px; }
+
+  .url-text {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    line-height: 1.8;
+    color: var(--color-text);
+    word-break: break-all;
+  }
+  .url-base { color: var(--color-text-muted); }
+  .url-sep { color: var(--color-text-subtle); padding: 0 0.05rem; }
+
+  .url-param {
+    display: inline-flex;
+    align-items: baseline;
+    padding: 0.05rem 0.4rem;
+    margin: 0 0.05rem;
+    border-radius: var(--radius-sm);
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 12%, transparent);
+    color: var(--words-accent, var(--color-accent));
+  }
+  .param-key { font-weight: 600; }
+  .param-eq { opacity: 0.55; padding: 0 0.05rem; }
+  .param-val { font-style: italic; }
+
+  /* ─── Legend ─── */
+  .legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem 1.5rem;
+  }
+  @media (max-width: 580px) {
+    .legend { grid-template-columns: 1fr; }
+  }
+  .legend li {
+    display: grid;
+    grid-template-columns: minmax(110px, auto) 16px 1fr;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+  }
+  .legend-key {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--words-accent, var(--color-accent));
+    font-weight: 600;
+  }
+  .legend-arrow {
+    display: grid;
+    place-items: center;
+    color: var(--color-text-subtle);
+  }
+  .legend-arrow :global(svg) { width: 14px; height: 14px; }
+  .legend-meaning {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+</style>

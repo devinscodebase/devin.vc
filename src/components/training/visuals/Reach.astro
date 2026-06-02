@@ -1,0 +1,96 @@
+---
+/*
+  Reach visual — a grid of 100 person dots with N "reached" lit up.
+*/
+
+const TOTAL = 100;
+const REACHED = 36;
+
+// Pre-compute reached indices (stable selection — first 36 in a slight scatter pattern)
+const reachedSet = new Set();
+for (let i = 0; i < REACHED; i++) {
+  // Spread reached dots somewhat evenly across the grid
+  const idx = (i * 7 + (i % 3) * 19) % TOTAL;
+  reachedSet.add(idx);
+}
+const reachedIndices = Array.from(reachedSet);
+const reachedCount = reachedIndices.length;
+---
+
+<div class="reach">
+  <div class="grid" aria-hidden="true">
+    {Array.from({ length: TOTAL }, (_, i) => (
+      <span class={`dot ${reachedSet.has(i) ? 'reached' : ''}`}></span>
+    ))}
+  </div>
+  <div class="readout">
+    <div class="readout-num">
+      <span class="num-big">{reachedCount}</span>
+      <span class="num-sep">of</span>
+      <span class="num-small">100</span>
+    </div>
+    <div class="readout-label">Unique people reached</div>
+    <div class="readout-note">Reach counts each person once, no matter how many times they saw the ad.</div>
+  </div>
+</div>
+
+<style>
+  .reach {
+    padding: 1.25rem;
+    background: color-mix(in oklab, var(--color-text-muted) 4%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    border-radius: var(--radius-lg);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    align-items: center;
+  }
+  @media (max-width: 540px) { .reach { grid-template-columns: 1fr; } }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 4px;
+  }
+  .dot {
+    aspect-ratio: 1;
+    border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--color-text-muted) 15%, transparent);
+  }
+  .dot.reached {
+    background: var(--words-accent, var(--color-accent));
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--words-accent, var(--color-accent)) 30%, transparent);
+  }
+
+  .readout { display: flex; flex-direction: column; gap: 0.5rem; }
+  .readout-num {
+    display: flex; align-items: baseline; gap: 0.4rem;
+    font-family: var(--font-display);
+  }
+  .num-big {
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    color: var(--words-accent, var(--color-accent));
+    line-height: 1;
+    letter-spacing: var(--tracking-tight);
+    font-variant-numeric: tabular-nums;
+  }
+  .num-sep, .num-small {
+    color: var(--color-text-muted);
+    font-size: var(--text-md);
+  }
+  .readout-label {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+  .readout-note {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    max-width: 30ch;
+  }
+</style>

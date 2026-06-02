@@ -1,0 +1,177 @@
+---
+/*
+  Social Proof visual — landing-page module with star rating, customer count,
+  customer logos, and a quote card.
+*/
+---
+
+<div class="sp">
+  <div class="proof-card">
+    <!-- Stars + rating -->
+    <div class="rating">
+      <div class="stars" aria-label="4.9 out of 5 stars">
+        {Array.from({ length: 5 }, () => (
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <polygon points="12,3 14.5,9 21,9.5 16,13.5 17.5,20 12,16.5 6.5,20 8,13.5 3,9.5 9.5,9"/>
+          </svg>
+        ))}
+      </div>
+      <span class="rating-num">4.9</span>
+      <span class="rating-meta">from <strong>10,348</strong> reviews</span>
+    </div>
+
+    <!-- Customer logos -->
+    <div class="logos" aria-label="Trusted by these brands">
+      <span class="logo-label">As featured in</span>
+      <div class="logo-row">
+        <span class="logo logo-a">Acme</span>
+        <span class="logo logo-b">FORBES</span>
+        <span class="logo logo-c">Wired</span>
+        <span class="logo logo-d">NYT</span>
+        <span class="logo logo-e">VOGUE</span>
+      </div>
+    </div>
+
+    <!-- Testimonial -->
+    <blockquote class="quote">
+      <span class="quote-mark" aria-hidden="true">"</span>
+      <p class="quote-text">Three weeks in and my back doesn't hurt anymore. I'd been on a $79 mattress from college for a decade.</p>
+      <footer class="quote-foot">
+        <span class="quote-avatar" aria-hidden="true">SK</span>
+        <div class="quote-attrib">
+          <span class="quote-name">Sara K.</span>
+          <span class="quote-meta">Verified buyer · Brooklyn</span>
+        </div>
+      </footer>
+    </blockquote>
+  </div>
+</div>
+
+<style>
+  .sp {
+    padding: 1.25rem;
+    background: color-mix(in oklab, var(--color-text-muted) 4%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    border-radius: var(--radius-lg);
+  }
+
+  .proof-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 1rem 1.1rem;
+    background: var(--color-surface);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+    border-radius: var(--radius-md);
+  }
+
+  /* ─── Rating ─── */
+  .rating { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+  .stars { display: flex; gap: 2px; color: var(--words-accent, var(--color-accent)); }
+  .stars svg { width: 16px; height: 16px; }
+  .rating-num {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-text);
+    line-height: 1;
+    letter-spacing: var(--tracking-tight);
+  }
+  .rating-meta {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-left: auto;
+  }
+  .rating-meta strong { color: var(--color-text); font-weight: var(--weight-medium); }
+
+  /* ─── Logos ─── */
+  .logos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+  }
+  .logo-label {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+  .logo-row {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    flex-wrap: wrap;
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    opacity: 0.65;
+    letter-spacing: 0.02em;
+  }
+  .logo-a { font-style: italic; }
+  .logo-b { font-weight: 700; letter-spacing: 0.04em; }
+  .logo-c { font-family: var(--font-body); font-style: italic; font-size: var(--text-md); }
+  .logo-d { font-family: var(--font-display); font-weight: 600; letter-spacing: 0.18em; font-size: var(--text-xs); }
+  .logo-e { font-weight: 600; letter-spacing: 0.2em; font-size: var(--text-xs); }
+
+  /* ─── Quote ─── */
+  .quote {
+    position: relative;
+    margin: 0;
+    padding: 0.85rem 1rem 0.85rem 1.6rem;
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 6%, transparent);
+    border-left: 2px solid var(--words-accent, var(--color-accent));
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .quote-mark {
+    position: absolute;
+    top: -8px;
+    left: 4px;
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    color: var(--words-accent, var(--color-accent));
+    opacity: 0.4;
+    line-height: 1;
+  }
+  .quote-text {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    line-height: 1.45;
+    color: var(--color-text);
+    margin: 0;
+  }
+  .quote-foot {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .quote-avatar {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 22%, transparent);
+    color: var(--words-accent, var(--color-accent));
+    display: grid; place-items: center;
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+  }
+  .quote-attrib { display: flex; flex-direction: column; gap: 0.05rem; }
+  .quote-name {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
+  }
+  .quote-meta {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+  }
+</style>

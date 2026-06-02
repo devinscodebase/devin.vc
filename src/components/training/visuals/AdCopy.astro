@@ -1,0 +1,227 @@
+---
+/*
+  Ad Copy visual — anatomy diagram using numbered inline callouts.
+
+  Each labeled part of the ad gets a small numbered chip placed inline
+  with the content. The right column has a matching numbered legend.
+  No invisible leader lines, no floating dots that need them.
+*/
+---
+
+<div class="ad-copy">
+  <div class="diagram">
+    <!-- Annotated ad card -->
+    <article class="card">
+      <div class="card-image" aria-hidden="true">
+        <svg viewBox="0 0 100 50" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="ac-grad" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="currentColor" stop-opacity="0.32"/>
+              <stop offset="1" stop-color="currentColor" stop-opacity="0.08"/>
+            </linearGradient>
+          </defs>
+          <rect width="100" height="50" fill="url(#ac-grad)"/>
+          <circle cx="68" cy="22" r="7" fill="currentColor" opacity="0.7"/>
+          <path d="M0,42 Q24,32 48,38 T100,30 L100,50 L0,50 Z" fill="currentColor" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <span class="num">1</span>
+          <h5 class="card-headline">Sleep like it's 1995.</h5>
+        </div>
+        <div class="row">
+          <span class="num">2</span>
+          <p class="card-copy">Memory-foam mattress shipped flat. 100-night risk-free trial. Free returns.</p>
+        </div>
+        <div class="row">
+          <span class="num">3</span>
+          <span class="card-caption">@reststudio · Sponsored</span>
+        </div>
+        <div class="row">
+          <span class="num">4</span>
+          <button type="button" class="card-cta" tabindex="-1">Shop now</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- Numbered legend -->
+    <ol class="legend">
+      <li class="legend-row">
+        <span class="legend-num">1</span>
+        <div class="legend-text">
+          <span class="legend-name">Headline</span>
+          <span class="legend-desc">The line that stops the scroll.</span>
+        </div>
+      </li>
+      <li class="legend-row">
+        <span class="legend-num">2</span>
+        <div class="legend-text">
+          <span class="legend-name">Body copy</span>
+          <span class="legend-desc">Proof and detail. The "why".</span>
+        </div>
+      </li>
+      <li class="legend-row">
+        <span class="legend-num">3</span>
+        <div class="legend-text">
+          <span class="legend-name">Caption</span>
+          <span class="legend-desc">Brand handle and labeling.</span>
+        </div>
+      </li>
+      <li class="legend-row">
+        <span class="legend-num">4</span>
+        <div class="legend-text">
+          <span class="legend-name">Call to action</span>
+          <span class="legend-desc">The next step the viewer takes.</span>
+        </div>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<style>
+  .ad-copy {
+    padding: 1.5rem;
+    background: color-mix(in oklab, var(--color-text-muted) 4%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    border-radius: var(--radius-lg);
+  }
+
+  .diagram {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2rem;
+    align-items: start;
+  }
+  @media (max-width: 580px) {
+    .diagram { grid-template-columns: 1fr; gap: 1.5rem; }
+  }
+
+  /* ─── Ad card mock ─── */
+  .card {
+    background: var(--color-surface);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .card-image {
+    /* Compact — image is set dressing, not the focus */
+    aspect-ratio: 5 / 2;
+    color: var(--words-accent, var(--color-accent));
+    display: block;
+  }
+  .card-image svg { width: 100%; height: 100%; display: block; }
+
+  .card-body {
+    padding: 0.95rem 1rem 1.05rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  /* ─── Numbered rows ─── */
+  .row {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    align-items: center;
+    gap: 0.65rem;
+  }
+  .num {
+    width: 20px; height: 20px;
+    border-radius: var(--radius-full);
+    background: var(--words-accent, var(--color-accent));
+    color: var(--color-bg);
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    line-height: 1;
+    display: grid;
+    place-items: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .card-headline {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    font-weight: var(--weight-regular);
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1.25;
+  }
+  .card-copy {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+  .card-caption {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+    color: var(--color-text-subtle);
+  }
+  .card-cta {
+    justify-self: start;
+    padding: 0.45rem 0.95rem;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-bg);
+    background: var(--words-accent, var(--color-accent));
+    border: 0;
+    border-radius: var(--radius-sm);
+    cursor: default;
+  }
+
+  /* ─── Legend column ─── */
+  .legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.95rem;
+    padding-top: 0.25rem;
+  }
+  .legend-row {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    align-items: start;
+    gap: 0.7rem;
+  }
+  .legend-num {
+    width: 22px; height: 22px;
+    border-radius: var(--radius-full);
+    border: 1.5px solid var(--words-accent, var(--color-accent));
+    color: var(--words-accent, var(--color-accent));
+    background: transparent;
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    line-height: 1;
+    display: grid;
+    place-items: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .legend-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding-top: 0.05rem;
+  }
+  .legend-name {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
+  }
+  .legend-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    line-height: 1.4;
+    color: var(--color-text-muted);
+  }
+</style>

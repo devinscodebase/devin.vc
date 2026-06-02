@@ -1,0 +1,157 @@
+---
+/*
+  Conversion Rate — a real tapered funnel showing how 10,000 impressions
+  drop down to 200 clicks and 12 conversions. Each stage has a lucide
+  icon, count, and the survival rate between stages.
+*/
+import LucideIcon from "./LucideIcon.astro";
+
+const stages = [
+  { icon: 'lucide:eye',                label: 'Impressions',  count: 10_000, width: 100 },
+  { icon: 'lucide:mouse-pointer-click', label: 'Clicks',      count: 200,    width: 55, rate: '2%', drop: 'CTR' },
+  { icon: 'lucide:shopping-bag',       label: 'Conversions',  count: 12,     width: 20, rate: '6%', drop: 'conversion rate' },
+];
+---
+
+<div class="cr">
+  <div class="funnel">
+    {stages.map((s, i) => (
+      <>
+        {i > 0 && (
+          <div class="step-rate">
+            <span class="rate-arrow" aria-hidden="true">↓</span>
+            <span class="rate-num">{s.rate}</span>
+            <span class="rate-key">{s.drop}</span>
+          </div>
+        )}
+
+        <div class="stage" style={`width: ${s.width}%`}>
+          <span class="stage-icon">
+            <LucideIcon name={s.icon.replace("lucide:", "")} />
+          </span>
+          <div class="stage-text">
+            <span class="stage-label">{s.label}</span>
+            <span class="stage-count">{s.count.toLocaleString()}</span>
+          </div>
+        </div>
+      </>
+    ))}
+  </div>
+
+  <p class="note">
+    Conversion rate is the percentage of people who do the thing the ad was meant to make them do.
+    Here: 2% of impressions click, then 6% of clicks buy — <strong>12 sales from 10,000 impressions.</strong>
+  </p>
+</div>
+
+<style>
+  .cr {
+    padding: 1.5rem;
+    background: color-mix(in oklab, var(--color-text-muted) 4%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .funnel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* ─── Funnel stage — width controlled by inline style for tapering ─── */
+  .stage {
+    min-width: 200px;
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 14%, transparent);
+    border-radius: var(--radius-md);
+    color: var(--words-accent, var(--color-accent));
+  }
+  .stage:first-of-type {
+    background: color-mix(in oklab, var(--color-text-muted) 6%, transparent);
+    color: var(--color-text-muted);
+  }
+  .stage:last-of-type {
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 12%, transparent);
+    border-color: color-mix(in oklab, var(--words-accent, var(--color-accent)) 40%, transparent);
+  }
+
+  .stage-icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    background: color-mix(in oklab, currentColor 12%, transparent);
+    color: inherit;
+  }
+  .stage-icon :global(svg) { width: 18px; height: 18px; }
+
+  .stage-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+  .stage-label {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+  .stage-count {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    line-height: 1;
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ─── Inter-stage drop rate ─── */
+  .step-rate {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.15rem 0.7rem;
+    color: var(--color-text-muted);
+  }
+  .rate-arrow {
+    font-size: var(--text-md);
+    line-height: 1;
+    color: var(--color-text-subtle);
+  }
+  .rate-num {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--words-accent, var(--color-accent));
+    font-variant-numeric: tabular-nums;
+  }
+  .rate-key {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+
+  .note {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.55;
+    color: var(--color-text-muted);
+    margin: 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+  }
+  .note strong { color: var(--color-text); font-weight: var(--weight-medium); }
+</style>

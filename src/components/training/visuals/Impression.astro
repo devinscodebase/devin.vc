@@ -1,0 +1,160 @@
+---
+/*
+  Impression visual — multiplication metaphor.
+
+  Shows: 100 people × 3 average views = 300 impressions. Three columns
+  side by side, separated by × and = symbols.
+*/
+---
+
+<div class="imp">
+  <div class="eq">
+    <!-- People column -->
+    <div class="col">
+      <div class="col-art">
+        <div class="people-grid" aria-hidden="true">
+          {Array.from({ length: 16 }, () => <span class="p-dot"></span>)}
+        </div>
+      </div>
+      <div class="col-num">100</div>
+      <div class="col-label">unique people</div>
+    </div>
+
+    <div class="op" aria-hidden="true">×</div>
+
+    <!-- Views column -->
+    <div class="col">
+      <div class="col-art">
+        <div class="views">
+          <span class="view-block"></span>
+          <span class="view-block"></span>
+          <span class="view-block"></span>
+        </div>
+      </div>
+      <div class="col-num">3</div>
+      <div class="col-label">average views</div>
+    </div>
+
+    <div class="op" aria-hidden="true">=</div>
+
+    <!-- Impressions column -->
+    <div class="col col-result">
+      <div class="col-art result-art">
+        <svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M3 30 Q15 12 30 12 Q45 12 57 30 Q45 48 30 48 Q15 48 3 30 Z"/>
+          <circle cx="30" cy="30" r="6" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="col-num result-num">300</div>
+      <div class="col-label result-label">impressions</div>
+    </div>
+  </div>
+
+  <p class="note">Impressions count every appearance, including repeats. 100 people seeing the ad 3 times each is 300 impressions, but only 100 reach.</p>
+</div>
+
+<style>
+  .imp {
+    padding: 1.25rem;
+    background: color-mix(in oklab, var(--color-text-muted) 4%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    border-radius: var(--radius-lg);
+    display: flex; flex-direction: column; gap: 0.95rem;
+  }
+
+  .eq {
+    display: grid;
+    grid-template-columns: 1fr 24px 1fr 24px 1fr;
+    gap: 0.45rem;
+    align-items: stretch;
+  }
+  @media (max-width: 540px) {
+    .eq { grid-template-columns: 1fr; }
+    .op { transform: rotate(0); justify-self: center; }
+  }
+
+  .col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.85rem 0.6rem;
+    background: var(--color-surface);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+  .col-result {
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 9%, transparent);
+    border-color: color-mix(in oklab, var(--words-accent, var(--color-accent)) 35%, transparent);
+  }
+
+  .col-art {
+    width: 70px;
+    height: 50px;
+    display: grid;
+    place-items: center;
+  }
+
+  .people-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3px;
+    width: 100%;
+    height: 100%;
+  }
+  .p-dot {
+    background: color-mix(in oklab, var(--color-text-muted) 30%, transparent);
+    border-radius: var(--radius-full);
+  }
+
+  .views { display: flex; flex-direction: column; gap: 4px; width: 60%; }
+  .view-block {
+    height: 8px;
+    background: color-mix(in oklab, var(--color-text-muted) 28%, transparent);
+    border-radius: 2px;
+  }
+
+  .result-art {
+    color: var(--words-accent, var(--color-accent));
+  }
+  .result-art svg { width: 100%; height: 100%; }
+
+  .col-num {
+    font-family: var(--font-display);
+    font-size: 1.65rem;
+    color: var(--color-text);
+    line-height: 1;
+    letter-spacing: var(--tracking-tight);
+    font-variant-numeric: tabular-nums;
+  }
+  .result-num { color: var(--words-accent, var(--color-accent)); font-size: 2rem; }
+  .col-label {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+  .result-label { color: var(--words-accent, var(--color-accent)); }
+
+  .op {
+    display: grid; place-items: center;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-text-subtle);
+    user-select: none;
+  }
+
+  .note {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    margin: 0;
+    text-align: center;
+    max-width: 50ch;
+    margin: 0 auto;
+  }
+</style>

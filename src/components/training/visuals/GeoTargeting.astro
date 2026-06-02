@@ -1,0 +1,200 @@
+---
+/*
+  Geo-Targeting visual — a stylized map grid with a target pin and a radius
+  circle showing the targeted area.
+*/
+---
+
+<div class="geo" role="img" aria-label="City map with a targeted 1-mile radius">
+  <div class="map">
+    <svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice">
+      <!-- Grid (city blocks) -->
+      <defs>
+        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+          <rect x="0" y="0" width="20" height="20" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.18"/>
+        </pattern>
+      </defs>
+      <rect width="320" height="200" fill="url(#grid)" class="grid"/>
+
+      <!-- Highways -->
+      <path d="M0 60 L320 90" class="road" />
+      <path d="M180 0 L150 200" class="road" />
+      <path d="M0 150 L260 180" class="road" />
+
+      <!-- Park -->
+      <rect x="40" y="115" width="55" height="45" rx="3" class="park"/>
+
+      <!-- Water -->
+      <path d="M0 0 L60 0 L40 35 L0 30 Z" class="water"/>
+
+      <!-- Radius circle -->
+      <circle cx="120" cy="105" r="58" class="radius-outer"/>
+      <circle cx="120" cy="105" r="58" class="radius-fill"/>
+
+      <!-- Center pin -->
+      <g transform="translate(120, 105)">
+        <circle r="5" class="pin-pulse"/>
+        <circle r="3" class="pin"/>
+        <g transform="translate(0, -22)" class="pin-marker">
+          <path d="M0,8 L-5,-2 A 6 6 0 1 1 5,-2 Z" />
+        </g>
+      </g>
+
+      <!-- Radius label -->
+      <line x1="120" y1="105" x2="178" y2="105" class="radius-line" stroke-dasharray="3,3"/>
+      <text x="150" y="100" class="radius-label">1 mi</text>
+    </svg>
+  </div>
+
+  <ul class="legend">
+    <li>
+      <span class="legend-swatch swatch-pin"></span>
+      <span class="legend-text">
+        <span class="legend-name">Target point</span>
+        <span class="legend-desc">A specific address or coordinate</span>
+      </span>
+    </li>
+    <li>
+      <span class="legend-swatch swatch-radius"></span>
+      <span class="legend-text">
+        <span class="legend-name">Radius</span>
+        <span class="legend-desc">Ads only serve to people inside this area</span>
+      </span>
+    </li>
+  </ul>
+</div>
+
+<style>
+  /* The map is full-bleed: it fills the whole panel. The legend floats over
+     its right edge on a gradient scrim so the map reads edge to edge.
+     aspect-ratio shapes it on /words; height:100% lets the showcase card
+     stretch it taller. */
+  .geo {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    min-height: 240px;
+    aspect-ratio: 16 / 11;
+    background: var(--color-surface);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 14%, transparent);
+    border-radius: var(--radius-lg);
+    color: var(--color-text-muted);
+  }
+
+  .map { position: absolute; inset: 0; }
+  .map svg { width: 100%; height: 100%; display: block; }
+
+  .grid { color: var(--color-text-muted); }
+  .road { stroke: color-mix(in oklab, var(--color-text-muted) 35%, transparent); stroke-width: 4; fill: none; opacity: 0.7; }
+  .park { fill: color-mix(in oklab, var(--color-success) 22%, transparent); opacity: 0.7; }
+  .water { fill: color-mix(in oklab, var(--color-accent-teal) 25%, transparent); }
+
+  .radius-outer {
+    fill: none;
+    stroke: var(--words-accent, var(--color-accent));
+    stroke-width: 1.5;
+    stroke-dasharray: 4 4;
+  }
+  .radius-fill {
+    fill: var(--words-accent, var(--color-accent));
+    opacity: 0.08;
+  }
+
+  .pin {
+    fill: var(--words-accent, var(--color-accent));
+  }
+  .pin-pulse {
+    fill: none;
+    stroke: var(--words-accent, var(--color-accent));
+    stroke-width: 1;
+    opacity: 0.4;
+    transform-origin: 0 0;
+    animation: pulse 2.2s var(--ease-out-expo) infinite;
+  }
+  .pin-marker {
+    fill: var(--words-accent, var(--color-accent));
+  }
+  @keyframes pulse {
+    0%   { transform: scale(1);   opacity: 0.5; }
+    100% { transform: scale(2.6); opacity: 0;   }
+  }
+
+  .radius-line {
+    stroke: var(--words-accent, var(--color-accent));
+    stroke-width: 1;
+    opacity: 0.7;
+  }
+  .radius-label {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    fill: var(--words-accent, var(--color-accent));
+  }
+
+  .legend {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: clamp(160px, 44%, 200px);
+    list-style: none; margin: 0;
+    padding: 1rem 1.25rem 1rem 1.75rem;
+    display: flex; flex-direction: column; justify-content: center; gap: 0.95rem;
+    background: linear-gradient(
+      to right,
+      transparent,
+      color-mix(in oklab, var(--color-surface) 88%, transparent) 38%,
+      var(--color-surface) 70%
+    );
+  }
+  @media (max-width: 480px) {
+    .legend {
+      top: auto; left: 0; width: auto;
+      padding: 1rem 1.1rem 1.1rem;
+      flex-direction: row; gap: 1rem;
+      background: linear-gradient(
+        to top,
+        var(--color-surface),
+        color-mix(in oklab, var(--color-surface) 80%, transparent) 70%,
+        transparent
+      );
+    }
+  }
+  .legend li {
+    display: grid;
+    grid-template-columns: 16px 1fr;
+    align-items: start;
+    gap: 0.55rem;
+  }
+  .legend-swatch {
+    width: 14px; height: 14px;
+    margin-top: 0.1rem;
+  }
+  .swatch-pin {
+    border-radius: var(--radius-full);
+    background: var(--words-accent, var(--color-accent));
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--words-accent, var(--color-accent)) 20%, transparent);
+  }
+  .swatch-radius {
+    border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 18%, transparent);
+    border: 1.5px dashed var(--words-accent, var(--color-accent));
+  }
+
+  .legend-text { display: flex; flex-direction: column; gap: 0.15rem; }
+  .legend-name {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
+  }
+  .legend-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    line-height: 1.4;
+    color: var(--color-text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pin-pulse { animation: none; }
+  }
+</style>

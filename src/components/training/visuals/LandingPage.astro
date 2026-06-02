@@ -1,0 +1,234 @@
+---
+/*
+  Landing Page visual — landing page vs. homepage, side by side.
+
+  Two browser frames. Homepage shows many sections + many CTAs (busy,
+  scattered). Landing page shows one focused offer + one CTA. Tags
+  underneath name the purpose count.
+*/
+---
+
+<div class="landing">
+  <div class="grid">
+    <!-- Homepage -->
+    <figure class="screen">
+      <div class="browser">
+        <div class="dots" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="url-bar">/home</div>
+      </div>
+      <div class="content">
+        <div class="row nav">
+          <span class="logo"></span>
+          <span class="nav-links">
+            <span></span><span></span><span></span><span></span>
+          </span>
+          <span class="cta cta-small">Sign in</span>
+        </div>
+        <div class="row hero">
+          <span class="hero-title"></span>
+          <span class="hero-title short"></span>
+          <span class="hero-row">
+            <span class="cta">Start</span>
+            <span class="cta cta-ghost">Learn</span>
+          </span>
+        </div>
+        <div class="row tile-row">
+          <span class="tile"></span>
+          <span class="tile"></span>
+          <span class="tile"></span>
+        </div>
+        <div class="row hero short-hero">
+          <span class="hero-title short"></span>
+          <span class="cta">See pricing</span>
+        </div>
+      </div>
+      <figcaption class="cap">
+        <span class="cap-tag">Homepage</span>
+        <span class="cap-meta">Many purposes · Many CTAs</span>
+      </figcaption>
+    </figure>
+
+    <!-- Landing Page -->
+    <figure class="screen">
+      <div class="browser">
+        <div class="dots" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="url-bar">/get-the-guide</div>
+      </div>
+      <div class="content lp">
+        <div class="lp-headline"></div>
+        <div class="lp-headline short"></div>
+        <div class="lp-sub"></div>
+        <div class="lp-sub"></div>
+        <div class="lp-form">
+          <div class="lp-input"></div>
+          <span class="cta cta-primary">Get the free guide</span>
+        </div>
+        <div class="lp-proof">
+          <span class="proof-dot"></span>
+          <span class="proof-line"></span>
+        </div>
+      </div>
+      <figcaption class="cap">
+        <span class="cap-tag highlighted">Landing page</span>
+        <span class="cap-meta">One purpose · One CTA</span>
+      </figcaption>
+    </figure>
+  </div>
+</div>
+
+<style>
+  .landing {
+    padding: 1.25rem;
+    background: color-mix(in oklab, var(--color-text-muted) 4%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    border-radius: var(--radius-lg);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  @media (max-width: 540px) { .grid { grid-template-columns: 1fr; } }
+
+  .screen { margin: 0; display: flex; flex-direction: column; gap: 0.55rem; }
+
+  /* ─── Browser chrome ─── */
+  .browser {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0.6rem;
+    background: var(--color-surface);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    border-bottom: 0;
+  }
+  .dots { display: flex; gap: 0.25rem; }
+  .dots span {
+    width: 7px; height: 7px; border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--color-text-muted) 20%, transparent);
+  }
+  .url-bar {
+    flex: 1;
+    padding: 0.15rem 0.5rem;
+    background: color-mix(in oklab, var(--color-text-muted) 8%, transparent);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* ─── Page content area ─── */
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.7rem;
+    background: var(--color-surface);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
+    border-top: 0;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    min-height: 200px;
+  }
+
+  /* ─── Skeleton primitives ─── */
+  .row { display: flex; flex-direction: column; gap: 0.3rem; }
+  .nav { flex-direction: row; align-items: center; justify-content: space-between; }
+  .logo {
+    width: 28px; height: 8px; border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--color-text-muted) 30%, transparent);
+  }
+  .nav-links { display: flex; gap: 0.35rem; }
+  .nav-links span {
+    width: 14px; height: 4px; border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--color-text-muted) 18%, transparent);
+  }
+
+  .hero { gap: 0.35rem; padding: 0.25rem 0; }
+  .short-hero { padding-top: 0.5rem; }
+  .hero-title {
+    height: 7px; border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--color-text-muted) 28%, transparent);
+  }
+  .hero-title.short { width: 60%; }
+  .hero-row { display: flex; gap: 0.3rem; margin-top: 0.2rem; }
+
+  .cta {
+    padding: 0.2rem 0.5rem;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-bg);
+    background: var(--words-accent, var(--color-accent));
+    border-radius: var(--radius-sm);
+  }
+  .cta-small { font-size: var(--text-xs); padding: 0.15rem 0.4rem; }
+  .cta-ghost {
+    background: transparent;
+    color: var(--color-text-muted);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 25%, transparent);
+  }
+  .cta-primary { font-size: var(--text-xs); padding: 0.3rem 0.7rem; }
+
+  .tile-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.3rem; }
+  .tile {
+    height: 28px; border-radius: var(--radius-sm);
+    background: color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-text-muted) 14%, transparent);
+  }
+
+  /* ─── LP-specific ─── */
+  .lp { gap: 0.6rem; }
+  .lp-headline {
+    height: 10px; border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--color-text) 30%, transparent);
+  }
+  .lp-headline.short { width: 55%; }
+  .lp-sub {
+    height: 5px; border-radius: var(--radius-full); width: 80%;
+    background: color-mix(in oklab, var(--color-text-muted) 22%, transparent);
+  }
+  .lp-form {
+    display: flex; gap: 0.35rem; margin-top: 0.5rem;
+    padding: 0.45rem;
+    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 6%, transparent);
+    border: 1px dashed color-mix(in oklab, var(--words-accent, var(--color-accent)) 35%, transparent);
+    border-radius: var(--radius-sm);
+  }
+  .lp-input {
+    flex: 1; height: 18px; border-radius: var(--radius-sm);
+    background: color-mix(in oklab, var(--color-text-muted) 10%, transparent);
+  }
+  .lp-proof { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.2rem; }
+  .proof-dot {
+    width: 8px; height: 8px; border-radius: var(--radius-full);
+    background: var(--words-accent, var(--color-accent));
+  }
+  .proof-line {
+    flex: 1; height: 4px; border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--color-text-muted) 16%, transparent);
+  }
+
+  /* ─── Captions ─── */
+  .cap { display: flex; flex-direction: column; gap: 0.1rem; padding-top: 0.2rem; }
+  .cap-tag {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+  .cap-tag.highlighted { color: var(--words-accent, var(--color-accent)); }
+  .cap-meta {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-text);
+  }
+</style>

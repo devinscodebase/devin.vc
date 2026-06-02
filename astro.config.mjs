@@ -11,6 +11,7 @@ import mdx from '@astrojs/mdx';
 
 import sanity from '@sanity/astro';
 import sitemap from '@astrojs/sitemap';
+import icon from 'astro-icon';
 import { createClient } from '@sanity/client';
 
 // ─── Build the sitemap's dynamic page list from Sanity at build time ───
@@ -67,6 +68,10 @@ export default defineConfig({
     svelte(),
     react(),
     mdx(),
+    icon({
+      // Use Iconify lucide set across .astro files via <Icon name="lucide:..." />
+      include: { lucide: ['*'] },
+    }),
     sanity({
       projectId: 'ka7dwvnq',
       dataset: 'production',
