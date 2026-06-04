@@ -72,35 +72,16 @@ import Headline         from './visuals/Headline.svelte';
 import Cta              from './visuals/Cta.astro';
 import SocialProof      from './visuals/SocialProof.astro';
 
+import { VISUAL_TERMS } from '../../lib/training-landing';
+
 interface Props {
   term: string;
 }
 const { term } = Astro.props;
 
-// Terms that have any visual reference (used for the wrapper conditional).
-const termsWithVisuals = new Set([
-  // Anatomy
-  'Ad Copy', 'Storyboard', 'UTM Parameter', 'Landing Page', 'Pod',
-  // Format
-  'Ad Format', 'TV Spot', 'Full-Page Ad', 'Spread', 'Classified', 'Bleed', 'Above the Fold (Print)',
-  // Time
-  'Daypart', 'Primetime', 'Hook',
-  // Channels
-  'Search Ads', 'Display Ads', 'Native Ads', 'Connected TV (CTV)', 'Out-of-Home (OOH)',
-  // Targeting
-  'Demographics', 'Geo-Targeting', 'Lookalike Audience', 'Cold vs. Warm Audience',
-  // Metrics
-  'Reach', 'Frequency', 'Impression',
-  'Click-Through Rate (CTR)', 'Cost Per Click (CPC)', 'Cost Per Thousand (CPM)',
-  'Conversion Rate', 'Return on Ad Spend (ROAS)', 'Cost Per Acquisition (CPA)',
-  // Journey
-  'Attribution', 'Last-Click Attribution', 'First-Click Attribution',
-  'Retargeting (Remarketing)', 'Tracking Pixel', 'A/B Test',
-  // Quality
-  'Headline', 'Call to Action (CTA)', 'Social Proof',
-]);
-
-const hasVisual = termsWithVisuals.has(term);
+// VISUAL_TERMS is the single source of truth for which terms have a visual,
+// shared with [slug].astro. Keep the dispatch below in sync when adding one.
+const hasVisual = VISUAL_TERMS.has(term);
 ---
 
 {hasVisual && (

@@ -2,7 +2,17 @@
 import Layout from '../../layouts/Layout.astro';
 import Button from '../../components/ui/Button.svelte';
 import { sanityClient } from '../../lib/sanity';
-import { isTrainingAssetEnabled } from '../../lib/training-leads';
+import { isTrainingAssetEnabled, groupSlug, SITE_URL } from '../../lib/training-leads';
+import {
+  VISUAL_TERMS,
+  countVisualTerms,
+  resolveHeroSlides,
+  resolveShowcase,
+  headlineHtml,
+  subtitleHtml,
+  showcaseTitleOf,
+  categoriesTitleOf,
+} from '../../lib/training-landing';
 import TermVisual from '../../components/training/TermVisual.astro';
 
 // Hero rotator — crossfades through kinetic term diagrams. Each slide is a
@@ -27,11 +37,16 @@ const asset = await sanityClient.fetch(
   `*[_type == "trainingAsset" && slug.current == $slug][0] {
     title,
     "slug": slug.current,
-    category,
     tagline,
     description,
     accent,
-    publishedAt,
+    heroHeadline,
+    heroSubtitle,
+    heroSlides[]{ visual, term, note },
+    showcaseTitle,
+    showcaseLead,
+    showcasePair,
+    categoriesTitle,
     terms[]{ term, definition, group },
     seoTitle,
     noIndex
@@ -47,22 +62,8 @@ type Term = { term: string; definition: string; group?: string | null };
 const terms: Term[] = asset.terms || [];
 const termCount = terms.length;
 
-// Terms that ship with a bespoke visual reference. Kept in sync with the
-// dispatch set in TermVisual.astro — this drives the "X visualized" stat.
-const allVisualTerms = new Set([
-  'Ad Copy', 'Storyboard', 'UTM Parameter', 'Landing Page', 'Pod',
-  'Ad Format', 'TV Spot', 'Full-Page Ad', 'Spread', 'Classified', 'Bleed', 'Above the Fold (Print)',
-  'Daypart', 'Primetime', 'Hook',
-  'Search Ads', 'Display Ads', 'Native Ads', 'Connected TV (CTV)', 'Out-of-Home (OOH)',
-  'Demographics', 'Geo-Targeting', 'Lookalike Audience', 'Cold vs. Warm Audience',
-  'Reach', 'Frequency', 'Impression',
-  'Click-Through Rate (CTR)', 'Cost Per Click (CPC)', 'Cost Per Thousand (CPM)',
-  'Conversion Rate', 'Return on Ad Spend (ROAS)', 'Cost Per Acquisition (CPA)',
-  'Attribution', 'Last-Click Attribution', 'First-Click Attribution',
-  'Retargeting (Remarketing)', 'Tracking Pixel', 'A/B Test',
-  'Headline', 'Call to Action (CTA)', 'Social Proof',
-]);
-const visualsCount = terms.filter((t) => allVisualTerms.has(t.term)).length;
+// Count of terms with a bespoke visual — drives the "X illustrated" stat.
+const visualsCount = countVisualTerms(terms, VISUAL_TERMS);
 
 // Group terms in source (curated) order. Ungrouped terms collapse to "All Terms".
 const grouped: Record<string, Term[]> = {};
@@ -76,11 +77,6 @@ for (const t of terms) {
   grouped[key].push(t);
 }
 const groupCount = groupOrder.length;
-
-// Slugify group names → stable anchor IDs. MUST match words.astro's algorithm —
-// the category cards below link straight into those anchors.
-const groupSlug = (s: string) =>
-  s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 // Category cards: name, count, anchor, and the first three curated terms as a teaser.
 const categories = groupOrder.map((name) => ({
@@ -97,38 +93,64 @@ const catOf = (name: string) => (terms.find((t) => t.term === name)?.group || ''
 const formUrl = `/training/${asset.slug}/form`;
 const wordsUrl = `/training/${asset.slug}/words`;
 
-// Hero rotator slides — kinetic term diagrams that auto-fade between each
-// other. Each pairs one distinct motion with the term and a plain-English
-// half-line. Kept deliberately spare; the animation carries the meaning.
-const heroLoop = [
-  { Visual: HeroRetargeting, term: 'Retargeting', note: 'You looked once and left. Now the same ad trails you from site to site, asking you back.' },
-  { Visual: HeroClickRate,   term: 'Click-Through Rate', note: 'Of everyone who sees an ad, the small slice who actually click it. Usually just a few percent.' },
-  { Visual: HeroConversion,  term: 'Conversion', note: 'A thousand people visit, most drift off, and only a handful do the thing you wanted.' },
-  { Visual: HeroFrequency,   term: 'Frequency', note: 'How many times the same person sees your ad. Reach is people; frequency is repeats.' },
-  { Visual: HeroBounce,      term: 'Bounce Rate', note: 'Visitors who land on one page and leave at once, without clicking a single thing.' },
-];
+// Hero rotator — Sanity supplies the slides, but each slide's animation is a
+// code component, so a slide only renders if its `visual` key resolves in this
+// registry. A list with no buildable slides (e.g. a brand-new SEO list)
+// collapses the hero to a single column rather than showing the wrong examples.
+const heroVisuals: Record<string, any> = {
+  retargeting: HeroRetargeting,
+  'click-rate': HeroClickRate,
+  conversion: HeroConversion,
+  frequency: HeroFrequency,
+  bounce: HeroBounce,
+};
+const heroLoop = resolveHeroSlides(asset.heroSlides, heroVisuals);
+const showHero = heroLoop.length > 0;
 
-// Showcase: one full-width specimen + two halves. Terms are picked to be
-// distinct from the hero rotator, and to be cases where a picture genuinely
-// beats a sentence. CPC/CPM/CPA are excluded — their formula row clips < 640px.
-const showcaseLead = { term: 'Storyboard', label: 'Storyboard' };
-const showcasePair = [
-  { term: 'Geo-Targeting', label: 'Geo-Targeting' },
-  { term: 'A/B Test', label: 'A/B Test' },
-];
+// Showcase specimens come from Sanity, validated against the terms that have a
+// visual — no valid specimens -> the section is skipped.
+const {
+  leadTerm: showcaseLeadTerm,
+  pairTerms: showcasePairTerms,
+  show: showShowcase,
+} = resolveShowcase(asset.showcaseLead, asset.showcasePair, VISUAL_TERMS);
+
+// Landing copy with title-derived fallbacks. `*phrase*` -> accent <em>.
+const headline = headlineHtml(asset.heroHeadline, asset.title);
+const subtitle = subtitleHtml(asset.heroSubtitle, termCount);
+const showcaseTitle = showcaseTitleOf(asset.showcaseTitle);
+const categoriesTitle = categoriesTitleOf(asset.categoriesTitle, groupCount);
 
 const pageTitle = `${asset.seoTitle || asset.title}, Devin Alexander`;
 const pageDescription =
   asset.description || asset.tagline || `Free asset: ${asset.title}.`;
 const ogImage = `/og/training/${asset.slug}.png`;
+
+// Structured data: the gated /words list is noIndex, so expose the glossary's
+// value to search engines here on the public landing as a DefinedTermSet.
+const definedTermSet = {
+  '@context': 'https://schema.org',
+  '@type': 'DefinedTermSet',
+  name: asset.title,
+  description: pageDescription,
+  url: `${SITE_URL}/training/${asset.slug}`,
+  hasDefinedTerm: terms.map((t) => ({
+    '@type': 'DefinedTerm',
+    name: t.term,
+    description: t.definition,
+  })),
+};
 ---
 
 <Layout title={pageTitle} description={pageDescription} image={ogImage} noIndex={asset.noIndex}>
+  {!asset.noIndex && (
+    <script type="application/ld+json" set:html={JSON.stringify(definedTermSet)} />
+  )}
   <main class={`landing accent-${asset.accent || 'gold'}`}>
 
     {/* ─── Section 1: Hero ─── */}
     <section class="hero">
-      <div class="hero-inner">
+      <div class={`hero-inner${showHero ? '' : ' hero-inner-solo'}`}>
 
         <div class="hero-left">
           <div class="hero-breadcrumb reveal" style="--reveal-i: 0">
@@ -142,11 +164,8 @@ const ogImage = `/og/training/${asset.slug}.png`;
           </div>
 
           <div class="hero-headline reveal" style="--reveal-i: 1">
-            <h1 class="page-title">Advertising<br />Word List</h1>
-            <p class="page-subtitle">
-              73 of the most important terms in advertising, <em>fully defined
-              and visualized</em>.
-            </p>
+            <h1 class="page-title" set:html={headline} />
+            <p class="page-subtitle" set:html={subtitle} />
           </div>
 
           <div class="hero-cta reveal" style="--reveal-i: 2">
@@ -157,8 +176,12 @@ const ogImage = `/og/training/${asset.slug}.png`;
 
           <p class="hero-stats reveal" style="--reveal-i: 3">
             <span class="stat-num">{termCount}</span> terms
-            <span class="stat-dot" aria-hidden="true">·</span>
-            <span class="stat-num">{visualsCount}</span> illustrated
+            {visualsCount > 0 && (
+              <>
+                <span class="stat-dot" aria-hidden="true">·</span>
+                <span class="stat-num">{visualsCount}</span> illustrated
+              </>
+            )}
             <span class="stat-dot" aria-hidden="true">·</span>
             <span class="stat-num">{groupCount}</span> categories
             <span class="stat-dot" aria-hidden="true">·</span>
@@ -166,19 +189,21 @@ const ogImage = `/og/training/${asset.slug}.png`;
           </p>
         </div>
 
-        <div class="hero-right reveal" style="--reveal-i: 2">
-          <HeroTermLoop count={heroLoop.length} interval={7200} client:load>
-            {heroLoop.map((s) => (
-              <article data-slide class="tl-slide" aria-label={`Example: ${s.term}`}>
-                <div class="tl-visual"><s.Visual /></div>
-                <div class="tl-cap">
-                  <h2 class="tl-term">{s.term}</h2>
-                  <p class="tl-note">{s.note}</p>
-                </div>
-              </article>
-            ))}
-          </HeroTermLoop>
-        </div>
+        {showHero && (
+          <div class="hero-right reveal" style="--reveal-i: 2">
+            <HeroTermLoop count={heroLoop.length} interval={7200} client:load>
+              {heroLoop.map((s: { Visual: any; term: string; note: string }) => (
+                <article data-slide class="tl-slide" aria-label={`Example: ${s.term}`}>
+                  <div class="tl-visual"><s.Visual /></div>
+                  <div class="tl-cap">
+                    <h2 class="tl-term">{s.term}</h2>
+                    <p class="tl-note">{s.note}</p>
+                  </div>
+                </article>
+              ))}
+            </HeroTermLoop>
+          </div>
+        )}
 
       </div>
     </section>
@@ -192,14 +217,16 @@ const ogImage = `/og/training/${asset.slug}.png`;
           know either. <em>This one doesn't.</em>
         </p>
 
-        <div class="pitch-grid">
-          <figure class="pitch-stat reveal" style="--reveal-i: 2">
-            <span class="pitch-stat-num">{visualsCount}</span>
-            <figcaption>
-              of {termCount} terms come with a picture, so you see how each one
-              <em>actually works</em>, instead of picturing it wrong.
-            </figcaption>
-          </figure>
+        <div class={`pitch-grid${visualsCount > 0 ? '' : ' pitch-grid-solo'}`}>
+          {visualsCount > 0 && (
+            <figure class="pitch-stat reveal" style="--reveal-i: 2">
+              <span class="pitch-stat-num">{visualsCount}</span>
+              <figcaption>
+                of {termCount} terms come with a picture, so you see how each one
+                <em>actually works</em>, instead of picturing it wrong.
+              </figcaption>
+            </figure>
+          )}
 
           <div class="pitch-who reveal" style="--reveal-i: 3">
             <p class="pitch-who-head">For anyone who ends up in the room without the vocabulary.</p>
@@ -213,48 +240,54 @@ const ogImage = `/og/training/${asset.slug}.png`;
       </div>
     </section>
 
-    {/* ─── Section 3: Visualized showcase ─── */}
-    <section class="showcase">
-      <div class="showcase-inner">
-        <header class="showcase-head reveal">
-          <p class="section-eyebrow">Defined, then drawn</p>
-          <h2 class="section-title">Some words are easier to show than to say</h2>
-        </header>
+    {/* ─── Section 3: Visualized showcase (only when specimens have visuals) ─── */}
+    {showShowcase && (
+      <section class="showcase">
+        <div class="showcase-inner">
+          <header class="showcase-head reveal">
+            <p class="section-eyebrow">Defined, then drawn</p>
+            <h2 class="section-title">{showcaseTitle}</h2>
+          </header>
 
-        <article class="specimen specimen-lead reveal" style="--reveal-i: 1">
-          <div class="specimen-text">
-            {catOf(showcaseLead.term) && <p class="specimen-cat">{catOf(showcaseLead.term)}</p>}
-            <h3 class="specimen-term">{showcaseLead.label}</h3>
-            <p class="specimen-def">{defOf(showcaseLead.term)}</p>
-          </div>
-          <div class="specimen-visual">
-            <TermVisual term={showcaseLead.term} />
-          </div>
-        </article>
-
-        <div class="specimen-pair">
-          {showcasePair.map((s, i) => (
-            <article class="specimen reveal" style={`--reveal-i: ${i + 2}`}>
+          {showcaseLeadTerm && (
+            <article class="specimen specimen-lead reveal" style="--reveal-i: 1">
               <div class="specimen-text">
-                {catOf(s.term) && <p class="specimen-cat">{catOf(s.term)}</p>}
-                <h3 class="specimen-term specimen-term-sm">{s.label}</h3>
-                <p class="specimen-def">{defOf(s.term)}</p>
+                {catOf(showcaseLeadTerm) && <p class="specimen-cat">{catOf(showcaseLeadTerm)}</p>}
+                <h3 class="specimen-term">{showcaseLeadTerm}</h3>
+                <p class="specimen-def">{defOf(showcaseLeadTerm)}</p>
               </div>
               <div class="specimen-visual">
-                <TermVisual term={s.term} />
+                <TermVisual term={showcaseLeadTerm} />
               </div>
             </article>
-          ))}
+          )}
+
+          {showcasePairTerms.length > 0 && (
+            <div class="specimen-pair">
+              {showcasePairTerms.map((term: string, i: number) => (
+                <article class="specimen reveal" style={`--reveal-i: ${i + 2}`}>
+                  <div class="specimen-text">
+                    {catOf(term) && <p class="specimen-cat">{catOf(term)}</p>}
+                    <h3 class="specimen-term specimen-term-sm">{term}</h3>
+                    <p class="specimen-def">{defOf(term)}</p>
+                  </div>
+                  <div class="specimen-visual">
+                    <TermVisual term={term} />
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
         </div>
-      </div>
-    </section>
+      </section>
+    )}
 
     {/* ─── Section 4: Category index ─── */}
     <section class="categories">
       <div class="categories-inner">
         <header class="categories-head reveal">
           <p class="section-eyebrow">{groupCount} categories</p>
-          <h2 class="section-title">From the ad itself to the sale it makes</h2>
+          <h2 class="section-title">{categoriesTitle}</h2>
         </header>
 
         <ul class="category-grid">
@@ -376,6 +409,11 @@ const ogImage = `/og/training/${asset.slug}.png`;
     .hero-inner {
       grid-template-columns: 1fr 1fr;
       gap: var(--space-block-lg);
+    }
+    /* No hero animation -> keep the copy column from stretching full-bleed. */
+    .hero-inner-solo {
+      grid-template-columns: 1fr;
+      max-width: 720px;
     }
   }
   .hero-left {
@@ -505,6 +543,7 @@ const ogImage = `/og/training/${asset.slug}.png`;
   }
   @media (min-width: 760px) {
     .pitch-grid { grid-template-columns: 1fr 1fr; gap: var(--space-block-lg); }
+    .pitch-grid-solo { grid-template-columns: 1fr; }
   }
 
   /* stat figure — a visual anchor for the "with a picture" claim */
