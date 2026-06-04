@@ -55,15 +55,17 @@
     aria-label="Cookie consent"
   >
     <div class="card">
-      <!-- Grain texture matching nav overlay -->
-      <div class="grain-overlay" style="border-radius: inherit;" aria-hidden="true"></div>
-
-      <!-- Accent border glow -->
-      <div class="accent-edge" aria-hidden="true"></div>
+      <!-- Top accent rail — same convention as the contact + lead cards. -->
+      <span class="card-bar" aria-hidden="true"></span>
+      <!-- Film grain on the elevated surface, matching nav + hero. -->
+      <span class="grain-overlay" aria-hidden="true"></span>
 
       <div class="content" class:entered>
         <div class="header">
-          <span class="label">Privacy</span>
+          <span class="eyebrow">
+            <span class="eyebrow-rule"></span>
+            <span class="eyebrow-text">Privacy</span>
+          </span>
           <h3 class="title">A quick note</h3>
         </div>
 
@@ -86,17 +88,17 @@
     bottom: clamp(1rem, 3vw, 1.75rem);
     left: clamp(1rem, 3vw, 1.75rem);
     z-index: 50;
-    animation: card-in 600ms var(--ease-out-expo) forwards;
+    animation: card-in var(--duration-slow) var(--ease-out-expo) forwards;
   }
 
   .consent.dismissing {
-    animation: card-out 450ms var(--ease-in-out-smooth) forwards;
+    animation: card-out var(--duration-normal) var(--ease-in-out-smooth) forwards;
   }
 
   @keyframes card-in {
     from {
       opacity: 0;
-      transform: translateY(20px) scale(0.96);
+      transform: translateY(16px) scale(0.985);
     }
     to {
       opacity: 1;
@@ -111,52 +113,47 @@
     }
     to {
       opacity: 0;
-      transform: translateY(12px) scale(0.97);
+      transform: translateY(10px) scale(0.99);
     }
   }
 
+  /* Architectural surface card — mirrors the contact + lead cards: solid
+     elevated surface, hairline border, sharp 4px corners, real layered
+     shadow, and a 2px accent rail across the top. No glassmorphism. */
   .card {
     position: relative;
-    width: min(22rem, calc(100vw - 2rem));
-    background: color-mix(in oklab, var(--color-bg) 92%, transparent);
-    backdrop-filter: blur(24px) saturate(1.4);
-    -webkit-backdrop-filter: blur(24px) saturate(1.4);
-    border: 1px solid color-mix(in oklab, var(--color-text-muted) 12%, transparent);
-    border-radius: var(--radius-xl);
+    width: min(23rem, calc(100vw - 2rem));
+    background: var(--color-surface);
+    border: var(--border-subtle);
+    border-radius: var(--radius-md);
     overflow: hidden;
-    box-shadow:
-      0 4px 24px color-mix(in oklab, var(--color-bg) 60%, transparent),
-      0 1px 3px color-mix(in oklab, var(--color-bg) 40%, transparent);
+    box-shadow: var(--shadow-lg);
   }
 
-  /* Left accent edge — subtle gold bar */
-  .accent-edge {
+  .card-bar {
     position: absolute;
-    top: 1.25rem;
-    bottom: 1.25rem;
-    left: 0;
-    width: 2px;
+    inset: 0 0 auto 0;
+    height: 2px;
     background: linear-gradient(
-      to bottom,
-      transparent,
+      90deg,
       var(--color-accent),
-      transparent
+      color-mix(in oklab, var(--color-accent) 30%, transparent)
     );
-    opacity: 0.6;
-    border-radius: 0 1px 1px 0;
+    z-index: 1;
   }
 
   .content {
     position: relative;
-    padding: 1.5rem 1.5rem 1.25rem 1.75rem;
+    z-index: 1;
+    padding: var(--space-card);
     display: flex;
     flex-direction: column;
     gap: 0.875rem;
     opacity: 0;
     transform: translateY(6px);
     transition:
-      opacity 500ms var(--ease-out-expo) 150ms,
-      transform 500ms var(--ease-out-expo) 150ms;
+      opacity var(--duration-slow) var(--ease-out-expo) 150ms,
+      transform var(--duration-slow) var(--ease-out-expo) 150ms;
   }
 
   .content.entered {
@@ -166,28 +163,41 @@
 
   .header {
     display: flex;
-    align-items: baseline;
-    gap: 0.625rem;
+    flex-direction: column;
+    gap: 0.55rem;
   }
 
-  .label {
+  /* Eyebrow — accent rule + uppercase label, matching the site's section
+     and visual labels. */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .eyebrow-rule {
+    display: inline-block;
+    width: 18px;
+    height: 1px;
+    background: var(--color-accent);
+    opacity: 0.6;
+  }
+  .eyebrow-text {
     font-family: var(--font-body);
     font-size: var(--text-xs);
     font-weight: var(--weight-medium);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-accent);
-    position: relative;
-    top: -0.05em;
   }
 
   .title {
     font-family: var(--font-display);
-    font-size: var(--text-md);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-regular);
     color: var(--color-text);
     margin: 0;
     letter-spacing: var(--tracking-tight);
-    line-height: 1.2;
+    line-height: 1.15;
   }
 
   .body {
@@ -202,11 +212,11 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding-top: 0.25rem;
+    padding-top: 0.35rem;
   }
 
-  /* Buttons now provided by Button primitive (variants: ghost + primary).
-     Focus, hover, active states all come from the primitive. */
+  /* Buttons come from the Button primitive (ghost + primary) — focus, hover,
+     and active states all live there. */
 
   /* ---- Responsive ---- */
   @media (max-width: 480px) {
@@ -218,10 +228,6 @@
 
     .card {
       width: 100%;
-    }
-
-    .content {
-      padding: 1.25rem 1.25rem 1.125rem 1.5rem;
     }
 
     .actions {
