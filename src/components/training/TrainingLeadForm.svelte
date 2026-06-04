@@ -91,8 +91,9 @@
 
       assetUrl = data.assetUrl || `/training/${assetSlug}/words`;
       done = true;
-      // Let the success state register, then open the list.
-      setTimeout(() => window.location.assign(assetUrl), 850);
+      // Brief "accessing" beat so the redirect doesn't feel like a flash, then
+      // straight into the unlocked list — no celebratory interstitial.
+      setTimeout(() => window.location.assign(assetUrl), 700);
     } catch (err: any) {
       error = err?.message || 'Something went wrong. Please try again.';
       submitting = false;
@@ -103,24 +104,15 @@
 </script>
 
 {#if done}
-  <div class="lead-done" aria-live="polite">
-    <span class="done-mark" aria-hidden="true">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M20 6L9 17l-5-5" />
-      </svg>
-    </span>
-    <h2 class="done-title">You're in</h2>
-    <p class="done-text">
-      Opening the list now. A copy is on its way to your inbox too.
-    </p>
-    <a class="done-link" href={assetUrl}>
-      Open the {assetTitle}
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M1 7h12M8 2l5 5-5 5" />
-      </svg>
-    </a>
+  <div class="lead-accessing" aria-live="polite" role="status">
+    <span class="accessing-spinner" aria-hidden="true"></span>
+    <p class="accessing-text">Accessing the {assetTitle}…</p>
   </div>
 {:else}
+  <header class="card-head">
+    <h2 class="card-title">Where should I send it?</h2>
+    <p class="card-sub">Four quick fields. The list opens the moment you submit, and a copy lands in your inbox.</p>
+  </header>
   <form
     class="lead-form"
     method="POST"
@@ -321,69 +313,65 @@
     text-align: center;
   }
 
-  /* ---- Success state ---- */
-  .lead-done {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 0.85rem;
-    padding: clamp(1.5rem, 4vw, 2.5rem) 0;
-    animation: lead-enter var(--duration-normal) var(--ease-out-expo) both;
+  /* ---- Card head (moved in from form.astro so it hides during access) ---- */
+  .card-head {
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
   }
-  .done-mark {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 52px;
-    height: 52px;
-    border-radius: var(--radius-full);
-    color: var(--words-accent, var(--color-accent));
-    background: color-mix(in oklab, var(--words-accent, var(--color-accent)) 12%, transparent);
-    animation: lead-pop var(--duration-slow) var(--ease-out-back) both;
-  }
-  .done-title {
-    margin: 0;
+  .card-title {
+    margin: 0 0 0.5rem;
     font-family: var(--font-display);
-    font-size: var(--text-2xl);
+    font-size: var(--text-xl);
     font-weight: var(--weight-regular);
-    line-height: 1.05;
+    line-height: 1.1;
     letter-spacing: var(--tracking-tight);
     color: var(--color-text);
   }
-  .done-text {
+  .card-sub {
     margin: 0;
     font-family: var(--font-body);
     font-size: var(--text-md);
-    line-height: 1.6;
+    line-height: 1.55;
     color: var(--color-text-muted);
-    max-width: 32ch;
+    max-width: 42ch;
   }
-  .done-link {
-    display: inline-flex;
+
+  /* ---- Accessing state ---- A quiet loader, not a celebration. Holds the
+     card's height steady for the ~700ms before the redirect fires. */
+  .lead-accessing {
+    display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-top: 0.35rem;
-    font-family: var(--font-body);
-    font-size: var(--text-sm);
-    font-weight: var(--weight-medium);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--words-accent, var(--color-accent));
-    text-decoration: none;
+    justify-content: center;
+    gap: 0.85rem;
+    min-height: 8.5rem;
+    padding: clamp(1.5rem, 4vw, 2.5rem) 0;
+    animation: lead-enter var(--duration-normal) var(--ease-out-expo) both;
   }
-  .done-link svg { transition: transform var(--duration-fast) var(--ease-out-expo); }
-  .done-link:hover svg { transform: translateX(3px); }
+  .accessing-spinner {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: var(--radius-full);
+    border: 2px solid color-mix(in oklab, var(--words-accent, var(--color-accent)) 22%, transparent);
+    border-top-color: var(--words-accent, var(--color-accent));
+    animation: accessing-spin 0.7s linear infinite;
+  }
+  .accessing-text {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--text-md);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
 
   @keyframes lead-enter {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  @keyframes lead-pop {
-    0%   { opacity: 0; transform: scale(0.6); }
-    100% { opacity: 1; transform: scale(1); }
+  @keyframes accessing-spin {
+    to { transform: rotate(360deg); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .lead-done, .done-mark { animation: none; }
+    .lead-accessing { animation: none; }
+    .accessing-spinner { animation-duration: 1.4s; }
   }
 </style>
