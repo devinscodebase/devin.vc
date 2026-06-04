@@ -30,7 +30,6 @@
   let company = $state('');
   let jobTitle = $state('');
   let consent = $state(false);
-  let marketingConsent = $state(false);
 
   let submitting = $state(false);
   let done = $state(false);
@@ -83,7 +82,9 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name, email, company, jobTitle, assetSlug,
-          consent, marketingConsent, turnstileToken, website: '',
+          // Agreeing to the Privacy Policy + Terms is the marketing opt-in
+          // (per our Terms), so there's no separate marketing checkbox.
+          consent, marketingConsent: consent, turnstileToken, website: '',
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -183,17 +184,7 @@
           <path d="M10 3L4.5 8.5 2 6" />
         </svg>
       </span>
-      <span class="consent-text">I agree to the <a href="/privacy" target="_blank">Privacy Policy</a> and <a href="/terms" target="_blank">Terms of Use</a>.</span>
-    </label>
-
-    <label class="consent-label">
-      <input type="checkbox" name="marketingConsent" bind:checked={marketingConsent} class="consent-checkbox" />
-      <span class="consent-check" aria-hidden="true">
-        <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M10 3L4.5 8.5 2 6" />
-        </svg>
-      </span>
-      <span class="consent-text">Email me when new training assets are released. <span class="consent-optional">Optional.</span></span>
+      <span class="consent-text">I agree to the <a href="/privacy" target="_blank">Privacy Policy</a> and <a href="/terms" target="_blank">Terms of Use</a>, and to receive occasional emails about new training assets.</span>
     </label>
 
     {#if siteKey}
@@ -301,7 +292,6 @@
     transition: text-decoration-color var(--duration-fast) var(--ease-out-expo);
   }
   .consent-text a:hover { text-decoration-color: var(--words-accent, var(--color-accent)); }
-  .consent-optional { color: var(--color-text-subtle); }
 
   .submit-row { display: flex; }
 

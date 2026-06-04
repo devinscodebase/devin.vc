@@ -35,7 +35,8 @@ if (Astro.request.method === 'POST') {
       jobTitle: String(data.get('jobTitle') ?? ''),
       assetSlug: String(data.get('assetSlug') ?? slug ?? ''),
       consent: data.get('consent') === 'on',
-      marketingConsent: data.get('marketingConsent') === 'on',
+      // Agreeing to the Privacy Policy + Terms is the marketing opt-in.
+      marketingConsent: data.get('consent') === 'on',
       website: String(data.get('website') ?? ''),
       turnstileToken: String(data.get('cf-turnstile-response') ?? ''),
     },
