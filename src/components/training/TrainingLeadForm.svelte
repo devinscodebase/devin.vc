@@ -7,27 +7,63 @@
     per-asset unlock cookie), then sends the visitor straight to the word
     list. The email arrives in parallel; the on-screen link is the fast path.
   */
+  import { untrack } from 'svelte';
   import Field from '../ui/Field.svelte';
   import Button from '../ui/Button.svelte';
 
-  let { assetSlug, assetTitle = 'word list' }: { assetSlug: string; assetTitle?: string } = $props();
+  let {
+    assetSlug,
+    assetTitle = 'word list',
+    formAction,
+    siteKey,
+    serverError = '',
+  }: {
+    assetSlug: string;
+    assetTitle?: string;
+    formAction: string;
+    siteKey?: string;
+    serverError?: string;
+  } = $props();
 
   let name = $state('');
   let email = $state('');
   let company = $state('');
   let jobTitle = $state('');
   let consent = $state(false);
+  let marketingConsent = $state(false);
 
   let submitting = $state(false);
   let done = $state(false);
-  let error = $state('');
+  // Seed the form-level error from any no-JS POST round-trip (initial value
+  // only — it's rendered during SSR so a no-JS failure still shows its error).
+  let error = $state(untrack(() => serverError));
   let assetUrl = $state('');
+  let formEl = $state<HTMLFormElement | null>(null);
+
+  // Per-field errors, surfaced inline rather than dead-ending behind a button.
+  let fieldErrors = $state<{ name?: string; email?: string; company?: string; jobTitle?: string }>({});
+
+  const isValidEmail = (s: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+
+  function validate(): boolean {
+    const next: typeof fieldErrors = {};
+    if (!name.trim()) next.name = 'Your name is required.';
+    if (!email.trim()) next.email = 'Your email is required.';
+    else if (!isValidEmail(email.trim())) next.email = 'Enter a valid email address.';
+    if (!company.trim()) next.company = 'Your company is required.';
+    if (!jobTitle.trim()) next.jobTitle = 'Your job title is required.';
+    fieldErrors = next;
+    return Object.keys(next).length === 0;
+  }
 
   async function onSubmit(e: SubmitEvent) {
     e.preventDefault();
     if (submitting) return;
 
-    // Validate consent inline rather than dead-ending behind a disabled button.
+    if (!validate()) {
+      error = '';
+      return;
+    }
     if (!consent) {
       error = 'Please agree to the Privacy Policy and Terms to continue.';
       return;
@@ -36,11 +72,19 @@
     submitting = true;
     error = '';
 
+    // The Turnstile widget injects a hidden input named cf-turnstile-response
+    // into the form once solved. Pull it for the JSON request.
+    const turnstileToken =
+      (formEl?.querySelector('[name="cf-turnstile-response"]') as HTMLInputElement | null)?.value || '';
+
     try {
       const res = await fetch('/api/training-lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, company, jobTitle, assetSlug, consent }),
+        body: JSON.stringify({
+          name, email, company, jobTitle, assetSlug,
+          consent, marketingConsent, turnstileToken, website: '',
+        }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || 'Something went wrong. Please try again.');
@@ -52,6 +96,8 @@
     } catch (err: any) {
       error = err?.message || 'Something went wrong. Please try again.';
       submitting = false;
+      // Reset the Turnstile widget so the next attempt gets a fresh token.
+      (window as any).turnstile?.reset?.();
     }
   }
 </script>
@@ -75,7 +121,22 @@
     </a>
   </div>
 {:else}
-  <form class="lead-form" onsubmit={onSubmit} novalidate>
+  <form
+    class="lead-form"
+    method="POST"
+    action={formAction}
+    onsubmit={onSubmit}
+    bind:this={formEl}
+    novalidate
+  >
+    <input type="hidden" name="assetSlug" value={assetSlug} />
+
+    <!-- Honeypot — hidden from humans, irresistible to bots. Filled = spam. -->
+    <div class="hp-field" aria-hidden="true">
+      <label for="lead-website">Website</label>
+      <input id="lead-website" type="text" name="website" tabindex="-1" autocomplete="off" />
+    </div>
+
     <div class="lead-grid">
       <Field
         type="text"
@@ -85,6 +146,7 @@
         placeholder="Jane Doe"
         autocomplete="name"
         required
+        error={fieldErrors.name}
         bind:value={name}
       />
       <Field
@@ -95,6 +157,7 @@
         placeholder="jane@company.com"
         autocomplete="email"
         required
+        error={fieldErrors.email}
         bind:value={email}
       />
       <Field
@@ -105,6 +168,7 @@
         placeholder="Company name"
         autocomplete="organization"
         required
+        error={fieldErrors.company}
         bind:value={company}
       />
       <Field
@@ -115,12 +179,13 @@
         placeholder="Marketing Lead"
         autocomplete="organization-title"
         required
+        error={fieldErrors.jobTitle}
         bind:value={jobTitle}
       />
     </div>
 
     <label class="consent-label">
-      <input type="checkbox" required bind:checked={consent} class="consent-checkbox" />
+      <input type="checkbox" name="consent" required bind:checked={consent} class="consent-checkbox" />
       <span class="consent-check" aria-hidden="true">
         <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M10 3L4.5 8.5 2 6" />
@@ -128,6 +193,20 @@
       </span>
       <span class="consent-text">I agree to the <a href="/privacy" target="_blank">Privacy Policy</a> and <a href="/terms" target="_blank">Terms of Use</a>.</span>
     </label>
+
+    <label class="consent-label">
+      <input type="checkbox" name="marketingConsent" bind:checked={marketingConsent} class="consent-checkbox" />
+      <span class="consent-check" aria-hidden="true">
+        <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 3L4.5 8.5 2 6" />
+        </svg>
+      </span>
+      <span class="consent-text">Email me when new training assets are released. <span class="consent-optional">Optional.</span></span>
+    </label>
+
+    {#if siteKey}
+      <div class="cf-turnstile" data-sitekey={siteKey} data-theme="auto"></div>
+    {/if}
 
     <div class="submit-row">
       <Button type="submit" variant="primary" size="lg" arrow loading={submitting} fullWidth>
@@ -146,6 +225,16 @@
     display: flex;
     flex-direction: column;
     gap: 1.75rem;
+  }
+
+  /* Honeypot — kept in the layout but off-screen and out of the tab order so
+     only bots (which fill every field) ever populate it. */
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
   }
 
   .lead-grid {
@@ -220,6 +309,7 @@
     transition: text-decoration-color var(--duration-fast) var(--ease-out-expo);
   }
   .consent-text a:hover { text-decoration-color: var(--words-accent, var(--color-accent)); }
+  .consent-optional { color: var(--color-text-subtle); }
 
   .submit-row { display: flex; }
 

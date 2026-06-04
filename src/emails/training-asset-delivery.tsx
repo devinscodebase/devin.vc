@@ -33,10 +33,10 @@ export default function TrainingAssetDelivery({
       {/* Eyebrow */}
       <Text style={eyebrow}>{categoryLabel.toUpperCase()}</Text>
 
-      {/* Hero title in serif */}
+      {/* Hero title */}
       <Text style={heroTitle}>{assetTitle}</Text>
 
-      {/* Italic serif tagline */}
+      {/* Tagline */}
       {assetTagline && <Text style={tagline}>{assetTagline}</Text>}
 
       {/* Gradient accent rule (matches the site) */}

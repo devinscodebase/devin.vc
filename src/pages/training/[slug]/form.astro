@@ -1,7 +1,13 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import { sanityClient } from '../../../lib/sanity';
-import { gateCookieName, isTrainingAssetEnabled } from '../../../lib/training-leads';
+import {
+  gateCookieName,
+  gateCookieOptions,
+  isTrainingAssetEnabled,
+  submitTrainingLead,
+} from '../../../lib/training-leads';
+import { TURNSTILE_SITE_KEY } from 'astro:env/client';
 import TrainingLeadForm from '../../../components/training/TrainingLeadForm.svelte';
 
 export const prerender = false;
@@ -13,8 +19,42 @@ if (!isTrainingAssetEnabled(slug)) {
   return Astro.redirect('/training');
 }
 
-// Already unlocked? Skip the gate and go straight to the list.
-if (Astro.cookies.get(gateCookieName(slug!))?.value === 'unlocked') {
+// No-JS fallback: the Svelte form posts JSON to /api/training-lead when JS is
+// available; without it, the native form posts here. Same shared service.
+let formError = '';
+if (Astro.request.method === 'POST') {
+  const data = await Astro.request.formData();
+  const ctx = (Astro.locals as any)?.runtime?.ctx as
+    | { waitUntil?: (p: Promise<unknown>) => void }
+    | undefined;
+  const result = await submitTrainingLead(
+    {
+      name: String(data.get('name') ?? ''),
+      email: String(data.get('email') ?? ''),
+      company: String(data.get('company') ?? ''),
+      jobTitle: String(data.get('jobTitle') ?? ''),
+      assetSlug: String(data.get('assetSlug') ?? slug ?? ''),
+      consent: data.get('consent') === 'on',
+      marketingConsent: data.get('marketingConsent') === 'on',
+      website: String(data.get('website') ?? ''),
+      turnstileToken: String(data.get('cf-turnstile-response') ?? ''),
+    },
+    {
+      ip: Astro.request.headers.get('CF-Connecting-IP') ?? undefined,
+      waitUntil: ctx?.waitUntil?.bind(ctx),
+    }
+  );
+  if (result.ok) {
+    Astro.cookies.set(gateCookieName(slug!), 'unlocked', gateCookieOptions(slug!));
+    return Astro.redirect(`/training/${slug}/words`, 303);
+  }
+  formError = result.error;
+}
+
+// Already unlocked? Skip the gate and go straight to the list. (GET only —
+// a POST above falls through to re-render with its error.)
+if (Astro.request.method === 'GET' &&
+    Astro.cookies.get(gateCookieName(slug!))?.value === 'unlocked') {
   return Astro.redirect(`/training/${slug}/words`);
 }
 
@@ -73,11 +113,21 @@ const perks = [
           <h2 class="card-title">Where should I send it?</h2>
           <p class="card-sub">Four quick fields. The list opens the moment you submit, and a copy lands in your inbox.</p>
         </header>
-        <TrainingLeadForm assetSlug={asset.slug} assetTitle={asset.title} client:load />
+        <TrainingLeadForm
+          assetSlug={asset.slug}
+          assetTitle={asset.title}
+          formAction={`/training/${asset.slug}/form`}
+          siteKey={TURNSTILE_SITE_KEY}
+          serverError={formError}
+          client:load
+        />
       </section>
 
     </div>
   </main>
+  {TURNSTILE_SITE_KEY && (
+    <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  )}
 </Layout>
 
 <style>

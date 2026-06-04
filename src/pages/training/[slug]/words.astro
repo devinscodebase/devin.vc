@@ -2,7 +2,12 @@
 import Layout from '../../../layouts/Layout.astro';
 import { sanityClient } from '../../../lib/sanity';
 import TermVisual from '../../../components/training/TermVisual.astro';
-import { gateCookieName, isTrainingAssetEnabled } from '../../../lib/training-leads';
+import {
+  gateCookieName,
+  isTrainingAssetEnabled,
+  categoryLabels,
+  groupSlug,
+} from '../../../lib/training-leads';
 
 export const prerender = false;
 
@@ -39,14 +44,6 @@ if (!asset) {
   return Astro.redirect('/training');
 }
 
-const categoryLabels: Record<string, string> = {
-  'word-list': 'Word List',
-  playbook: 'Playbook',
-  checklist: 'Checklist',
-  template: 'Template',
-  guide: 'Guide',
-};
-
 // Group terms by their optional "group" field. Ungrouped terms fall under "General".
 type Term = { term: string; definition: string; group?: string | null };
 const terms: Term[] = asset.terms || [];
@@ -64,11 +61,6 @@ for (const t of terms) {
 for (const key of groupOrder) {
   grouped[key].sort((a, b) => a.term.localeCompare(b.term, 'en', { sensitivity: 'base' }));
 }
-
-// Slugify group names → stable anchor IDs. The landing page's Categories
-// section links to these — keep the algorithm identical there.
-const groupSlug = (s: string) =>
-  s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 const formattedDate = asset.publishedAt
   ? new Date(asset.publishedAt).toLocaleDateString('en-US', {
@@ -115,7 +107,7 @@ const formattedDate = asset.publishedAt
                 <polyline points="7 10 12 15 17 10"/>
                 <line x1="12" y1="15" x2="12" y2="3"/>
               </svg>
-              Download PDF
+              <span class="btn-label">Download PDF</span>
             </button>
             <span class="action-meta">
               <span class="action-num">{terms.length}</span> terms
@@ -267,8 +259,10 @@ const formattedDate = asset.publishedAt
     pdfBtn.addEventListener('focus', warm, { once: true });
 
     pdfBtn.addEventListener('click', async () => {
-      const labelEl = pdfBtn.querySelector('span, .btn-label') as HTMLElement | null;
-      const originalLabel = pdfBtn.textContent;
+      // Only swap the label text — never pdfBtn.textContent, which would wipe
+      // the inline SVG icon.
+      const labelEl = pdfBtn.querySelector('.btn-label') as HTMLElement | null;
+      const originalLabel = labelEl?.textContent ?? 'Download PDF';
       try {
         (pdfBtn as HTMLButtonElement).disabled = true;
         if (labelEl) labelEl.textContent = 'Generating…';
@@ -571,8 +565,7 @@ const formattedDate = asset.publishedAt
         alert('Sorry, the PDF could not be generated. Please try again.');
       } finally {
         (pdfBtn as HTMLButtonElement).disabled = false;
-        if (labelEl && originalLabel) labelEl.textContent = originalLabel;
-        else if (originalLabel) pdfBtn.textContent = originalLabel;
+        if (labelEl) labelEl.textContent = originalLabel;
       }
     });
   }
