@@ -1,0 +1,1674 @@
+---
+// ────────────────────────────────────────────────────────────────
+// /testing — DESIGN TESTING GROUND (noindex, not linked anywhere)
+//
+// Sandbox for the agency rebrand. Runs on its own `--t-*` token set
+// so production `--color-*` variables are never touched. The chosen
+// palette is MARKER (ink + highlighter yellow), light and dark,
+// previewed against a full mockup agency landing page.
+// ────────────────────────────────────────────────────────────────
+import '../styles/global.css';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Testing Ground · Devin Alexander</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/DMSans-Variable-Latin.woff2" as="font" type="font/woff2" crossorigin />
+  </head>
+  <body>
+    <main class="tg" id="tg" data-p="marker" data-m="light">
+      <!-- ── Masthead ───────────────────────────────── -->
+      <header class="mast">
+        <span class="mast-name">Devin Alexander</span>
+        <a class="btn btn-primary btn-sm" href="#contact">Book a call</a>
+      </header>
+
+      <!-- ── Hero mockup ─────────────────────────────── -->
+      <section class="hero">
+        <div class="hero-inner">
+          <p class="eyebrow"><span class="eyebrow-dot"></span>A human-made marketing, advertising, and PR agency</p>
+
+          <h1 class="headline">
+            Marketing that<br />
+            <em>earns</em> its invoice.
+          </h1>
+
+          <p class="sub">
+            Real research, human copy, human design, human-built everything.
+            The unglamorous work your last agency skipped, done in the only
+            sequence that makes money.
+          </p>
+
+          <div class="ctas">
+            <a class="btn btn-primary" href="#">Book a strategy call</a>
+            <a class="btn btn-ghost" href="#system">See how it works<span class="btn-arrow">&rarr;</span></a>
+          </div>
+
+          <!-- Four blocks become one: the 4 C's → Revenue -->
+          <div class="blocks-wrap">
+            <div class="blocks" id="blocks">
+              <div class="block" style="--i: 0">
+                <span class="block-num">01</span>
+                <span class="block-name">Captivate</span>
+              </div>
+              <div class="block" style="--i: 1">
+                <span class="block-num">02</span>
+                <span class="block-name">Connect</span>
+              </div>
+              <div class="block" style="--i: 2">
+                <span class="block-num">03</span>
+                <span class="block-name">Convert</span>
+              </div>
+              <div class="block" style="--i: 3">
+                <span class="block-num">04</span>
+                <span class="block-name">Close</span>
+              </div>
+              <div class="revenue-label" aria-hidden="true">
+                <span>Revenue</span>
+              </div>
+            </div>
+            <p class="blocks-caption">Four moves. One outcome.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── The 4 C's ──────────────────────────────── -->
+      <section class="section" id="system">
+        <div class="inner">
+          <p class="kicker rv">The system</p>
+          <h2 class="h2 rv">Four moves, run in order,<br />aimed at one number.</h2>
+          <p class="lede rv">
+            Most agencies sell tactics in whatever order you will pay for
+            them. We run the same four moves every time, because each one
+            feeds the next.
+          </p>
+          <div class="cgrid">
+            <article class="ccard rv" style="--i: 0">
+              <span class="cnum">01</span>
+              <h3 class="cname">Captivate</h3>
+              <p class="cdesc">
+                Stop the scroll. Branding, design, and websites that make
+                your business impossible to skim past.
+              </p>
+              <ul class="clist">
+                <li>Brand identity</li>
+                <li>Web design and build</li>
+                <li>Positioning</li>
+                <li>Creative direction</li>
+              </ul>
+            </article>
+            <article class="ccard rv" style="--i: 1">
+              <span class="cnum">02</span>
+              <h3 class="cname">Connect</h3>
+              <p class="cdesc">
+                Start the conversation. Advertising and email that sounds
+                like a person, because a person wrote it.
+              </p>
+              <ul class="clist">
+                <li>Ad campaigns</li>
+                <li>Email marketing</li>
+                <li>Content and PR</li>
+                <li>Brand voice</li>
+              </ul>
+            </article>
+            <article class="ccard rv" style="--i: 2">
+              <span class="cnum">03</span>
+              <h3 class="cname">Convert</h3>
+              <p class="cdesc">
+                Turn attention into pipeline. Funnels, lead magnets, and
+                offers engineered to move people from curious to committed.
+              </p>
+              <ul class="clist">
+                <li>Funnel design</li>
+                <li>Lead magnets</li>
+                <li>Landing pages</li>
+                <li>Offer strategy</li>
+              </ul>
+            </article>
+            <article class="ccard rv" style="--i: 3">
+              <span class="cnum">04</span>
+              <h3 class="cname">Close</h3>
+              <p class="cdesc">
+                Finish what marketing starts. Sales process and assets that
+                carry the deal the last mile, so the pipeline actually pays.
+              </p>
+              <ul class="clist">
+                <li>Sales process design</li>
+                <li>Sales assets</li>
+                <li>Proposals</li>
+                <li>Follow-up systems</li>
+              </ul>
+            </article>
+          </div>
+          <p class="cfoot rv">
+            Run together, the four compound into one block:
+            <span class="mark">revenue</span>.
+          </p>
+        </div>
+      </section>
+
+      <!-- ── Manifesto, printed in ink ──────────────── -->
+      <section class="section flip">
+        <div class="inner">
+          <p class="kicker rv">Why we are different</p>
+          <h2 class="h2 rv">Humans speak to humans.</h2>
+          <div class="mani rv">
+            <p>
+              AI can generate a thousand ads before lunch. Not one of them
+              will make your customer feel understood. So we do the work
+              other agencies quietly skip: research that means talking to
+              real buyers, copy written by a writer, design drawn by a
+              designer, websites built by hand.
+            </p>
+            <p>
+              Not because it is romantic. Because it is the difference
+              between marketing people scroll past and marketing that makes
+              them money. Your money, specifically.
+            </p>
+          </div>
+          <ul class="mani-list">
+            <li class="rv" style="--i: 0"><span class="mark">Real research.</span> Interviews and market data, not a prompt.</li>
+            <li class="rv" style="--i: 1"><span class="mark">Human copy.</span> Written, rewritten, and argued over.</li>
+            <li class="rv" style="--i: 2"><span class="mark">Human design.</span> Drawn by hand, not generated.</li>
+            <li class="rv" style="--i: 3"><span class="mark">Human-built web.</span> Fast, accessible, and yours.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ── Proof band ─────────────────────────────── -->
+      <section class="band">
+        <div class="inner band-grid">
+          <div class="stat rv" style="--i: 0">
+            <span class="stat-n">3.4x</span>
+            <span class="stat-l">average return on ad spend</span>
+          </div>
+          <div class="stat rv" style="--i: 1">
+            <span class="stat-n">38%</span>
+            <span class="stat-l">average lift in close rate</span>
+          </div>
+          <div class="stat rv" style="--i: 2">
+            <span class="stat-n">10+</span>
+            <span class="stat-l">years building brands that sell</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── System: states, borders, elevation, AA ─── -->
+      <section class="section" id="tokens">
+        <div class="inner">
+          <p class="kicker rv">The Marker system</p>
+          <h2 class="h2 rv">The parts nobody notices,<br />until they are wrong.</h2>
+          <p class="lede rv">
+            Semantic states, borders, elevation, focus, selection, and
+            scrollbars. Every pair below is measured against WCAG AA from
+            the rendered page, in both modes.
+          </p>
+
+          <h3 class="sys-h rv">Semantic states</h3>
+          <p class="sys-note rv">
+            The proofreader's marks: the red pen corrects, the stamp
+            approves, the flag warns, the margin note explains. All four
+            sit on the brand's warm wheel; none is a stray hue.
+          </p>
+          <div class="alerts rv">
+            <div class="alert ok"><strong>Approved.</strong> Your message is on its way. A human reads it next.</div>
+            <div class="alert err"><strong>Corrected.</strong> That email address will not work. One more look?</div>
+            <div class="alert warn"><strong>Flagged.</strong> That budget looks thin for the goal. We will say so.</div>
+            <div class="alert info"><strong>Noted.</strong> Replies land within one business day, usually faster.</div>
+          </div>
+          <div class="sys-forms rv">
+            <div class="field fld-err">
+              <label for="sys-em">Email</label>
+              <input id="sys-em" type="email" value="devin@devin" />
+              <p class="fmsg">Corrected: this needs a full address, like you@company.com.</p>
+            </div>
+            <div class="field fld-ok">
+              <label for="sys-em2">Email</label>
+              <input id="sys-em2" type="email" value="owner@company.com" />
+              <p class="fmsg">Approved: that works.</p>
+            </div>
+          </div>
+
+          <h3 class="sys-h rv">Buttons, focus, disabled</h3>
+          <div class="sys-row rv">
+            <button class="btn btn-primary" type="button">Primary</button>
+            <button class="btn btn-ghost" type="button">Ghost</button>
+            <button class="btn btn-primary" type="button" disabled>Primary disabled</button>
+            <button class="btn btn-ghost" type="button" disabled>Ghost disabled</button>
+            <a class="tlink" href="#tokens">Text link</a>
+          </div>
+          <p class="sys-note rv">
+            Focus rings are ink on paper and highlighter on ink: a yellow
+            ring on newsprint is 1.3 to 1 and fails the 3 to 1 rule. Tab
+            through to see.
+          </p>
+
+          <h3 class="sys-h rv">Borders and elevation</h3>
+          <div class="sys-grid rv">
+            <div class="tile t-b1"><span class="tile-l">border-subtle</span><span class="tile-d">hairlines, row dividers</span></div>
+            <div class="tile t-b2"><span class="tile-l">border</span><span class="tile-d">cards, panels, structure</span></div>
+            <div class="tile t-b3"><span class="tile-l">border-strong</span><span class="tile-d">inputs, interactive edges</span></div>
+            <div class="tile t-s1"><span class="tile-l">shadow-sm</span><span class="tile-d">nudged off the page</span></div>
+            <div class="tile t-s2"><span class="tile-l">shadow-md</span><span class="tile-d">dropdowns, popovers</span></div>
+            <div class="tile t-s3"><span class="tile-l">shadow-lg</span><span class="tile-d">modals, the floating rail</span></div>
+          </div>
+          <p class="sys-note rv">
+            Shadows are neutral ink, never tinted, never a glow. Borders
+            and surface shifts do most of the elevation work; shadows are
+            reserved for things that truly float.
+          </p>
+
+          <h3 class="sys-h rv">Selection and scrollbar</h3>
+          <p class="sys-select rv">
+            Drag across this paragraph. Selecting text runs the
+            highlighter, the same mark the brand makes everywhere else.
+          </p>
+          <div class="sys-scroll rv" tabindex="0" aria-label="Scrollbar demo">
+            <p>PROOF NOTES, PAGE 1 OF 1</p>
+            <p>01 · The scrollbar is an ink bar in the margin, not browser chrome.</p>
+            <p>02 · Thumb holds three to one against its track in both modes.</p>
+            <p>03 · It stays thin, square-shouldered, and quiet.</p>
+            <p>04 · The same treatment applies to the page scrollbar itself.</p>
+            <p>05 · Nothing glows. Nothing pulses. Nothing loops.</p>
+            <p>06 · Ink does the reading, yellow does the marking.</p>
+            <p>07 · If a part draws attention to itself, it is wrong.</p>
+            <p>08 · End of notes.</p>
+          </div>
+
+          <h3 class="sys-h rv">Contrast, measured live</h3>
+          <div class="aa rv" id="aa" aria-live="polite"></div>
+          <p class="sys-note rv">
+            Measured from the rendered page, not the spec sheet. Toggle
+            dark mode and the table re-tests itself.
+          </p>
+        </div>
+      </section>
+
+      <!-- ── Contact ────────────────────────────────── -->
+      <section class="section" id="contact">
+        <div class="inner contact-grid">
+          <div>
+            <p class="kicker rv">No pitch deck required</p>
+            <h2 class="h2 rv">Tired of paying for marketing that never pays you back?</h2>
+            <p class="lede rv">
+              Tell us what you sell and where it hurts. A human reads every
+              message and answers straight, usually within a day.
+            </p>
+            <p class="contact-alt rv">
+              Prefer to talk it out?
+              <a class="tlink" href="#">Book a strategy call</a>
+            </p>
+          </div>
+          <form class="lead rv" action="#" onsubmit="return false">
+            <div class="field">
+              <label for="t-name">Name</label>
+              <input id="t-name" type="text" name="name" placeholder="Your name" autocomplete="name" />
+            </div>
+            <div class="field">
+              <label for="t-email">Email</label>
+              <input id="t-email" type="email" name="email" placeholder="you@company.com" autocomplete="email" />
+            </div>
+            <div class="field">
+              <label for="t-about">What do you sell?</label>
+              <textarea id="t-about" name="about" rows="4" placeholder="And what is not working right now?"></textarea>
+            </div>
+            <button class="btn btn-primary" type="submit">Send it</button>
+            <p class="lead-note">No newsletter ambush. No chatbot. A person reads this.</p>
+          </form>
+        </div>
+      </section>
+
+      <!-- ── Footer ─────────────────────────────────── -->
+      <footer class="foot">
+        <div class="inner foot-grid">
+          <div>
+            <p class="foot-name">Devin Alexander</p>
+            <p class="foot-tag">A human-made marketing, advertising, and PR agency.</p>
+          </div>
+          <nav class="foot-nav" aria-label="Footer">
+            <a href="#system">The system</a>
+            <a href="#contact">Contact</a>
+            <a href="#">Training</a>
+            <a href="#">Journal</a>
+          </nav>
+        </div>
+        <div class="inner foot-fine">
+          <span>&copy; 2026 Devin Alexander</span>
+          <span>Made by hand.</span>
+        </div>
+      </footer>
+
+      <!-- ── Control rail ────────────────────────────── -->
+      <div class="rail" role="toolbar" aria-label="Palette preview controls">
+        <div class="rail-group">
+          <button class="rail-btn is-active" data-mode="light">Light</button>
+          <button class="rail-btn" data-mode="dark">Dark</button>
+        </div>
+        <span class="rail-divider"></span>
+        <button class="rail-btn" id="replay">Replay</button>
+      </div>
+    </main>
+
+    <style>
+      /* ══════════════════════════════════════════════════
+         THE PALETTE — new --t-* tokens only.
+
+         MARKER is a two-ink print system, not a neutral
+         ground + accent: committed grounds, ink that reads,
+         a highlighter that marks. Dark mode is soft ink,
+         never gray-black.
+         ══════════════════════════════════════════════════ */
+
+      /* — MARKER — ink and highlighter yellow.
+           An editor's pen on newsprint: the accent is a
+           highlighter, so it works as a background you mark
+           things WITH, carrying ink text on top. */
+      /* All colors are authored in oklch(). Derived tokens
+         (on-accent, block, borders, focus, semantic tints)
+         reference their source vars, so each literal exists
+         exactly once per mode. */
+      .tg[data-p='marker'][data-m='light'] {
+        --t-bg: oklch(95.2% 0.012 91.5);
+        --t-surface: oklch(97.8% 0.011 95.2);
+        --t-text: oklch(21.7% 0.011 99.4);
+        --t-muted: oklch(46.9% 0.02 99.9);
+        --t-accent: oklch(86.4% 0.172 100.5);
+        --t-accent-strong: oklch(90.4% 0.174 102.9);
+        --t-on-accent: var(--t-text);
+        --t-block: var(--t-accent-strong);
+
+        /* Border scale: subtle (hairlines) → default (cards) →
+           strong (interactive; ~3.8:1 vs paper, passes non-text AA) */
+        --t-border-subtle: color-mix(in oklab, var(--t-text) 12%, transparent);
+        --t-border: color-mix(in oklab, var(--t-text) 22%, transparent);
+        --t-border-strong: color-mix(in oklab, var(--t-text) 55%, transparent);
+
+        /* Focus is its own token: a yellow ring on newsprint is
+           ~1.3:1 and fails non-text AA, so focus is INK on paper
+           (and highlighter on ink in dark mode). */
+        --t-focus: var(--t-text);
+
+        /* Semantic inks: the red pen, the flag, the approval
+           stamp, the margin note. All AA on paper, and all ON
+           THE BRAND WHEEL — the whole system sits on a warm
+           axis at hue ~100°, so semantics fan out from it:
+           error 30°, warn 65°, success 137°, info 200° (teal,
+           already in the brand's vocabulary — never a stray
+           blue). */
+        --t-error: oklch(54.4% 0.17 30);
+        --t-error-bg: color-mix(in oklab, var(--t-error) 9%, var(--t-bg));
+        --t-success: oklch(51.3% 0.13 137);
+        --t-success-bg: color-mix(in oklab, var(--t-success) 9%, var(--t-bg));
+        --t-warn: oklch(53.2% 0.118 65);
+        --t-warn-bg: color-mix(in oklab, var(--t-warn) 9%, var(--t-bg));
+        --t-info: oklch(51.5% 0.086 200);
+        --t-info-bg: color-mix(in oklab, var(--t-info) 9%, var(--t-bg));
+
+        /* Elevation: neutral ink shadows, never tinted. Borders
+           and surface shifts do most of the work; shadows are
+           reserved for things that truly float. */
+        --t-shadow-sm:
+          0 1px 2px oklch(21.7% 0.011 99.4 / 0.05),
+          0 2px 6px oklch(21.7% 0.011 99.4 / 0.05);
+        --t-shadow-md:
+          0 2px 4px oklch(21.7% 0.011 99.4 / 0.05),
+          0 8px 20px oklch(21.7% 0.011 99.4 / 0.08);
+        --t-shadow-lg:
+          0 4px 10px oklch(21.7% 0.011 99.4 / 0.06),
+          0 16px 40px oklch(21.7% 0.011 99.4 / 0.12);
+      }
+      .tg[data-p='marker'][data-m='dark'] {
+        --t-bg: oklch(18.6% 0.006 107);
+        --t-surface: oklch(23.8% 0.013 100.6);
+        --t-text: oklch(94.2% 0.016 95.2);
+        --t-muted: oklch(70.3% 0.026 99.3);
+        --t-accent: oklch(90.4% 0.174 102.9);
+        --t-accent-strong: oklch(93.6% 0.168 102.9);
+        --t-on-accent: var(--t-bg);
+        --t-block: var(--t-accent);
+
+        --t-border-subtle: color-mix(in oklab, var(--t-muted) 14%, transparent);
+        --t-border: color-mix(in oklab, var(--t-muted) 24%, transparent);
+        --t-border-strong: color-mix(in oklab, var(--t-text) 50%, transparent);
+
+        --t-focus: var(--t-accent);
+
+        --t-error: oklch(72% 0.17 30);
+        --t-error-bg: color-mix(in oklab, var(--t-error) 12%, var(--t-bg));
+        --t-success: oklch(75% 0.13 137);
+        --t-success-bg: color-mix(in oklab, var(--t-success) 12%, var(--t-bg));
+        --t-warn: oklch(76% 0.14 65);
+        --t-warn-bg: color-mix(in oklab, var(--t-warn) 12%, var(--t-bg));
+        --t-info: oklch(75% 0.11 200);
+        --t-info-bg: color-mix(in oklab, var(--t-info) 12%, var(--t-bg));
+
+        --t-shadow-sm:
+          0 2px 4px oklch(0% 0 0 / 0.5),
+          0 4px 10px oklch(0% 0 0 / 0.35);
+        --t-shadow-md:
+          0 4px 10px oklch(0% 0 0 / 0.5),
+          0 12px 28px oklch(0% 0 0 / 0.45);
+        --t-shadow-lg:
+          0 8px 20px oklch(0% 0 0 / 0.5),
+          0 24px 60px oklch(0% 0 0 / 0.5);
+      }
+
+      /* ══════════════════════════════════════════════════
+         PAGE
+         ══════════════════════════════════════════════════ */
+      .tg {
+        min-height: 100vh;
+        min-height: 100dvh;
+        background: var(--t-bg);
+        color: var(--t-text);
+        font-family: var(--font-body);
+        transition:
+          background-color var(--duration-normal) var(--ease-in-out-smooth),
+          color var(--duration-normal) var(--ease-in-out-smooth);
+      }
+      .tg ::selection {
+        background: var(--t-accent);
+        color: var(--t-on-accent);
+      }
+
+      /* Paper grain — sells the print-system idea on every ground */
+      .tg::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 40;
+        opacity: 0.07;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+
+      /* ── Hero ── */
+      .hero {
+        display: flex;
+        align-items: center;
+        min-height: 100vh;
+        min-height: 100dvh;
+        padding: clamp(7.5rem, 14vh, 10rem) var(--space-page-x) clamp(9rem, 18vh, 12rem);
+      }
+      .hero-inner {
+        width: 100%;
+        max-width: 68rem;
+        margin-inline: auto;
+      }
+
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 0.65em;
+        font-size: var(--text-xs);
+        font-weight: var(--weight-medium);
+        letter-spacing: var(--tracking-wide);
+        text-transform: uppercase;
+        color: var(--t-muted);
+        margin-bottom: clamp(1.5rem, 3vh, 2.25rem);
+        animation: rise 0.9s var(--ease-out-expo) both;
+      }
+      .eyebrow-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: var(--radius-full);
+        background: var(--t-accent);
+        flex: none;
+      }
+
+      .headline {
+        font-family: var(--font-display);
+        font-size: var(--text-4xl);
+        font-weight: var(--weight-semibold);
+        line-height: 1.02;
+        letter-spacing: var(--tracking-tight);
+        margin: 0 0 clamp(1.5rem, 3vh, 2rem);
+        text-wrap: balance;
+        animation: rise 0.9s var(--ease-out-expo) 0.08s both;
+      }
+      /* Spot-color highlight — reads like a hand-marked proof,
+         not a tinted word. Works in every palette because the
+         accent always carries its own on-accent ink. */
+      .headline em {
+        font-style: normal;
+        color: var(--t-on-accent);
+        background: var(--t-accent);
+        padding: 0 0.14em;
+        margin: 0 -0.04em;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+        transition:
+          background-color var(--duration-normal) var(--ease-in-out-smooth),
+          color var(--duration-normal) var(--ease-in-out-smooth);
+      }
+
+      .sub {
+        font-size: var(--text-md);
+        line-height: 1.6;
+        color: var(--t-muted);
+        max-width: 44ch;
+        margin: 0 0 clamp(2rem, 4vh, 2.75rem);
+        animation: rise 0.9s var(--ease-out-expo) 0.16s both;
+      }
+
+      /* ── CTAs ── */
+      .ctas {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: clamp(0.75rem, 2vw, 1.25rem);
+        margin-bottom: clamp(4rem, 9vh, 6.5rem);
+        animation: rise 0.9s var(--ease-out-expo) 0.24s both;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
+        font-family: var(--font-display);
+        font-size: var(--text-sm);
+        font-weight: var(--weight-semibold);
+        letter-spacing: 0.01em;
+        text-decoration: none;
+        border-radius: var(--radius-md);
+        padding: 0.9em 1.6em;
+        transition:
+          background-color var(--duration-fast) var(--ease-out-expo),
+          color var(--duration-fast) var(--ease-out-expo),
+          transform var(--duration-fast) var(--ease-out-expo);
+      }
+      .btn:active {
+        transform: scale(0.98);
+      }
+      .btn:focus-visible {
+        outline: 2px solid var(--t-focus);
+        outline-offset: 3px;
+      }
+      .btn[disabled] {
+        opacity: 0.45;
+        pointer-events: none;
+      }
+      .btn-primary {
+        background: var(--t-accent);
+        color: var(--t-on-accent);
+      }
+      .btn-primary:hover {
+        background: var(--t-accent-strong);
+        transform: translateY(-2px);
+      }
+      .btn-ghost {
+        color: var(--t-text);
+        border: 1px solid var(--t-border-strong);
+        background: transparent;
+      }
+      .btn-ghost:hover {
+        background: var(--t-surface);
+        transform: translateY(-2px);
+      }
+      .btn-arrow {
+        transition: transform var(--duration-fast) var(--ease-out-expo);
+      }
+      .btn-ghost:hover .btn-arrow {
+        transform: translateX(3px);
+      }
+
+      /* ── The 4 C's → Revenue blocks ──
+         Plays ONCE per activation, then rests on the merged end state. */
+      .blocks-wrap {
+        animation: rise 0.9s var(--ease-out-expo) 0.32s both;
+      }
+      .blocks {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: clamp(8px, 1.2vw, 14px);
+        transition: gap 0.8s var(--ease-in-out-smooth);
+      }
+      .block {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: clamp(96px, 13vw, 148px);
+        padding: clamp(0.8rem, 1.6vw, 1.25rem);
+        background: var(--t-surface);
+        border: 1px solid var(--t-border);
+        border-radius: var(--radius-lg);
+        opacity: 0;
+        transform: translateY(16px);
+        animation: blockIn 0.7s var(--ease-out-expo) calc(0.55s + var(--i) * 0.12s) both;
+        transition:
+          background-color 0.8s var(--ease-in-out-smooth),
+          border-color 0.8s var(--ease-in-out-smooth),
+          border-radius 0.8s var(--ease-in-out-smooth);
+      }
+      .block-num {
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        color: var(--t-accent);
+        transition: opacity 0.4s var(--ease-in-out-smooth);
+      }
+      .block-name {
+        font-family: var(--font-display);
+        font-size: var(--text-lg);
+        font-weight: var(--weight-semibold);
+        letter-spacing: var(--tracking-tight);
+        transition: opacity 0.4s var(--ease-in-out-smooth);
+      }
+      .revenue-label {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s var(--ease-out-expo);
+      }
+      .revenue-label span {
+        font-family: var(--font-display);
+        font-size: var(--text-2xl);
+        font-weight: var(--weight-bold);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--t-on-accent);
+      }
+
+      /* End state: gaps close, blocks fuse into one solid accent bar */
+      .blocks.merged {
+        gap: 0;
+      }
+      .blocks.merged .block {
+        background: var(--t-block);
+        border-color: var(--t-block);
+        border-radius: 0;
+      }
+      .blocks.merged .block:first-child {
+        border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+      }
+      .blocks.merged .block:last-child {
+        border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+      }
+      .blocks.merged .block-num,
+      .blocks.merged .block-name {
+        opacity: 0;
+      }
+      .blocks.merged .revenue-label {
+        opacity: 1;
+        transition-delay: 0.45s;
+      }
+
+      .blocks-caption {
+        margin: 1rem 0 0;
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--t-muted);
+        animation: rise 0.9s var(--ease-out-expo) 1.2s both;
+      }
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes blockIn {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ── Control rail ── */
+      .rail {
+        position: fixed;
+        bottom: clamp(1rem, 3vh, 1.75rem);
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 0.4rem 0.6rem;
+        border-radius: var(--radius-xl);
+        background: color-mix(in oklab, var(--t-surface) 88%, transparent);
+        border: 1px solid var(--t-border);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: var(--t-shadow-lg);
+        z-index: 50;
+        max-width: calc(100vw - 2rem);
+        width: max-content;
+      }
+      .rail-group {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.2rem;
+      }
+      .rail-divider {
+        width: 1px;
+        align-self: stretch;
+        margin: 0.35rem 0.15rem;
+        background: var(--t-border);
+        flex: none;
+      }
+      .rail-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45em;
+        font-family: var(--font-body);
+        font-size: 0.8rem;
+        font-weight: var(--weight-medium);
+        color: var(--t-muted);
+        background: transparent;
+        border: none;
+        border-radius: var(--radius-full);
+        padding: 0.5em 0.95em;
+        cursor: pointer;
+        white-space: nowrap;
+        transition:
+          background-color var(--duration-fast) var(--ease-out-expo),
+          color var(--duration-fast) var(--ease-out-expo);
+      }
+      .rail-btn:hover {
+        color: var(--t-text);
+      }
+      .rail-btn.is-active {
+        background: var(--t-text);
+        color: var(--t-bg);
+      }
+      .rail-btn:focus-visible {
+        outline: 2px solid var(--t-focus);
+        outline-offset: 2px;
+      }
+      /* ── Reduced motion: rest on end states immediately ── */
+      @media (prefers-reduced-motion: reduce) {
+        .eyebrow,
+        .headline,
+        .sub,
+        .ctas,
+        .blocks-wrap,
+        .blocks-caption,
+        .block {
+          animation: none;
+          opacity: 1;
+          transform: none;
+        }
+        .blocks,
+        .block,
+        .revenue-label {
+          transition: none;
+        }
+      }
+
+      /* ── Small screens ── */
+      @media (max-width: 640px) {
+        .blocks {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .blocks.merged {
+          gap: 0;
+        }
+        .blocks.merged .block {
+          border-radius: 0;
+        }
+        .blocks.merged .block:nth-child(1) {
+          border-radius: var(--radius-lg) 0 0 0;
+        }
+        .blocks.merged .block:nth-child(2) {
+          border-radius: 0 var(--radius-lg) 0 0;
+        }
+        .blocks.merged .block:nth-child(3) {
+          border-radius: 0 0 0 var(--radius-lg);
+        }
+        .blocks.merged .block:nth-child(4) {
+          border-radius: 0 0 var(--radius-lg) 0;
+        }
+      }
+    </style>
+
+    <style is:global>
+      html {
+        scroll-behavior: smooth;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+
+      /* ── Scrollbars: an ink bar in the margin, not chrome.
+         scrollbar-color inherits, so setting it on html styles
+         every scrollbar on the page. Thumbs hold >=3:1 against
+         their tracks in both modes. ── */
+      html {
+        scrollbar-width: thin;
+      }
+      html:has(.tg[data-m='light']) {
+        scrollbar-color: oklch(59.7% 0.027 99.4) oklch(93.3% 0.016 95.2);
+      }
+      html:has(.tg[data-m='dark']) {
+        scrollbar-color: oklch(51.4% 0.029 99.9) oklch(20.3% 0.01 107.2);
+      }
+      ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+      html:has(.tg[data-m='light']) ::-webkit-scrollbar-track,
+      html:has(.tg[data-m='light'])::-webkit-scrollbar-track {
+        background: oklch(93.3% 0.016 95.2);
+      }
+      html:has(.tg[data-m='light']) ::-webkit-scrollbar-thumb,
+      html:has(.tg[data-m='light'])::-webkit-scrollbar-thumb {
+        background: oklch(59.7% 0.027 99.4);
+        border-radius: 5px;
+        border: 2px solid oklch(93.3% 0.016 95.2);
+      }
+      html:has(.tg[data-m='light']) ::-webkit-scrollbar-thumb:hover,
+      html:has(.tg[data-m='light'])::-webkit-scrollbar-thumb:hover {
+        background: oklch(51.5% 0.026 99);
+      }
+      html:has(.tg[data-m='dark']) ::-webkit-scrollbar-track,
+      html:has(.tg[data-m='dark'])::-webkit-scrollbar-track {
+        background: oklch(20.3% 0.01 107.2);
+      }
+      html:has(.tg[data-m='dark']) ::-webkit-scrollbar-thumb,
+      html:has(.tg[data-m='dark'])::-webkit-scrollbar-thumb {
+        background: oklch(51.4% 0.029 99.9);
+        border-radius: 5px;
+        border: 2px solid oklch(20.3% 0.01 107.2);
+      }
+      html:has(.tg[data-m='dark']) ::-webkit-scrollbar-thumb:hover,
+      html:has(.tg[data-m='dark'])::-webkit-scrollbar-thumb:hover {
+        background: oklch(57.6% 0.033 100.9);
+      }
+    </style>
+
+    <style>
+      /* ══════════════════════════════════════════════════
+         FULL-PAGE SECTIONS
+         ══════════════════════════════════════════════════ */
+      .tg {
+        position: relative;
+      }
+
+      /* ── Masthead ── */
+      .mast {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: clamp(1.25rem, 3vh, 2rem) var(--space-page-x);
+      }
+      .mast-name {
+        font-family: var(--font-display);
+        font-weight: var(--weight-semibold);
+        font-size: var(--text-md);
+        letter-spacing: var(--tracking-tight);
+      }
+      .btn-sm {
+        padding: 0.55em 1.1em;
+        font-size: var(--text-xs);
+      }
+
+      /* ── Section scaffolding ── */
+      .inner {
+        max-width: 68rem;
+        margin-inline: auto;
+      }
+      .section {
+        padding: var(--space-section) var(--space-page-x);
+      }
+      .kicker {
+        display: flex;
+        align-items: center;
+        gap: 0.6em;
+        margin: 0 0 clamp(1rem, 2.5vh, 1.5rem);
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        font-weight: var(--weight-medium);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--t-muted);
+      }
+      .kicker::before {
+        content: '';
+        width: 10px;
+        height: 10px;
+        background: var(--t-accent);
+        flex: none;
+      }
+      .h2 {
+        font-family: var(--font-display);
+        font-size: var(--text-3xl);
+        font-weight: var(--weight-semibold);
+        line-height: 1.05;
+        letter-spacing: var(--tracking-tight);
+        margin: 0 0 clamp(1.25rem, 3vh, 1.75rem);
+        text-wrap: balance;
+      }
+      .lede {
+        font-size: var(--text-md);
+        line-height: 1.6;
+        color: var(--t-muted);
+        max-width: 48ch;
+        margin: 0;
+      }
+      /* Spot-color highlight, generic version of the hero em */
+      .mark {
+        background: var(--t-accent);
+        color: var(--t-on-accent);
+        padding: 0.05em 0.3em;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+        transition:
+          background-color var(--duration-normal) var(--ease-in-out-smooth),
+          color var(--duration-normal) var(--ease-in-out-smooth);
+      }
+
+      /* ── 4 C's grid ── */
+      .cgrid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: clamp(0.75rem, 1.5vw, 1.25rem);
+        margin-top: var(--space-block);
+      }
+      .ccard {
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+        padding: var(--space-card);
+        background: var(--t-surface);
+        border: 1px solid var(--t-border);
+        border-radius: var(--radius-lg);
+        transition:
+          border-color var(--duration-fast) var(--ease-out-expo),
+          transform var(--duration-fast) var(--ease-out-expo),
+          background-color var(--duration-normal) var(--ease-in-out-smooth);
+      }
+      .ccard:hover {
+        border-color: var(--t-accent);
+        transform: translateY(-4px);
+      }
+      .cnum {
+        align-self: flex-start;
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        padding: 0.2em 0.55em;
+        border-radius: var(--radius-sm);
+        background: var(--t-accent);
+        color: var(--t-on-accent);
+      }
+      .cname {
+        font-family: var(--font-display);
+        font-size: var(--text-xl);
+        font-weight: var(--weight-semibold);
+        letter-spacing: var(--tracking-tight);
+        line-height: 1.1;
+        margin: 0;
+      }
+      .cdesc {
+        font-size: var(--text-sm);
+        line-height: 1.55;
+        color: var(--t-muted);
+        margin: 0;
+      }
+      .clist {
+        list-style: none;
+        margin: auto 0 0;
+        padding: 0.5rem 0 0;
+        border-top: 1px solid var(--t-border-subtle);
+      }
+      .clist li {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5em;
+        padding: 0.4em 0;
+        font-size: var(--text-xs);
+      }
+      .clist li::before {
+        content: '·';
+        color: var(--t-accent);
+        font-weight: var(--weight-bold);
+      }
+      .cfoot {
+        margin: var(--space-element) 0 0;
+        font-size: var(--text-md);
+      }
+
+      /* ── Manifesto: the page flips to ink ── */
+      .flip {
+        background: var(--t-text);
+        color: var(--t-bg);
+        transition:
+          background-color var(--duration-normal) var(--ease-in-out-smooth),
+          color var(--duration-normal) var(--ease-in-out-smooth);
+      }
+      .flip .kicker {
+        color: color-mix(in oklab, var(--t-bg) 72%, transparent);
+      }
+      .mani {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: clamp(1.5rem, 3vw, 2.5rem);
+        max-width: 62rem;
+      }
+      .mani p {
+        margin: 0;
+        font-size: var(--text-md);
+        line-height: 1.65;
+        color: color-mix(in oklab, var(--t-bg) 90%, transparent);
+      }
+      .mani-list {
+        list-style: none;
+        margin: var(--space-block) 0 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem clamp(1.5rem, 3vw, 2.5rem);
+      }
+      .mani-list li {
+        font-size: var(--text-base);
+        line-height: 1.6;
+        color: color-mix(in oklab, var(--t-bg) 82%, transparent);
+      }
+
+      /* ── Proof band ── */
+      .band {
+        background: var(--t-block);
+        color: var(--t-on-accent);
+        padding: var(--space-block-lg) var(--space-page-x);
+        transition:
+          background-color var(--duration-normal) var(--ease-in-out-smooth),
+          color var(--duration-normal) var(--ease-in-out-smooth);
+      }
+      .band-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: clamp(1.5rem, 4vw, 3rem);
+      }
+      .stat {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+      .stat-n {
+        font-family: var(--font-display);
+        font-size: var(--text-3xl);
+        font-weight: var(--weight-bold);
+        letter-spacing: var(--tracking-tight);
+        line-height: 1;
+      }
+      .stat-l {
+        font-size: var(--text-sm);
+        opacity: 0.78;
+      }
+
+      /* ── Contact ── */
+      .contact-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: clamp(2.5rem, 6vw, 5rem);
+        align-items: start;
+      }
+      .contact-alt {
+        margin: var(--space-element) 0 0;
+        font-size: var(--text-base);
+      }
+      .tlink {
+        color: inherit;
+        font-weight: var(--weight-semibold);
+        text-decoration: underline;
+        text-decoration-color: var(--t-accent);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 3px;
+        transition:
+          background-color var(--duration-fast) var(--ease-out-expo),
+          color var(--duration-fast) var(--ease-out-expo);
+      }
+      .tlink:hover {
+        background: var(--t-accent);
+        color: var(--t-on-accent);
+        text-decoration: none;
+      }
+      .tlink:focus-visible {
+        outline: 2px solid var(--t-focus);
+        outline-offset: 2px;
+      }
+      .lead {
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+        padding: var(--space-card);
+        background: var(--t-surface);
+        border: 1px solid var(--t-border);
+        border-radius: var(--radius-xl);
+        transition: background-color var(--duration-normal) var(--ease-in-out-smooth);
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+      }
+      .field label {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--t-muted);
+      }
+      .field input,
+      .field textarea {
+        width: 100%;
+        font-family: var(--font-body);
+        font-size: var(--text-sm);
+        color: var(--t-text);
+        background: var(--t-bg);
+        border: 1px solid var(--t-border-strong);
+        border-radius: var(--radius-md);
+        padding: 0.75em 0.9em;
+        transition:
+          border-color var(--duration-fast) var(--ease-out-expo),
+          background-color var(--duration-normal) var(--ease-in-out-smooth);
+        resize: vertical;
+      }
+      .field input::placeholder,
+      .field textarea::placeholder {
+        color: color-mix(in oklab, var(--t-muted) 65%, transparent);
+      }
+      .field input:focus-visible,
+      .field textarea:focus-visible {
+        outline: 2px solid var(--t-focus);
+        outline-offset: 1px;
+        border-color: var(--t-focus);
+      }
+      .lead .btn {
+        align-self: flex-start;
+        border: none;
+        cursor: pointer;
+      }
+      .lead-note {
+        margin: 0;
+        font-size: 0.85rem;
+        color: var(--t-muted);
+      }
+
+      /* ── Footer ── */
+      .foot {
+        border-top: 1px solid var(--t-border);
+        padding: var(--space-block) var(--space-page-x) clamp(7rem, 14vh, 9rem);
+      }
+      .foot-grid {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      .foot-name {
+        margin: 0 0 0.4rem;
+        font-family: var(--font-display);
+        font-size: var(--text-lg);
+        font-weight: var(--weight-semibold);
+        letter-spacing: var(--tracking-tight);
+      }
+      .foot-tag {
+        margin: 0;
+        font-size: var(--text-sm);
+        color: var(--t-muted);
+        max-width: 34ch;
+      }
+      .foot-nav {
+        display: flex;
+        gap: clamp(1rem, 3vw, 2rem);
+        flex-wrap: wrap;
+      }
+      .foot-nav a {
+        color: var(--t-muted);
+        text-decoration: none;
+        font-size: var(--text-sm);
+        transition: color var(--duration-fast) var(--ease-out-expo);
+      }
+      .foot-nav a:hover {
+        color: var(--t-text);
+        text-decoration: underline;
+        text-decoration-color: var(--t-accent);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 3px;
+      }
+      .foot-nav a:focus-visible {
+        outline: 2px solid var(--t-focus);
+        outline-offset: 2px;
+      }
+      .foot-fine {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-top: var(--space-element);
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--t-muted);
+      }
+
+      /* ── System showcase ── */
+      .sys-h {
+        font-family: var(--font-display);
+        font-size: var(--text-lg);
+        font-weight: var(--weight-semibold);
+        letter-spacing: var(--tracking-tight);
+        margin: var(--space-block) 0 0.75rem;
+      }
+      .sys-note {
+        margin: 0.9rem 0 0;
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        line-height: 1.6;
+        color: var(--t-muted);
+        max-width: 62ch;
+      }
+      .sys-h + .sys-note {
+        margin: 0 0 1.1rem;
+      }
+      .alerts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+      }
+      .alert {
+        padding: 0.85em 1em;
+        border-left: 3px solid;
+        border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        font-size: var(--text-sm);
+        line-height: 1.5;
+      }
+      .alert strong {
+        font-weight: var(--weight-bold);
+      }
+      .alert.ok { border-color: var(--t-success); background: var(--t-success-bg); }
+      .alert.ok strong { color: var(--t-success); }
+      .alert.err { border-color: var(--t-error); background: var(--t-error-bg); }
+      .alert.err strong { color: var(--t-error); }
+      .alert.warn { border-color: var(--t-warn); background: var(--t-warn-bg); }
+      .alert.warn strong { color: var(--t-warn); }
+      .alert.info { border-color: var(--t-info); background: var(--t-info-bg); }
+      .alert.info strong { color: var(--t-info); }
+      .sys-forms {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-top: 1rem;
+        max-width: 44rem;
+      }
+      .fld-err input { border-color: var(--t-error); }
+      .fld-err .fmsg { color: var(--t-error); }
+      .fld-ok input { border-color: var(--t-success); }
+      .fld-ok .fmsg { color: var(--t-success); }
+      .fmsg {
+        margin: 0;
+        font-size: 0.85rem;
+        line-height: 1.45;
+      }
+      .sys-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .sys-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+      }
+      .tile {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 1.5rem;
+        min-height: 96px;
+        padding: 1rem 1.1rem;
+        background: var(--t-surface);
+        border-radius: var(--radius-lg);
+      }
+      .tile-l {
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+      }
+      .tile-d {
+        font-size: var(--text-xs);
+        color: var(--t-muted);
+      }
+      .t-b1 { border: 1px solid var(--t-border-subtle); }
+      .t-b2 { border: 1px solid var(--t-border); }
+      .t-b3 { border: 1px solid var(--t-border-strong); }
+      .t-s1 { box-shadow: var(--t-shadow-sm); }
+      .t-s2 { box-shadow: var(--t-shadow-md); }
+      .t-s3 { box-shadow: var(--t-shadow-lg); }
+      .sys-select {
+        margin: 0;
+        font-size: var(--text-md);
+        line-height: 1.6;
+        max-width: 52ch;
+      }
+      .sys-scroll {
+        margin-top: 1.1rem;
+        max-width: 44rem;
+        height: 170px;
+        overflow: auto;
+        padding: 1rem 1.2rem;
+        background: var(--t-surface);
+        border: 1px solid var(--t-border);
+        border-radius: var(--radius-md);
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        line-height: 1.7;
+      }
+      .sys-scroll p {
+        margin: 0 0 0.9em;
+        white-space: nowrap;
+      }
+      .sys-scroll:focus-visible {
+        outline: 2px solid var(--t-focus);
+        outline-offset: 2px;
+      }
+      .aa {
+        overflow-x: auto;
+      }
+      .aa table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--text-xs);
+      }
+      .aa th,
+      .aa td {
+        text-align: left;
+        padding: 0.55em 0.9em 0.55em 0;
+        border-bottom: 1px solid var(--t-border-subtle);
+        white-space: nowrap;
+      }
+      .aa th {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        font-weight: var(--weight-medium);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--t-muted);
+      }
+      .aa-sample {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 26px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--t-border-subtle);
+        font-weight: var(--weight-bold);
+        font-size: 0.85rem;
+      }
+      .aa-ratio {
+        font-family: var(--font-mono);
+      }
+      .aa-verdict {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+      }
+      .aa-verdict.pass { color: var(--t-success); }
+      .aa-verdict.fail { color: var(--t-error); }
+
+      /* ── Scroll reveals: play once, rest on end state ── */
+      .rv {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+          opacity 0.7s var(--ease-out-expo),
+          transform 0.7s var(--ease-out-expo);
+        transition-delay: calc(var(--i, 0) * 90ms);
+      }
+      .rv.on {
+        opacity: 1;
+        transform: none;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .rv {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+      }
+
+      /* ── Responsive ── */
+      @media (max-width: 1080px) {
+        .cgrid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 900px) {
+        .contact-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 700px) {
+        .mani,
+        .mani-list {
+          grid-template-columns: 1fr;
+        }
+        .band-grid {
+          grid-template-columns: 1fr;
+        }
+        .foot-fine {
+          flex-direction: column;
+          gap: 0.35rem;
+        }
+        .alerts,
+        .sys-forms {
+          grid-template-columns: 1fr;
+        }
+        .sys-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 560px) {
+        .cgrid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+
+    <script is:inline>
+      (function () {
+        var tg = document.getElementById('tg');
+        var blocks = document.getElementById('blocks');
+        var rail = document.querySelector('.rail');
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var mergeTimer = null;
+
+        // The 4→1 merge plays once, then rests on the Revenue end state.
+        function playMerge() {
+          clearTimeout(mergeTimer);
+          if (reduced) {
+            blocks.classList.add('merged');
+            return;
+          }
+          mergeTimer = setTimeout(function () {
+            blocks.classList.add('merged');
+          }, 2100);
+        }
+
+        function replay() {
+          blocks.classList.remove('merged');
+          // Restart the entrance animations by forcing a reflow
+          Array.prototype.forEach.call(blocks.querySelectorAll('.block'), function (el) {
+            el.style.animation = 'none';
+            void el.offsetWidth;
+            el.style.animation = '';
+          });
+          playMerge();
+        }
+
+        function setActive(group, btn) {
+          Array.prototype.forEach.call(group, function (b) {
+            b.classList.toggle('is-active', b === btn);
+          });
+        }
+
+        // ── Live AA contrast audit ──
+        // Resolves each token to its rendered color (canvas
+        // normalization handles color-mix), alpha-blends
+        // translucent values over the page background, and
+        // reports the real WCAG ratio for the current mode.
+        var PAIRS = [
+          ['Ink on paper', '--t-text', '--t-bg', 4.5],
+          ['Muted ink on paper', '--t-muted', '--t-bg', 4.5],
+          ['Ink on surface', '--t-text', '--t-surface', 4.5],
+          ['Muted ink on surface', '--t-muted', '--t-surface', 4.5],
+          ['Button ink on accent', '--t-on-accent', '--t-accent', 4.5],
+          ['Error on paper', '--t-error', '--t-bg', 4.5],
+          ['Success on paper', '--t-success', '--t-bg', 4.5],
+          ['Warning on paper', '--t-warn', '--t-bg', 4.5],
+          ['Info on paper', '--t-info', '--t-bg', 4.5],
+          ['Focus ring on paper', '--t-focus', '--t-bg', 3],
+          ['Strong border on paper', '--t-border-strong', '--t-bg', 3]
+        ];
+        var aaBox = document.getElementById('aa');
+        var probe = document.createElement('span');
+        probe.style.display = 'none';
+        tg.appendChild(probe);
+        var cnv = document.createElement('canvas');
+        cnv.width = cnv.height = 1;
+        var ctx = cnv.getContext('2d', { willReadFrequently: true });
+
+        function resolveColor(varName) {
+          probe.style.color = 'var(' + varName + ')';
+          var resolved = getComputedStyle(probe).color;
+          ctx.clearRect(0, 0, 1, 1);
+          ctx.fillStyle = resolved;
+          ctx.fillRect(0, 0, 1, 1);
+          var d = ctx.getImageData(0, 0, 1, 1).data;
+          return [d[0], d[1], d[2], d[3] / 255];
+        }
+
+        function blend(fg, bg) {
+          var a = fg[3];
+          return [
+            fg[0] * a + bg[0] * (1 - a),
+            fg[1] * a + bg[1] * (1 - a),
+            fg[2] * a + bg[2] * (1 - a),
+            1
+          ];
+        }
+
+        function luminance(c) {
+          var ch = [c[0], c[1], c[2]].map(function (v) {
+            v /= 255;
+            return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+          });
+          return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
+        }
+
+        function contrast(fg, bg) {
+          var l1 = luminance(fg);
+          var l2 = luminance(bg);
+          var hi = Math.max(l1, l2);
+          var lo = Math.min(l1, l2);
+          return (hi + 0.05) / (lo + 0.05);
+        }
+
+        // Emit oklch() even for runtime-measured colors, so every
+        // color value on the page speaks the same language.
+        function oklchCss(c) {
+          function chan(v) {
+            v /= 255;
+            return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+          }
+          var r = chan(c[0]), g = chan(c[1]), b = chan(c[2]);
+          var l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+          var m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+          var s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+          var L = 0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s;
+          var a = 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s;
+          var bb = 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s;
+          var C = Math.sqrt(a * a + bb * bb);
+          var H = Math.atan2(bb, a) * 180 / Math.PI;
+          if (H < 0) H += 360;
+          if (C < 0.0005) H = 0;
+          return 'oklch(' + (L * 100).toFixed(1) + '% ' + C.toFixed(3) + ' ' + H.toFixed(1) + ')';
+        }
+
+        function renderAA() {
+          if (!aaBox) return;
+          // innerHTML is safe here: every interpolated value is either a
+          // hardcoded literal from PAIRS or a number produced by
+          // canvas/contrast math. No user or remote input reaches this.
+          var rows = PAIRS.map(function (pair) {
+            var bg = resolveColor(pair[2]);
+            var fg = blend(resolveColor(pair[1]), bg);
+            var ratio = contrast(fg, bg);
+            var pass = ratio >= pair[3];
+            return '<tr>' +
+              '<td>' + pair[0] + '</td>' +
+              '<td><span class="aa-sample" style="background:' + oklchCss(bg) + ';color:' + oklchCss(fg) + '">Ag</span></td>' +
+              '<td class="aa-ratio">' + ratio.toFixed(2) + ':1</td>' +
+              '<td class="aa-ratio">' + pair[3] + ':1</td>' +
+              '<td><span class="aa-verdict ' + (pass ? 'pass' : 'fail') + '">' + (pass ? 'PASS' : 'FAIL') + '</span></td>' +
+              '</tr>';
+          }).join('');
+          aaBox.innerHTML =
+            '<table><thead><tr>' +
+            '<th>Pair</th><th>Sample</th><th>Measured</th><th>Target</th><th>Verdict</th>' +
+            '</tr></thead><tbody>' + rows + '</tbody></table>';
+        }
+
+        rail.addEventListener('click', function (e) {
+          var btn = e.target.closest('.rail-btn');
+          if (!btn) return;
+          if (btn.dataset.mode) {
+            tg.dataset.m = btn.dataset.mode;
+            setActive(document.querySelectorAll('[data-mode]'), btn);
+            renderAA();
+          } else if (btn.id === 'replay') {
+            replay();
+          }
+        });
+
+        playMerge();
+        renderAA();
+
+        // Scroll reveals — play once per element, then rest
+        var revealEls = document.querySelectorAll('.rv');
+        if (reduced || !('IntersectionObserver' in window)) {
+          revealEls.forEach(function (el) { el.classList.add('on'); });
+        } else {
+          var rio = new IntersectionObserver(function (entries) {
+            entries.forEach(function (en) {
+              if (en.isIntersecting) {
+                en.target.classList.add('on');
+                rio.unobserve(en.target);
+              }
+            });
+          }, { rootMargin: '0px 0px -10% 0px', threshold: 0 });
+          revealEls.forEach(function (el) { rio.observe(el); });
+        }
+      })();
+    </script>
+  </body>
+</html>
