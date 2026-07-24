@@ -1,0 +1,17 @@
+{
+  // Cloudflare config for the local build/preview runtime. Production
+  // flags are also set in the CF dashboard; keeping them here means a
+  // local `bun run build` uses the same runtime as the deploy.
+  //
+  // nodejs_compat is required: src/lib/og-image.ts reads the Funnel
+  // Display font files and the resvg wasm binary off disk via
+  // node:fs + node:module.
+  //
+  // No pages_build_output_dir: @astrojs/cloudflare v14 targets Workers
+  // with static assets, and it binds assets as ASSETS, a name Pages
+  // reserves. This project deploys as a Worker, not a Pages project.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "devin-vc",
+  "compatibility_date": "2026-07-01",
+  "compatibility_flags": ["nodejs_compat"]
+}

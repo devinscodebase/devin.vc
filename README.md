@@ -1,43 +1,52 @@
-# Astro Starter Kit: Minimal
+# devin.vc
 
-```sh
-bun create astro@latest -- --template minimal
+Marketing site for Devin Alexander, built on Astro 7 with React islands and
+the Marker design system.
+
+## Stack
+
+| Layer | Choice |
+| --- | --- |
+| Framework | Astro 7 (Vite 8), SSR |
+| UI | React 19 islands, `motion` for animation |
+| Styles | Tailwind CSS 4, driven by `src/styles/global.css` |
+| Hosting | Cloudflare Workers via `@astrojs/cloudflare` |
+| Email | Resend |
+| Bookings | Cal.com (`/api/availability`) |
+
+No database, no CMS, no auth. Those were removed deliberately; see
+`updates.md` for what went and why.
+
+## Commands
+
+```bash
+bun install
+bun run dev      # http://localhost:4321
+bun run build
+bun test
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Layout
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```
+src/
+  components/   React islands and page sections
+  config/       nav
+  icons/        Streamline Freehand SVGs (the only icon set)
+  layouts/      Site.astro shell
+  lib/          pricing, resend client, turnstile
+  pages/        7 routes, thin .astro shells over React
+  styles/       global.css IS the design system
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Design system
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+`src/styles/global.css` is the source of truth in code, `/components` is the
+rendered catalog, and `docs/design.md` is the prose spec. Read the spec before
+building UI. Nothing ships that is not built from system classes and tokens.
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Deployment
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Deploys as a Cloudflare Worker with static assets. `wrangler.jsonc` carries
+`nodejs_compat`. Pushing to `main` triggers the production deploy, so do not
+push unless you mean to release.
