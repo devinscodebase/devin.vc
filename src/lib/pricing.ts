@@ -29,10 +29,10 @@
     selecting zero project-type services means projectTotal is legitimately
     0, not floored.
 
-  This file is imported both server-side (src/pages/api/quote.ts, for a
-  sanity re-derivation of client-submitted numbers) and client-side
-  (bundled into the /quote page) so it must stay framework-free and have
-  no side effects at import time.
+  This runs entirely client-side today (bundled into the /quote page).
+  Keep it framework-free with no side effects at import time, so it can
+  also be imported server-side to re-derive a submitted number if a data
+  layer is added later.
 */
 
 export type ServiceType = 'project' | 'monthly';

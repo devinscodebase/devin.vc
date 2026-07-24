@@ -1,8 +1,0 @@
-{
-  // Cloudflare config for the local build/preview runtime and the
-  // deploy. @astrojs/cloudflare v14 targets Workers with static
-  // assets, so this is a Worker, not a Pages project.
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "devin-vc",
-  "compatibility_date": "2026-07-01"
-}

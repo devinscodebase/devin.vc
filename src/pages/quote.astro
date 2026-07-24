@@ -7,11 +7,9 @@
 // the price is revealed, never before. See
 // src/components/QuoteFlow.tsx for the full behavior contract.
 //
-// No siteKey is passed: Turnstile was removed with the rest of the
-// server layer, and QuoteFlow no-ops its widget handshake without
-// one. Pricing is computed client-side from src/lib/pricing.ts, so
-// the flow still renders and calculates. Submission has no endpoint
-// until the new data layer exists.
+// The flow is fully client-side: pricing is computed in the browser
+// from src/lib/pricing.ts and revealed on submit. Nothing is
+// transmitted, because the site has no server layer.
 // ────────────────────────────────────────────────────────────────
 import Site from '../layouts/Site.astro';
 

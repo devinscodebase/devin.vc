@@ -3,7 +3,6 @@ import { defineConfig } from 'astro/config';
 
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
-import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
@@ -16,24 +15,12 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap({
-      // API endpoints and OG image routes are assets, not pages.
-      filter: (page) => {
-        const path = new URL(page).pathname.replace(/\/$/, '') || '/';
-        if (path.startsWith('/api/')) return false;
-        if (path.startsWith('/og/')) return false;
-        return true;
-      },
+      // /components is the design system catalog, not public content.
+      filter: (page) => !new URL(page).pathname.startsWith('/components'),
       changefreq: 'weekly',
       priority: 0.7,
     }),
   ],
-
-  markdown: {
-    shikiConfig: {
-      theme: 'vitesse-dark',
-      wrap: true,
-    },
-  },
 
   vite: {
     plugins: [tailwindcss()],
@@ -52,6 +39,4 @@ export default defineConfig({
     prefetchAll: true,
     defaultStrategy: 'viewport',
   },
-
-  adapter: cloudflare(),
 });

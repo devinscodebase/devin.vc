@@ -7,15 +7,14 @@ the Marker design system.
 
 | Layer | Choice |
 | --- | --- |
-| Framework | Astro 7 (Vite 8), SSR |
+| Framework | Astro 7 (Vite 8), fully static |
 | UI | React 19 islands, `motion` for animation |
 | Styles | Tailwind CSS 4, driven by `src/styles/global.css` |
-| Hosting | Cloudflare Workers via `@astrojs/cloudflare` |
-| Email | Resend |
-| Bookings | Cal.com (`/api/availability`) |
 
-No database, no CMS, no auth. Those were removed deliberately; see
-`updates.md` for what went and why.
+Ten dependencies, one dev dependency. There is no server layer: no
+database, no CMS, no auth, no email, no API routes, no environment
+variables. `astro build` emits plain static HTML to `dist/`. All of that
+was removed deliberately; see `updates.md` for what went and why.
 
 ## Commands
 
@@ -34,7 +33,7 @@ src/
   config/       nav
   icons/        Streamline Freehand SVGs (the only icon set)
   layouts/      Site.astro shell
-  lib/          pricing, resend client, turnstile
+  lib/          pricing (pure client-side math)
   pages/        7 routes, thin .astro shells over React
   styles/       global.css IS the design system
 ```
@@ -47,6 +46,7 @@ building UI. Nothing ships that is not built from system classes and tokens.
 
 ## Deployment
 
-Deploys as a Cloudflare Worker with static assets. `wrangler.jsonc` carries
-`nodejs_compat`. Pushing to `main` triggers the production deploy, so do not
-push unless you mean to release.
+`dist/` is plain static output, so it deploys to Cloudflare Pages from the
+existing Git integration with no adapter and no wrangler config. Pushing to
+`main` triggers the production deploy, so do not push unless you mean to
+release.
