@@ -1,7 +1,6 @@
 // @ts-check
 import { defineConfig, envField } from 'astro/config';
 
-import svelte from '@astrojs/svelte';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 
@@ -57,6 +56,7 @@ export default defineConfig({
       RESEND_RETENTION_CALC_AUDIENCE_ID: envField.string({ context: 'server', access: 'secret', optional: true }),
       RESEND_SCORECARD_AUDIENCE_ID: envField.string({ context: 'server', access: 'secret', optional: true }),
       RESEND_TRAINING_AUDIENCE_ID: envField.string({ context: 'server', access: 'secret', optional: true }),
+      RESEND_QUOTE_AUDIENCE_ID: envField.string({ context: 'server', access: 'secret', optional: true }),
       RESEND_WEBHOOK_SECRET: envField.string({ context: 'server', access: 'secret', optional: true }),
       NEWSLETTER_SECRET: envField.string({ context: 'server', access: 'secret' }),
       CAL_API_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
@@ -67,7 +67,6 @@ export default defineConfig({
   },
 
   integrations: [
-    svelte(),
     react(),
     mdx(),
     icon({
@@ -118,7 +117,16 @@ export default defineConfig({
   },
 
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    // motion/react gets pre-bundled by the dep optimizer with its own
+    // React copy, which breaks hooks at hydration ("Invalid hook call").
+    // Optimizing it together with react keeps one shared copy.
+    optimizeDeps: {
+      include: ['motion/react', 'react', 'react-dom'],
+    },
+    resolve: {
+      dedupe: ['react', 'react-dom'],
+    },
   },
 
   prefetch: {

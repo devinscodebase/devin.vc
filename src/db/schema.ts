@@ -128,3 +128,24 @@ export const notifications = sqliteTable('notifications', {
   createdAt: text('created_at').notNull(),
   readAt: text('read_at'),
 });
+
+export const quoteLeads = sqliteTable('quote_leads', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  // Contact
+  name: text('name').notNull(),
+  email: text('email').notNull(),
+  // Context (not priced, informational only — goes in Devin's notification email)
+  industry: text('industry').notNull(),
+  whatYouSell: text('what_you_sell'),
+  // Pricing inputs
+  revenueBand: text('revenue_band').notNull(),
+  selectedServices: text('selected_services').notNull(), // JSON-stringified array of service ids
+  // Results (as submitted by the client, see pricing.ts; already integers so
+  // plain integer columns are fine, no need for the text-preserves-decimals
+  // convention used by gtmLeads/retentionLeads)
+  projectTotal: integer('project_total').notNull(),
+  monthlyTotal: integer('monthly_total').notNull(),
+  // Meta
+  resendContactId: text('resend_contact_id'),
+  createdAt: text('created_at').notNull(),
+});

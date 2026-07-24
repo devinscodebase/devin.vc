@@ -1,0 +1,55 @@
+---
+// ────────────────────────────────────────────────────────────────
+// /quote — the site's entire funnel. The static section head is
+// server-rendered here; everything inside the flow area is the
+// QuoteFlow island (client:load — the flow IS the page and the
+// Turnstile widget must mount promptly). Three steps; contact
+// info is collected once, in step 3, right before the price is
+// revealed — never before. See src/components/QuoteFlow.tsx for
+// the full behavior contract.
+//
+// Turnstile loads in explicit-render mode: api.js is told to call
+// window.onQuoteTurnstileLoad when it finishes loading, and the
+// island renders the widget from that callback (or directly, if
+// the script beat hydration and window.turnstile already exists).
+// The no-op stub below is defined BEFORE the script tag so the
+// callback can never be undefined when api.js fires it, whichever
+// side wins the race.
+// ────────────────────────────────────────────────────────────────
+import Site from '../layouts/Site.astro';
+import { TURNSTILE_SITE_KEY } from 'astro:env/client';
+
+import QuoteFlow from '../components/QuoteFlow';
+---
+
+<Site title="Get your price · Devin Alexander" description="Answer a few questions and get a real price for your project, not a range.">
+  <section class="section_layout" id="quote">
+    <div class="padding-global">
+      <div class="container-large">
+        <div class="padding-section-large">
+          <div class="section_head">
+            <p class="label is-kicker" data-reveal>Get your price</p>
+            <h2 class="text-h2" data-reveal data-reveal-delay="90">A real number, not a range.</h2>
+            <p class="section_lead text-body-md text-ink-muted max-w-measure-md" data-reveal data-reveal-delay="180">
+              Three steps. Industry, what you need, then your price. Your
+              name and email unlock the number, not before it.
+            </p>
+          </div>
+
+          <div class="section_body">
+            <QuoteFlow client:load siteKey={TURNSTILE_SITE_KEY} />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    /* Turnstile explicit-render handshake stub. QuoteFlow
+       overwrites this during hydration; if api.js loads first it
+       calls this no-op and the island finds window.turnstile
+       already defined instead. */
+    window.onQuoteTurnstileLoad = function () {};
+  </script>
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onQuoteTurnstileLoad" async defer></script>
+</Site>

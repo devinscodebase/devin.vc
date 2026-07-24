@@ -1,0 +1,3040 @@
+---
+// ────────────────────────────────────────────────────────────────
+// /components — DESIGN SYSTEM SOURCE OF TRUTH (noindex, unlisted)
+//
+// Every component of the Marker system is designed here first and
+// shipped to production after. The system lives in
+// src/styles/global.css: Tailwind v4 generates the utilities from
+// Marker variables (variable combos), and Client-First supplies
+// the naming discipline. The system is site-wide via global.css —
+// production global.css is untouched until parts graduate.
+//
+// Sections:
+//   1 · Conventions      2 · Type scale     3 · Paragraphs
+//   4 · Colors           04 · Spacing        6 · Buttons & links
+//   7 · Forms            8 · Alerts         9 · Cards & elevation
+//   10 · Tables           11 · Motion         12 · Selection & scrollbar
+//   13 · Icons    14 · Navigation    15 · Disclosure    16 · Overlays
+//   17 · Content  18 · Contrast, measured live
+// ────────────────────────────────────────────────────────────────
+import '../styles/global.css';
+
+import iconArrowRight from '../icons/freehand/arrow-right.svg?raw';
+import iconArrowUpRight from '../icons/freehand/arrow-up-right.svg?raw';
+import iconCheck from '../icons/freehand/check.svg?raw';
+import iconClose from '../icons/freehand/close.svg?raw';
+import iconMenu from '../icons/freehand/menu.svg?raw';
+import iconMail from '../icons/freehand/mail.svg?raw';
+import iconPhone from '../icons/freehand/phone.svg?raw';
+import iconCalendar from '../icons/freehand/calendar.svg?raw';
+import iconSearch from '../icons/freehand/search.svg?raw';
+import iconChat from '../icons/freehand/chat.svg?raw';
+import iconPen from '../icons/freehand/pen.svg?raw';
+import iconDownload from '../icons/freehand/download.svg?raw';
+import iconChevronDown from '../icons/freehand/chevron-down.svg?raw';
+import iconAsterisk from '../icons/freehand/asterisk.svg?raw';
+import iconCheckDouble from '../icons/freehand/check-double.svg?raw';
+import iconEmailUnread from '../icons/freehand/email-unread.svg?raw';
+import iconUser from '../icons/freehand/user.svg?raw';
+import iconLocation from '../icons/freehand/location.svg?raw';
+import iconLink from '../icons/freehand/link.svg?raw';
+import iconMoney from '../icons/freehand/money.svg?raw';
+import iconBuilding from '../icons/freehand/building.svg?raw';
+import iconMessage from '../icons/freehand/message.svg?raw';
+import iconInfo from '../icons/freehand/info.svg?raw';
+import iconThemeSun from '../icons/freehand/theme-sun.svg?raw';
+import iconThemeMoon from '../icons/freehand/theme-moon.svg?raw';
+import iconLogoMeteor from '../icons/freehand/logo-meteor.svg?raw';
+
+const icons = [
+  { name: 'arrow-right', svg: iconArrowRight },
+  { name: 'arrow-up-right', svg: iconArrowUpRight },
+  { name: 'check', svg: iconCheck },
+  { name: 'close', svg: iconClose },
+  { name: 'menu', svg: iconMenu },
+  { name: 'mail', svg: iconMail },
+  { name: 'phone', svg: iconPhone },
+  { name: 'calendar', svg: iconCalendar },
+  { name: 'search', svg: iconSearch },
+  { name: 'chat', svg: iconChat },
+  { name: 'pen', svg: iconPen },
+  { name: 'download', svg: iconDownload },
+  { name: 'chevron-down', svg: iconChevronDown },
+  { name: 'asterisk', svg: iconAsterisk },
+  { name: 'check-double', svg: iconCheckDouble },
+];
+
+const principles = [
+  {
+    title: 'Variables first',
+    body: 'Every value resolves to a Marker variable. A raw number in markup is a defect; the root is the only ruler.',
+  },
+  {
+    title: 'Two inks, one wheel',
+    body: 'Ink reads, yellow marks. Semantic hues sit on the brand’s warm axis, and nothing strays off it.',
+  },
+  {
+    title: 'One class, both modes',
+    body: 'Color is authored in oklch and flipped by mode variables. A dark: variant for system color is never written.',
+  },
+  {
+    title: 'Motion plays once',
+    body: 'An entrance resolves to its end state and rests there. Reduced motion arrives at that state instantly.',
+  },
+  {
+    title: 'No glow, no dividers',
+    body: 'Elevation is neutral ink and surface shifts. Separation is space and scale; a line only ever draws a box.',
+  },
+  {
+    title: 'Labels are not headings',
+    body: 'Kickers and eyebrows are .label on a p or span. They carry no weight in the document outline.',
+  },
+  {
+    title: 'Nothing decorative',
+    body: 'Every mark carries information or it is removed. No index numbers, no ornament for its own sake.',
+  },
+  {
+    title: 'Semantics before style',
+    body: 'A specimen declares its element and its classes as two separate, deliberate decisions.',
+  },
+];
+
+const inkSwatches = [
+  { cls: 'bg-paper', name: 'paper', v: '--m-paper' },
+  { cls: 'bg-surface', name: 'surface', v: '--m-surface' },
+  { cls: 'bg-ink', name: 'ink', v: '--m-ink' },
+  { cls: 'bg-ink-muted', name: 'ink-muted', v: '--m-ink-muted' },
+  { cls: 'bg-accent', name: 'accent', v: '--m-accent' },
+  { cls: 'bg-accent-strong', name: 'accent-strong', v: '--m-accent-strong' },
+  { cls: 'bg-block', name: 'block', v: '--m-block' },
+];
+
+// Class names are complete literals on purpose: Tailwind only
+// generates classes it can see whole in the source.
+const semantics = [
+  { name: 'error', chip: 'bg-error', tintChip: 'bg-error-tint', text: 'text-error', sample: 'Corrected.' },
+  { name: 'success', chip: 'bg-success', tintChip: 'bg-success-tint', text: 'text-success', sample: 'Approved.' },
+  { name: 'warning', chip: 'bg-warning', tintChip: 'bg-warning-tint', text: 'text-warning', sample: 'Flagged.' },
+  { name: 'info', chip: 'bg-info', tintChip: 'bg-info-tint', text: 'text-info', sample: 'Noted.' },
+];
+
+const lineScale = ['line-subtle', 'line', 'line-strong'];
+
+// Bars are sized by real generated utilities (w-*, max-w-*),
+// written as complete literals so Tailwind's scanner sees them.
+const spacingSizes = [
+  ['tiny', '0.25rem', 'w-tiny'],
+  ['xxsmall', '0.5rem', 'w-xxsmall'],
+  ['xsmall', '0.75rem', 'w-xsmall'],
+  ['small', '1rem', 'w-small'],
+  ['medium', '1.5rem', 'w-medium'],
+  ['large', '2rem', 'w-large'],
+  ['xlarge', '3rem', 'w-xlarge'],
+  ['xxlarge', '4rem', 'w-xxlarge'],
+  ['huge', '6rem', 'w-huge'],
+  ['xxhuge', '8rem', 'w-xxhuge'],
+];
+
+const structureSpacing = [
+  ['global', 'clamp(1.5rem, 5vw, 3.5rem)', 'w-global'],
+  ['section-sm', 'clamp(3rem, 6vw, 5rem)', 'w-section-sm'],
+  ['section-md', 'clamp(4rem, 8vw, 6rem)', 'w-section-md'],
+  ['section-lg', 'clamp(8rem, 20vh, 14rem)', 'w-section-lg'],
+];
+
+const containers = [
+  ['sm', '48rem', 'max-w-sm'],
+  ['md', '64rem', 'max-w-md'],
+  ['lg', '80rem', 'max-w-lg'],
+  ['measure-sm', '56ch', 'max-w-measure-sm'],
+  ['measure-md', '62ch', 'max-w-measure-md'],
+  ['measure-lg', '68ch', 'max-w-measure-lg'],
+];
+
+const ledger = [
+  { move: 'Captivate', deliverable: 'Brand identity', owner: 'Studio', cost: '4,800' },
+  { move: 'Connect', deliverable: 'Email program', owner: 'Studio', cost: '2,400' },
+  { move: 'Convert', deliverable: 'Funnel build', owner: 'Studio', cost: '6,200' },
+  { move: 'Close', deliverable: 'Sales assets', owner: 'Studio', cost: '3,600' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Components · Devin Alexander</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/DMSans-Variable-Latin.woff2" as="font" type="font/woff2" crossorigin />
+  </head>
+  <body>
+    <div id="cp" class="page-wrapper">
+      <a class="skip_link" href="#main">Skip to the components</a>
+      <!-- ── Masthead ───────────────────────────────── -->
+      <header class="mast_wrapper px-global">
+        <div class="mast_id">
+          <a class="logo" href="#main"><span class="logo_mark" aria-hidden="true" set:html={iconLogoMeteor} />Devin Alexander</a>
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <span class="crumb">Marker</span>
+            <span class="crumb" aria-current="page">Components</span>
+          </nav>
+        </div>
+        <div class="theme-switch" role="radiogroup" aria-label="Color theme">
+          <span class="theme-switch_marker" aria-hidden="true"></span>
+          <button
+            class="theme-switch_option"
+            type="button"
+            role="radio"
+            aria-checked="true"
+            data-theme-choice="light"
+          >
+            <span class="icon" aria-hidden="true" set:html={iconThemeSun} />
+            <span>Light</span>
+          </button>
+          <button
+            class="theme-switch_option"
+            type="button"
+            role="radio"
+            aria-checked="false"
+            data-theme-choice="dark"
+          >
+            <span class="icon" aria-hidden="true" set:html={iconThemeMoon} />
+            <span>Dark</span>
+          </button>
+        </div>
+      </header>
+
+      <main id="main" class="main-wrapper">
+        <!-- ── Intro ──────────────────────────────────── -->
+        <header class="section_layout is-intro">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-large">
+              <div class="section_head">
+                  <p class="eyebrow">Source of truth</p>
+                  <h1 class="text-h1">Components.</h1>
+                  <p class="section_lead text-body-lg text-ink-muted max-w-measure-sm">
+                  Every piece of the Marker system, designed here first and
+                  shipped everywhere after. If it is not on this page, it is
+                  not in the system.
+                  </p>
+              </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- ═══════ PART ONE · FOUNDATIONS ═══════ -->
+        <header class="section_layout is-part">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-large">
+              <div class="section_head">
+                  <p class="eyebrow">Part One</p>
+                  <h2 class="text-h2">Foundations.</h2>
+                  <p class="section_lead text-body-md text-ink-muted max-w-measure-md">
+                  The raw material every component is built from: color, type, space, motion, and the hand-drawn icon set.
+                  </p>
+              </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- ── 1 · Principles ────────────────────────── -->
+        <section class="section_layout" id="principles">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-medium">
+              <div class="section_head">
+                  <p class="eyebrow">Principles</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                  The eight rules the whole system answers to. If a
+                  component breaks one of these, the component is wrong,
+                  not the rule.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <ul class="principles_grid">
+                    {principles.map((p) => (
+                      <li class="principle">
+                        <h3 class="principle_title text-h6">{p.title}</h3>
+                        <p class="principle_body text-small text-ink-muted">{p.body}</p>
+                      </li>
+                    ))}
+                  </ul>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 2 · Colors ────────────────────────────── -->
+        <section class="section_layout" id="colors">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-medium">
+              <div class="section_head">
+                  <p class="eyebrow">Colors</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                  A two-ink print system: ink reads, highlighter marks.
+                  Values below are read live from the rendered page and
+                  re-resolve when the mode flips. Semantics fan out from the
+                  brand's warm axis: error 30, warning 65, success 137,
+                  info 200.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <h3 class="text-h5 mb-small">Inks and papers</h3>
+                  <div class="swatch_grid">
+                    {inkSwatches.map((s) => (
+                      <div class="swatch_tile">
+                        <div class={`swatch_chip ${s.cls}`}></div>
+                        <span class="swatch_name">{s.name}</span>
+                        <span class="swatch_val" data-swatch={s.v}></span>
+                      </div>
+                    ))}
+                    <div class="swatch_tile">
+                      <div class="swatch_chip bg-accent"><span class="text-on-accent">Ag</span></div>
+                      <span class="swatch_name">on-accent</span>
+                      <span class="swatch_val" data-swatch="--m-on-accent"></span>
+                    </div>
+                  </div>
+
+                  <h3 class="text-h5 mt-xlarge mb-small">Semantics</h3>
+                  <div class="swatch_grid">
+                    {semantics.map((s) => (
+                      <div class="swatch_tile">
+                        <div class={`swatch_chip ${s.chip}`}></div>
+                        <span class="swatch_name">{s.name}</span>
+                        <span class="swatch_val" data-swatch={`--m-${s.name}`}></span>
+                      </div>
+                    ))}
+                    {semantics.map((s) => (
+                      <div class="swatch_tile">
+                        <div class={`swatch_chip ${s.tintChip}`}>
+                          <strong class={`${s.text} text-small`}>{s.sample}</strong>
+                        </div>
+                        <span class="swatch_name">{s.name}-tint</span>
+                        <span class="swatch_val" data-swatch={`--m-${s.name}-tint`}></span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <h3 class="text-h5 mt-xlarge mb-small">Lines and focus</h3>
+                  <div class="swatch_grid">
+                    {lineScale.map((l) => (
+                      <div class="swatch_tile">
+                        <div class="swatch_chip bg-paper" style={`border: 0.125rem solid var(--m-${l})`}></div>
+                        <span class="swatch_name">{l}</span>
+                        <span class="swatch_val" data-swatch={`--m-${l}`}></span>
+                      </div>
+                    ))}
+                    <div class="swatch_tile">
+                      <div class="swatch_chip bg-paper"><span class="swatch_ring"></span></div>
+                      <span class="swatch_name">focus</span>
+                      <span class="swatch_val" data-swatch="--m-focus"></span>
+                    </div>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 3 · Type scale ────────────────────────── -->
+        <section class="section_layout" id="type">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-medium">
+              <div class="section_head">
+                  <p class="eyebrow">Type scale</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                  Funnel Display carries every heading, H1 through H6, at
+                  weight 600. Tracking tightens as size grows; leading opens
+                  as size shrinks. Each text-* utility is one complete
+                  typographic decision. The label below the scale is NOT a
+                  heading and never takes an h tag.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">h1 · text-h1</span>
+                      <span class="spec_info">64→120 · 600 · lh 1.02 · ls -0.025em</span>
+                    </div>
+                    <h1 class="text-h1">Marketing that earns its invoice.</h1>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">h2 · text-h2</span>
+                      <span class="spec_info">48→76 · 600 · lh 1.05 · ls -0.025em</span>
+                    </div>
+                    <h2 class="text-h2">Four moves, aimed at one number.</h2>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">h3 · text-h3</span>
+                      <span class="spec_info">34→48 · 600 · lh 1.08 · ls -0.025em</span>
+                    </div>
+                    <h3 class="text-h3">Humans speak to humans.</h3>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">h4 · text-h4</span>
+                      <span class="spec_info">26→34 · 600 · lh 1.15 · ls -0.02em</span>
+                    </div>
+                    <h4 class="text-h4">The unglamorous work, done properly.</h4>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">h5 · text-h5</span>
+                      <span class="spec_info">20→24 · 600 · lh 1.25 · ls -0.01em</span>
+                    </div>
+                    <h5 class="text-h5">Real research, never a prompt.</h5>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">h6 · text-h6</span>
+                      <span class="spec_info">18 · 600 · lh 1.35 · ls -0.005em</span>
+                    </div>
+                    <h6 class="text-h6">Interviews before ideas, always.</h6>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">p · label</span>
+                      <span class="spec_info">mono 0.8rem · 500 · lh 1.4 · ls +0.12em · uppercase · not a heading</span>
+                    </div>
+                    <p class="label">The Marker system</p>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 4 · Paragraphs ────────────────────────── -->
+        <section class="section_layout" id="paragraphs">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-small">
+              <div class="section_head">
+                  <p class="eyebrow">Paragraphs</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                  DM Sans at weight 400. Three sizes, one job each: large
+                  opens a page, medium opens a section, regular carries the
+                  reading. Muted ink is a color utility, not a size. Measures
+                  cap with max-w-measure-*.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">p · text-body-lg</span>
+                      <span class="spec_info">20→24 · 400 · lh 1.55 · max-w-measure-sm</span>
+                    </div>
+                    <p class="text-body-lg max-w-measure-sm">
+                      We are a human-made agency. Real research, human copy,
+                      human design, and websites built by hand, for owners who
+                      are done paying agencies to guess.
+                    </p>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">p · text-body-md</span>
+                      <span class="spec_info">19→21 · 400 · lh 1.6 · max-w-measure-md</span>
+                    </div>
+                    <p class="text-body-md max-w-measure-md">
+                      Every engagement runs the same four moves in order:
+                      captivate, connect, convert, close. Each one feeds the
+                      next, and together they compound into the only metric
+                      that matters.
+                    </p>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">p · text-body</span>
+                      <span class="spec_info">18 · 400 · lh 1.65 · max-w-measure-lg</span>
+                    </div>
+                    <p class="text-body max-w-measure-lg">
+                      Most marketing fails quietly. The ad gets scrolled past,
+                      the email goes unopened, the site visit ends without a
+                      trace, and the invoice arrives anyway. We build the
+                      unglamorous machinery that turns attention into revenue,
+                      and we show our work at every step.
+                    </p>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 5 · Spacing & containers ──────────────── -->
+        <section class="section_layout" id="spacing">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-medium">
+              <div class="section_head">
+                  <p class="eyebrow">Spacing and containers</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                  Client-First size words, generated:, gap-medium,
+                  p-large. Structure tokens carry the page: px-global for the
+                  gutter, py-section-sm/md/lg for rhythm. Containers cap
+                  layout; measures cap reading.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <h3 class="text-h5 mb-small">Sizes</h3>
+                  <div>
+                    {spacingSizes.map(([name, val, cls]) => (
+                      <div class="bar_row">
+                        <span class="bar_name">{name}</span>
+                        <div class="bar_track"><div class={`bar ${cls}`}></div></div>
+                        <span class="bar_val">{val}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <h3 class="text-h5 mt-xlarge mb-small">Structure</h3>
+                  <div>
+                    {structureSpacing.map(([name, val, cls]) => (
+                      <div class="bar_row">
+                        <span class="bar_name">{name}</span>
+                        <div class="bar_track"><div class={`bar ${cls}`}></div></div>
+                        <span class="bar_val">{val}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <h3 class="text-h5 mt-xlarge mb-small">Containers and measures</h3>
+                  <div>
+                    {containers.map(([name, val, cls]) => (
+                      <div class="bar_row">
+                        <span class="bar_name">{name}</span>
+                        <div class="bar_track"><div class={`bar is-block w-full ${cls}`}></div></div>
+                        <span class="bar_val">{val}</span>
+                      </div>
+                    ))}
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 6 · Motion ────────────────────────────── -->
+        <section class="section_layout" id="motion">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-medium">
+              <div class="section_head">
+                  <p class="eyebrow">Motion</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                  Motion plays once, then rests on its end state. Two
+                  easings do all the work:
+                  out-expo for entrances and interaction, in-out-smooth for
+                  color and mode changes. Reduced motion gets end states
+                  immediately.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <h3 class="text-h5 mb-small">Easings</h3>
+                  <p class="text-small text-ink-muted max-w-measure-md mb-medium">
+                    Two curves carry everything. Out-expo for entrances
+                    and interaction; in-out-smooth for color and mode
+                    changes.
+                  </p>
+                  <div id="motionStage">
+                    <div class="motion_row">
+                      <span class="motion_name">ease-out-expo</span>
+                      <div class="motion_bar"><div class="motion_fill is-expo"></div></div>
+                      <span class="motion_val">0.16, 1, 0.3, 1</span>
+                    </div>
+                    <div class="motion_row">
+                      <span class="motion_name">ease-in-out-smooth</span>
+                      <div class="motion_bar"><div class="motion_fill is-smooth"></div></div>
+                      <span class="motion_val">0.65, 0, 0.35, 1</span>
+                    </div>
+                  </div>
+
+                  <h3 class="text-h5 mt-xlarge mb-small">Entrance patterns</h3>
+                  <p class="text-small text-ink-muted max-w-measure-md mb-medium">
+                    The named entrances content arrives on. Each is a
+                    utility, plays once, and rests on its end state.
+                  </p>
+                  <div class="motion_cards" id="motionCards">
+                    <div class="motion_card">
+                      <div class="motion_stage"><span class="motion_chip motion-fade-up">motion-fade-up</span></div>
+                      <span class="motion_caption">Section and card entrances</span>
+                    </div>
+                    <div class="motion_card">
+                      <div class="motion_stage"><span class="motion_chip motion-fade-in">motion-fade-in</span></div>
+                      <span class="motion_caption">Text and quiet reveals</span>
+                    </div>
+                    <div class="motion_card">
+                      <div class="motion_stage"><span class="motion_chip motion-slide-in">motion-slide-in</span></div>
+                      <span class="motion_caption">Lists, staggered by --m-delay</span>
+                    </div>
+                  </div>
+                  <div class="demo_row mt-medium">
+                    <button class="button is-secondary is-small" type="button" id="motionPlay">Replay all</button>
+                  </div>
+
+                  <h3 class="text-h5 mt-xlarge mb-small">Interaction motion</h3>
+                  <p class="text-small text-ink-muted max-w-measure-md mb-medium">
+                    Built into the components themselves. Hover a button
+                    to feel the lift and offset; the field sweep, dropdown
+                    unfold, and menu open all run the same out-expo curve.
+                  </p>
+                  <div class="demo_row">
+                    <button class="button" type="button">Hover me</button>
+                    <button class="button is-secondary" type="button">And me</button>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 7 · Icons ─────────────────────────────── -->
+        <section class="section_layout" id="icons">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-medium">
+              <div class="section_head">
+                  <p class="eyebrow">Icons</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                  Streamline Freehand: hand-drawn line icons, the controlled
+                  dose of the human hand. One set, never mixed. Every icon is
+                  inked in currentColor, so it takes whatever ink its text
+                  has, and sized in em, so it scales with the type beside it.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <div class="icons_grid">
+                    {icons.map((i) => (
+                      <div class="icon_tile">
+                        <div class="icon_frame"><span class="icon" set:html={i.svg} /></div>
+                        <span class="icon_name">{i.name}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <h3 class="text-h5 mt-xlarge mb-small">Sizes</h3>
+                  <p class="text-small text-ink-muted max-w-measure-md mb-medium">
+                    Bare, an icon scales with its text. Standalone, pick a
+                    step: is-tiny, is-small, the default, is-large.
+                  </p>
+                  <div class="flex flex-wrap items-end gap-large">
+                    <div class="flex flex-col items-center gap-small">
+                      <span class="icon is-tiny" set:html={iconCalendar} />
+                      <span class="icon_name">is-tiny</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-small">
+                      <span class="icon is-small" set:html={iconCalendar} />
+                      <span class="icon_name">is-small</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-small">
+                      <span class="icon" set:html={iconCalendar} />
+                      <span class="icon_name">icon</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-small">
+                      <span class="icon is-large" set:html={iconCalendar} />
+                      <span class="icon_name">is-large</span>
+                    </div>
+                  </div>
+
+                  <h3 class="text-h5 mt-xlarge mb-small">In use</h3>
+                  <div class="demo_row">
+                    <button class="button" type="button">
+                      <span class="icon" set:html={iconCalendar} /> Book a strategy call
+                    </button>
+                    <button class="button is-secondary" type="button">
+                      Download the deck <span class="icon" set:html={iconDownload} />
+                    </button>
+                    <span class="text-error text-small icon_inline">
+                      <span class="icon" set:html={iconClose} /> Corrected in red ink
+                    </span>
+                    <span class="text-success text-small icon_inline">
+                      <span class="icon" set:html={iconCheck} /> Approved in green
+                    </span>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══════ PART TWO · COMPONENTS ═══════ -->
+        <header class="section_layout is-part">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-large">
+              <div class="section_head">
+                  <p class="eyebrow">Part Two</p>
+                  <h2 class="text-h2">Components.</h2>
+                  <p class="section_lead text-body-md text-ink-muted max-w-measure-md">
+                  The assembled parts. Each is specified with its markup, its full set of states, and the behavior a team can rely on.
+                  </p>
+              </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- ── 8 · Buttons & links ───────────────────── -->
+        <section class="section_layout" id="buttons">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-medium">
+              <div class="section_head">
+                  <p class="eyebrow">Buttons and links</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                  One button, two voices: accent speaks, secondary holds
+                  the line. Works as a button or a link. Hover lifts the
+                  slab and slides its ink offset out beneath it; press
+                  stamps it flat. The color never changes, the motion is
+                  the feedback.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">button · button</span>
+                      <span class="spec_info">display 600 · accent / is-secondary · is-small · disabled</span>
+                    </div>
+                    <div class="demo_row">
+                      <button class="button" type="button">Book a strategy call</button>
+                      <button class="button is-secondary" type="button">See the work</button>
+                      <button class="button is-small" type="button">Small</button>
+                      <button class="button is-secondary is-small" type="button">Small secondary</button>
+                      <button class="button" type="button" disabled>Disabled</button>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">button · is-hero</span>
+                      <span class="spec_info">--text-body-lg · hero CTAs only, one primary per hero · lift and offset in em, they scale with the type</span>
+                    </div>
+                    <div class="demo_row">
+                      <button class="button is-hero" type="button">
+                        <span class="icon" set:html={iconCalendar} /> Book a strategy call
+                      </button>
+                      <button class="button is-hero is-secondary" type="button">
+                        See the work <span class="icon" set:html={iconArrowRight} />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">div · button-group</span>
+                      <span class="spec_info">THE container for buttons · buttons are never loose siblings · in a section_head it owns the head-to-action gap</span>
+                    </div>
+                    <div class="button-group">
+                      <button class="button" type="button">Book a strategy call</button>
+                      <button class="button is-secondary" type="button">See the work</button>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">button · is-ink</span>
+                      <span class="spec_info">the button for accent surfaces · solid ink slab, paper offset · same motion, inks traded</span>
+                    </div>
+                    <div class="demo_row" style="background: var(--m-accent); padding: var(--spacing-medium); border-radius: var(--radius-xs);">
+                      <button class="button is-ink" type="button">Book a strategy call</button>
+                      <button class="button is-ink is-small" type="button">Small ink</button>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">button · with icon</span>
+                      <span class="spec_info">leading or trailing · icons hold still · is-icon is square and needs an aria-label</span>
+                    </div>
+                    <div class="demo_row">
+                      <button class="button" type="button">
+                        <span class="icon" set:html={iconCalendar} /> Book a strategy call
+                      </button>
+                      <button class="button is-secondary" type="button">
+                        See the work <span class="icon" set:html={iconArrowRight} />
+                      </button>
+                      <button class="button is-small" type="button">
+                        <span class="icon" set:html={iconDownload} /> Download
+                      </button>
+                      <button class="button is-icon" type="button" aria-label="Search">
+                        <span class="icon" set:html={iconSearch} />
+                      </button>
+                      <button class="button is-secondary is-icon" type="button" aria-label="Close">
+                        <span class="icon" set:html={iconClose} />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">button · is-icon sizes</span>
+                      <span class="spec_info">square, icon-only · is-tiny · is-small · default · is-large · needs an aria-label</span>
+                    </div>
+                    <div class="demo_row">
+                      <button class="button is-icon is-tiny" type="button" aria-label="Search"><span class="icon" set:html={iconSearch} /></button>
+                      <button class="button is-icon is-small" type="button" aria-label="Search"><span class="icon" set:html={iconSearch} /></button>
+                      <button class="button is-icon" type="button" aria-label="Search"><span class="icon" set:html={iconSearch} /></button>
+                      <button class="button is-icon is-large" type="button" aria-label="Search"><span class="icon" set:html={iconSearch} /></button>
+                      <button class="button is-secondary is-icon is-tiny" type="button" aria-label="Close"><span class="icon" set:html={iconClose} /></button>
+                      <button class="button is-secondary is-icon is-small" type="button" aria-label="Close"><span class="icon" set:html={iconClose} /></button>
+                      <button class="button is-secondary is-icon" type="button" aria-label="Close"><span class="icon" set:html={iconClose} /></button>
+                      <button class="button is-secondary is-icon is-large" type="button" aria-label="Close"><span class="icon" set:html={iconClose} /></button>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">a · text-link</span>
+                      <span class="spec_info">600 · accent underline · highlight sweeps in from the left, leaves to the right</span>
+                    </div>
+                    <p class="text-body max-w-measure-lg">
+                      Prefer to talk it out?
+                      <a class="text-link" href="#buttons">Book a strategy call</a>
+                      and bring the numbers you are not proud of.
+                    </p>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 9 · Forms ─────────────────────────────── -->
+        <section class="section_layout" id="forms">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-medium">
+              <div class="section_head">
+                  <p class="eyebrow">Forms</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                  The field is a marker stroke you type into. Focus sweeps
+                  the highlighter across it, so you write ink on yellow;
+                  answered fields keep the mark at half strength, so a
+                  finished form reads as a marked-up page. Every field
+                  carries its type icon on the left, its error or success
+                  mark on the right. The dropdown, checkbox, and radio are
+                  all ours, and fully keyboard-operable.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <div class="form_grid">
+                    <div class="field">
+                      <label class="label" for="f-name">Name</label>
+                      <div class="field_control">
+                        <span class="field_icon" aria-hidden="true" set:html={iconUser} />
+                        <input class="field_input" id="f-name" type="text" placeholder="Your name" autocomplete="name" />
+                      </div>
+                    </div>
+                    <div class="field">
+                      <label class="label" for="f-site">Website</label>
+                      <div class="field_control">
+                        <span class="field_icon" aria-hidden="true" set:html={iconLink} />
+                        <input class="field_input" id="f-site" type="url" value="devin.vc" placeholder="https://" />
+                      </div>
+                    </div>
+                    <div class="field">
+                      <span class="label" id="dd-budget-label">Budget</span>
+                      <div class="field_control">
+                        <span class="field_icon" aria-hidden="true" set:html={iconMoney} />
+                        <div class="dropdown">
+                        <button
+                          type="button"
+                          class="field_input dropdown_trigger"
+                          aria-haspopup="listbox"
+                          aria-expanded="false"
+                          aria-labelledby="dd-budget-label"
+                        >
+                          <span class="dropdown_value is-empty">Choose a range</span>
+                          <span class="dropdown_caret icon" aria-hidden="true" set:html={iconChevronDown} />
+                        </button>
+                        <ul class="dropdown_panel" role="listbox" aria-labelledby="dd-budget-label" tabindex="-1">
+                          <li class="dropdown_option" role="option" aria-selected="false" data-value="under-5k">
+                            <span>Under 5k</span>
+                            <span class="dropdown_mark" aria-hidden="true">&#x2715;</span>
+                          </li>
+                          <li class="dropdown_option" role="option" aria-selected="false" data-value="5k-15k">
+                            <span>5k to 15k</span>
+                            <span class="dropdown_mark" aria-hidden="true">&#x2715;</span>
+                          </li>
+                          <li class="dropdown_option" role="option" aria-selected="false" data-value="15k-up">
+                            <span>15k and up</span>
+                            <span class="dropdown_mark" aria-hidden="true">&#x2715;</span>
+                          </li>
+                          <li class="dropdown_option" role="option" aria-selected="false" data-value="strategy">
+                            <span>Strategy only, for now</span>
+                            <span class="dropdown_mark" aria-hidden="true">&#x2715;</span>
+                          </li>
+                        </ul>
+                        <input type="hidden" name="budget" value="" />
+                        </div>
+                      </div>
+                      <p class="field_message">The honest range. We will say so if it is thin.</p>
+                    </div>
+                    <div class="field form_span">
+                      <label class="label" for="f-address">Address</label>
+                      <div class="field_control">
+                        <span class="field_icon" aria-hidden="true" set:html={iconLocation} />
+                        <input class="field_input" id="f-address" type="text" placeholder="Street, city, postcode" autocomplete="street-address" />
+                      </div>
+                      <p class="field_message">Where the work ships, if it ships anywhere physical.</p>
+                    </div>
+                    <div class="field form_span">
+                      <label class="label" for="f-about">What do you sell?</label>
+                      <div class="field_control is-textarea">
+                        <span class="field_icon" aria-hidden="true" set:html={iconMessage} />
+                        <textarea class="field_input" id="f-about" rows="3" placeholder="And what is not working right now?"></textarea>
+                      </div>
+                      <p class="field_message">A human reads this. Usually the same day.</p>
+                    </div>
+                    <div class="field is-error">
+                      <label class="label" for="f-email-err">Email</label>
+                      <div class="field_control">
+                        <span class="field_icon" aria-hidden="true" set:html={iconEmailUnread} />
+                        <input class="field_input" id="f-email-err" type="email" value="devin@devin" />
+                      </div>
+                      <p class="field_message">Corrected: this needs a full address, like you@company.com.</p>
+                    </div>
+                    <div class="field is-success">
+                      <label class="label" for="f-email-ok">Email</label>
+                      <div class="field_control">
+                        <span class="field_icon" aria-hidden="true" set:html={iconEmailUnread} />
+                        <input class="field_input" id="f-email-ok" type="email" value="owner@company.com" />
+                      </div>
+                      <p class="field_message">Approved: that works.</p>
+                    </div>
+                    <div class="field form_span">
+                      <label class="label" for="f-company">Company</label>
+                      <div class="field_control">
+                        <span class="field_icon" aria-hidden="true" set:html={iconBuilding} />
+                        <input class="field_input" id="f-company" type="text" placeholder="Disabled field" disabled />
+                      </div>
+                    </div>
+                    <div class="form_span demo_row">
+                      <label class="field_check"><input type="checkbox" checked /> Send the monthly letter</label>
+                      <label class="field_check"><input type="radio" name="contact" checked /> Email me</label>
+                      <label class="field_check"><input type="radio" name="contact" /> Call me</label>
+                      <label class="field_switch"><input type="checkbox" role="switch" checked /> Weekly status notes</label>
+                      <label class="field_switch"><input type="checkbox" role="switch" /> Share results publicly</label>
+                    </div>
+
+                    <div class="field form_span">
+                      <span class="label">Attach the brief, if one exists</span>
+                      <div class="field_file" id="fileDemo">
+                        <input type="file" id="f-brief" aria-describedby="f-brief-name" />
+                        <label class="button is-secondary is-small" for="f-brief">
+                          <span class="icon" set:html={iconPen} /> Choose a file
+                        </label>
+                        <span class="field_file_name" id="f-brief-name">Nothing attached yet</span>
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <label class="label" for="f-pages">Pages to rework</label>
+                      <div class="field_stepper" id="stepperDemo">
+                        <button class="stepper_button" type="button" data-step="-1" aria-label="Fewer pages">&minus;</button>
+                        <input class="field_input" id="f-pages" type="number" value="3" min="1" max="40" />
+                        <button class="stepper_button" type="button" data-step="1" aria-label="More pages">+</button>
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <label class="label" for="f-spend">Monthly ad spend</label>
+                      <div class="field_range" id="rangeDemo">
+                        <input type="range" id="f-spend" min="0" max="20000" step="500" value="8000" />
+                      </div>
+                      <p class="field_message" id="f-spend-out">8,000 USD a month</p>
+                    </div>
+
+                    <div class="field form_span">
+                      <label class="label" for="f-find">Search the work</label>
+                      <div class="field_search" id="searchDemo">
+                        <span class="field_search_icon icon" aria-hidden="true" set:html={iconSearch} />
+                        <input class="field_input" id="f-find" type="search" placeholder="Industry, channel, or result" />
+                        <button class="field_search_clear" type="button" aria-label="Clear the search">
+                          <span class="icon" set:html={iconClose} />
+                        </button>
+                      </div>
+                    </div>
+
+                    <fieldset class="field_group form_span">
+                      <legend class="label">How did you find us?</legend>
+                      <div class="demo_row mt-xsmall">
+                        <label class="field_check"><input type="radio" name="found" checked /> A referral</label>
+                        <label class="field_check"><input type="radio" name="found" /> The training pages</label>
+                        <label class="field_check"><input type="radio" name="found" /> Searched for help</label>
+                      </div>
+                    </fieldset>
+
+                    <div class="form_span demo_row">
+                      <button class="button" type="button" id="loadingDemo">Send it</button>
+                      <p class="text-tiny text-ink-muted">
+                        Click it: while the form travels, an ink rule sweeps the
+                        base of the face. The one loop the system sanctions,
+                        because it is information, not decoration.
+                      </p>
+                    </div>
+                  </div>
+
+                  <h3 class="text-h5 mt-xxlarge mb-small">Composed: the lead form</h3>
+                  <p class="text-small text-ink-muted max-w-measure-md mb-large">
+                    The whole thing assembled: a card carrying a title, a
+                    description, the fields, terms acceptance, and a submit.
+                    Everything below is existing pieces; nothing new was
+                    invented to build it.
+                  </p>
+
+                  <form class="card p-large max-w-sm flex flex-col gap-medium" id="lead-form" novalidate>
+                    <div>
+                      <h4 class="text-h4">Tell us what you sell.</h4>
+                      <p class="text-small text-ink-muted mt-xsmall">
+                        Three minutes, no pitch deck. A human reads every
+                        message, usually the same day.
+                      </p>
+                    </div>
+
+                    <div class="grid gap-medium sm:grid-cols-2">
+                      <div class="field">
+                        <label class="label" for="lf-name">Name</label>
+                        <div class="field_control">
+                          <span class="field_icon" aria-hidden="true" set:html={iconUser} />
+                          <input class="field_input" id="lf-name" type="text" placeholder="Your name" autocomplete="name" />
+                        </div>
+                      </div>
+                      <div class="field">
+                        <label class="label" for="lf-email">Email</label>
+                        <div class="field_control">
+                          <span class="field_icon" aria-hidden="true" set:html={iconEmailUnread} />
+                          <input class="field_input" id="lf-email" type="email" placeholder="you@company.com" autocomplete="email" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <span class="label" id="lf-budget-label">Budget</span>
+                      <div class="field_control">
+                        <span class="field_icon" aria-hidden="true" set:html={iconMoney} />
+                        <div class="dropdown">
+                        <button
+                          type="button"
+                          class="field_input dropdown_trigger"
+                          aria-haspopup="listbox"
+                          aria-expanded="false"
+                          aria-labelledby="lf-budget-label"
+                        >
+                          <span class="dropdown_value is-empty">Choose a range</span>
+                          <span class="dropdown_caret icon" aria-hidden="true" set:html={iconChevronDown} />
+                        </button>
+                        <ul class="dropdown_panel" role="listbox" aria-labelledby="lf-budget-label" tabindex="-1">
+                          <li class="dropdown_option" role="option" aria-selected="false" data-value="under-5k">
+                            <span>Under 5k</span>
+                            <span class="dropdown_mark" aria-hidden="true">&#x2715;</span>
+                          </li>
+                          <li class="dropdown_option" role="option" aria-selected="false" data-value="5k-15k">
+                            <span>5k to 15k</span>
+                            <span class="dropdown_mark" aria-hidden="true">&#x2715;</span>
+                          </li>
+                          <li class="dropdown_option" role="option" aria-selected="false" data-value="15k-up">
+                            <span>15k and up</span>
+                            <span class="dropdown_mark" aria-hidden="true">&#x2715;</span>
+                          </li>
+                          <li class="dropdown_option" role="option" aria-selected="false" data-value="strategy">
+                            <span>Strategy only, for now</span>
+                            <span class="dropdown_mark" aria-hidden="true">&#x2715;</span>
+                          </li>
+                        </ul>
+                        <input type="hidden" name="lead-budget" value="" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <label class="label" for="lf-about">What do you sell?</label>
+                      <div class="field_control is-textarea">
+                        <span class="field_icon" aria-hidden="true" set:html={iconMessage} />
+                        <textarea class="field_input" id="lf-about" rows="4" placeholder="And what is not working right now?"></textarea>
+                      </div>
+                    </div>
+
+                    <label class="field_check">
+                      <input type="checkbox" required />
+                      <span>
+                        I accept the
+                        <a class="text-link" href="#forms">terms of service</a>
+                        and the
+                        <a class="text-link" href="#forms">privacy policy</a>.
+                      </span>
+                    </label>
+
+                    <div class="demo_row">
+                      <button class="button" type="submit">Send it</button>
+                      <p class="text-tiny text-ink-muted">A person reads this, not a chatbot, and it does not sign you up for anything.</p>
+                    </div>
+                  </form>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 10 · Navigation ────────────────────────── -->
+        <section class="section_layout" id="navigation">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-medium">
+              <div class="section_head">
+                  <p class="eyebrow">Navigation</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                  Nav links are quiet ink; hover slides an accent underline
+                  in from the left, and the current page is fully marked,
+                  the same yellow that marks the active mode. The menu is
+                  not a drawer: it is a sheet of paper laid over the site,
+                  ruled like a ledger, entries settling in one beat apart.
+                  A skip link waits above everything for the keyboard;
+                  press Tab from the very top of the page to meet it. The
+                  logo is the wordmark, a breadcrumb trails in the mono
+                  ledger voice, and the eyebrow sits above every section
+                  title on this page, this one included.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">a · nav_link</span>
+                      <span class="spec_info">display 600 · underline sweeps in on hover · is-active is marked</span>
+                    </div>
+                    <nav class="demo_row" aria-label="Demo navigation">
+                      <a class="nav_link is-active" href="#navigation" aria-current="page">Work</a>
+                      <a class="nav_link" href="#navigation">Services</a>
+                      <a class="nav_link" href="#navigation">Training</a>
+                      <a class="nav_link" href="#navigation">Contact</a>
+                    </nav>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">div · menu_overlay</span>
+                      <span class="spec_info">mobile navigation · full-page paper sheet · ruled entries · staggered settle, once</span>
+                    </div>
+                    <div class="demo_row">
+                      <button class="button is-secondary" type="button" id="menuOpen">
+                        <span class="icon" set:html={iconMenu} /> Open the menu
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">a · logo</span>
+                      <span class="spec_info">the wordmark with its meteor mark · optional avatar stamp · is-small</span>
+                    </div>
+                    <div class="demo_row" style="gap: 2.5rem;">
+                      <a class="logo" href="#navigation"><span class="logo_mark" aria-hidden="true" set:html={iconLogoMeteor} />Devin Alexander</a>
+                      <a class="logo" href="#navigation">
+                        <img class="logo_avatar" src="/images/avatar.png" alt="" width="40" height="40" />
+                        Devin Alexander
+                      </a>
+                      <a class="logo is-small" href="#navigation"><span class="logo_mark" aria-hidden="true" set:html={iconLogoMeteor} />Devin Alexander</a>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">nav · crumbs</span>
+                      <span class="spec_info">mono ledger trail · slash separators · ancestors link, current is inked</span>
+                    </div>
+                    <nav class="crumbs" aria-label="Breadcrumb example">
+                      <a class="crumb" href="#navigation">Training</a>
+                      <a class="crumb" href="#navigation">SEO</a>
+                      <span class="crumb" aria-current="page">Word List</span>
+                    </nav>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">p · eyebrow</span>
+                      <span class="spec_info">the section eyebrow · the section name marked in the display voice</span>
+                    </div>
+                    <div class="demo_row">
+                      <p class="eyebrow">Toolkit</p>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">footer · footer</span>
+                      <span class="spec_info">logo, nav links, CTA, one closing label line · space separates the pieces, nothing rules between them · stacks under the nav breakpoint · runs full viewport width on a real page (boxed here so the catalog layout holds)</span>
+                    </div>
+                    <div style="overflow: hidden; border: 0.0625rem solid var(--m-line); border-radius: var(--radius-sm);">
+                      <footer class="footer">
+                        <div class="padding-global">
+                          <div class="container-large">
+                            <div class="footer_inner">
+                              <a class="logo" href="#navigation">
+                                <span class="logo_mark" aria-hidden="true" set:html={iconLogoMeteor} />Devin Alexander
+                              </a>
+                              <nav class="footer_nav" aria-label="Footer">
+                                <a class="nav_link" href="#navigation">Services</a>
+                                <a class="nav_link" href="#navigation">About</a>
+                              </nav>
+                              <a class="button is-small" href="#navigation">Get an instant quote</a>
+                              <p class="footer_line label text-ink-muted">© 2026 Devin Alexander. All work human-made.</p>
+                            </div>
+                          </div>
+                        </div>
+                      </footer>
+                    </div>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 11 · Disclosure ────────────────────────── -->
+        <section class="section_layout" id="disclosure">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-medium">
+              <div class="section_head">
+                  <p class="eyebrow">Disclosure</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                  The accordion is a ruled ledger of questions on native
+                  details and summary; the controller unfolds and folds the
+                  row by measured height, and the ink settles a half-beat
+                  behind. Tabs come in three voices, one per job, none
+                  underlined and none pilled: marked tabs switch views on
+                  tables and filters, folder tabs hold page sections on a
+                  drawn sheet, and ticket tabs pick a plan. Arrow keys walk
+                  every rail.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">details · acc</span>
+                      <span class="spec_info">native disclosure · unfolds and folds by height · the ink settles a half-beat behind</span>
+                    </div>
+                    <div class="acc">
+                      <details class="acc_item" open>
+                        <summary class="acc_summary">
+                          What does an engagement cost?
+                          <span class="icon" set:html={iconChevronDown} />
+                        </summary>
+                        <div class="acc_body">
+                          <p class="text-small">
+                            Projects start at 5k and retainers at 3k a month.
+                            You get the honest number after one call, in
+                            writing, before any work starts.
+                          </p>
+                        </div>
+                      </details>
+                      <details class="acc_item">
+                        <summary class="acc_summary">
+                          How fast do we see results?
+                          <span class="icon" set:html={iconChevronDown} />
+                        </summary>
+                        <div class="acc_body">
+                          <p class="text-small">
+                            The machinery lands in weeks; the numbers move in
+                            months. Anyone promising faster is selling you
+                            the promise, not the work.
+                          </p>
+                        </div>
+                      </details>
+                      <details class="acc_item">
+                        <summary class="acc_summary">
+                          Who actually does the work?
+                          <span class="icon" set:html={iconChevronDown} />
+                        </summary>
+                        <div class="acc_body">
+                          <p class="text-small">
+                            People. Research is read, copy is written, design
+                            is drawn. Partners join for the parts outside our
+                            wheelhouse, and you always know who they are.
+                          </p>
+                        </div>
+                      </details>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">button · tab</span>
+                      <span class="spec_info">marked tabs for switching views · the mark sweeps in from the left, leaves right</span>
+                    </div>
+                    <div data-tabs>
+                      <div class="tab_rail" role="tablist" aria-label="Reporting period">
+                        <button class="tab is-active" role="tab" aria-selected="true" id="vt-1" aria-controls="vp-1" type="button">This month</button>
+                        <button class="tab" role="tab" aria-selected="false" id="vt-2" aria-controls="vp-2" tabindex="-1" type="button">Last quarter</button>
+                        <button class="tab" role="tab" aria-selected="false" id="vt-3" aria-controls="vp-3" tabindex="-1" type="button">All time</button>
+                      </div>
+                      <div class="tab_panel" role="tabpanel" id="vp-1" aria-labelledby="vt-1">
+                        <div class="table_wrapper">
+                          <table class="table">
+                            <thead><tr><th>Channel</th><th>Leads</th><th class="is-numeric">Cost per lead</th></tr></thead>
+                            <tbody>
+                              <tr><td>Search</td><td>38</td><td class="is-numeric">41.20</td></tr>
+                              <tr><td>Email</td><td>24</td><td class="is-numeric">12.75</td></tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div class="tab_panel" role="tabpanel" id="vp-2" aria-labelledby="vt-2" hidden>
+                        <div class="table_wrapper">
+                          <table class="table">
+                            <thead><tr><th>Channel</th><th>Leads</th><th class="is-numeric">Cost per lead</th></tr></thead>
+                            <tbody>
+                              <tr><td>Search</td><td>102</td><td class="is-numeric">44.90</td></tr>
+                              <tr><td>Email</td><td>71</td><td class="is-numeric">11.30</td></tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div class="tab_panel" role="tabpanel" id="vp-3" aria-labelledby="vt-3" hidden>
+                        <div class="table_wrapper">
+                          <table class="table">
+                            <thead><tr><th>Channel</th><th>Leads</th><th class="is-numeric">Cost per lead</th></tr></thead>
+                            <tbody>
+                              <tr><td>Search</td><td>317</td><td class="is-numeric">46.10</td></tr>
+                              <tr><td>Email</td><td>289</td><td class="is-numeric">10.85</td></tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">tab_rail is-folder · tab_sheet</span>
+                      <span class="spec_info">folder tabs for page sections · the active tab and the sheet are one piece of card</span>
+                    </div>
+                    <div data-tabs>
+                      <div class="tab_rail is-folder" role="tablist" aria-label="Engagement phases">
+                        <button class="tab is-active" role="tab" aria-selected="true" id="ft-1" aria-controls="fp-1" type="button">Captivate</button>
+                        <button class="tab" role="tab" aria-selected="false" id="ft-2" aria-controls="fp-2" tabindex="-1" type="button">Connect</button>
+                        <button class="tab" role="tab" aria-selected="false" id="ft-3" aria-controls="fp-3" tabindex="-1" type="button">Convert</button>
+                      </div>
+                      <div class="tab_sheet">
+                        <div class="tab_panel" role="tabpanel" id="fp-1" aria-labelledby="ft-1">
+                          <p class="text-small">
+                            Branding, design, and the website. The work that makes
+                            a stranger stop scrolling and look twice.
+                          </p>
+                        </div>
+                        <div class="tab_panel" role="tabpanel" id="fp-2" aria-labelledby="ft-2" hidden>
+                          <p class="text-small">
+                            Advertising and email that talk like a person. The
+                            stranger becomes someone who answers.
+                          </p>
+                        </div>
+                        <div class="tab_panel" role="tabpanel" id="fp-3" aria-labelledby="ft-3" hidden>
+                          <p class="text-small">
+                            Offers, lead magnets, and funnels with the math shown.
+                            Attention starts turning into pipeline.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">tab is-plan</span>
+                      <span class="spec_info">ticket tabs for pricing · the chosen ticket lifts off-register and rests there</span>
+                    </div>
+                    <div data-tabs>
+                      <div class="tab_rail is-plans" role="tablist" aria-label="Ways to work together">
+                        <button class="tab is-plan is-active" role="tab" aria-selected="true" id="pt-1" aria-controls="pp-1" type="button">
+                          Project
+                          <span class="tab_meta">from 5k, fixed</span>
+                        </button>
+                        <button class="tab is-plan" role="tab" aria-selected="false" id="pt-2" aria-controls="pp-2" tabindex="-1" type="button">
+                          Retainer
+                          <span class="tab_meta">3k a month</span>
+                        </button>
+                        <button class="tab is-plan" role="tab" aria-selected="false" id="pt-3" aria-controls="pp-3" tabindex="-1" type="button">
+                          Strategy
+                          <span class="tab_meta">1.5k a month</span>
+                        </button>
+                      </div>
+                      <div class="tab_panel" role="tabpanel" id="pp-1" aria-labelledby="pt-1">
+                        <p class="text-small max-w-measure-md">
+                          One scoped build with an end date: brand, site, or
+                          both. The number is in writing before work starts.
+                        </p>
+                        <ul class="list is-check text-small mt-small">
+                          <li>Brand and site, built by hand</li>
+                          <li>Fixed price, no surprise invoices</li>
+                          <li>Everything is yours when it ships</li>
+                        </ul>
+                      </div>
+                      <div class="tab_panel" role="tabpanel" id="pp-2" aria-labelledby="pt-2" hidden>
+                        <p class="text-small max-w-measure-md">
+                          The machinery, run monthly: ads, email, and the
+                          reporting that shows what moved.
+                        </p>
+                        <ul class="list is-check text-small mt-small">
+                          <li>Ads and email, written by people</li>
+                          <li>A numbers meeting every month</li>
+                          <li>Leave with one month's notice</li>
+                        </ul>
+                      </div>
+                      <div class="tab_panel" role="tabpanel" id="pp-3" aria-labelledby="pt-3" hidden>
+                        <p class="text-small max-w-measure-md">
+                          Oversight without production: the plan, the math, and
+                          a human on call when a decision costs money.
+                        </p>
+                        <ul class="list is-check text-small mt-small">
+                          <li>The plan and the math behind it</li>
+                          <li>A human on call, same day</li>
+                          <li>No production work billed</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">tab_rail is-lines</span>
+                      <span class="spec_info">statements as tabs, stacked; size from the caller's text-* utility · the accent underline is the active mark, running in from the left · --tab-line-sweep paces the stroke: an auto-playing controller sets it to the dwell time so the mark doubles as the countdown, walks the list once, then rests (page behavior; this catalog wires click and arrows only) · muted tails stay muted in the open line</span>
+                    </div>
+                    <div data-tabs>
+                      <div class="tab_rail is-lines" role="tablist" aria-orientation="vertical" aria-label="Line tabs">
+                        <button class="tab text-h5 is-active" role="tab" aria-selected="true" id="lt-1" aria-controls="lp-1" type="button">Revenue<span class="text-ink-muted">, not leads.</span></button>
+                        <button class="tab text-h5" role="tab" aria-selected="false" id="lt-2" aria-controls="lp-2" tabindex="-1" type="button">Pricing up front.</button>
+                        <button class="tab text-h5" role="tab" aria-selected="false" id="lt-3" aria-controls="lp-3" tabindex="-1" type="button">Built for you<span class="text-ink-muted">, not a template.</span></button>
+                      </div>
+                      <div class="tab_panel" role="tabpanel" id="lp-1" aria-labelledby="lt-1">
+                        <p class="text-small max-w-measure-md">The report's first line is revenue attributed, not reach.</p>
+                      </div>
+                      <div class="tab_panel" role="tabpanel" id="lp-2" aria-labelledby="lt-2" hidden>
+                        <p class="text-small max-w-measure-md">The number arrives before any call is booked.</p>
+                      </div>
+                      <div class="tab_panel" role="tabpanel" id="lp-3" aria-labelledby="lt-3" hidden>
+                        <p class="text-small max-w-measure-md">Made for one audience: yours.</p>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 12 · Overlays ──────────────────────────── -->
+        <section class="section_layout" id="overlays">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-medium">
+              <div class="section_head">
+                  <p class="eyebrow">Overlays</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                  The dialog is a sheet stamped onto the page: drawn ink
+                  rule, hard offset, a plain dim behind it and no backdrop
+                  blur, because print does not defocus. Tooltips are margin
+                  notes in ink, patient on the way in and instant on the
+                  way out. The info circle-i carries that same note beside a
+                  label, wrapping for a full sentence. Toasts are alerts
+                  that arrive, say it once, and leave to the right.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">dialog · dialog</span>
+                      <span class="spec_info">native dialog · ink rule + hard offset · plain dim, no blur</span>
+                    </div>
+                    <div class="demo_row">
+                      <button class="button is-secondary" type="button" id="dialogOpen">Cancel the engagement</button>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">[data-tip] · tip</span>
+                      <span class="spec_info">ink margin note · 350ms patience in, instant out · wrap buttons in a span.tip</span>
+                    </div>
+                    <div class="demo_row">
+                      <span class="tip" data-tip="Sends the brief to a person">
+                        <button class="button is-secondary is-small" type="button">Send the brief</button>
+                      </span>
+                      <span class="chip is-outline tip" tabindex="0" data-tip="Set in Funnel Display 600">display face</span>
+                      <span class="tip" data-tip="Search the work">
+                        <button class="button is-secondary is-icon is-small" type="button" aria-label="Search">
+                          <span class="icon" set:html={iconSearch} />
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">button · info</span>
+                      <span class="spec_info">a circle-i · hover or focus reveals a wrapping tooltip · data-tip mirrored to aria-label</span>
+                    </div>
+                    <div class="demo_row" style="gap: 2rem;">
+                      <span class="text-body">
+                        Monthly budget
+                        <button
+                          class="info"
+                          type="button"
+                          data-tip="The honest range you can commit each month. We will tell you if it is too thin for the goal."
+                          aria-label="The honest range you can commit each month. We will tell you if it is too thin for the goal."
+                        ><span class="icon" set:html={iconInfo} /></button>
+                      </span>
+                      <span class="label text-ink-muted">
+                        Qualified pipeline
+                        <button
+                          class="info"
+                          type="button"
+                          data-tip="Leads that match the ideal-customer profile and have shown real buying intent."
+                          aria-label="Leads that match the ideal-customer profile and have shown real buying intent."
+                        ><span class="icon" set:html={iconInfo} /></button>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">div · toast</span>
+                      <span class="spec_info">an alert that floats · in from below, out to the right · five seconds</span>
+                    </div>
+                    <div class="demo_row">
+                      <button class="button is-secondary is-small" type="button" data-toast="brand">Stamp a note</button>
+                      <button class="button is-secondary is-small" type="button" data-toast="success">Stamp an approval</button>
+                      <button class="button is-secondary is-small" type="button" data-toast="error">Stamp a correction</button>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">div · consent</span>
+                      <span class="spec_info">a card sheet with grain, not a full-width bar · decline-by-default, persisted to localStorage · appears once, never re-asks once answered · no glow, no tinted shadow</span>
+                    </div>
+                    <div class="demo_row">
+                      <div class="consent card is-elevated" style="position: static;">
+                        <span class="grain-overlay" aria-hidden="true"></span>
+                        <p class="text-small">
+                          This site doesn't set tracking cookies today. Choosing accept or decline now decides what happens if that changes, explained on the <a class="text-link" href="/privacy">privacy page</a>.
+                        </p>
+                        <div class="button-group mt-medium">
+                          <button class="button is-small" type="button">Accept</button>
+                          <button class="button is-secondary is-small" type="button">Decline</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 13 · Alerts ────────────────────────────── -->
+        <section class="section_layout" id="alerts">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-small">
+              <div class="section_head">
+                  <p class="eyebrow">Alerts</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                  Proofreader's notes: the verdict is stamped in the
+                  semantic ink; the message stays in body ink on a washed
+                  sheet. No left color-rule, that is framework dialect, not
+                  print.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <div class="alerts_grid">
+                    <div class="alert is-brand"><strong>Noted</strong> The brand note: the full highlighter, used sparingly.</div>
+                    <div class="alert is-success"><strong>Approved</strong> Your message is on its way. A human reads it next.</div>
+                    <div class="alert is-error"><strong>Corrected</strong> That email address will not work. One more look?</div>
+                    <div class="alert is-warning"><strong>Flagged</strong> That budget looks thin for the goal. We will say so.</div>
+                    <div class="alert is-info"><strong>Noted</strong> Replies land within one business day, usually faster.</div>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 14 · Cards & elevation ─────────────────── -->
+        <section class="section_layout" id="cards">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-medium">
+              <div class="section_head">
+                  <p class="eyebrow">Cards, chips, tags</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                  A card is a sheet of surface that earns its border.
+                  Elevation is optional: most cards live flat, is-elevated is
+                  for the few that float. Chips are filled stamps for meta;
+                  tags are the drawn, interactive cousin for keywords and
+                  filters. Shadows are neutral ink at three sizes, never
+                  tinted.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <div class="cards_grid">
+                    <div class="card">
+                      <span class="chip is-outline">default</span>
+                      <h3 class="text-h5 mt-small">Captivate</h3>
+                      <p class="text-small text-ink-muted mt-xsmall">
+                        Stop the scroll. Branding, design, and websites that
+                        make your business impossible to skim past.
+                      </p>
+                      <a class="text-link text-small mt-small" href="#cards">See the work</a>
+                    </div>
+                    <div class="card is-elevated">
+                      <span class="chip">is-elevated</span>
+                      <h3 class="text-h5 mt-small">The floating few</h3>
+                      <p class="text-small text-ink-muted mt-xsmall">
+                        Dropdowns, popovers, and toasts. Elevation via
+                        shadow-md, and the border drops to subtle because the
+                        shadow already separates the sheet from the page.
+                      </p>
+                    </div>
+                    <div class="bg-surface border border-line-subtle rounded-sm p-medium shadow-lg">
+                      <span class="chip is-outline">recipe</span>
+                      <h3 class="text-h5 mt-small">Pure utilities</h3>
+                      <p class="text-small text-ink-muted mt-xsmall">
+                        The same card from generated classes alone: bg-surface
+                        border-line-subtle rounded-sm p-medium shadow-lg.
+                      </p>
+                    </div>
+                  </div>
+
+                  <h3 class="text-h5 mt-xlarge mb-small">Tags</h3>
+                  <p class="text-small text-ink-muted max-w-measure-md mb-medium">
+                    Drawn in ink, not filled like a chip. A row reads as a
+                    ledger of terms; click to filter and the chosen one strikes
+                    yellow. The hash marks each one as a tag.
+                  </p>
+                  <div class="tags">
+                    <button class="tag is-active" type="button">branding</button>
+                    <button class="tag" type="button">web design</button>
+                    <button class="tag" type="button">copywriting</button>
+                    <button class="tag" type="button">seo</button>
+                    <button class="tag" type="button">email</button>
+                    <button class="tag" type="button">paid ads</button>
+                  </div>
+                  <div class="tags mt-small">
+                    <span class="tag is-static">is-static</span>
+                    <span class="tag is-static">metadata, no hash</span>
+                    <span class="tag is-static">no hover</span>
+                  </div>
+
+                  <h3 class="text-h5 mt-xlarge mb-small">Elevation scale</h3>
+                  <div class="tiles_grid">
+                    <div class="bg-surface rounded-sm p-small shadow-sm"><span class="label text-ink-muted">shadow-sm</span></div>
+                    <div class="bg-surface rounded-sm p-small shadow-md"><span class="label text-ink-muted">shadow-md</span></div>
+                    <div class="bg-surface rounded-sm p-small shadow-lg"><span class="label text-ink-muted">shadow-lg</span></div>
+                    <div class="bg-surface rounded-sm p-small border border-line-subtle"><span class="label text-ink-muted">border-line-subtle</span></div>
+                    <div class="bg-surface rounded-sm p-small border border-line"><span class="label text-ink-muted">border-line</span></div>
+                    <div class="bg-surface rounded-sm p-small border border-line-strong"><span class="label text-ink-muted">border-line-strong</span></div>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 15 · Content ───────────────────────────── -->
+        <section class="section_layout" id="content">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-medium">
+              <div class="section_head">
+                  <p class="eyebrow">Content</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                  The pieces long-form pages are built from. Quotes carry no
+                  giant quotation marks: the line that matters is
+                  highlighted and the human gets the spot color. Pictures
+                  sit on a mat with an archive caption. Stats are big
+                  tabular readouts. Lists mark in ink; the check list is for
+                  what is included. Code and the empty sheet close the
+                  drawer.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">blockquote · quote</span>
+                      <span class="spec_info">no giant quote marks · key line highlighted · the human gets the color</span>
+                    </div>
+                    <blockquote class="quote">
+                      <p class="quote_text">
+                        Three agencies took our money and guessed. These people
+                        interviewed our customers first, and
+                        <em class="highlight">the new site paid for itself in nine weeks</em>.
+                      </p>
+                      <p class="quote_attr">Maria Keller · Owner, Keller Supply Co.</p>
+                    </blockquote>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">del · struck word</span>
+                      <span class="spec_info">the proofreader's kill · a full-ink pen line, tilted a hair off level, overshooting the word · the word drops to muted · one word per del, the stroke cannot follow a line wrap</span>
+                    </div>
+                    <p class="text-body-lg max-w-measure-sm">
+                      Every plan is <del>data-driven</del> built from customer
+                      interviews, <del>bespoke</del> written for one business,
+                      and <del>results-driven</del> reported in revenue.
+                    </p>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">span · highlight is-swept</span>
+                      <span class="spec_info">swept on once when it scrolls into view, then rests · carries its own data-reveal · clip-path reveals mark and text as one piece · fade-in only, never fade-up, since it animates an inline span</span>
+                    </div>
+                    <p class="text-body max-w-measure-sm">
+                      An agency that is more of a partner than a vendor:
+                      <span class="highlight is-swept" data-reveal data-reveal-motion="motion-fade-in">pricing up-front</span>, no walls and forms.
+                    </p>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">figure · figure</span>
+                      <span class="spec_info">a mat, a hairline, an archive caption · is-plain for full-bleed</span>
+                    </div>
+                    <figure class="figure max-w-measure-sm">
+                      <div class="figure_frame">
+                        <svg viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder artwork: a two-ink layout study">
+                          <rect width="800" height="420" fill="var(--m-paper)" />
+                          <rect x="56" y="64" width="300" height="44" fill="var(--m-accent)" />
+                          <rect x="56" y="132" width="420" height="12" fill="var(--m-ink)" opacity="0.85" />
+                          <rect x="56" y="160" width="380" height="12" fill="var(--m-ink)" opacity="0.55" />
+                          <rect x="56" y="188" width="340" height="12" fill="var(--m-ink)" opacity="0.35" />
+                          <rect x="56" y="252" width="150" height="48" fill="var(--m-ink)" />
+                          <rect x="520" y="64" width="224" height="292" fill="none" stroke="var(--m-ink)" stroke-width="3" />
+                          <rect x="548" y="96" width="168" height="120" fill="var(--m-accent)" />
+                          <rect x="548" y="240" width="168" height="10" fill="var(--m-ink)" opacity="0.6" />
+                          <rect x="548" y="264" width="120" height="10" fill="var(--m-ink)" opacity="0.35" />
+                        </svg>
+                      </div>
+                      <figcaption>Layout study, two inks · Keller Supply rebrand, 2026</figcaption>
+                    </figure>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">div · stat</span>
+                      <span class="spec_info">display 600, tabular numerals · label and source compose</span>
+                    </div>
+                    <div class="grid gap-large sm:grid-cols-3">
+                      <div class="stat">
+                        <p class="stat_value">9<span class="text-ink-muted">wk</span></p>
+                        <p class="label text-ink-muted mt-tiny">Site paid for itself</p>
+                        <p class="stat_source">Keller Supply, 2026</p>
+                      </div>
+                      <div class="stat">
+                        <p class="stat_value">3.4&times;</p>
+                        <p class="label text-ink-muted mt-tiny">Qualified pipeline</p>
+                        <p class="stat_source">Median across engagements</p>
+                      </div>
+                      <div class="stat">
+                        <p class="stat_value">0</p>
+                        <p class="label text-ink-muted mt-tiny">AI-written words shipped</p>
+                        <p class="stat_source">Counted, proudly</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">ul ol · list</span>
+                      <span class="spec_info">highlighter-stroke bullets · marked step numbers · is-check for what is included</span>
+                    </div>
+                    <div class="grid gap-large sm:grid-cols-3">
+                      <ul class="list text-small">
+                        <li>Real research, read by people</li>
+                        <li>Copy written by a writer</li>
+                        <li>Design drawn by a designer</li>
+                      </ul>
+                      <ol class="list text-small">
+                        <li>Captivate</li>
+                        <li>Connect</li>
+                        <li>Convert</li>
+                        <li>Close</li>
+                      </ol>
+                      <ul class="list is-check text-small">
+                        <li>Brand and site</li>
+                        <li>Monthly reporting, shown plainly</li>
+                        <li>Everything you paid for, yours</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">p · tape</span>
+                      <span class="spec_info">statement band, display voice on a solid highlighter slab · the page's loudest mark, used sparingly · runs full viewport width on a real page (boxed here so the catalog layout holds) · size comes from the text-* utility on the element · alternates is-reverse · the skew is the one deliberate rule-break, everything else stays square · motion goes on a wrapper, never the tape itself</span>
+                    </div>
+                    <div style="overflow: hidden; border: 0.0625rem solid var(--m-line); border-radius: var(--radius-sm);">
+                      <div class="tape-group">
+                        <p class="tape text-h3">Ink reads.<span class="grain-overlay" aria-hidden="true"></span></p>
+                        <p class="tape is-reverse text-h3">Yellow marks.<span class="grain-overlay" aria-hidden="true"></span></p>
+                        <p class="tape text-h3">Motion plays once.<span class="grain-overlay" aria-hidden="true"></span></p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">ul · ledger</span>
+                      <span class="spec_info">ruled rows: icon, title, blurb, trailing arrow · hover sweeps the highlighter across the row · the top and bottom rules are the design.md exception, they rule the ledger's entries, they do not divide</span>
+                    </div>
+                    <ul class="ledger max-w-measure-md">
+                      <li class="ledger_row">
+                        <a class="ledger_link" href="#content">
+                          <span class="ledger_icon" aria-hidden="true" set:html={iconSearch} />
+                          <span class="ledger_text">
+                            <span class="ledger_title text-h6">Strategy and research</span>
+                            <span class="ledger_body text-small">Customer interviews, a teardown of your current funnel, and a written plan.</span>
+                          </span>
+                          <span class="ledger_arrow" aria-hidden="true" set:html={iconArrowUpRight} />
+                        </a>
+                      </li>
+                      <li class="ledger_row">
+                        <a class="ledger_link" href="#content">
+                          <span class="ledger_icon" aria-hidden="true" set:html={iconPen} />
+                          <span class="ledger_text">
+                            <span class="ledger_title text-h6">Brand and creative</span>
+                            <span class="ledger_body text-small">Logo, voice, copy, and design. You approve everything before it ships.</span>
+                          </span>
+                          <span class="ledger_arrow" aria-hidden="true" set:html={iconArrowUpRight} />
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">div · receipt</span>
+                      <span class="spec_info">mono thermal voice, uppercase · torn bottom edge is clip-path only, never mask-image · grain override is unlayered, next to .tape's · tilt lives on the frame, never the paper · prints once on reveal, steps() easing · dotted leaders are borders, not typed characters</span>
+                    </div>
+                    <div class="receipt_frame" style="max-width: 20rem;">
+                      <div class="receipt">
+                        <span class="grain-overlay" aria-hidden="true"></span>
+                        <div class="receipt_head">
+                          <p>Sample Vendor Co.</p>
+                          <p>Date: Specimen</p>
+                          <p>Customer: Style Guide</p>
+                        </div>
+                        <div class="receipt_rule"></div>
+                        <div class="receipt_row">
+                          <span>Line item one</span>
+                          <span class="receipt_leader"></span>
+                          <span>Paid</span>
+                        </div>
+                        <div class="receipt_row">
+                          <span>Line item two</span>
+                          <span class="receipt_leader"></span>
+                          <span>1,204</span>
+                        </div>
+                        <div class="receipt_row">
+                          <span>Line item three</span>
+                          <span class="receipt_leader"></span>
+                          <span>Included</span>
+                        </div>
+                        <div class="receipt_rule"></div>
+                        <div class="receipt_total">
+                          <span>Total</span>
+                          <span class="receipt_leader"></span>
+                          <span>$128.00</span>
+                        </div>
+                        <div class="receipt_rule"></div>
+                        <div class="receipt_foot">Keep this for your records</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">code kbd pre</span>
+                      <span class="spec_info">inline wash · drawn keys · the ledger page scrolls inside itself</span>
+                    </div>
+                    <div class="max-w-measure-md">
+                      <p class="text-small">
+                        Set <code>--m-accent</code> before anything else, then press
+                        <kbd>&#8984;</kbd> <kbd>S</kbd> and watch the mode flip.
+                      </p>
+                      <pre class="mt-small"><code>[data-theme='dark'] &#123;
+        --m-paper: oklch(18.6% 0.006 107);
+        --m-ink: oklch(94.2% 0.016 95.2);
+      &#125;</code></pre>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">div · empty</span>
+                      <span class="spec_info">a penciled sheet · one honest line · a way forward</span>
+                    </div>
+                    <div class="empty max-w-measure-md">
+                      <span class="icon" set:html={iconPen} />
+                      <h3 class="text-h6 mt-small">No results written up yet</h3>
+                      <p class="text-small text-ink-muted mt-xsmall">
+                        This engagement is still in the fieldwork phase. The
+                        first report lands at the end of the month.
+                      </p>
+                      <a class="text-link text-small mt-small" href="#content">See finished work instead</a>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">span · icon_plate</span>
+                      <span class="spec_info">a Freehand drawing on a solid accent slab, the training heroes' "solid gold" anchor systemized · grain rides the tape's louder tuning · slight tilt off the grid · one per composition, it is a shout</span>
+                    </div>
+                    <span class="icon_plate">
+                      <span class="grain-overlay" aria-hidden="true"></span>
+                      <span class="icon" style="width: 4em; height: 4em;" set:html={iconPen} />
+                    </span>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">div · exhibit</span>
+                      <span class="spec_info">a small piece of paper evidence · surface, hairline, grain, slight tilt, mono caption · the interior composes from existing pieces (table, marks, stamps) · the tilt is static, entrance motion rides a parent</span>
+                    </div>
+                    <div class="exhibit max-w-measure-sm">
+                      <span class="grain-overlay" aria-hidden="true"></span>
+                      <table class="table">
+                        <tbody>
+                          <tr><td class="text-ink-muted">Impressions</td><td class="is-numeric text-ink-muted">2,400,000</td></tr>
+                          <tr><td class="text-ink-muted">Leads</td><td class="is-numeric text-ink-muted">214</td></tr>
+                          <tr><td><span class="highlight">Revenue attributed</span></td><td class="is-numeric"><span class="redact">$00,000</span></td></tr>
+                        </tbody>
+                      </table>
+                      <p class="exhibit_caption">The monthly report, first page</p>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">span · redact</span>
+                      <span class="spec_info">an inline ink bar over real placeholder text · content-sized, screen readers get a value-shaped token · the honest way to show a real document while a client's number stays private</span>
+                    </div>
+                    <p class="text-body max-w-measure-sm">
+                      Their retainer is <span class="redact">$0,000</span> a month
+                      and the campaign returned <span class="redact">$00,000</span> in
+                      attributed revenue.
+                    </p>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 16 · Tables ────────────────────────────── -->
+        <section class="section_layout" id="tables">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-small">
+              <div class="section_head">
+                  <p class="eyebrow">Tables</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                  A ledger: mono label headers, hairline rows, numbers
+                  right-aligned in mono with is-numeric. Wide tables scroll
+                  inside table_wrapper, never the page.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <div class="table_wrapper">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Move</th>
+                          <th>Deliverable</th>
+                          <th>Owner</th>
+                          <th class="is-numeric">Cost, USD</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {ledger.map((r) => (
+                          <tr>
+                            <td>{r.move}</td>
+                            <td>{r.deliverable}</td>
+                            <td>{r.owner}</td>
+                            <td class="is-numeric">{r.cost}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══════ PART THREE · PROOF ═══════ -->
+        <header class="section_layout is-part">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-large">
+              <div class="section_head">
+                  <p class="eyebrow">Part Three</p>
+                  <h2 class="text-h2">Verification.</h2>
+                  <p class="section_lead text-body-md text-ink-muted max-w-measure-md">
+                  The system held to its own standard: contrast ratios measured live from the rendered page, plus the platform details most systems skip.
+                  </p>
+              </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- ── 17 · Selection & scrollbar ─────────────── -->
+        <section class="section_layout" id="selection">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-small">
+              <div class="section_head">
+                  <p class="eyebrow">Selection and scrollbar</p>
+                  <p class="section_lead text-body-md max-w-measure-md">
+                  Drag across this paragraph. Selecting text runs the
+                  highlighter, the same mark the brand makes everywhere else.
+                  The scrollbar is an ink bar in the margin, not browser
+                  chrome, on the page and inside panels alike.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <div class="scroll_pane" tabindex="0" aria-label="Scrollbar demo">
+                    <p>Scroll to test.</p>
+                    <p>The scrollbar is an ink bar in the margin, not browser chrome.</p>
+                    <p>The thumb holds three to one against its track in both modes.</p>
+                    <p>It stays thin, square-shouldered, and quiet.</p>
+                    <p>The page scrollbar takes the same treatment.</p>
+                    <p>It never glows and it never pulses.</p>
+                    <p>Ink does the reading, yellow does the marking.</p>
+                    <p>A part that draws attention to itself is wrong.</p>
+                    <p>End of notes.</p>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 18 · Contrast, measured live ───────────── -->
+        <section class="section_layout" id="contrast">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-small">
+              <div class="section_head">
+                  <p class="eyebrow">Contrast, measured live</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                  Measured from the rendered page, not the spec sheet. Text
+                  pairs target 4.5:1; non-text (focus, strong lines) target
+                  3:1. Toggle dark mode and the table re-tests itself.
+                  </p>
+              </div>
+              <div class="section_body">
+                  <div class="aa" id="aa" aria-live="polite"></div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- ── Menu overlay (demo) ────────────────────── -->
+      <div class="menu_overlay" id="siteMenu" role="dialog" aria-modal="true" aria-label="Site menu">
+        <div class="menu_head">
+          <span class="mast_name">Devin Alexander</span>
+          <button class="button is-secondary is-icon" type="button" id="menuClose" aria-label="Close the menu">
+            <span class="icon" set:html={iconClose} />
+          </button>
+        </div>
+        <ul class="menu_list container-large">
+          <li class="menu_item"><a class="menu_link" href="#navigation">Work</a></li>
+          <li class="menu_item"><a class="menu_link" href="#navigation">Services</a></li>
+          <li class="menu_item"><a class="menu_link" href="#navigation">Training</a></li>
+          <li class="menu_item"><a class="menu_link" href="#navigation">About</a></li>
+          <li class="menu_item"><a class="menu_link" href="#navigation">Contact</a></li>
+        </ul>
+        <p class="label text-ink-muted mt-xlarge">Human-made, start to finish.</p>
+      </div>
+
+      <!-- ── Dialog (demo) ──────────────────────────── -->
+      <dialog class="dialog" id="demoDialog" aria-labelledby="demoDialogTitle">
+        <div class="dialog_head">
+          <h3 class="text-h5" id="demoDialogTitle">Cancel the engagement?</h3>
+          <button class="button is-secondary is-icon is-small" type="button" data-dialog-close aria-label="Close">
+            <span class="icon" set:html={iconClose} />
+          </button>
+        </div>
+        <p class="text-small text-ink-muted mt-small max-w-measure-sm">
+          Work stops at the end of the month. Every file and deliverable
+          stays yours, and the last report still arrives.
+        </p>
+        <div class="demo_row mt-medium">
+          <button class="button" type="button" data-dialog-close>Keep working</button>
+          <button class="button is-secondary" type="button" data-dialog-close>Cancel it</button>
+        </div>
+      </dialog>
+
+      <!-- ── Toast rack ─────────────────────────────── -->
+      <div class="toast_rack" id="toastRack" aria-live="polite"></div>
+
+      <footer class="foot_wrapper px-global">
+        <div class="container-large foot_fine">
+          <span class="label text-ink-muted">Marker · design system</span>
+          <span class="label text-ink-muted">Designed here first.</span>
+        </div>
+      </footer>
+    </div>
+
+    <style>
+      /* ══════════════════════════════════════════════════
+         PAGE COMPONENTS — Client-First folder_element
+         naming; every value from Marker variables.
+         ══════════════════════════════════════════════════ */
+
+      /* mast_ — the page masthead. Sticky so the mode toggle
+         and wayfinding stay reachable down a long reference
+         page; opaque paper covers the content sliding under
+         it, no divider needed. */
+      .mast_wrapper {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding-top: clamp(1rem, 2.5vh, 1.5rem);
+        padding-bottom: clamp(1rem, 2.5vh, 1.5rem);
+        background: var(--m-paper);
+      }
+      .mast_id {
+        display: flex;
+        align-items: center;
+        gap: clamp(0.75rem, 2vw, 1.25rem);
+        min-width: 0;
+      }
+
+      /* principles_ — the system's rules, set as an editorial
+         grid of titled statements. No numbers: the title is the
+         handle, the body is the reason. */
+      .principles_grid {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+        gap: clamp(1.75rem, 3.5vw, 2.75rem) clamp(2rem, 4vw, 3.5rem);
+      }
+      .principle {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        max-width: 30ch;
+      }
+      .principle_title {
+        position: relative;
+        padding-left: 0.9rem;
+      }
+      /* A short highlighter tick keys each rule — the mark that
+         carries meaning, not an index. */
+      .principle_title::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.15em;
+        width: 0.3rem;
+        height: 1em;
+        background: var(--m-accent);
+        border-radius: var(--radius-xs);
+      }
+      .principle_body {
+        line-height: 1.55;
+      }
+
+      /* spec_ — specimen rows */
+      .spec_row {
+        display: grid;
+        grid-template-columns: 16rem 1fr;
+        gap: 1rem clamp(1.5rem, 4vw, 3rem);
+        align-items: baseline;
+        padding: clamp(1.5rem, 3.5vh, 2.25rem) 0;
+      }
+      .spec_meta {
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+      }
+      .spec_tag {
+        align-self: flex-start;
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        padding: 0.15em 0.5em;
+        border-radius: var(--radius-xs);
+        background: var(--m-accent);
+        color: var(--m-on-accent);
+        white-space: nowrap;
+      }
+      .spec_info {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.02em;
+        color: var(--m-ink-muted);
+        line-height: 1.5;
+      }
+
+      /* demo_ — inline demo rows */
+      .demo_row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      /* icons_ — the Freehand specimen grid */
+      .icons_grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+        gap: 1rem;
+      }
+      .icon_tile {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+      .icon_frame {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: 5 / 3;
+        background: var(--m-surface);
+        border: 0.0625rem solid var(--m-line-subtle);
+        border-radius: var(--radius-xs);
+      }
+      .icon_frame .icon {
+        width: 2rem;
+        height: 2rem;
+      }
+      .icon_name {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--m-ink-muted);
+      }
+      .icon_inline {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4em;
+      }
+
+      /* swatch_ — color tiles */
+      .swatch_grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+        gap: 1rem;
+      }
+      .swatch_tile {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        min-width: 0;
+      }
+      .swatch_chip {
+        height: 3.5rem;
+        border-radius: var(--radius-xs);
+        border: 0.0625rem solid var(--m-line-subtle);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-weight: 600;
+      }
+      .swatch_ring {
+        width: 58%;
+        height: 58%;
+        border-radius: var(--radius-xs);
+        background: var(--m-paper);
+        border: 0.0625rem solid var(--m-line-subtle);
+        outline: 0.125rem solid var(--m-focus);
+        outline-offset: 0.125rem;
+        box-shadow: 0 0 0 0.125rem var(--m-accent);
+      }
+      .swatch_name {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+      }
+      .swatch_val {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--m-ink-muted);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      /* bar_ — spacing and container rulers */
+      .bar_row {
+        display: grid;
+        grid-template-columns: 8rem 1fr auto;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.3rem 0;
+      }
+      .bar_name {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+      }
+      .bar_track {
+        min-width: 0;
+      }
+      .bar {
+        height: 0.75rem;
+        background: var(--m-accent);
+        border-radius: var(--radius-xs);
+      }
+      .bar.is-block {
+        background: var(--m-block);
+      }
+      .bar_val {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--m-ink-muted);
+        white-space: nowrap;
+      }
+
+      /* form_ — the forms demo grid */
+      .form_grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem clamp(1.25rem, 3vw, 2rem);
+        max-width: 46rem;
+      }
+      .form_span {
+        grid-column: 1 / -1;
+      }
+
+      /* alerts_ — the alerts demo grid */
+      .alerts_grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+      }
+
+      /* cards_ / tiles_ — card and elevation grids */
+      .cards_grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        align-items: start;
+      }
+      .cards_grid .text-link {
+        display: inline-block;
+      }
+      .tiles_grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+      }
+
+      /* motion_ — easing demo */
+      .motion_row {
+        display: grid;
+        grid-template-columns: 11rem 1fr auto;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.45rem 0;
+      }
+      .motion_name {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+      }
+      .motion_bar {
+        height: 0.75rem;
+        max-width: 24rem;
+        background: var(--m-surface);
+        border: 0.0625rem solid var(--m-line-subtle);
+        border-radius: var(--radius-xs);
+        overflow: hidden;
+      }
+      .motion_fill {
+        height: 100%;
+        background: var(--m-accent);
+        transform: scaleX(0);
+        transform-origin: left;
+      }
+      .is-playing .motion_fill.is-expo {
+        animation: motion-fill 0.9s var(--ease-out-expo) forwards;
+      }
+      .is-playing .motion_fill.is-smooth {
+        animation: motion-fill 0.9s var(--ease-in-out-smooth) forwards;
+      }
+      @keyframes motion-fill {
+        to {
+          transform: scaleX(1);
+        }
+      }
+      .motion_val {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--m-ink-muted);
+        white-space: nowrap;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .motion_fill,
+        .is-playing .motion_fill.is-expo,
+        .is-playing .motion_fill.is-smooth {
+          animation: none;
+          transform: scaleX(1);
+        }
+      }
+
+      /* motion_card — the entrance-pattern specimens */
+      .motion_cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+        gap: 1rem;
+      }
+      .motion_card {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+      .motion_stage {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 6rem;
+        padding: 1rem;
+        background: var(--m-surface);
+        border: 0.0625rem solid var(--m-line-subtle);
+        border-radius: var(--radius-md);
+      }
+      .motion_chip {
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        color: var(--m-on-accent);
+        background: var(--m-accent);
+        padding: 0.3em 0.6em;
+        border-radius: var(--radius-xs);
+      }
+      .motion_caption {
+        font-size: 0.78rem;
+        color: var(--m-ink-muted);
+      }
+
+      /* scroll_ — scrollbar demo pane */
+      .scroll_pane {
+        height: 10rem;
+        max-width: var(--container-sm);
+        overflow: auto;
+        padding: var(--spacing-small) var(--spacing-medium);
+        background: var(--m-surface);
+        border: 0.0625rem solid var(--m-line);
+        border-radius: var(--radius-xs);
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        line-height: 1.7;
+      }
+      .scroll_pane p {
+        margin: 0 0 0.9em;
+        white-space: nowrap;
+      }
+
+      /* aa_ — the live contrast audit. The table itself is the
+         system .table component (rendered in JS); only the
+         swatch + verdict chips below are specimen-specific. */
+      .aa-sample {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 3rem;
+        height: 1.625rem;
+        border-radius: var(--radius-xs);
+        border: 0.0625rem solid var(--m-line-subtle);
+        font-weight: 700;
+        font-size: 0.85rem;
+      }
+      .aa-ratio {
+        font-family: var(--font-mono);
+      }
+      .aa-verdict {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+      }
+      .aa-verdict.pass {
+        color: var(--m-success);
+      }
+      .aa-verdict.fail {
+        color: var(--m-error);
+      }
+
+      /* foot_ — the page footer */
+      .foot_wrapper {
+        padding-top: var(--spacing-medium);
+        padding-bottom: var(--spacing-xlarge);
+        margin-top: var(--spacing-xxlarge);
+      }
+      .foot_fine {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      /* ── Responsive ── */
+      @media (max-width: 50rem) {
+        .spec_row {
+          grid-template-columns: 1fr;
+          gap: 0.9rem;
+        }
+        .form_grid,
+        .alerts_grid {
+          grid-template-columns: 1fr;
+        }
+        .cards_grid {
+          grid-template-columns: 1fr;
+        }
+        .tiles_grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .bar_row {
+          grid-template-columns: 6rem 1fr auto;
+        }
+        .motion_row {
+          grid-template-columns: 1fr;
+          gap: 0.35rem;
+        }
+        .mast_wrapper {
+          flex-wrap: wrap;
+        }
+        .foot_fine {
+          flex-direction: column;
+          gap: 0.35rem;
+        }
+      }
+    </style>
+
+    <script is:inline>
+      (function () {
+        var cp = document.getElementById('cp');
+
+        /* ── Color resolution: read a variable from the rendered
+           page, normalize through canvas (handles color-mix),
+           return [r, g, b, a]. ── */
+        var probe = document.createElement('span');
+        probe.style.display = 'none';
+        cp.appendChild(probe);
+        var cnv = document.createElement('canvas');
+        cnv.width = cnv.height = 1;
+        var ctx = cnv.getContext('2d', { willReadFrequently: true });
+
+        function resolveVar(varName) {
+          probe.style.color = 'var(' + varName + ')';
+          var resolved = getComputedStyle(probe).color;
+          ctx.clearRect(0, 0, 1, 1);
+          ctx.fillStyle = resolved;
+          ctx.fillRect(0, 0, 1, 1);
+          var d = ctx.getImageData(0, 0, 1, 1).data;
+          return [d[0], d[1], d[2], d[3] / 255];
+        }
+
+        function chan(v) {
+          v /= 255;
+          return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+        }
+
+        function oklchCss(c) {
+          var r = chan(c[0]), g = chan(c[1]), b = chan(c[2]);
+          var l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+          var m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+          var s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+          var L = 0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s;
+          var a = 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s;
+          var bb = 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s;
+          var C = Math.sqrt(a * a + bb * bb);
+          var H = Math.atan2(bb, a) * 180 / Math.PI;
+          if (H < 0) H += 360;
+          if (C < 0.0005) H = 0;
+          return 'oklch(' + (L * 100).toFixed(1) + '% ' + C.toFixed(3) + ' ' + H.toFixed(1) + ')';
+        }
+
+        function blend(fg, bg) {
+          var a = fg[3];
+          return [
+            fg[0] * a + bg[0] * (1 - a),
+            fg[1] * a + bg[1] * (1 - a),
+            fg[2] * a + bg[2] * (1 - a),
+            1
+          ];
+        }
+
+        function luminance(c) {
+          return 0.2126 * chan(c[0]) + 0.7152 * chan(c[1]) + 0.0722 * chan(c[2]);
+        }
+
+        function contrast(fg, bg) {
+          var l1 = luminance(fg);
+          var l2 = luminance(bg);
+          var hi = Math.max(l1, l2);
+          var lo = Math.min(l1, l2);
+          return (hi + 0.05) / (lo + 0.05);
+        }
+
+        /* ── 03: live swatch values — translucent tokens (the
+           line scale) display their alpha honestly. ── */
+        function oklchCssAlpha(c) {
+          var s = oklchCss(c);
+          if (c[3] < 0.995) {
+            s = s.slice(0, -1) + ' / ' + c[3].toFixed(2) + ')';
+          }
+          return s;
+        }
+        function refreshSwatches() {
+          document.querySelectorAll('[data-swatch]').forEach(function (el) {
+            el.textContent = oklchCssAlpha(resolveVar(el.getAttribute('data-swatch')));
+          });
+        }
+
+        /* ── 12: live AA audit ── */
+        var PAIRS = [
+          ['Ink on paper', '--m-ink', '--m-paper', 4.5],
+          ['Muted ink on paper', '--m-ink-muted', '--m-paper', 4.5],
+          ['Ink on surface', '--m-ink', '--m-surface', 4.5],
+          ['Muted ink on surface', '--m-ink-muted', '--m-surface', 4.5],
+          ['Button ink on accent', '--m-on-accent', '--m-accent', 4.5],
+          ['Error on paper', '--m-error', '--m-paper', 4.5],
+          ['Success on paper', '--m-success', '--m-paper', 4.5],
+          ['Warning on paper', '--m-warning', '--m-paper', 4.5],
+          ['Info on paper', '--m-info', '--m-paper', 4.5],
+          ['Focus ring on paper', '--m-focus', '--m-paper', 3],
+          ['Strong line on paper', '--m-line-strong', '--m-paper', 3]
+        ];
+        var aaBox = document.getElementById('aa');
+
+        function renderAA() {
+          if (!aaBox) return;
+          // innerHTML is safe here: every interpolated value is either a
+          // hardcoded literal from PAIRS or a number produced by
+          // canvas/contrast math. No user or remote input reaches this.
+          var rows = PAIRS.map(function (pair) {
+            var bg = resolveVar(pair[2]);
+            var fg = blend(resolveVar(pair[1]), bg);
+            var ratio = contrast(fg, bg);
+            var pass = ratio >= pair[3];
+            return '<tr>' +
+              '<td>' + pair[0] + '</td>' +
+              '<td><span class="aa-sample" style="background:' + oklchCss(bg) + ';color:' + oklchCss(fg) + '">Ag</span></td>' +
+              '<td class="is-numeric">' + ratio.toFixed(2) + ':1</td>' +
+              '<td class="is-numeric">' + pair[3] + ':1</td>' +
+              '<td><span class="aa-verdict ' + (pass ? 'pass' : 'fail') + '">' + (pass ? 'PASS' : 'FAIL') + '</span></td>' +
+              '</tr>';
+          }).join('');
+          aaBox.innerHTML =
+            '<div class="table_wrapper"><table class="table"><thead><tr>' +
+            '<th>Pair</th><th>Sample</th><th class="is-numeric">Measured</th><th class="is-numeric">Target</th><th>Verdict</th>' +
+            '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+        }
+
+        /* ── 10: motion demo — plays once, replay on demand ── */
+        var stage = document.getElementById('motionStage');
+        var motionCards = document.getElementById('motionCards');
+        var motionClasses = ['motion-fade-up', 'motion-fade-in', 'motion-slide-in'];
+        function playMotion() {
+          if (stage) {
+            stage.classList.remove('is-playing');
+            void stage.offsetWidth;
+            stage.classList.add('is-playing');
+          }
+          if (motionCards) {
+            /* Re-trigger the entrance animations by stripping the
+               utility, forcing reflow, then re-applying it. */
+            var chips = motionCards.querySelectorAll('.motion_chip');
+            chips.forEach(function (chip, idx) {
+              var cls = motionClasses[idx % motionClasses.length];
+              chip.classList.remove(cls);
+              chip.style.removeProperty('--m-delay');
+              void chip.offsetWidth;
+              chip.style.setProperty('--m-delay', idx * 90 + 'ms');
+              chip.classList.add(cls);
+            });
+          }
+        }
+        var playBtn = document.getElementById('motionPlay');
+        if (playBtn) playBtn.addEventListener('click', playMotion);
+
+        /* ── dropdown — listbox pattern, keyboard-complete.
+           Focus stays on the trigger; aria-activedescendant
+           tracks the marker-swept option. ── */
+        document.querySelectorAll('.dropdown').forEach(function (dd, ddIndex) {
+          var trigger = dd.querySelector('.dropdown_trigger');
+          var panel = dd.querySelector('.dropdown_panel');
+          var valueEl = dd.querySelector('.dropdown_value');
+          var hidden = dd.querySelector('input[type="hidden"]');
+          var options = Array.prototype.slice.call(dd.querySelectorAll('.dropdown_option'));
+          var active = -1;
+
+          options.forEach(function (opt, i) {
+            if (!opt.id) opt.id = 'dd' + ddIndex + '-opt' + i;
+          });
+
+          function selectedIndex() {
+            return options.findIndex(function (o) { return o.classList.contains('is-selected'); });
+          }
+
+          function setActive(i) {
+            active = (i + options.length) % options.length;
+            options.forEach(function (o, j) {
+              o.classList.toggle('is-active', j === active);
+            });
+            trigger.setAttribute('aria-activedescendant', options[active].id);
+            options[active].scrollIntoView({ block: 'nearest' });
+          }
+
+          function open() {
+            dd.classList.add('is-open');
+            trigger.setAttribute('aria-expanded', 'true');
+            var sel = selectedIndex();
+            setActive(sel >= 0 ? sel : 0);
+          }
+
+          function close() {
+            dd.classList.remove('is-open');
+            trigger.setAttribute('aria-expanded', 'false');
+            trigger.removeAttribute('aria-activedescendant');
+            options.forEach(function (o) { o.classList.remove('is-active'); });
+            active = -1;
+          }
+
+          function isOpen() {
+            return dd.classList.contains('is-open');
+          }
+
+          function select(i) {
+            options.forEach(function (o, j) {
+              o.classList.toggle('is-selected', j === i);
+              o.setAttribute('aria-selected', j === i ? 'true' : 'false');
+            });
+            valueEl.textContent = options[i].querySelector('span:first-child').textContent;
+            valueEl.classList.remove('is-empty');
+            dd.classList.add('is-filled');
+            if (hidden) hidden.value = options[i].getAttribute('data-value') || '';
+            close();
+            trigger.focus();
+          }
+
+          if (selectedIndex() >= 0) dd.classList.add('is-filled');
+
+          trigger.addEventListener('click', function () {
+            isOpen() ? close() : open();
+          });
+
+          trigger.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+              e.preventDefault();
+              if (!isOpen()) { open(); return; }
+              setActive(active + (e.key === 'ArrowDown' ? 1 : -1));
+            } else if (e.key === 'Home' && isOpen()) {
+              e.preventDefault();
+              setActive(0);
+            } else if (e.key === 'End' && isOpen()) {
+              e.preventDefault();
+              setActive(options.length - 1);
+            } else if ((e.key === 'Enter' || e.key === ' ') && isOpen()) {
+              e.preventDefault();
+              select(active);
+            } else if (e.key === 'Escape' && isOpen()) {
+              e.preventDefault();
+              close();
+            }
+          });
+
+          options.forEach(function (opt, i) {
+            opt.addEventListener('mousemove', function () {
+              if (active !== i) setActive(i);
+            });
+            opt.addEventListener('click', function () {
+              select(i);
+            });
+          });
+
+          document.addEventListener('click', function (e) {
+            if (isOpen() && !dd.contains(e.target)) close();
+          });
+        });
+
+        /* ── theme-switch — the marker slides to the chosen
+           side; the root data-theme is the single source of
+           truth, so CSS drives the slab and the active ink. ── */
+        var themeSwitch = document.querySelector('.theme-switch');
+        function setTheme(mode) {
+          document.documentElement.setAttribute('data-theme', mode);
+          themeSwitch.querySelectorAll('[data-theme-choice]').forEach(function (b) {
+            b.setAttribute('aria-checked', b.dataset.themeChoice === mode ? 'true' : 'false');
+          });
+          refreshSwatches();
+          renderAA();
+        }
+        themeSwitch.addEventListener('click', function (e) {
+          var btn = e.target.closest('[data-theme-choice]');
+          if (btn) setTheme(btn.dataset.themeChoice);
+        });
+        /* Arrow keys move between the two radios, as a radiogroup should. */
+        themeSwitch.addEventListener('keydown', function (e) {
+          if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+          e.preventDefault();
+          var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          setTheme(next);
+          themeSwitch.querySelector('[data-theme-choice="' + next + '"]').focus();
+        });
+
+        /* ── tags — interactive filter tags toggle on click ── */
+        document.querySelectorAll('.tag:not(.is-static)').forEach(function (tag) {
+          if (tag.tagName !== 'BUTTON' && tag.tagName !== 'A') return;
+          tag.addEventListener('click', function (e) {
+            if (tag.tagName === 'A') e.preventDefault();
+            var on = tag.classList.toggle('is-active');
+            tag.setAttribute('aria-pressed', on ? 'true' : 'false');
+          });
+        });
+
+        /* ── 06: the composed lead form — demo submit ── */
+        var leadForm = document.getElementById('lead-form');
+        if (leadForm) {
+          leadForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (leadForm.querySelector('.alert')) return;
+            var note = document.createElement('div');
+            note.className = 'alert is-success';
+            // Literal string only; no user input reaches this.
+            note.innerHTML = '<strong>Approved</strong> Your message is on its way. A human reads it next.';
+            leadForm.appendChild(note);
+          });
+        }
+
+        /* ── 14: menu overlay — open, close, Escape ── */
+        var menu = document.getElementById('siteMenu');
+        var menuOpen = document.getElementById('menuOpen');
+        var menuClose = document.getElementById('menuClose');
+        if (menu && menuOpen) {
+          menuOpen.addEventListener('click', function () {
+            menu.classList.add('is-open');
+            menuClose.focus();
+          });
+          var closeMenu = function () {
+            menu.classList.remove('is-open');
+            menuOpen.focus();
+          };
+          menuClose.addEventListener('click', closeMenu);
+          menu.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeMenu();
+          });
+          menu.querySelectorAll('.menu_link').forEach(function (l) {
+            l.addEventListener('click', closeMenu);
+          });
+        }
+
+        /* ── 15: tabs — one controller for every voice:
+           click + arrow keys, roving tabindex ── */
+        document.querySelectorAll('[data-tabs]').forEach(function (root) {
+          var tabs = Array.from(root.querySelectorAll('.tab'));
+          var panels = Array.from(root.querySelectorAll('.tab_panel'));
+          var activate = function (i, focus) {
+            tabs.forEach(function (t, j) {
+              t.classList.toggle('is-active', j === i);
+              t.setAttribute('aria-selected', j === i ? 'true' : 'false');
+              t.tabIndex = j === i ? 0 : -1;
+              panels[j].hidden = j !== i;
+            });
+            if (focus) tabs[i].focus();
+          };
+          tabs.forEach(function (t, i) {
+            t.addEventListener('click', function () { activate(i, false); });
+            t.addEventListener('keydown', function (e) {
+              var n = null;
+              if (e.key === 'ArrowRight') n = (i + 1) % tabs.length;
+              if (e.key === 'ArrowLeft') n = (i - 1 + tabs.length) % tabs.length;
+              if (e.key === 'Home') n = 0;
+              if (e.key === 'End') n = tabs.length - 1;
+              if (n !== null) { e.preventDefault(); activate(n, true); }
+            });
+          });
+        });
+
+        /* ── 15: accordion — the controller measures the row
+           and drives its height with WAAPI, both directions.
+           Reduced motion falls through to the native toggle. */
+        var accReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+        document.querySelectorAll('.acc_item').forEach(function (item) {
+          var summary = item.querySelector('.acc_summary');
+          var accAnim = null;
+          summary.addEventListener('click', function (e) {
+            if (accReduced.matches) return;
+            e.preventDefault();
+            var willOpen = !item.open || item.classList.contains('is-closing');
+            var startH = item.offsetHeight; // mid-flight safe: reads the animated height
+            if (accAnim) accAnim.cancel();
+            item.classList.add('is-animating');
+            item.classList.toggle('is-closing', !willOpen);
+            item.open = true; // content must be in the tree to measure
+            var endH;
+            if (willOpen) {
+              endH = item.offsetHeight;
+            } else {
+              item.open = false;
+              endH = item.offsetHeight;
+              item.open = true; // stays open so the text is visible while folding
+            }
+            // fill: forwards holds the end height until cleanup —
+            // without it the row flashes open for a frame between
+            // the animation ending and onfinish closing the item.
+            var a = item.animate(
+              [{ height: startH + 'px' }, { height: endH + 'px' }],
+              { duration: 350, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'forwards' }
+            );
+            accAnim = a;
+            a.onfinish = function () {
+              if (!willOpen) {
+                item.open = false;
+                item.classList.remove('is-closing');
+              }
+              item.classList.remove('is-animating');
+              a.cancel(); // release the fill; natural height takes over
+              if (accAnim === a) accAnim = null;
+            };
+          });
+        });
+
+        /* ── 16: dialog ── */
+        var dialog = document.getElementById('demoDialog');
+        var dialogOpen = document.getElementById('dialogOpen');
+        if (dialog && dialogOpen) {
+          dialogOpen.addEventListener('click', function () { dialog.showModal(); });
+          dialog.querySelectorAll('[data-dialog-close]').forEach(function (b) {
+            b.addEventListener('click', function () { dialog.close(); });
+          });
+        }
+
+        /* ── 16: toasts — arrive, wait, leave right ── */
+        var rack = document.getElementById('toastRack');
+        var toastCopy = {
+          brand: '<strong>Noted</strong> Saved to the system. It ships with the next build.',
+          success: '<strong>Approved</strong> The change shipped. A human checked it first.',
+          error: '<strong>Corrected</strong> That did not save. The details are still here.',
+        };
+        document.querySelectorAll('[data-toast]').forEach(function (b) {
+          b.addEventListener('click', function () {
+            var kind = b.dataset.toast;
+            var t = document.createElement('div');
+            t.className = 'alert toast is-' + kind;
+            // Literal strings only; no user input reaches this.
+            t.innerHTML = toastCopy[kind];
+            rack.appendChild(t);
+            setTimeout(function () {
+              t.classList.add('is-leaving');
+              t.addEventListener('animationend', function () { t.remove(); });
+            }, 5000);
+          });
+        });
+
+        /* ── 07: file input — read the chosen name back ── */
+        var fileDemo = document.getElementById('fileDemo');
+        if (fileDemo) {
+          var fileInput = fileDemo.querySelector('input[type="file"]');
+          var fileName = document.getElementById('f-brief-name');
+          fileInput.addEventListener('change', function () {
+            var f = fileInput.files[0];
+            fileName.textContent = f ? f.name : 'Nothing attached yet';
+            fileDemo.classList.toggle('is-filled', !!f);
+          });
+        }
+
+        /* ── 07: stepper ── */
+        var stepper = document.getElementById('stepperDemo');
+        if (stepper) {
+          var count = stepper.querySelector('input');
+          stepper.querySelectorAll('.stepper_button').forEach(function (b) {
+            b.addEventListener('click', function () {
+              var v = (parseInt(count.value, 10) || 0) + parseInt(b.dataset.step, 10);
+              var min = parseInt(count.min, 10);
+              var max = parseInt(count.max, 10);
+              count.value = Math.min(max, Math.max(min, v));
+            });
+          });
+        }
+
+        /* ── 07: range — fill follows the thumb ── */
+        var rangeDemo = document.getElementById('rangeDemo');
+        if (rangeDemo) {
+          var range = rangeDemo.querySelector('input');
+          var rangeOut = document.getElementById('f-spend-out');
+          var paintRange = function () {
+            var pct = ((range.value - range.min) / (range.max - range.min)) * 100;
+            range.style.setProperty('--range-fill', pct + '%');
+            rangeOut.textContent = Number(range.value).toLocaleString('en-US') + ' USD a month';
+          };
+          range.addEventListener('input', paintRange);
+          paintRange();
+        }
+
+        /* ── 07: search — clear appears with content ── */
+        var searchDemo = document.getElementById('searchDemo');
+        if (searchDemo) {
+          var searchInput = searchDemo.querySelector('input');
+          var searchClear = searchDemo.querySelector('.field_search_clear');
+          var paintSearch = function () {
+            searchDemo.classList.toggle('is-filled', searchInput.value.length > 0);
+          };
+          searchInput.addEventListener('input', paintSearch);
+          searchClear.addEventListener('click', function () {
+            searchInput.value = '';
+            paintSearch();
+            searchInput.focus();
+          });
+        }
+
+        /* ── 07: loading button — click to watch it travel ── */
+        var loadingBtn = document.getElementById('loadingDemo');
+        if (loadingBtn) {
+          loadingBtn.addEventListener('click', function () {
+            if (loadingBtn.classList.contains('is-loading')) return;
+            var label = loadingBtn.textContent;
+            loadingBtn.classList.add('is-loading');
+            loadingBtn.textContent = 'Sending';
+            setTimeout(function () {
+              loadingBtn.classList.remove('is-loading');
+              loadingBtn.textContent = label;
+            }, 2400);
+          });
+        }
+
+        refreshSwatches();
+        renderAA();
+        playMotion();
+      })();
+    </script>
+  </body>
+</html>

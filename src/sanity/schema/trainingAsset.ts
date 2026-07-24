@@ -116,6 +116,11 @@ export const trainingAsset = defineType({
                   { title: 'Conversion', value: 'conversion' },
                   { title: 'Frequency', value: 'frequency' },
                   { title: 'Bounce Rate', value: 'bounce' },
+                  { title: 'SEO: Crawler', value: 'seo-crawl' },
+                  { title: 'SEO: Indexing', value: 'seo-index' },
+                  { title: 'SEO: Topic Cluster', value: 'seo-cluster' },
+                  { title: 'SEO: AI Overview', value: 'seo-ai-overview' },
+                  { title: 'SEO: Layout Shift (CLS)', value: 'seo-cls' },
                 ],
               },
               validation: (rule) => rule.required(),
@@ -172,6 +177,32 @@ export const trainingAsset = defineType({
       type: 'string',
       fieldset: 'landing',
       description: 'Heading for the category index section. Defaults to a generic line.',
+    }),
+    defineField({
+      name: 'pitchStatement',
+      title: 'Pitch Statement',
+      type: 'text',
+      rows: 2,
+      fieldset: 'landing',
+      description:
+        'The big "why this exists" line. Wrap a phrase in *asterisks* to render it in the accent color. Defaults to the glossary line.',
+    }),
+    defineField({
+      name: 'audienceHead',
+      title: 'Audience Heading',
+      type: 'string',
+      fieldset: 'landing',
+      description:
+        'The "who this is for" heading in the pitch section. Defaults to a generic line.',
+    }),
+    defineField({
+      name: 'audienceItems',
+      title: 'Audience Items',
+      type: 'array',
+      of: [{ type: 'string' }],
+      fieldset: 'landing',
+      description:
+        'The list of reader types under the audience heading. Defaults to the generic set.',
     }),
     defineField({
       name: 'order',

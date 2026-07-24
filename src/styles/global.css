@@ -1,12 +1,35 @@
-@import "tailwindcss";
+/* ════════════════════════════════════════════════════════════════
+   MARKER — the design system, site-wide (source of truth)
 
-/* ==============================
-   FONTS
-   - Funnel Display: variable sans (300–800), self-hosted via @fontsource
-   - DM Sans:        variable sans, locally hosted
-   - OG images load Instrument Serif separately for legacy social previews
-   ============================== */
-@import "@fontsource-variable/funnel-display";
+   This file IS global.css: the Marker system applied to the
+   root. Mode rides [data-theme] on <html> (light default).
+   A legacy-token bridge near the end keeps pre-Marker
+   component styles resolving while they migrate.
+
+   Tailwind v4 is the utility engine; Finsweet Client-First supplies
+   the naming and structure discipline. Utilities are GENERATED from
+   the variables below — variable combos, not hand-written classes:
+
+     · Mode variables (--m-*) hold every color, authored in oklch,
+       and flip with [data-m]. Utilities reference them through
+       @theme inline, so ONE class works in both modes. Never write
+       dark: variants for system colors.
+     · Type variables (--text-*) carry size, line height, tracking,
+       and weight together. `text-h2` is Client-First's
+       heading-style-h2 compiled to one generated utility.
+     · Spacing keeps Client-First's names (tiny → xxhuge) plus the
+       structure tokens: `px-global` = padding-global,
+       `py-section-md` = padding-section-medium,
+       `max-w-large mx-auto` = container-large.
+     · Component classes stay Client-First: folder_element naming,
+       is-* variants, defined per component, never as globals.
+
+   The full catalog lives at /components; the prose spec at
+   docs/design.md.
+   ════════════════════════════════════════════════════════════════ */
+
+@import 'tailwindcss';
+@import '@fontsource-variable/funnel-display';
 
 @font-face {
   font-family: 'DM Sans';
@@ -17,307 +40,3642 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-@theme {
-  --font-display: 'Funnel Display Variable', sans-serif;
-  --font-body: 'DM Sans', sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+/* ══════════════════════════════════════════════════
+   MODE VARIABLES — the two-ink print system.
+   Ink reads, highlighter marks. Dark mode is soft ink,
+   never gray-black. Derived values reference their
+   source, so each literal exists exactly once per mode.
+   ══════════════════════════════════════════════════ */
+:root,
+[data-theme='light'] {
+  --m-paper: oklch(95.2% 0.012 91.5);
+  --m-surface: oklch(97.8% 0.011 95.2);
+  --m-ink: oklch(21.7% 0.011 99.4);
+  --m-ink-muted: oklch(46.9% 0.02 99.9);
+  --m-accent: oklch(86.4% 0.172 100.5);
+  --m-accent-strong: oklch(90.4% 0.174 102.9);
+  --m-on-accent: var(--m-ink);
+  --m-block: var(--m-accent-strong);
+  /* Accent ink: what accent-flavored TEXT resolves to. On
+     paper it is simply ink — yellow never carries text, and
+     no third color exists. In dark mode it is the yellow
+     itself, which is text-safe there. */
+  --m-ink-accent: var(--m-ink);
+
+  /* Line scale: subtle (hairlines) → line (cards) →
+     strong (interactive; passes non-text AA vs paper) */
+  --m-line-subtle: color-mix(in oklab, var(--m-ink) 12%, transparent);
+  --m-line: color-mix(in oklab, var(--m-ink) 22%, transparent);
+  --m-line-strong: color-mix(in oklab, var(--m-ink) 55%, transparent);
+
+  /* Focus: the pen line of the two-ink focus mark. Always
+     ink — a yellow ring alone fails the 3:1 non-text rule
+     on newsprint; the accent band is voice, not compliance. */
+  --m-focus: var(--m-ink);
+
+  /* Semantics fan out from the brand's warm axis (~100°):
+     error 30°, warning 65°, success 137°, info 200°. */
+  --m-error: oklch(54.4% 0.17 30);
+  --m-error-tint: color-mix(in oklab, var(--m-error) 9%, var(--m-paper));
+  --m-success: oklch(51.3% 0.13 137);
+  --m-success-tint: color-mix(in oklab, var(--m-success) 9%, var(--m-paper));
+  --m-warning: oklch(53.2% 0.118 65);
+  --m-warning-tint: color-mix(in oklab, var(--m-warning) 9%, var(--m-paper));
+  --m-info: oklch(51.5% 0.086 200);
+  --m-info-tint: color-mix(in oklab, var(--m-info) 9%, var(--m-paper));
+
+  /* Elevation: neutral ink, never tinted, never a glow. */
+  --m-shadow-sm:
+    0 0.0625rem 0.125rem oklch(21.7% 0.011 99.4 / 0.05),
+    0 0.125rem 0.375rem oklch(21.7% 0.011 99.4 / 0.05);
+  --m-shadow-md:
+    0 0.125rem 0.25rem oklch(21.7% 0.011 99.4 / 0.05),
+    0 0.5rem 1.25rem oklch(21.7% 0.011 99.4 / 0.08);
+  --m-shadow-lg:
+    0 0.25rem 0.625rem oklch(21.7% 0.011 99.4 / 0.06),
+    0 1rem 2.5rem oklch(21.7% 0.011 99.4 / 0.12);
+
+  --m-grain-opacity: 0.07;
+}
+[data-theme='dark'] {
+  --m-paper: oklch(18.6% 0.006 107);
+  --m-surface: oklch(23.8% 0.013 100.6);
+  --m-ink: oklch(94.2% 0.016 95.2);
+  --m-ink-muted: oklch(70.3% 0.026 99.3);
+  --m-accent: oklch(90.4% 0.174 102.9);
+  --m-accent-strong: oklch(93.6% 0.168 102.9);
+  --m-on-accent: var(--m-paper);
+  --m-block: var(--m-accent);
+  /* On dark paper the yellow itself is text-safe. */
+  --m-ink-accent: var(--m-accent);
+
+  --m-line-subtle: color-mix(in oklab, var(--m-ink-muted) 14%, transparent);
+  --m-line: color-mix(in oklab, var(--m-ink-muted) 24%, transparent);
+  --m-line-strong: color-mix(in oklab, var(--m-ink) 50%, transparent);
+
+  --m-focus: var(--m-ink);
+
+  --m-error: oklch(72% 0.17 30);
+  --m-error-tint: color-mix(in oklab, var(--m-error) 12%, var(--m-paper));
+  --m-success: oklch(75% 0.13 137);
+  --m-success-tint: color-mix(in oklab, var(--m-success) 12%, var(--m-paper));
+  --m-warning: oklch(76% 0.14 65);
+  --m-warning-tint: color-mix(in oklab, var(--m-warning) 12%, var(--m-paper));
+  --m-info: oklch(75% 0.11 200);
+  --m-info-tint: color-mix(in oklab, var(--m-info) 12%, var(--m-paper));
+
+  --m-shadow-sm:
+    0 0.125rem 0.25rem oklch(0% 0 0 / 0.5),
+    0 0.25rem 0.625rem oklch(0% 0 0 / 0.35);
+  --m-shadow-md:
+    0 0.25rem 0.625rem oklch(0% 0 0 / 0.5),
+    0 0.75rem 1.75rem oklch(0% 0 0 / 0.45);
+  --m-shadow-lg:
+    0 0.5rem 1.25rem oklch(0% 0 0 / 0.5),
+    0 1.5rem 3.75rem oklch(0% 0 0 / 0.5);
+
+  --m-grain-opacity: 0.07;
 }
 
-/* ==============================
-   THEME-INDEPENDENT TOKENS
-   ============================== */
+/* Motion variables (not a Tailwind namespace; used by components) */
 :root {
-  --border-subtle: 1px solid color-mix(in oklab, var(--color-text-muted) 15%, transparent);
-  --border-accent: 1px solid color-mix(in oklab, var(--color-accent) 40%, transparent);
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out-smooth: cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-instant: 100ms;
   --duration-fast: 200ms;
   --duration-normal: 350ms;
   --duration-slow: 500ms;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
-  /* — Type Scale — clean ~1.25 modular steps, no overlap, no holes */
-  --text-xs:   0.75rem;                                    /* 12px  */
-  --text-sm:   0.875rem;                                   /* 14px  */
-  --text-base: 1rem;                                       /* 16px  */
-  --text-md:   clamp(1.0625rem, 0.45vw + 0.95rem, 1.1875rem); /* 17→19 */
-  --text-lg:   clamp(1.25rem, 0.9vw + 1.05rem, 1.5rem);    /* 20→24 */
-  --text-xl:   clamp(1.625rem, 2vw + 1.1rem, 2.125rem);    /* 26→34 */
-  --text-2xl:  clamp(2.125rem, 3.5vw + 1.2rem, 3rem);      /* 34→48 */
-  --text-3xl:  clamp(3rem, 5.5vw + 1.4rem, 4.75rem);       /* 48→76 */
-  --text-4xl:  clamp(4rem, 9vw + 1.5rem, 7.5rem);          /* 64→120 */
+/* ══════════════════════════════════════════════════
+   THEME → GENERATED UTILITIES
+   ══════════════════════════════════════════════════ */
 
-  /* — Tracking — */
-  --tracking-tight:  -0.025em;
+/* Colors + shadows reference mode variables, so utilities
+   flip with [data-m] automatically. One class, both modes. */
+@theme inline {
+  --color-*: initial;
+  --color-paper: var(--m-paper);
+  --color-surface: var(--m-surface);
+  --color-ink: var(--m-ink);
+  --color-ink-muted: var(--m-ink-muted);
+  --color-accent: var(--m-accent);
+  --color-accent-strong: var(--m-accent-strong);
+  --color-on-accent: var(--m-on-accent);
+  --color-ink-accent: var(--m-ink-accent);
+  --color-block: var(--m-block);
+  --color-line-subtle: var(--m-line-subtle);
+  --color-line: var(--m-line);
+  --color-line-strong: var(--m-line-strong);
+  --color-focus: var(--m-focus);
+  --color-error: var(--m-error);
+  --color-error-tint: var(--m-error-tint);
+  --color-success: var(--m-success);
+  --color-success-tint: var(--m-success-tint);
+  --color-warning: var(--m-warning);
+  --color-warning-tint: var(--m-warning-tint);
+  --color-info: var(--m-info);
+  --color-info-tint: var(--m-info-tint);
+
+  --shadow-*: initial;
+  --shadow-sm: var(--m-shadow-sm);
+  --shadow-md: var(--m-shadow-md);
+  --shadow-lg: var(--m-shadow-lg);
+}
+
+@theme {
+  /* — Fonts — */
+  --font-*: initial;
+  --font-display: 'Funnel Display Variable', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* — Type scale: variable combos. Each --text-* key carries
+       size, line height, tracking, and weight, so `text-h2`
+       is one complete typographic decision (Client-First's
+       heading-style-h2, generated). 1rem floor: nothing
+       reads below 1rem except labels and meta. — */
+  --text-*: initial;
+  --text-h1: clamp(4rem, 9vw + 1.5rem, 7.5rem);
+  --text-h1--line-height: 1.02;
+  --text-h1--letter-spacing: -0.025em;
+  --text-h1--font-weight: 600;
+  --text-h2: clamp(3rem, 5.5vw + 1.4rem, 4.75rem);
+  --text-h2--line-height: 1.05;
+  --text-h2--letter-spacing: -0.025em;
+  --text-h2--font-weight: 600;
+  --text-h3: clamp(2.125rem, 3.5vw + 1.2rem, 3rem);
+  --text-h3--line-height: 1.08;
+  --text-h3--letter-spacing: -0.025em;
+  --text-h3--font-weight: 600;
+  --text-h4: clamp(1.625rem, 2vw + 1.1rem, 2.125rem);
+  --text-h4--line-height: 1.15;
+  --text-h4--letter-spacing: -0.02em;
+  --text-h4--font-weight: 600;
+  --text-h5: clamp(1.25rem, 0.9vw + 1.05rem, 1.5rem);
+  --text-h5--line-height: 1.25;
+  --text-h5--letter-spacing: -0.01em;
+  --text-h5--font-weight: 600;
+  --text-h6: 1.15rem;
+  --text-h6--line-height: 1.35;
+  --text-h6--letter-spacing: -0.005em;
+  --text-h6--font-weight: 600;
+  --text-body-lg: clamp(1.25rem, 0.9vw + 1.05rem, 1.5rem);
+  --text-body-lg--line-height: 1.55;
+  --text-body-lg--font-weight: 400;
+  --text-body-md: clamp(1.1875rem, 0.5vw + 1.05rem, 1.3125rem);
+  --text-body-md--line-height: 1.6;
+  --text-body-md--font-weight: 400;
+  --text-body: 1.15rem;
+  --text-body--line-height: 1.65;
+  --text-body--font-weight: 400;
+  --text-small: 1.0625rem;
+  --text-small--line-height: 1.6;
+  --text-tiny: 1rem;
+  --text-tiny--line-height: 1.5;
+
+  /* — Spacing: Client-First size names + structure tokens.
+       `mt-small` replaces `margin-top margin-small`. — */
+  --spacing-tiny: 0.25rem;
+  --spacing-xxsmall: 0.5rem;
+  --spacing-xsmall: 0.75rem;
+  --spacing-small: 1rem;
+  --spacing-medium: 1.5rem;
+  --spacing-large: 2rem;
+  --spacing-xlarge: 3rem;
+  --spacing-xxlarge: 4rem;
+  --spacing-huge: 6rem;
+  --spacing-xxhuge: 8rem;
+  --spacing-global: clamp(1.5rem, 5vw, 3.5rem);
+  --spacing-section-sm: clamp(3rem, 6vw, 5rem);
+  --spacing-section-md: clamp(4rem, 8vw, 6rem);
+  --spacing-section-lg: clamp(8rem, 20vh, 14rem);
+
+  /* — Split gap: the column-gap standard for two-column
+       copy-beside-an-object sections (.about_grid, .receipts_grid,
+       any future one). A named rung of the spacing scale, not a
+       new size — this exists so "how far copy sits from the thing
+       beside it" is one deliberate, revisitable decision instead
+       of picking a --spacing-* value fresh each time a section
+       gets built. small is a light pairing (a small supporting
+       object); medium is the general default; large is for an
+       object with real visual weight (a portrait, a receipt) that
+       needs its own breathing room so the copy never reads as
+       reaching for it. — */
+  --split-gap-small: var(--spacing-xxlarge);
+  --split-gap-medium: var(--spacing-huge);
+  --split-gap-large: var(--spacing-xxhuge);
+
+  /* — Containers + reading measures.
+       Short keys on purpose: spacing owns the Client-First
+       words (small, medium, large), and max-w-* resolves
+       spacing keys too, so word-named containers would
+       collide. CF container-small/medium/large = max-w-sm/md/lg. — */
+  --container-*: initial;
+  --container-sm: 48rem;
+  --container-md: 64rem;
+  --container-lg: 80rem;
+  --container-measure-sm: 56ch;
+  --container-measure-md: 62ch;
+  --container-measure-lg: 68ch;
+
+  /* — Radius. Root-based like every other length: the
+       design is ruled in rem and em, never px. — */
+  --radius-*: initial;
+  --radius-xs: 0.1875rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.875rem;
+  --radius-full: 9999rem;
+
+  /* — Motion — */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+  /* The marker's pull, for long strokes (the line-tab dwell
+     sweep): a quick touch as the pen lands, then a steady drag
+     that eases off as the stroke ends. Pure linear reads like a
+     progress bar; a hand never moves at constant velocity. */
+  --ease-drag: cubic-bezier(0.19, 0.36, 0.72, 0.92);
+}
+
+/* ══════════════════════════════════════════════════
+   BASE
+   ══════════════════════════════════════════════════ */
+@layer base {
+  body {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--m-paper);
+    color: var(--m-ink);
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    transition:
+      background-color var(--duration-normal) var(--ease-in-out-smooth),
+      color var(--duration-normal) var(--ease-in-out-smooth);
+  }
+  /* Headings own the display face and balance by default.
+     A non-heading element wearing a heading utility adds
+     `font-display` itself (semantics ≠ style). */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+  /* Selecting text runs the highlighter. Known and accepted,
+     tested 2026-07-10: Safari natively paints a full-bleed
+     band across the gap between blocks during cross-block
+     selection (Safari-only; appears at ANY selection color),
+     and every engine extends the highlight slightly past a
+     line's last glyph. No CSS removes either. */
+  ::selection {
+    background: var(--m-accent);
+    color: var(--m-on-accent);
+  }
+  /* Paper grain below. */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 40;
+    opacity: var(--m-grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 10rem 10rem;
+  }
+  /* Focus is drawn in two inks: the highlighter bands the
+     element, the pen rules a line just outside it. Flat,
+     hard-edged — a mark, not a glow. The pen line carries
+     the 3:1 contrast in both modes; the band is the voice.
+     Fields and text-links opt out: there the highlighter
+     sweep IS the focus indicator. */
+  :focus-visible {
+    outline: 0.125rem solid var(--m-focus);
+    outline-offset: 0.125rem;
+    box-shadow: 0 0 0 0.125rem var(--m-accent);
+  }
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+  /* Anything clickable shows the pointer — the plain signal
+     that you can click it. Native <button> and [role=button]
+     default to the ARROW, so this is not automatic; links,
+     selects, and summaries already point, but we name them so
+     the intent is explicit and survives any reset. This lives
+     in the base layer, so a component can still override it
+     (the info circle-i keeps cursor: help, a static tag keeps
+     default). Disabled controls that still take events read
+     not-allowed. */
+  button,
+  [role='button'],
+  [role='tab'],
+  [role='option'],
+  a[href],
+  select,
+  summary {
+    cursor: pointer;
+  }
+  :disabled,
+  [aria-disabled='true'] {
+    cursor: not-allowed;
+  }
+  html {
+    background-color: var(--m-paper);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    transition:
+      background-color var(--duration-normal) var(--ease-in-out-smooth),
+      color var(--duration-normal) var(--ease-in-out-smooth);
+  }
+  /* Headings are never italic — global enforcement, ports the
+     site rule. Synthesized italics are disabled too. */
+  h1, h2, h3, h4, h5, h6, .heading {
+    font-style: normal !important;
+    font-synthesis-style: none;
+  }
+  h1 em, h1 i, h2 em, h2 i, h3 em, h3 i,
+  h4 em, h4 i, h5 em, h5 i, h6 em, h6 i,
+  .heading em, .heading i {
+    font-style: normal;
+  }
+  /* HARD RULE: no dividing lines, ever. No hr, no separator
+     hairlines between sections or passages — space and scale
+     do the separating. Lines exist only to draw a component's
+     box or rule a ledger's entries. Stray hr elements (CMS
+     content, pasted markup) are suppressed outright. */
+  hr {
+    display: none;
+  }
+  /* Inline code is set on a faint wash; kbd is a drawn key
+     with a deeper bottom rule; pre is the ledger page for
+     longer passages, scrolling inside itself. */
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: color-mix(in oklab, var(--m-ink) 6%, var(--m-surface));
+    padding: 0.12em 0.4em;
+    border-radius: var(--radius-xs);
+  }
+  kbd {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    background: var(--m-surface);
+    border: 0.0625rem solid var(--m-line-strong);
+    border-bottom-width: 0.1875rem;
+    border-radius: var(--radius-xs);
+    padding: 0.1em 0.45em;
+  }
+  pre {
+    background: color-mix(in oklab, var(--m-ink) 6%, var(--m-surface));
+    border: 0.0625rem solid var(--m-line-subtle);
+    border-radius: var(--radius-xs);
+    padding: var(--spacing-small);
+    overflow-x: auto;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   SYSTEM COMPONENTS — Client-First naming:
+   folder_element for structure, is-* for variants.
+   ══════════════════════════════════════════════════ */
+@layer components {
+  /* ════════════════════════════════════════════════════════
+     LAYOUT PRIMITIVES — Client-First structure. Every page is
+     assembled from these wrappers, never from ad-hoc margins.
+     Nesting order is fixed and each layer has ONE job:
+
+       page-wrapper        clips the horizontal overflow
+        main-wrapper       the flow column
+         section_layout    the full-bleed band (owns background)
+          padding-global   the horizontal gutter
+           container-*      the centered measure cap
+            padding-section vertical rhythm between bands
+             section_head   the intro cluster (label, heading, lead)
+             section_body   the specimens / running content
+
+     Spacing lives in the wrappers, so text never carries its
+     own margins. Drop a margin utility on a heading and you
+     have broken the system. ════════════════════════════════ */
+  .page-wrapper {
+    overflow-x: clip;
+  }
+  .main-wrapper {
+    display: flow-root;
+  }
+  /* The full-bleed band. Owns its background (a band that
+     flips ink, like a creed or closing band, layers its color
+     here) and anchors any band-level positioning. */
+  .section_layout {
+    position: relative;
+    background: transparent;
+  }
+
+  /* The horizontal gutter. Wraps the container, never the other
+     way around — the band bleeds full width, the gutter insets
+     the measure. */
+  .padding-global {
+    padding-inline: var(--spacing-global);
+  }
+
+  /* Centered measure caps. Large is the page default; small and
+     medium step the reading width down for denser bands. */
+  .container-small,
+  .container-medium,
+  .container-large {
+    width: 100%;
+    margin-inline: auto;
+  }
+  .container-small {
+    max-width: var(--container-sm);
+  }
+  .container-medium {
+    max-width: var(--container-md);
+  }
+  .container-large {
+    max-width: var(--container-lg);
+  }
+
+  /* Vertical rhythm between bands. Sits INSIDE the container so
+     the padding follows the measure, not the viewport edge. */
+  .padding-section-small {
+    padding-block: var(--spacing-section-sm);
+  }
+  .padding-section-medium {
+    padding-block: var(--spacing-section-md);
+  }
+  .padding-section-large {
+    padding-block: var(--spacing-section-lg);
+  }
+
+  /* section_head — the intro cluster. Groups the eyebrow, the
+     heading, and the lead so they read as one unit and space
+     themselves. The lead is capped to a comfortable measure. */
+  .section_head > * + * {
+    margin-top: var(--spacing-small);
+  }
+  .section_head .section_lead {
+    max-width: var(--container-measure-md);
+    color: var(--m-ink-muted);
+    margin-top: var(--spacing-medium);
+  }
+
+  /* section_body — the specimens or running content below the
+     head. The gap to the head is a deliberate, single value;
+     specimens own their internal rhythm. */
+  .section_body {
+    margin-top: var(--spacing-xlarge);
+  }
+
+  /* rich_text — a self-spacing prose block for passages that
+     are not specimens: paragraphs, sub-heads, lists in flow. */
+  .rich_text > * + * {
+    margin-top: var(--spacing-medium);
+  }
+  .rich_text > * + :is(h2, h3, h4) {
+    margin-top: var(--spacing-large);
+  }
+
+  /* ════════════════════════════════════════════════════════
+     MOTION PATTERNS — the named entrances the site actually
+     uses. Each plays ONCE and rests on its end state (both
+     fill mode). Stagger a group with --m-delay on each child.
+     Interaction motion (button hover, field sweep, menu
+     unfold) lives on those components; these are for content
+     arriving on the page. ════════════════════════════════ */
+  .motion-fade-up,
+  .motion-fade-in,
+  .motion-slide-in {
+    animation-duration: var(--duration-slow);
+    animation-timing-function: var(--ease-out-expo);
+    animation-fill-mode: both;
+    animation-delay: var(--m-delay, 0ms);
+  }
+  .motion-fade-up {
+    animation-name: m-fade-up;
+  }
+  .motion-fade-in {
+    animation-name: m-fade-in;
+    animation-duration: var(--duration-normal);
+  }
+  .motion-slide-in {
+    animation-name: m-slide-in;
+  }
+  @keyframes m-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(1.25rem);
+    }
+  }
+  @keyframes m-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes m-slide-in {
+    from {
+      opacity: 0;
+      transform: translateX(-1.5rem);
+    }
+  }
+  /* Reduced motion: the end state, immediately. No exceptions. */
+  @media (prefers-reduced-motion: reduce) {
+    .motion-fade-up,
+    .motion-fade-in,
+    .motion-slide-in {
+      animation: none;
+    }
+  }
+
+  /* The label: kickers, eyebrows, meta headings. NEVER an
+     h tag — labels have no place in the document outline. */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  /* Kicker variant: muted ink, nothing else. The old accent
+     square in front was decoration carrying no information —
+     an AI-tell, removed. Type and tracking do the work. */
+  .label.is-kicker {
+    color: var(--m-ink-muted);
+  }
+
+  /* The signature spot-color highlight: accent carries
+     on-accent ink, cloned across line breaks. */
+  .highlight {
+    font-style: normal;
+    background: var(--m-accent);
+    color: var(--m-on-accent);
+    padding: 0 0.14em;
+    margin: 0 -0.04em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    transition:
+      background-color var(--duration-normal) var(--ease-in-out-smooth),
+      color var(--duration-normal) var(--ease-in-out-smooth);
+  }
+
+  /* ── highlight sweep — the hand marking the line as you read
+     it: a mark that arrives once, on its own, instead of sitting
+     on the page from first paint. Wired like .receipt's print
+     (see receipt-feed below): the animation is always attached
+     under html.js but starts paused, and only THIS element
+     picking up .is-revealed from the page's [data-reveal]
+     IntersectionObserver (see index.astro) releases it — unlike
+     .edit's old choreography, where an ancestor carried
+     data-reveal and released a descendant, each swept mark must
+     carry its OWN data-reveal data-reveal-motion="motion-fade-in"
+     directly on the span. A page like "What you need" is tall and
+     stacks several marks down the column; one section-level
+     trigger would fire marks that are still below the fold and
+     unseen, so every mark gets its own IntersectionObserver entry
+     and sweeps in only when the reader actually reaches it.
+     motion-fade-in, never motion-fade-up: fade-up carries a
+     translateY, and a transform on an inline span shifts the
+     surrounding text instead of just revealing the mark.
+
+     background-size, not clip-path: an animated clip-path on a
+     box-decoration-break:clone span that wraps across more than
+     one line is a live Chromium bug — the computed style resolves
+     correctly (clip-path: inset(0 0 0 0), fully open) but the
+     paint on the wrapped continuation fragments stays stuck
+     invisible, will-change included. Confirmed live on a
+     three-line mark before this was rewritten. .text-link already
+     solved this exact problem for exactly this reason — its own
+     comment: "a boxed outline around a wrapped inline link
+     fragments per line; the sweep marks every fragment cleanly."
+     Same anchor-swap technique here: a hard-stop gradient standing
+     in for the solid background-color, position pinned at the
+     left edge, only background-size ever animates, 0% to 100% —
+     each line fragment grows in from its own left edge in unison.
+
+     Text color rides the same keyframe, inherit to on-accent: in
+     light mode on-accent already equals ink, so this is a no-op:
+     in dark mode on-accent is paper (dark), while inherited body
+     text is ink (light) — the two are opposite there, so the
+     color has to travel from "reads on paper" to "reads on
+     accent" exactly as the yellow sweeps under it, not before,
+     not after. Keyframing both together keeps them synced by
+     construction — no separate timer to drift out of step.
+
+     Without JS, html.js never matches, so nothing here is ever
+     attached and .highlight.is-swept simply rests at .highlight's
+     normal, fully-visible appearance (solid accent, on-accent ink)
+     — progressive enhancement, never a stuck hidden state. Plays
+     once: the observer unobserves after the first hit. ── */
+  @keyframes highlight-sweep {
+    from {
+      background-size: 0% 100%;
+      color: inherit;
+    }
+    to {
+      background-size: 100% 100%;
+      color: var(--m-on-accent);
+    }
+  }
+  html.js .highlight.is-swept {
+    background-color: transparent;
+    background-image: linear-gradient(var(--m-accent), var(--m-accent));
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    animation: highlight-sweep 450ms var(--ease-out-expo) both;
+    animation-delay: var(--m-delay, 0ms);
+    animation-play-state: paused;
+  }
+  html.js .highlight.is-swept.is-revealed {
+    animation-play-state: running;
+  }
+  /* Explicit override, matching every other motion component in
+     this file (.acc, .dropdown, .menu, .tab_panel, .dialog,
+     .toast, .receipt): pin the end state rather than trust the
+     blanket reduced-motion clamp near the bottom of this file. */
+  @media (prefers-reduced-motion: reduce) {
+    html.js .highlight.is-swept {
+      animation: none;
+      background-size: 100% 100%;
+      color: var(--m-on-accent);
+    }
+  }
+
+  /* ── button — works as <button> or <a>. The hover is riso
+     MISREGISTRATION: the slab shifts off-register and reveals
+     a hard offset behind it (flat, zero blur — a print
+     artifact, not a glow). Pressing stamps it flat, fast.
+     The offset is a pseudo-element moved with transform only:
+     GPU-composited, no box-shadow repaints. Secondary inverts
+     to ink and reveals a YELLOW offset — the two inks trading
+     places. ── */
+  .button {
+    --btn-offset: var(--m-ink);
+    --btn-surface: var(--m-accent);
+    --btn-border: transparent;
+    --btn-border-w: 0.0625rem;
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    font-family: var(--font-display);
+    font-size: var(--text-small);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    color: var(--m-on-accent);
+    background: none;
+    border: none;
+    border-radius: var(--radius-xs);
+    padding: 0.75em 1.4em;
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-normal) var(--ease-spring);
+  }
+  /* Two layers, both pseudo (paint order puts negative-z
+     children above the element's own background, so the
+     surface must be a pseudo too): offset slab at -2, the
+     button face at -1, content on top. */
+  /* The offset slab springs out a beat behind the button —
+     the opacity resolves quickly so nothing pops, while the
+     movement takes its time and settles soft. */
+  .button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    border-radius: inherit;
+    background: var(--btn-offset);
+    transform: translate(0, 0);
+    opacity: 0;
+    transition:
+      transform var(--duration-normal) var(--ease-spring) 40ms,
+      opacity 150ms var(--ease-out-expo);
+  }
+  .button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--btn-surface);
+    border: var(--btn-border-w) solid var(--btn-border);
+    transition:
+      background-color var(--duration-fast) var(--ease-out-expo),
+      border-color var(--duration-fast) var(--ease-out-expo);
+  }
+  /* Hover: the slab lifts off-register with a soft spring
+     while the ink offset slides out beneath it, trailing by
+     a beat. The color never changes — the motion is the
+     feedback. */
+  .button:hover {
+    /* Lift and offset are in em, so the misregistration
+       scales with the type: a hero button drifts further
+       off-register than a small one, automatically. */
+    transform: translate(-0.12em, -0.12em);
+  }
+  .button:hover::before {
+    /* Child of the lifted button: +0.24em relative =
+       +0.12em on the page, a 0.24em total misregistration. */
+    transform: translate(0.24em, 0.24em);
+    opacity: 1;
+  }
+  /* Press stamps it flat, instantly — the one abrupt beat,
+     because stamps are abrupt. */
+  .button:active,
+  .button:active::before {
+    transform: translate(0, 0);
+    transition-duration: var(--duration-instant);
+    transition-delay: 0ms;
+  }
+  .button:active::before {
+    opacity: 0;
+  }
+  .button:disabled,
+  .button.is-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+  /* Secondary is a DRAWN box: a solid ink rule, the same
+     weight as the checkbox and the dropdown panel. Interactive
+     things are drawn in ink; hairlines are for structure. */
+  .button.is-secondary {
+    --btn-offset: var(--m-accent);
+    --btn-surface: transparent;
+    --btn-border: var(--m-ink);
+    --btn-border-w: 0.125rem;
+    color: var(--m-ink);
+  }
+  .button.is-secondary:hover {
+    --btn-surface: var(--m-ink);
+    --btn-border: var(--m-ink);
+    color: var(--m-paper);
+  }
+  /* ── button-group — THE container for buttons. Buttons are
+     never loose siblings and never get bespoke page wrappers;
+     one or more buttons always sit in a button-group. Inside a
+     section_head it takes the head-to-action gap, so no page
+     ever sets its own. ── */
+  .button-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-small);
+  }
+  .section_head .button-group {
+    margin-top: var(--spacing-large);
+  }
+
+  /* Ink is the button for ACCENT surfaces (the closing band,
+     any full-highlighter moment): a solid ink slab with paper
+     ink, and a PAPER offset so the hover misregistration reads
+     against yellow, where the usual ink and accent slabs both
+     vanish. Same motion, same physics; only the inks trade. */
+  .button.is-ink {
+    --btn-offset: var(--m-paper);
+    --btn-surface: var(--m-ink);
+    --btn-border: transparent;
+    color: var(--m-paper);
+  }
+  /* — size scale: is-tiny · is-small · (default) · is-large ·
+       is-hero. Each sets the font-size, and everything else
+       (the 1.1em icon, the em padding, the em misregistration)
+       scales off it as one piece. — */
+  .button.is-tiny {
+    padding: 0.4em 0.85em;
+    font-size: 0.8rem;
+  }
+  .button.is-small {
+    padding: 0.5em 1em;
+    font-size: var(--text-tiny);
+  }
+  .button.is-large {
+    padding: 0.72em 1.5em;
+    font-size: var(--text-body-md);
+  }
+  /* — hero: the CTA that anchors a hero section. Bigger
+       type, bigger presence; the em-based misregistration
+       scales with it on its own. One per hero. — */
+  .button.is-hero {
+    font-size: var(--text-body-lg);
+    padding: 0.85em 1.6em;
+    border-radius: var(--radius-sm);
+  }
+  /* — with icon: leading or trailing, sized to the label.
+       Icons hold still — the offset slab is the only thing
+       that moves on a button. — */
+  .button .icon {
+    width: 1.1em;
+    height: 1.1em;
+    vertical-align: -0.18em;
+  }
+  /* — icon-only: square, silent — needs an aria-label. The
+       icon scales with the button's font-size, so the four
+       sizes above give four square buttons; only the padding
+       is retuned here to keep each one square and balanced. — */
+  .button.is-icon {
+    padding: 0.7em;
+  }
+  .button.is-icon.is-tiny {
+    padding: 0.5em;
+  }
+  .button.is-icon.is-small {
+    padding: 0.55em;
+  }
+  .button.is-icon.is-large {
+    padding: 0.8em;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .button,
+    .button::before,
+    .button::after {
+      transition: none;
+    }
+    .button:hover,
+    .button:hover::before {
+      transform: none;
+    }
+  }
+
+  /* ── text-link — underlined in accent; hover runs the
+     highlighter ACROSS it: the sweep enters from the left
+     and, on unhover, continues out to the right — a stroke
+     passing through, not a state toggling. The trick is the
+     anchor: left edge while hovered (grows in from the
+     left), right edge at rest (collapses rightward on the
+     way out). Position jumps; only the size animates. ── */
+  .text-link {
+    color: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--m-accent);
+    text-decoration-thickness: 0.11em;
+    text-underline-offset: 0.16em;
+    background-image: linear-gradient(var(--m-accent), var(--m-accent));
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    background-position: 100% 0;
+    transition:
+      background-size var(--duration-normal) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo);
+  }
+  .text-link:hover {
+    background-position: 0 0;
+    background-size: 100% 100%;
+    color: var(--m-on-accent);
+    text-decoration-color: transparent;
+  }
+  /* Keyboard focus runs the same sweep — the highlighter is
+     the indicator, same doctrine as fields. A boxed outline
+     around a wrapped inline link fragments per line; the
+     sweep marks every fragment cleanly. */
+  .text-link:focus-visible {
+    outline: none;
+    box-shadow: none;
+    background-position: 0 0;
+    background-size: 100% 100%;
+    color: var(--m-on-accent);
+    text-decoration-color: transparent;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .text-link {
+      transition: none;
+    }
+  }
+
+  /* ── field — a paper form, not a boxed widget. The control
+     is the WRITING LINE: a bottom rule you write on, no box.
+     Textareas are ruled like a notebook page. Focus does not
+     draw a ring around a box — the highlighter marks the
+     question you are answering (the label lights up) and the
+     rule thickens in the focus ink. ── */
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .field .label {
+    align-self: flex-start;
+    color: var(--m-ink-muted);
+    padding: 0 0.3em;
+    margin-left: -0.3em;
+    transition:
+      background-color var(--duration-fast) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo);
+  }
+  /* Focus runs the highlighter over the label too — the
+     marker marks the question while you answer it. */
+  .field:focus-within .label {
+    background: var(--m-accent);
+    color: var(--m-on-accent);
+  }
+  /* ── field icon — every typed field wears its type on the
+     left of the stroke: a Freehand mark for name, email,
+     address, and so on. Wrap the control in .field_control
+     and drop a .field_icon before it. At rest it is muted
+     ink; on focus it rides the swept accent as on-accent ink,
+     exactly like the text you write over it. State marks
+     (error/success) live on the RIGHT, so the two never
+     collide. ── */
+  .field_control {
+    position: relative;
+    display: block;
+  }
+  .field_icon {
+    position: absolute;
+    left: 0.85em;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    font-size: var(--text-small);
+    width: 1.1em;
+    height: 1.1em;
+    color: var(--m-ink-muted);
+    pointer-events: none;
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+  /* Textareas anchor the icon to the first line, not the
+     vertical middle of the box. */
+  .field_control.is-textarea .field_icon {
+    top: 1.1em;
+    transform: none;
+  }
+  .field_control .field_input {
+    padding-left: 2.5em;
+  }
+  .field:focus-within .field_icon {
+    color: var(--m-on-accent);
+  }
+  /* The field IS a marker stroke — a swipe you type into,
+     not text on a line. Empty: a pale strip with hand-swiped
+     edges. Focus: the highlighter sweeps the slab and you
+     write ink on yellow — the form highlights your answer as
+     you give it. Answered fields keep a faint wash of the
+     highlight. Error and success wash in the semantic tints. */
+  .field_input {
+    --field-wash: color-mix(in oklab, var(--m-ink) 5%, var(--m-surface));
+    --field-sweep: var(--m-accent);
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    line-height: 1.5;
+    color: var(--m-ink);
+    caret-color: var(--m-ink);
+    border: none;
+    border-radius: var(--radius-xs);
+    padding: 0.9em 0.95em;
+    background-color: transparent;
+    background-image:
+      linear-gradient(var(--field-sweep), var(--field-sweep)),
+      linear-gradient(var(--field-wash), var(--field-wash));
+    background-repeat: no-repeat;
+    background-position: left center, left center;
+    background-size: 0% 100%, 100% 100%;
+    transition:
+      background-size var(--duration-normal) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo);
+  }
+  .field_input:hover {
+    --field-wash: color-mix(in oklab, var(--m-accent) 18%, var(--m-surface));
+  }
+  /* The sweep is the focus indicator: surface → full accent
+     is an unmissable state change, no ring needed. */
+  .field_input:focus-visible {
+    outline: none;
+    box-shadow: none;
+    background-size: 100% 100%, 100% 100%;
+    color: var(--m-on-accent);
+    caret-color: var(--m-on-accent);
+  }
+  .field_input:focus-visible::placeholder {
+    color: color-mix(in oklab, var(--m-on-accent) 55%, transparent);
+  }
+  /* Selection inside a field is the pen, not the marker —
+     accent-on-accent would vanish while swept. */
+  .field_input::selection {
+    background: var(--m-ink);
+    color: var(--m-paper);
+  }
+  /* An answered field KEEPS the highlight, at half strength —
+     unmistakably marked, clearly distinct from the full-power
+     sweep of the field being answered right now. Scoped to
+     real text controls: buttons and selects never show a
+     placeholder, so they would false-positive. */
+  input.field_input:not(:placeholder-shown):not(:focus-visible),
+  textarea.field_input:not(:placeholder-shown):not(:focus-visible) {
+    --field-wash: color-mix(in oklab, var(--m-accent) 45%, var(--m-surface));
+  }
+  /* Chrome autofill would paint its own yellow-blue inside
+     the slab; paper over it with our inks. */
+  .field_input:-webkit-autofill,
+  .field_input:-webkit-autofill:hover,
+  .field_input:-webkit-autofill:focus {
+    -webkit-box-shadow: inset 0 0 0 62.5rem var(--m-surface);
+    -webkit-text-fill-color: var(--m-ink);
+    transition: background-color 999999s;
+  }
+  /* Disabled questions are crossed out */
+  .field_input:disabled {
+    --field-wash: transparent;
+    color: var(--m-ink-muted);
+    cursor: not-allowed;
+    background-image:
+      linear-gradient(
+        to top right,
+        transparent 49.4%,
+        var(--m-line-strong) 49.4% 50.6%,
+        transparent 50.6%
+      ),
+      linear-gradient(var(--m-surface), var(--m-surface));
+    background-size: 100% 100%, 100% 100%;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .field_input {
+      transition: none;
+    }
+  }
+  textarea.field_input {
+    resize: vertical;
+    min-height: 5.6em;
+  }
+  /* Selects share the stroke; the chevron is drawn in each
+     mode's ink (data URIs cannot read variables). */
+  select.field_input {
+    appearance: none;
+    padding-right: 1.9em;
+    background-position: right 0.7em center, left center, left center;
+    background-size: 0.7em auto, 0% 100%, 100% 100%;
+    cursor: pointer;
+  }
+  select.field_input:focus-visible {
+    background-size: 0.7em auto, 100% 100%, 100% 100%;
+  }
+  select.field_input {
+    background-image:
+      url("data:image/svg+xml,%3Csvg fill='%231b1a14' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M23.93 5.88a1.56 1.56 0 0 0 -0.8 -0.45c-1 -0.28 -3.34 -0.84 -4.39 -1a1.91 1.91 0 0 0 -0.71 0 0.46 0.46 0 0 0 -0.33 0.39c-0.77 1.06 -3.64 5.34 -5 7a3 3 0 0 1 -0.29 0.31 0.27 0.27 0 0 1 -0.08 -0.07 19 19 0 0 1 -1.41 -1.77c-1.61 -2.17 -3.66 -5.22 -4 -5.58A1.44 1.44 0 0 0 6 4.38a19.47 19.47 0 0 0 -4.41 0.32 2.89 2.89 0 0 0 -1.38 0.59A0.81 0.81 0 0 0 0 6a7.47 7.47 0 0 0 1.16 2.56 26.25 26.25 0 0 0 2.33 3.12c1 1.17 2 2.36 3.1 3.51a31.74 31.74 0 0 0 2.26 2.23A12.39 12.39 0 0 0 11 19.3a2.59 2.59 0 0 0 2.36 0.12 7.25 7.25 0 0 0 1.8 -1.17c0.75 -0.67 1.37 -1.44 2.05 -2.14 0.88 -0.91 1.71 -1.83 2.5 -2.77s1.57 -1.92 2.3 -2.93a10.89 10.89 0 0 0 0.99 -1.6 17 17 0 0 0 0.74 -1.68 3.43 3.43 0 0 0 0.26 -0.69 1 1 0 0 0 -0.07 -0.56Zm-5.38 -1h0.05l-0.06 0.08a0.25 0.25 0 0 0 0.01 -0.04Zm4.2 1.83c-0.2 0.49 -0.45 1 -0.73 1.56a10.2 10.2 0 0 1 -0.9 1.43c-0.74 1 -1.5 1.9 -2.31 2.81s-1.63 1.78 -2.51 2.64c-0.67 0.65 -1.28 1.39 -2 2a5.38 5.38 0 0 1 -1.46 0.91 1.23 1.23 0 0 1 -1.11 -0.1 10.32 10.32 0 0 1 -1.86 -1.71c-0.76 -0.69 -1.46 -1.41 -2.14 -2.15 -1 -1.15 -2 -2.33 -3.07 -3.5a25.91 25.91 0 0 1 -2.2 -2.91 8.74 8.74 0 0 1 -0.83 -1.53 17.65 17.65 0 0 1 3.77 -0.48 5.74 5.74 0 0 1 0.64 0c0.63 0.78 3 4.09 4.56 6a5.82 5.82 0 0 0 1.64 1.56 0.62 0.62 0 0 0 0.48 -0.07 3.42 3.42 0 0 0 0.77 -0.76c1.35 -1.68 4.12 -6.06 4.86 -7.13a2.27 2.27 0 0 1 0.28 0 40.38 40.38 0 0 1 4.22 1.12Z' fill='%231b1a14' stroke-width='1'%3E%3C/path%3E%3C/svg%3E"),
+      linear-gradient(var(--field-sweep), var(--field-sweep)),
+      linear-gradient(var(--field-wash), var(--field-wash));
+  }
+  [data-theme='dark'] select.field_input {
+    background-image:
+      url("data:image/svg+xml,%3Csvg fill='%23efece0' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M23.93 5.88a1.56 1.56 0 0 0 -0.8 -0.45c-1 -0.28 -3.34 -0.84 -4.39 -1a1.91 1.91 0 0 0 -0.71 0 0.46 0.46 0 0 0 -0.33 0.39c-0.77 1.06 -3.64 5.34 -5 7a3 3 0 0 1 -0.29 0.31 0.27 0.27 0 0 1 -0.08 -0.07 19 19 0 0 1 -1.41 -1.77c-1.61 -2.17 -3.66 -5.22 -4 -5.58A1.44 1.44 0 0 0 6 4.38a19.47 19.47 0 0 0 -4.41 0.32 2.89 2.89 0 0 0 -1.38 0.59A0.81 0.81 0 0 0 0 6a7.47 7.47 0 0 0 1.16 2.56 26.25 26.25 0 0 0 2.33 3.12c1 1.17 2 2.36 3.1 3.51a31.74 31.74 0 0 0 2.26 2.23A12.39 12.39 0 0 0 11 19.3a2.59 2.59 0 0 0 2.36 0.12 7.25 7.25 0 0 0 1.8 -1.17c0.75 -0.67 1.37 -1.44 2.05 -2.14 0.88 -0.91 1.71 -1.83 2.5 -2.77s1.57 -1.92 2.3 -2.93a10.89 10.89 0 0 0 0.99 -1.6 17 17 0 0 0 0.74 -1.68 3.43 3.43 0 0 0 0.26 -0.69 1 1 0 0 0 -0.07 -0.56Zm-5.38 -1h0.05l-0.06 0.08a0.25 0.25 0 0 0 0.01 -0.04Zm4.2 1.83c-0.2 0.49 -0.45 1 -0.73 1.56a10.2 10.2 0 0 1 -0.9 1.43c-0.74 1 -1.5 1.9 -2.31 2.81s-1.63 1.78 -2.51 2.64c-0.67 0.65 -1.28 1.39 -2 2a5.38 5.38 0 0 1 -1.46 0.91 1.23 1.23 0 0 1 -1.11 -0.1 10.32 10.32 0 0 1 -1.86 -1.71c-0.76 -0.69 -1.46 -1.41 -2.14 -2.15 -1 -1.15 -2 -2.33 -3.07 -3.5a25.91 25.91 0 0 1 -2.2 -2.91 8.74 8.74 0 0 1 -0.83 -1.53 17.65 17.65 0 0 1 3.77 -0.48 5.74 5.74 0 0 1 0.64 0c0.63 0.78 3 4.09 4.56 6a5.82 5.82 0 0 0 1.64 1.56 0.62 0.62 0 0 0 0.48 -0.07 3.42 3.42 0 0 0 0.77 -0.76c1.35 -1.68 4.12 -6.06 4.86 -7.13a2.27 2.27 0 0 1 0.28 0 40.38 40.38 0 0 1 4.22 1.12Z' fill='%23efece0' stroke-width='1'%3E%3C/path%3E%3C/svg%3E"),
+      linear-gradient(var(--field-sweep), var(--field-sweep)),
+      linear-gradient(var(--field-wash), var(--field-wash));
+  }
+  .field_input::placeholder {
+    color: color-mix(in oklab, var(--m-ink-muted) 65%, transparent);
+  }
+  .field_message {
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: var(--m-ink-muted);
+  }
+  .field.is-error .field_input,
+  .field.is-error input.field_input,
+  .field.is-error textarea.field_input {
+    --field-wash: color-mix(in oklab, var(--m-error) 15%, var(--m-surface));
+    caret-color: var(--m-error);
+  }
+  .field.is-error:focus-within .label {
+    background: var(--m-error);
+    color: var(--m-paper);
+  }
+  .field.is-error .field_message {
+    color: var(--m-error);
+  }
+  .field.is-success .field_input,
+  .field.is-success input.field_input,
+  .field.is-success textarea.field_input {
+    --field-wash: color-mix(in oklab, var(--m-success) 15%, var(--m-surface));
+  }
+  .field.is-success .field_message {
+    color: var(--m-success);
+  }
+  /* State marks sit inside the input's right edge: the
+     proofreader's asterisk for errors, the double check for
+     approval. Freehand glyphs, inked per mode and state
+     (data URIs cannot read variables). */
+  .field.is-error input.field_input,
+  .field.is-success input.field_input {
+    padding-right: 2.7em;
+    background-position: right 0.85em center, left center, left center;
+    background-size: 1.2em auto, 0% 100%, 100% 100%;
+    background-repeat: no-repeat;
+  }
+  .field.is-error input.field_input:focus-visible,
+  .field.is-success input.field_input:focus-visible {
+    background-size: 1.2em auto, 100% 100%, 100% 100%;
+  }
+  .field.is-error input.field_input {
+    background-image:
+      url("data:image/svg+xml,%3Csvg fill='%23bf3c2d' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M23.18 6.24A9 9 0 0 0 24 4.75a1 1 0 0 0 -0.27 -0.75A16.48 16.48 0 0 0 21 1.69a4.66 4.66 0 0 0 -1.47 -0.77 0.64 0.64 0 0 0 -0.59 0.21c-0.31 0.36 -1 0.94 -1.74 1.65 -0.25 0.24 -0.51 0.5 -0.75 0.78C15 5.13 13.49 7 12.77 7.82c-1.52 -1.58 -4.72 -5 -6.31 -6.3a2.77 2.77 0 0 0 -1.09 -0.6 0.71 0.71 0 0 0 -0.54 0.08C4.74 1.11 1 3.67 0.2 5.11a1.21 1.21 0 0 0 -0.1 1.14 3.57 3.57 0 0 0 0.66 0.82 9.88 9.88 0 0 0 1 0.91c0.25 0.19 0.91 0.78 1.68 1.5 1.25 1.13 2.76 2.52 3.5 3.27 -1 0.86 -3.33 2.88 -4.71 4.26a7.68 7.68 0 0 0 -1.11 1.29 0.86 0.86 0 0 0 -0.13 0.43 2.51 2.51 0 0 0 0.7 1.12 39.38 39.38 0 0 0 2.91 2.67c0.15 0.13 0.41 0.69 0.91 0.55a2.67 2.67 0 0 0 0.54 -0.37c0.28 -0.2 1.87 -1.51 3.52 -2.94 1.16 -1 2.34 -2.06 3.12 -2.83l0.41 0.34c1.68 1.39 5.85 4.95 6 5.23a0.34 0.34 0 0 0 0.46 0.15l0.33 -0.2c0.59 -0.4 1.86 -1.36 2.61 -2a0.31 0.31 0 0 0 0 -0.44 0.3 0.3 0 0 0 -0.43 0c-0.74 0.62 -2 1.55 -2.58 1.93l-0.06 0c-0.93 -0.94 -4.35 -4 -5.84 -5.28l-0.59 -0.53a0.49 0.49 0 0 0 -0.6 0c-0.77 0.76 -2.09 1.9 -3.38 3 -1.63 1.37 -3.2 2.63 -3.48 2.82l-0.1 0.08 -0.19 -0.2c-0.33 -0.29 -1.08 -0.95 -1.78 -1.63a10.92 10.92 0 0 1 -1.33 -1.4 1.58 1.58 0 0 1 0.16 -0.27 24.87 24.87 0 0 1 2 -1.89C6 15 8.17 13.21 8.17 13.21a0.56 0.56 0 0 0 0.2 -0.42 0.54 0.54 0 0 0 -0.17 -0.43S6 10.19 4.28 8.62C3.46 7.86 2.77 7.23 2.5 7a7.64 7.64 0 0 1 -0.9 -0.79c-0.59 -0.59 -0.49 -0.44 -0.13 -0.86 0.23 -0.27 0.5 -0.51 0.64 -0.67a25.38 25.38 0 0 1 3.18 -2.52 4.7 4.7 0 0 1 0.41 0.3C7.44 3.85 11.11 7.78 12.38 9a0.58 0.58 0 0 0 0.83 0c0.07 -0.07 0.21 -0.23 0.4 -0.46 0.71 -0.85 2.21 -2.7 3.61 -4.29l2.31 -2.31 0.09 0a15.06 15.06 0 0 1 3 2.22 5 5 0 0 1 0.41 0.44 10.3 10.3 0 0 1 -0.62 1.1 9.5 9.5 0 0 1 -0.9 1.18l-4.11 4.75a0.46 0.46 0 0 0 0 0.59 8.14 8.14 0 0 0 0.54 0.67c1.15 1.33 3.77 4.19 4.79 5.51 0.18 0.23 0.25 0.51 0.34 0.51a0.39 0.39 0 0 0 0.11 0.22 0.35 0.35 0 0 0 0.5 0 0.5 0.5 0 0 0 0 -0.57 11.87 11.87 0 0 0 -1 -1.36c-1.26 -1.53 -3.34 -3.86 -4.23 -4.93L18.2 12l4 -4.48a11.45 11.45 0 0 0 0.98 -1.28Z' fill='%23bf3c2d' fill-rule='evenodd' stroke-width='1'%3E%3C/path%3E%3C/svg%3E"),
+      linear-gradient(var(--field-sweep), var(--field-sweep)),
+      linear-gradient(var(--field-wash), var(--field-wash));
+  }
+  [data-theme='dark'] .field.is-error input.field_input {
+    background-image:
+      url("data:image/svg+xml,%3Csvg fill='%23fd7562' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M23.18 6.24A9 9 0 0 0 24 4.75a1 1 0 0 0 -0.27 -0.75A16.48 16.48 0 0 0 21 1.69a4.66 4.66 0 0 0 -1.47 -0.77 0.64 0.64 0 0 0 -0.59 0.21c-0.31 0.36 -1 0.94 -1.74 1.65 -0.25 0.24 -0.51 0.5 -0.75 0.78C15 5.13 13.49 7 12.77 7.82c-1.52 -1.58 -4.72 -5 -6.31 -6.3a2.77 2.77 0 0 0 -1.09 -0.6 0.71 0.71 0 0 0 -0.54 0.08C4.74 1.11 1 3.67 0.2 5.11a1.21 1.21 0 0 0 -0.1 1.14 3.57 3.57 0 0 0 0.66 0.82 9.88 9.88 0 0 0 1 0.91c0.25 0.19 0.91 0.78 1.68 1.5 1.25 1.13 2.76 2.52 3.5 3.27 -1 0.86 -3.33 2.88 -4.71 4.26a7.68 7.68 0 0 0 -1.11 1.29 0.86 0.86 0 0 0 -0.13 0.43 2.51 2.51 0 0 0 0.7 1.12 39.38 39.38 0 0 0 2.91 2.67c0.15 0.13 0.41 0.69 0.91 0.55a2.67 2.67 0 0 0 0.54 -0.37c0.28 -0.2 1.87 -1.51 3.52 -2.94 1.16 -1 2.34 -2.06 3.12 -2.83l0.41 0.34c1.68 1.39 5.85 4.95 6 5.23a0.34 0.34 0 0 0 0.46 0.15l0.33 -0.2c0.59 -0.4 1.86 -1.36 2.61 -2a0.31 0.31 0 0 0 0 -0.44 0.3 0.3 0 0 0 -0.43 0c-0.74 0.62 -2 1.55 -2.58 1.93l-0.06 0c-0.93 -0.94 -4.35 -4 -5.84 -5.28l-0.59 -0.53a0.49 0.49 0 0 0 -0.6 0c-0.77 0.76 -2.09 1.9 -3.38 3 -1.63 1.37 -3.2 2.63 -3.48 2.82l-0.1 0.08 -0.19 -0.2c-0.33 -0.29 -1.08 -0.95 -1.78 -1.63a10.92 10.92 0 0 1 -1.33 -1.4 1.58 1.58 0 0 1 0.16 -0.27 24.87 24.87 0 0 1 2 -1.89C6 15 8.17 13.21 8.17 13.21a0.56 0.56 0 0 0 0.2 -0.42 0.54 0.54 0 0 0 -0.17 -0.43S6 10.19 4.28 8.62C3.46 7.86 2.77 7.23 2.5 7a7.64 7.64 0 0 1 -0.9 -0.79c-0.59 -0.59 -0.49 -0.44 -0.13 -0.86 0.23 -0.27 0.5 -0.51 0.64 -0.67a25.38 25.38 0 0 1 3.18 -2.52 4.7 4.7 0 0 1 0.41 0.3C7.44 3.85 11.11 7.78 12.38 9a0.58 0.58 0 0 0 0.83 0c0.07 -0.07 0.21 -0.23 0.4 -0.46 0.71 -0.85 2.21 -2.7 3.61 -4.29l2.31 -2.31 0.09 0a15.06 15.06 0 0 1 3 2.22 5 5 0 0 1 0.41 0.44 10.3 10.3 0 0 1 -0.62 1.1 9.5 9.5 0 0 1 -0.9 1.18l-4.11 4.75a0.46 0.46 0 0 0 0 0.59 8.14 8.14 0 0 0 0.54 0.67c1.15 1.33 3.77 4.19 4.79 5.51 0.18 0.23 0.25 0.51 0.34 0.51a0.39 0.39 0 0 0 0.11 0.22 0.35 0.35 0 0 0 0.5 0 0.5 0.5 0 0 0 0 -0.57 11.87 11.87 0 0 0 -1 -1.36c-1.26 -1.53 -3.34 -3.86 -4.23 -4.93L18.2 12l4 -4.48a11.45 11.45 0 0 0 0.98 -1.28Z' fill='%23fd7562' fill-rule='evenodd' stroke-width='1'%3E%3C/path%3E%3C/svg%3E"),
+      linear-gradient(var(--field-sweep), var(--field-sweep)),
+      linear-gradient(var(--field-wash), var(--field-wash));
+  }
+  .field.is-success input.field_input {
+    background-image:
+      url("data:image/svg+xml,%3Csvg fill='%233f7723' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg%3E%3Cpath d='M24 5.47a1.85 1.85 0 0 0 -0.79 -0.86 16.81 16.81 0 0 0 -2.8 -1.36 2.54 2.54 0 0 0 -0.82 -0.16 1.37 1.37 0 0 0 -0.68 0.19 6.4 6.4 0 0 0 -1 1.22c-1.81 2.59 -5.81 9 -6.8 10l-0.07 0c-0.64 -0.32 -2 -1.24 -2.58 -1.58a1.29 1.29 0 0 0 -0.46 -0.21 0.35 0.35 0 0 0 -0.35 0.35c0 0.36 0.54 0.46 0.77 0.6 0.68 0.43 1.74 1.19 2.3 1.47a0.82 0.82 0 0 0 0.74 0.08A14.13 14.13 0 0 0 13.24 13c1.76 -2.49 4.39 -6.4 5.66 -8.11a6.09 6.09 0 0 1 0.55 -0.7 0.27 0.27 0 0 1 0.2 0 1.26 1.26 0 0 1 0.38 0.1 12.17 12.17 0 0 1 1.3 0.59 14 14 0 0 1 1.48 0.7 3.61 3.61 0 0 1 -0.15 0.35c-0.56 1 -1.94 2.88 -3.47 5 -2.42 3.3 -5.19 7.07 -6.05 8.2l-1 1.2 -0.32 0.27a0.88 0.88 0 0 1 -0.33 -0.13c-0.24 -0.16 -0.45 -0.37 -0.71 -0.52a35.06 35.06 0 0 1 -2.89 -2.14c-1.1 -0.88 -2.17 -1.78 -2.55 -2.18a0.41 0.41 0 0 1 0 -0.09A21.84 21.84 0 0 1 7 13.39c0.19 -0.23 1 -0.86 0.31 -1a0.59 0.59 0 0 0 -0.44 0.2 14.74 14.74 0 0 0 -1.36 1.59c-0.36 0.48 -0.68 0.93 -0.81 1.15a0.54 0.54 0 0 0 0 0.5A19.42 19.42 0 0 0 6.82 18a40.68 40.68 0 0 0 3.48 2.76c0.29 0.19 0.53 0.46 0.82 0.62a1.55 1.55 0 0 0 0.57 0.2 1.05 1.05 0 0 0 0.62 -0.12 2.13 2.13 0 0 0 0.54 -0.43L14 19.74c1.07 -1.43 5.61 -7.3 8.17 -10.93a26.78 26.78 0 0 0 1.7 -2.64 1.15 1.15 0 0 0 0.13 -0.7Z' fill='%233f7723' fill-rule='evenodd' stroke-width='1'%3E%3C/path%3E%3Cpath d='M7.45 20.63a21 21 0 0 1 -2.59 -2c-0.81 -0.68 -1.66 -1.42 -2.37 -2 -0.51 -0.44 -0.94 -0.8 -1.2 -1 0.42 -0.63 1.3 -1.85 1.89 -2.56 0.13 -0.17 0.32 -0.29 0.39 -0.38l1.2 0.71a0.3 0.3 0 0 0 0.34 -0.5c-0.45 -0.34 -0.87 -0.65 -1.15 -0.84a1.3 1.3 0 0 0 -0.48 -0.21 1.21 1.21 0 0 0 -0.59 0.31A28.91 28.91 0 0 0 0.63 14.5a5.85 5.85 0 0 0 -0.52 0.72 0.63 0.63 0 0 0 0 0.68 12.07 12.07 0 0 0 1.73 1.6c0.52 0.42 1.13 0.88 1.74 1.33a24.67 24.67 0 0 0 3.81 2.49 0.34 0.34 0 0 0 0.38 -0.3 0.35 0.35 0 0 0 -0.32 -0.39Z' fill='%233f7723' fill-rule='evenodd' stroke-width='1'%3E%3C/path%3E%3Cpath d='m3.46 11.73 0.02 0 0.01 0 -0.03 0z' fill='%233f7723' fill-rule='evenodd' stroke-width='1'%3E%3C/path%3E%3Cpath d='M9.63 11.31c0.93 -1.23 2 -2.64 3 -4 0.63 -0.91 1.2 -1.77 1.65 -2.47a17.62 17.62 0 0 1 1 -1.52 0.47 0.47 0 0 1 0.26 -0.08 1.93 1.93 0 0 1 0.43 0.08l0.95 0.34a0.3 0.3 0 0 0 0.4 -0.15 0.31 0.31 0 0 0 -0.14 -0.41l-1 -0.47a2.67 2.67 0 0 0 -0.75 -0.19 1.17 1.17 0 0 0 -0.63 0.15 13.66 13.66 0 0 0 -2 2.43c-0.37 0.52 -0.76 1.11 -1.16 1.73 -0.87 1.36 -1.74 2.87 -2.54 4.15a0.35 0.35 0 0 0 0.57 0.39Z' fill='%233f7723' fill-rule='evenodd' stroke-width='1'%3E%3C/path%3E%3C/g%3E%3C/svg%3E"),
+      linear-gradient(var(--field-sweep), var(--field-sweep)),
+      linear-gradient(var(--field-wash), var(--field-wash));
+  }
+  [data-theme='dark'] .field.is-success input.field_input {
+    background-image:
+      url("data:image/svg+xml,%3Csvg fill='%2386c16d' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg%3E%3Cpath d='M24 5.47a1.85 1.85 0 0 0 -0.79 -0.86 16.81 16.81 0 0 0 -2.8 -1.36 2.54 2.54 0 0 0 -0.82 -0.16 1.37 1.37 0 0 0 -0.68 0.19 6.4 6.4 0 0 0 -1 1.22c-1.81 2.59 -5.81 9 -6.8 10l-0.07 0c-0.64 -0.32 -2 -1.24 -2.58 -1.58a1.29 1.29 0 0 0 -0.46 -0.21 0.35 0.35 0 0 0 -0.35 0.35c0 0.36 0.54 0.46 0.77 0.6 0.68 0.43 1.74 1.19 2.3 1.47a0.82 0.82 0 0 0 0.74 0.08A14.13 14.13 0 0 0 13.24 13c1.76 -2.49 4.39 -6.4 5.66 -8.11a6.09 6.09 0 0 1 0.55 -0.7 0.27 0.27 0 0 1 0.2 0 1.26 1.26 0 0 1 0.38 0.1 12.17 12.17 0 0 1 1.3 0.59 14 14 0 0 1 1.48 0.7 3.61 3.61 0 0 1 -0.15 0.35c-0.56 1 -1.94 2.88 -3.47 5 -2.42 3.3 -5.19 7.07 -6.05 8.2l-1 1.2 -0.32 0.27a0.88 0.88 0 0 1 -0.33 -0.13c-0.24 -0.16 -0.45 -0.37 -0.71 -0.52a35.06 35.06 0 0 1 -2.89 -2.14c-1.1 -0.88 -2.17 -1.78 -2.55 -2.18a0.41 0.41 0 0 1 0 -0.09A21.84 21.84 0 0 1 7 13.39c0.19 -0.23 1 -0.86 0.31 -1a0.59 0.59 0 0 0 -0.44 0.2 14.74 14.74 0 0 0 -1.36 1.59c-0.36 0.48 -0.68 0.93 -0.81 1.15a0.54 0.54 0 0 0 0 0.5A19.42 19.42 0 0 0 6.82 18a40.68 40.68 0 0 0 3.48 2.76c0.29 0.19 0.53 0.46 0.82 0.62a1.55 1.55 0 0 0 0.57 0.2 1.05 1.05 0 0 0 0.62 -0.12 2.13 2.13 0 0 0 0.54 -0.43L14 19.74c1.07 -1.43 5.61 -7.3 8.17 -10.93a26.78 26.78 0 0 0 1.7 -2.64 1.15 1.15 0 0 0 0.13 -0.7Z' fill='%2386c16d' fill-rule='evenodd' stroke-width='1'%3E%3C/path%3E%3Cpath d='M7.45 20.63a21 21 0 0 1 -2.59 -2c-0.81 -0.68 -1.66 -1.42 -2.37 -2 -0.51 -0.44 -0.94 -0.8 -1.2 -1 0.42 -0.63 1.3 -1.85 1.89 -2.56 0.13 -0.17 0.32 -0.29 0.39 -0.38l1.2 0.71a0.3 0.3 0 0 0 0.34 -0.5c-0.45 -0.34 -0.87 -0.65 -1.15 -0.84a1.3 1.3 0 0 0 -0.48 -0.21 1.21 1.21 0 0 0 -0.59 0.31A28.91 28.91 0 0 0 0.63 14.5a5.85 5.85 0 0 0 -0.52 0.72 0.63 0.63 0 0 0 0 0.68 12.07 12.07 0 0 0 1.73 1.6c0.52 0.42 1.13 0.88 1.74 1.33a24.67 24.67 0 0 0 3.81 2.49 0.34 0.34 0 0 0 0.38 -0.3 0.35 0.35 0 0 0 -0.32 -0.39Z' fill='%2386c16d' fill-rule='evenodd' stroke-width='1'%3E%3C/path%3E%3Cpath d='m3.46 11.73 0.02 0 0.01 0 -0.03 0z' fill='%2386c16d' fill-rule='evenodd' stroke-width='1'%3E%3C/path%3E%3Cpath d='M9.63 11.31c0.93 -1.23 2 -2.64 3 -4 0.63 -0.91 1.2 -1.77 1.65 -2.47a17.62 17.62 0 0 1 1 -1.52 0.47 0.47 0 0 1 0.26 -0.08 1.93 1.93 0 0 1 0.43 0.08l0.95 0.34a0.3 0.3 0 0 0 0.4 -0.15 0.31 0.31 0 0 0 -0.14 -0.41l-1 -0.47a2.67 2.67 0 0 0 -0.75 -0.19 1.17 1.17 0 0 0 -0.63 0.15 13.66 13.66 0 0 0 -2 2.43c-0.37 0.52 -0.76 1.11 -1.16 1.73 -0.87 1.36 -1.74 2.87 -2.54 4.15a0.35 0.35 0 0 0 0.57 0.39Z' fill='%2386c16d' fill-rule='evenodd' stroke-width='1'%3E%3C/path%3E%3C/g%3E%3C/svg%3E"),
+      linear-gradient(var(--field-sweep), var(--field-sweep)),
+      linear-gradient(var(--field-wash), var(--field-wash));
+  }
+  /* ── checks and radios — marks, not widgets. A human
+     crosses a box with an X; a radio takes an ink dot. ── */
+  .field_check {
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    font-size: var(--text-small);
+    cursor: pointer;
+  }
+  .field_check input {
+    appearance: none;
+    width: 1.15em;
+    height: 1.15em;
+    margin: 0;
+    flex: none;
+    border: 0.125em solid var(--m-ink);
+    border-radius: var(--radius-xs);
+    background-color: var(--m-paper);
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--ease-out-expo);
+  }
+  .field_check input[type='checkbox']:checked {
+    background-color: var(--m-accent);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6.5l2.8 2.8L10 3' fill='none' stroke='%231b1a14' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-size: 78%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .field_check input[type='radio'] {
+    border-radius: var(--radius-full);
+  }
+  .field_check input[type='radio']:checked {
+    background: radial-gradient(
+      circle,
+      var(--m-on-accent) 0 38%,
+      var(--m-accent) 43% 100%
+    );
+  }
+
+  /* ── dropdown — a paper panel, not an OS menu. The trigger
+     is the writing line; the panel unfolds beneath it as a
+     sheet with a hard ink offset (misregistration, no blur).
+     Options are ruled entries with ledger numbers; the marker
+     sweeps the one under the pointer, and the chosen one
+     takes a hand-marked X. Keyboard: arrows, Enter, Escape,
+     Home/End. Non-JS contexts use select.field_input. ── */
+  .dropdown {
+    position: relative;
+  }
+  .dropdown_trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6em;
+    text-align: left;
+    cursor: pointer;
+  }
+  .dropdown_value.is-empty {
+    color: color-mix(in oklab, var(--m-ink-muted) 65%, transparent);
+  }
+  /* The caret is the Freehand hand-drawn arrow, inked in
+     currentColor like every other icon. */
+  .dropdown .dropdown_caret {
+    width: 1em;
+    height: 1em;
+    flex: none;
+    vertical-align: 0;
+    transition: transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .dropdown.is-open .dropdown_caret {
+    transform: rotate(180deg);
+  }
+  /* While the panel is open, the trigger stays swept */
+  .dropdown.is-open .dropdown_trigger {
+    background-size: 100% 100%, 100% 100%;
+    color: var(--m-on-accent);
+  }
+  /* A chosen dropdown is an answered field: it keeps the
+     highlight at half strength, same as filled inputs. */
+  .dropdown.is-filled .dropdown_trigger {
+    --field-wash: color-mix(in oklab, var(--m-accent) 45%, var(--m-surface));
+  }
+  .dropdown_panel {
+    position: absolute;
+    top: calc(100% + 0.4rem);
+    left: 0;
+    right: 0;
+    z-index: 30;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: var(--m-surface);
+    border: 0.125rem solid var(--m-ink);
+    border-radius: var(--radius-xs);
+    box-shadow: 0.3125rem 0.3125rem 0 0 var(--m-ink);
+    display: none;
+  }
+  .dropdown.is-open .dropdown_panel {
+    display: block;
+    animation: dropdown-unfold 0.18s var(--ease-out-expo);
+  }
+  @keyframes dropdown-unfold {
+    from {
+      opacity: 0;
+      transform: translateY(-0.25rem);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dropdown.is-open .dropdown_panel {
+      animation: none;
+    }
+  }
+  .dropdown_option {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6em;
+    padding: 0.6em 0.85em;
+    font-size: var(--text-small);
+    line-height: 1.4;
+    cursor: pointer;
+    border-bottom: 0.0625rem solid var(--m-line-subtle);
+  }
+  .dropdown_option:last-child {
+    border-bottom: none;
+  }
+  /* The marker sweeps the option under the pointer */
+  .dropdown_option.is-active {
+    background: var(--m-accent);
+    color: var(--m-on-accent);
+  }
+  .dropdown_mark {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    visibility: hidden;
+  }
+  .dropdown_option.is-selected .dropdown_mark {
+    visibility: visible;
+  }
+
+  /* ── alert — a proofreader's note: the verdict is STAMPED
+     in the semantic ink and the message stays in body ink on
+     a washed sheet. No left color-rule — that is framework
+     dialect, not print. ── */
+  .alert {
+    --alert-color: var(--m-info);
+    display: block;
+    padding: 0.85em 1em;
+    font-size: var(--text-small);
+    line-height: 1.5;
+    background: var(--m-info-tint);
+    border-radius: var(--radius-xs);
+  }
+  .alert strong {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.72em;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--alert-color);
+    color: var(--m-paper);
+    padding: 0.18em 0.55em;
+    border-radius: var(--radius-xs);
+    margin-right: 0.4em;
+    vertical-align: 0.09em;
+  }
+  .alert.is-success {
+    --alert-color: var(--m-success);
+    background: var(--m-success-tint);
+  }
+  .alert.is-error {
+    --alert-color: var(--m-error);
+    background: var(--m-error-tint);
+  }
+  .alert.is-warning {
+    --alert-color: var(--m-warning);
+    background: var(--m-warning-tint);
+  }
+  .alert.is-info {
+    --alert-color: var(--m-info);
+    background: var(--m-info-tint);
+  }
+  /* Brand note: the full highlighter, ink on yellow. The stamp
+     reverses to an ink block with a yellow legend. This is the
+     one alert that carries the accent as its whole surface. */
+  .alert.is-brand {
+    background: var(--m-accent);
+    color: var(--m-on-accent);
+  }
+  .alert.is-brand strong {
+    background: var(--m-on-accent);
+    color: var(--m-accent);
+  }
+
+  /* ── card — a sheet of surface. Elevation is optional
+     and earned; most cards live on their border. Corners
+     are near-square like every other Marker surface —
+     the soft 0.5rem template round was a tell. ── */
+  .card {
+    background: var(--m-surface);
+    border: 0.0625rem solid var(--m-line);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-medium);
+  }
+  .card.is-elevated {
+    border-color: var(--m-line-subtle);
+    box-shadow: var(--m-shadow-md);
+  }
+
+  /* ── chip — a small inked stamp for tags and meta. ── */
+  .chip {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    padding: 0.15em 0.5em;
+    border-radius: var(--radius-xs);
+    background: var(--m-accent);
+    color: var(--m-on-accent);
+    white-space: nowrap;
+  }
+  .chip.is-outline {
+    background: var(--m-surface);
+    color: var(--m-ink);
+    border: 0.0625rem solid var(--m-line);
+  }
+
+  /* ── tags — keyword and topic labels, grouped and often
+     interactive (filters, facets). Where the chip is a filled
+     stamp, a tag is DRAWN in ink — a ruled outline, so a row
+     of them reads as a ledger of terms. Hover washes accent;
+     is-active fills the mark, the chosen one struck in yellow.
+     Works as span, a, or button; is-static drops the
+     interactivity for plain metadata. ── */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    color: var(--m-ink);
+    background: transparent;
+    border: 0.0625rem solid var(--m-line-strong);
+    border-radius: var(--radius-xs);
+    padding: 0.22em 0.6em;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease-out-expo),
+      border-color var(--duration-fast) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo);
+  }
+  /* The tag marker: a mono hash, so a tag always reads as a
+     tag. Hidden on is-static metadata tags. */
+  .tag::before {
+    content: '#';
+    color: var(--m-ink-muted);
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+  .tag:hover {
+    background: color-mix(in oklab, var(--m-accent) 18%, transparent);
+    border-color: var(--m-ink);
+  }
+  .tag.is-active {
+    background: var(--m-accent);
+    border-color: transparent;
+    color: var(--m-on-accent);
+  }
+  .tag.is-active::before {
+    color: var(--m-on-accent);
+  }
+  .tag.is-static {
+    cursor: default;
+  }
+  .tag.is-static::before {
+    display: none;
+  }
+  .tag.is-static:hover {
+    background: transparent;
+    border-color: var(--m-line-strong);
+  }
+  .tag:focus-visible {
+    outline: 0.125rem solid var(--m-focus);
+    outline-offset: 0.125rem;
+    box-shadow: 0 0 0 0.125rem var(--m-accent);
+  }
+
+  /* ── icon — Streamline Freehand, one set only, never
+     mixed. Inked in currentColor so it takes whatever ink
+     its text has. Bare, it is sized in em so it scales with
+     the type it sits beside (inline in buttons, links, and
+     fields). For standalone use there is an explicit scale:
+     is-tiny, is-small, (default), is-large. ── */
+  .icon {
+    display: inline-block;
+    width: 1.25em;
+    height: 1.25em;
+    flex: none;
+    vertical-align: -0.25em;
+  }
+  .icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  /* Explicit standalone sizes — fixed rem, so the icon does
+     not depend on its context. The bare .icon is the default
+     "icon" step; these three bracket it. */
+  .icon.is-tiny {
+    width: 0.875rem;
+    height: 0.875rem;
+    vertical-align: -0.15em;
+  }
+  .icon.is-small {
+    width: 1.125rem;
+    height: 1.125rem;
+    vertical-align: -0.2em;
+  }
+  .icon.is-large {
+    width: 1.625rem;
+    height: 1.625rem;
+    vertical-align: -0.3em;
+  }
+
+  /* ── theme-switch — the light/dark control. A drawn ink box
+     holding two options; a single highlighter slab slides to
+     the chosen side and carries the active label as on-accent
+     ink. The slab is the state and the motion: it travels once
+     per switch on the expo curve, the same yellow that marks a
+     current nav item or a focused field. One control, not two
+     buttons — the marker is always on exactly one mode. ── */
+  .theme-switch {
+    position: relative;
+    display: inline-flex;
+    padding: 0.25rem;
+    gap: 0.125rem;
+    background: var(--m-paper);
+    border: 0.09rem solid var(--m-line-strong);
+    border-radius: var(--radius-full);
+    isolation: isolate;
+  }
+  /* The sliding slab. Sized to one option via the grid of two
+     equal columns; translated to the active side. */
+  .theme-switch_marker {
+    position: absolute;
+    z-index: -1;
+    top: 0.25rem;
+    bottom: 0.25rem;
+    left: 0.25rem;
+    width: calc((100% - 0.5rem - 0.125rem) / 2);
+    background: var(--m-accent);
+    border-radius: var(--radius-full);
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+  [data-theme='dark'] .theme-switch_marker {
+    transform: translateX(calc(100% + 0.125rem));
+  }
+  .theme-switch_option {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.4em 0.85em;
+    font-family: var(--font-display);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--m-ink-muted);
+    background: none;
+    border: 0;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+  .theme-switch_option .icon {
+    width: 1.15em;
+    height: 1.15em;
+    flex: none;
+  }
+  /* The option sitting over the slab reads as on-accent ink. */
+  :root:not([data-theme='dark']) .theme-switch_option[data-theme-choice='light'],
+  [data-theme='dark'] .theme-switch_option[data-theme-choice='dark'] {
+    color: var(--m-on-accent);
+  }
+  .theme-switch_option:not([aria-checked='true']):hover {
+    color: var(--m-ink);
+  }
+  /* Focus rides the two-ink mark on the option that has it. */
+  .theme-switch_option:focus-visible {
+    outline: 0.125rem solid var(--m-focus);
+    outline-offset: 0.2rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .theme-switch_marker {
+      transition: none;
+    }
+  }
+
+  /* ── navbar — the site header, assembled from parts already
+     in the system: the logo, nav_links, the theme-switch, and
+     a button. It rides on padding-global + a container, so it
+     lines up with every section below it.
+
+     Two states. At the top of the page it is part of the page:
+     a full-width opaque paper band, content slides under it.
+     Scrolled (is-stuck, set by JS once the page leaves the top),
+     it DETACHES into a slip of paper riding above the page: the
+     band's own background goes transparent, and .navbar_inner
+     becomes the object — paper surface with its grain, a
+     hairline border, a slight rounding, and just enough inline
+     padding for the items to breathe. Flat, no shadow: the
+     border is the edge, print-native. The border is always
+     present but transparent at the top, so no layout jump when
+     it appears; the grain child likewise rides opacity only. ── */
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--m-paper);
+    transition: background-color var(--duration-normal) var(--ease-out-expo);
+  }
+  .navbar_inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-large);
+    /* 80rem matches container-lg exactly, so at rest this cap is
+       invisible — it exists only so the stuck state's narrower cap
+       has a LENGTH to interpolate from (a percentage cannot
+       transition to a rem; two rems can). */
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-block: clamp(1rem, 2.4vh, 1.5rem);
+    border: 0.0625rem solid transparent;
+    border-radius: var(--radius-md);
+    transition:
+      padding var(--duration-normal) var(--ease-out-expo),
+      max-width var(--duration-normal) var(--ease-out-expo),
+      background-color var(--duration-normal) var(--ease-out-expo),
+      border-color var(--duration-normal) var(--ease-out-expo);
+  }
+  /* Scrolled: the band lets go, the slip takes over. A small
+     top gap on the (now transparent) band floats the slip off
+     the viewport edge so the page shows around it, and the slip
+     CONDENSES toward its content instead of spanning the whole
+     container — at full width it still read as a long banner
+     with rounded corners; at ~46rem, centered, it reads as an
+     object riding above the page. */
+  .navbar.is-stuck {
+    background: transparent;
+    padding-block-start: var(--spacing-xsmall);
+  }
+  .navbar.is-stuck .navbar_inner {
+    max-width: 46rem;
+    padding-block: clamp(0.7rem, 1.6vh, 1rem);
+    padding-inline: var(--spacing-medium);
+    background: var(--m-paper);
+    border-color: var(--m-line);
+  }
+  /* The right cluster: the walking links, then the controls. */
+  .navbar_menu {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.5rem, 3vw, 2.75rem);
+  }
+  .navbar_nav {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .navbar_actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+  }
+  /* The burger only exists below the collapse point. */
+  .navbar_burger {
+    display: none;
+  }
+  @media (max-width: 60rem) {
+    /* Below the collapse point the links fold into the menu
+       overlay; the CTA and switch stay, the burger appears. */
+    .navbar_nav {
+      display: none;
+    }
+    .navbar_burger {
+      display: inline-flex;
+    }
+  }
+  @media (max-width: 30rem) {
+    /* On the narrowest screens even the header CTA folds away;
+       it lives inside the opened menu instead. */
+    .navbar_actions .navbar_cta {
+      display: none;
+    }
+  }
+  /* In the navbar the active item is marked with a highlighter
+     underline, not a full block — quieter, more refined. */
+  .navbar .nav_link.is-active {
+    color: var(--m-ink);
+    background-size: 100% 0.16em;
+    background-position: 0 100%;
+  }
+
+  /* ── navbar · is-composed ── brand left, nav dead-centered,
+     action right. A three-column grid centers the nav no matter
+     how wide the brand or action grows. Below the collapse point
+     it falls back to brand-left / burger-right. ── */
+  .navbar.is-composed .navbar_inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--spacing-large);
+    transition:
+      padding var(--duration-normal) var(--ease-out-expo),
+      max-width var(--duration-normal) var(--ease-out-expo),
+      background-color var(--duration-normal) var(--ease-out-expo),
+      border-color var(--duration-normal) var(--ease-out-expo),
+      gap var(--duration-normal) var(--ease-out-expo);
+  }
+  /* Condensed, the clusters close ranks a step so the narrower
+     slip reads deliberately packed, not squeezed. */
+  .navbar.is-composed.is-stuck .navbar_inner {
+    gap: var(--spacing-medium);
+  }
+  .navbar.is-composed .navbar_nav {
+    justify-self: center;
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+  }
+  .navbar.is-composed .navbar_actions {
+    justify-self: end;
+  }
+  @media (max-width: 60rem) {
+    /* Nav folds into the menu; the grid becomes brand | action. */
+    .navbar.is-composed .navbar_inner {
+      grid-template-columns: 1fr auto;
+    }
+  }
+
+  /* ── nav — the site's walking voice. Links are quiet ink;
+     hover slides an accent underline in from the left; the
+     current page is fully MARKED — yellow says "you are
+     here" the same way it marks the active mode. ── */
+  .nav_link {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--m-ink-muted);
+    text-decoration: none;
+    padding: 0.2em 0.45em;
+    border-radius: var(--radius-xs);
+    background-image: linear-gradient(var(--m-accent), var(--m-accent));
+    background-repeat: no-repeat;
+    background-size: 0% 0.12em;
+    background-position: 100% 100%;
+    transition:
+      background-size var(--duration-normal) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo);
+  }
+  .nav_link:hover {
+    color: var(--m-ink);
+    background-position: 0 100%;
+    background-size: 100% 0.12em;
+  }
+  .nav_link.is-active {
+    color: var(--m-on-accent);
+    background-position: 0 0;
+    background-size: 100% 100%;
+  }
+
+  /* ── logo — the wordmark. The brand IS the name, Ogilvy
+     style, so there is no separate symbol; Funnel Display at
+     600 carries it. An optional square avatar rides alongside
+     as an ID stamp (square, not a circle — everything here is
+     near-square). ── */
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55em;
+    font-family: var(--font-display);
+    font-size: var(--text-body-md);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--m-ink);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .logo_avatar {
+    width: 1.7em;
+    height: 1.7em;
+    flex: none;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    border: 0.0625rem solid var(--m-line);
+  }
+  /* An optional inked symbol riding before the wordmark. It
+     takes the logo's ink as currentColor and carries the brand
+     yellow on its accent parts. */
+  .logo_mark {
+    width: 1.6em;
+    height: 1.6em;
+    flex: none;
+    display: inline-flex;
+  }
+  .logo_mark svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .logo.is-small {
+    font-size: var(--text-small);
+  }
+
+  /* ── eyebrow — the label above a title (a.k.a. overline).
+     The brand marks the section name in its OWN voice: the
+     display face (not the mono of chips and tags), uppercase,
+     with the highlighter hugging the letters — a marked title,
+     not a utility chip. On-accent ink keeps it legible in both
+     modes; box-decoration-break clones the mark across wraps.
+     Sections are NAMED, never numbered. ── */
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--m-on-accent);
+    background: var(--m-accent);
+    padding: 0.1em 0.34em;
+    border-radius: var(--radius-xs);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  /* ── crumbs — a breadcrumb trail in the mono ledger voice.
+     A slash rules between entries; ancestors are muted links,
+     the current page is inked. No chevrons, no home icon. ── */
+  .crumbs {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .crumb {
+    color: var(--m-ink-muted);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+  a.crumb:hover {
+    color: var(--m-ink);
+  }
+  .crumb[aria-current] {
+    color: var(--m-ink);
+  }
+  .crumb:not(:first-child) {
+    margin-left: 0.6em;
+  }
+  .crumb:not(:first-child)::before {
+    content: '/';
+    margin-right: 0.6em;
+    color: var(--m-ink-muted);
+    opacity: 0.5;
+  }
+
+  /* ── menu — the full-page menu is a sheet of paper laid
+     over the site, not a drawer. Entries are ruled like a
+     ledger; the marker sweeps the one under your pointer.
+     Items settle in once, staggered by a beat. ── */
+  .menu_overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: none;
+    overflow-y: auto;
+    background: var(--m-paper);
+    padding: var(--spacing-global);
+  }
+  .menu_overlay.is-open {
+    display: block;
+    animation: menu-unfold var(--duration-normal) var(--ease-out-expo);
+  }
+  @keyframes menu-unfold {
+    from {
+      opacity: 0;
+      transform: translateY(-0.5rem);
+    }
+  }
+  .menu_head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .menu_list {
+    list-style: none;
+    margin: var(--spacing-xlarge) 0 0;
+    padding: 0;
+    border-top: 0.0625rem solid var(--m-line);
+  }
+  .menu_item {
+    border-bottom: 0.0625rem solid var(--m-line);
+  }
+  .menu_overlay.is-open .menu_item {
+    animation: menu-item-settle var(--duration-normal) var(--ease-out-expo) backwards;
+  }
+  .menu_overlay.is-open .menu_item:nth-child(2) { animation-delay: 40ms; }
+  .menu_overlay.is-open .menu_item:nth-child(3) { animation-delay: 80ms; }
+  .menu_overlay.is-open .menu_item:nth-child(4) { animation-delay: 120ms; }
+  .menu_overlay.is-open .menu_item:nth-child(5) { animation-delay: 160ms; }
+  .menu_overlay.is-open .menu_item:nth-child(6) { animation-delay: 200ms; }
+  @keyframes menu-item-settle {
+    from {
+      opacity: 0;
+      transform: translateY(0.4rem);
+    }
+  }
+  .menu_link {
+    display: block;
+    padding: 0.4em 0.1em;
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--m-ink);
+    text-decoration: none;
+    background-image: linear-gradient(var(--m-accent), var(--m-accent));
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    background-position: 100% 0;
+    transition:
+      background-size var(--duration-normal) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo);
+  }
+  .menu_link:hover {
+    background-position: 0 0;
+    background-size: 100% 100%;
+    color: var(--m-on-accent);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .menu_overlay.is-open,
+    .menu_overlay.is-open .menu_item {
+      animation: none;
+    }
+  }
+
+  /* ── skip link — invisible until a keyboard asks for it,
+     then it is the loudest thing on the page. ── */
+  .skip_link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 70;
+    transform: translateY(-250%);
+    background: var(--m-accent);
+    color: var(--m-on-accent);
+    font-family: var(--font-display);
+    font-size: var(--text-tiny);
+    font-weight: 600;
+    text-decoration: none;
+    padding: 0.6em 1em;
+    border-radius: var(--radius-xs);
+    transition: transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .skip_link:focus-visible {
+    transform: translateY(0);
+  }
+
+  /* ── accordion — a ruled ledger of questions on native
+     details/summary. The caret is the same hand-drawn arrow
+     the dropdown uses; the open answer settles in once, no
+     height theatrics. ── */
+  .acc {
+    border-top: 0.0625rem solid var(--m-line);
+  }
+  .acc_item {
+    border-bottom: 0.0625rem solid var(--m-line);
+  }
+  .acc_summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    padding: 0.9em 0.15em;
+    font-family: var(--font-display);
+    font-size: var(--text-h6);
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+  }
+  .acc_summary::-webkit-details-marker {
+    display: none;
+  }
+  .acc_summary:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--m-accent);
+    text-decoration-thickness: 0.11em;
+    text-underline-offset: 0.16em;
+  }
+  .acc_summary .icon {
+    flex: none;
+    color: var(--m-ink-muted);
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+  .acc_item[open] .acc_summary .icon {
+    transform: rotate(180deg);
+  }
+  /* While folding shut the item is still technically open;
+     the arrow turns back at the click, not at the end. */
+  .acc_item.is-closing .acc_summary .icon {
+    transform: rotate(0deg);
+  }
+  /* The answer UNFOLDS: the controller measures the row and
+     drives its height with the Web Animations API — smooth
+     in every browser, both directions. The item clips while
+     it moves; on the way shut the ink fades out ahead of the
+     fold so text never gets guillotined. Without JS the
+     native toggle still works, just unanimated. */
+  .acc_item.is-animating {
+    overflow: clip;
+  }
+  .acc_body {
+    padding: 0 0.15em 1.1em;
+    max-width: var(--container-measure-md, 62ch);
+    transition: opacity var(--duration-fast) var(--ease-out-expo);
+  }
+  .acc_item.is-closing .acc_body {
+    opacity: 0;
+  }
+  /* The text settles a half-beat behind the unfold — the
+     sheet opens, then the ink arrives. */
+  .acc_item[open] .acc_body {
+    animation: acc-settle var(--duration-slow) var(--ease-out-expo);
+  }
+  @keyframes acc-settle {
+    from {
+      opacity: 0;
+      transform: translateY(-0.25rem);
+    }
+    30% {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .acc_item::details-content {
+      transition: none;
+    }
+    .acc_item[open] .acc_body {
+      animation: none;
+    }
+  }
+
+  /* ── tabs — three voices for three jobs, none underlined,
+     none pilled.
+
+     DEFAULT (view switcher — tables, filters, charts): a
+     ledger line of quiet display labels; the highlighter
+     MARKS the open one, sweeping in from the left and
+     leaving to the right when the mark moves on — the same
+     stroke every other mark in the system makes. ── */
+  .tab_rail {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+  .tab {
+    font-family: var(--font-display);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--m-ink-muted);
+    background: none;
+    border: none;
+    border-radius: var(--radius-xs);
+    padding: 0.35em 0.7em;
+    cursor: pointer;
+    background-image: linear-gradient(var(--m-accent), var(--m-accent));
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    background-position: 100% 0;
+    transition:
+      background-size var(--duration-normal) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo);
+  }
+  .tab:hover {
+    color: var(--m-ink);
+  }
+  .tab.is-active {
+    color: var(--m-on-accent);
+    background-position: 0 0;
+    background-size: 100% 100%;
+  }
+
+  /* — is-folder (page sections): real folder tabs, drawn in
+     ink at reading size, cut straight. Pair the rail with a
+     .tab_sheet: the active tab shares the sheet's surface
+     and papers over its top rule, so tab and sheet read as
+     ONE piece of card stock. — */
+  .tab_rail.is-folder {
+    border-bottom: none;
+    padding-bottom: 0;
+    gap: 0.375rem;
+    margin-bottom: -0.125rem;
+  }
+  .tab_rail.is-folder .tab {
+    position: relative;
+    z-index: 1;
+    background-image: none;
+    /* The transparent border keeps the box the same size in
+       both states (the sheet's rule shows through it on
+       resting tabs), so activation never nudges the label. */
+    border: 0.125rem solid transparent;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    padding: 0.65em 1.25em;
+    transition:
+      color var(--duration-fast) var(--ease-out-expo),
+      background-color var(--duration-fast) var(--ease-out-expo),
+      border-color var(--duration-fast) var(--ease-out-expo);
+  }
+  /* The passage into the sheet: a surface strip spanning
+     exactly the padding box — flush against the inside of
+     both ink verticals, so the lines meet the sheet's corner
+     square, no miter bite. It fades with the borders. */
+  .tab_rail.is-folder .tab::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.125rem;
+    height: 0.125rem;
+    background: var(--m-surface);
+    opacity: 0;
+    transition: opacity var(--duration-fast) var(--ease-out-expo);
+  }
+  .tab_rail.is-folder .tab.is-active {
+    color: var(--m-ink);
+    background-color: var(--m-surface);
+    border-color: var(--m-ink);
+    border-bottom-color: transparent;
+  }
+  .tab_rail.is-folder .tab.is-active::after {
+    opacity: 1;
+  }
+  .tab_sheet {
+    background: var(--m-surface);
+    border: 0.125rem solid var(--m-ink);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) var(--radius-sm);
+    padding: var(--spacing-medium);
+  }
+  .tab_sheet .tab_panel {
+    padding-top: 0;
+  }
+
+  /* — is-plans (pricing, offers): ticket tabs. Each option
+     is a stub of card — name over a mono meta line — drawn
+     in ink; the chosen ticket is a solid accent slab lifted
+     off-register on a hard ink offset, the button's physics
+     at card scale. It moves to its state once and rests. — */
+  .tab_rail.is-plans {
+    border-bottom: none;
+    padding-bottom: 0.3125rem;
+    gap: 0.75rem;
+  }
+  .tab.is-plan {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2em;
+    text-align: left;
+    background-image: none;
+    border: 0.125rem solid var(--m-ink);
+    border-radius: var(--radius-xs);
+    padding: 0.75em 1.1em;
+    min-width: 11rem;
+    color: var(--m-ink);
+    transition:
+      background-color var(--duration-fast) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo),
+      box-shadow var(--duration-normal) var(--ease-spring),
+      transform var(--duration-normal) var(--ease-spring);
+  }
+  .tab.is-plan:hover {
+    color: var(--m-ink);
+    background-color: color-mix(in oklab, var(--m-accent) 18%, transparent);
+  }
+  .tab.is-plan.is-active {
+    color: var(--m-on-accent);
+    background-color: var(--m-accent);
+    transform: translate(-0.125rem, -0.125rem);
+    box-shadow: 0.25rem 0.25rem 0 0 var(--m-ink);
+  }
+  .tab_meta {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    opacity: 0.8;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tab,
+    .tab.is-plan {
+      transition: none;
+    }
+    .tab.is-plan.is-active {
+      transform: none;
+    }
+  }
+
+  /* — is-lines (a stacked run of statements as tabs): each tab
+     is a full display-scale line — size comes from the caller's
+     text-* utility, never hardcoded here, same convention as
+     .tape. Muted at rest, ink when open, and the open line is
+     MARKED by a thick accent underline running in from the
+     left — the same "you are here" stroke the nav links make,
+     at statement scale. The stroke's travel time is
+     --tab-line-sweep (defaults to the system's fast sweep): an
+     auto-playing rail sets it to the dwell time, so the
+     highlighter crossing the line IS the countdown to the next
+     one — the cue and the timer are one mark. An underline
+     rather than the full slab on purpose: mid-travel, ink text
+     over a half-arrived accent slab goes illegible in dark
+     mode; the underline never touches the text. — */
+  .tab_rail.is-lines {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-small);
+    padding-bottom: 0;
+  }
+  .tab_rail.is-lines .tab {
+    text-align: left;
+    padding: 0 0 0.12em;
+    border-radius: 0;
+    background-size: 0% 0.14em;
+    /* The anchor swap .text-link canonized: resting anchor is the
+       RIGHT edge, active anchor the left. The mark grows in from
+       the left and, when the mark moves on, collapses out to the
+       right — a stroke passing through the line, never bouncing
+       back the way it came. Position jumps; only size animates. */
+    background-position: 100% 100%;
+    /* Layered inertia, the house move: the stroke starts, and
+       the line's ink follows a beat behind it — the mark is the
+       action, the color change is its consequence. The press is
+       the stamp: flat, instant, the one abrupt beat every button
+       on the site shares. */
+    transition:
+      background-size var(--tab-line-sweep, var(--duration-normal)) var(--tab-line-ease, var(--ease-out-expo)),
+      color var(--duration-normal) var(--ease-out-expo) 120ms,
+      transform var(--duration-normal) var(--ease-out-expo);
+  }
+  /* Hover previews the mark at hairline weight — you feel the
+     stroke before you commit to it. Enters left like the real
+     one; declared before is-active so the full mark always wins
+     on the open line. */
+  .tab_rail.is-lines .tab:hover {
+    background-size: 100% 0.06em;
+    background-position: 0 100%;
+  }
+  /* The press stamp, scoped off the open line: pressing what is
+     already open has no state to change, and stamping a swollen
+     line would fight the swell below. */
+  .tab_rail.is-lines .tab:not(.is-active):active {
+    transform: scale(0.985);
+    transition: transform var(--duration-instant) var(--ease-out-expo);
+  }
+  /* The open line SWELLS — scale contrast is the state, not just
+     ink. Transform only (no reflow: neighbors hold still and the
+     rail's gap absorbs the growth), origin left so the line grows
+     into the page, not off its own left edge. The underline
+     thickens with the scale for free. Held back on the stacked
+     layout, where a swelling line under a tapping thumb reads as
+     wobble, not emphasis. */
+  .tab_rail.is-lines .tab {
+    transform-origin: left center;
+  }
+  .tab_rail.is-lines .tab.is-active {
+    color: var(--m-ink);
+    background-size: 100% 0.14em;
+    background-position: 0 100%;
+    transform: scale(1.12);
+  }
+  @media (max-width: 60rem) {
+    .tab_rail.is-lines .tab.is-active {
+      transform: none;
+    }
+  }
+
+  /* Every voice's panel settles in once when it is revealed —
+     unhiding restarts the animation, so each swap gets the
+     beat without any JS help. */
+  .tab_panel {
+    padding-top: var(--spacing-small);
+    max-width: var(--container-measure-md, 62ch);
+    animation: tab-settle var(--duration-normal) var(--ease-out-expo);
+  }
+  @keyframes tab-settle {
+    from {
+      opacity: 0;
+      transform: translateY(0.3rem);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tab_panel {
+      animation: none;
+    }
+    .tab_rail.is-folder .tab {
+      transition: none;
+    }
+    /* The line voice's sweep is also its auto-play countdown;
+       under reduced motion the controller never auto-plays, and
+       the mark itself lands instantly. */
+    .tab_rail.is-lines .tab {
+      transition: none;
+    }
+  }
+
+  /* ── dialog — a sheet stamped onto the page: paper, drawn
+     ink rule, hard offset, and a plain dim behind it. No
+     backdrop blur; print does not defocus. ── */
+  .dialog {
+    /* Preflight zeroes dialog margins; restore the UA's
+       centering. */
+    margin: auto;
+    background: var(--m-surface);
+    color: var(--m-ink);
+    border: 0.125rem solid var(--m-ink);
+    border-radius: var(--radius-xs);
+    box-shadow: 0.3125rem 0.3125rem 0 0 var(--m-ink);
+    padding: var(--spacing-medium);
+    width: min(28rem, calc(100vw - 2 * var(--spacing-global)));
+  }
+  .dialog::backdrop {
+    background: oklch(0% 0 0 / 0.5);
+  }
+  .dialog[open] {
+    animation: dialog-stamp var(--duration-fast) var(--ease-out-expo);
+  }
+  @keyframes dialog-stamp {
+    from {
+      opacity: 0;
+      transform: scale(0.985);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dialog[open] {
+      animation: none;
+    }
+  }
+  .dialog_head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1em;
+  }
+
+  /* ── tip — a margin note in ink. Left-aligned over its
+     word like a proofreader writes, patient on the way in
+     (a beat of delay), instant on the way out. NOT for use
+     directly on a .button — buttons spend both pseudo
+     layers; wrap the button in a span.tip instead. ── */
+  .tip {
+    position: relative;
+    display: inline-block;
+  }
+  .tip::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 0.5rem);
+    left: 0;
+    z-index: 30;
+    background: var(--m-ink);
+    color: var(--m-paper);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+    padding: 0.4em 0.65em;
+    border-radius: var(--radius-xs);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(0.2rem);
+    transition:
+      opacity var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .tip:hover::after,
+  .tip:focus-visible::after,
+  .tip:focus-within::after {
+    opacity: 1;
+    transform: none;
+    transition-delay: 350ms;
+  }
+
+  /* ── info — a circle-i that reveals a tooltip on hover or
+     focus: the "what is this?" affordance beside a label, a
+     stat, a field. The mark is a muted Freehand glyph that
+     inks on interaction; the note is the same ink margin note
+     as the tip, centred over the icon and free to WRAP for a
+     full sentence. Put the copy in data-tip AND mirror it into
+     aria-label so screen readers get it too. Focusable —
+     render it as a <button type="button">. ── */
+  .info {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: -0.15em;
+    width: 1.1em;
+    height: 1.1em;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+    color: var(--m-ink-muted);
+    cursor: help;
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+  .info:hover,
+  .info:focus-visible {
+    color: var(--m-ink);
+  }
+  .info .icon {
+    width: 100%;
+    height: 100%;
+  }
+  .info::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 0.45rem);
+    left: 50%;
+    z-index: 30;
+    width: max-content;
+    max-width: 15rem;
+    background: var(--m-ink);
+    color: var(--m-paper);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    line-height: 1.45;
+    letter-spacing: 0.03em;
+    text-align: left;
+    padding: 0.5em 0.7em;
+    border-radius: var(--radius-xs);
+    white-space: normal;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, 0.2rem);
+    transition:
+      opacity var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .info:hover::after,
+  .info:focus-visible::after {
+    opacity: 1;
+    transform: translate(-50%, 0);
+    transition-delay: 350ms;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .info::after {
+      transform: translateX(-50%);
+      transition: opacity var(--duration-fast) var(--ease-out-expo);
+    }
+    .info:hover::after,
+    .info:focus-visible::after {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* ── toast — an alert that arrives, says it once, and
+     leaves to the right like the text-link sweep does. ── */
+  .toast_rack {
+    position: fixed;
+    right: var(--spacing-global);
+    bottom: var(--spacing-global);
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: min(26rem, calc(100vw - 2 * var(--spacing-global)));
+  }
+  .toast {
+    box-shadow: var(--m-shadow-md);
+    animation: toast-in var(--duration-normal) var(--ease-out-expo);
+  }
+  .toast.is-leaving {
+    animation: toast-out var(--duration-normal) var(--ease-in-out-smooth) forwards;
+  }
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.5rem);
+    }
+  }
+  @keyframes toast-out {
+    to {
+      opacity: 0;
+      transform: translateX(0.75rem);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .toast,
+    .toast.is-leaving {
+      animation: none;
+    }
+  }
+
+  /* ── consent — the cookie notice: a small sheet fixed to a
+     bottom corner, not a full-width law bar (a bar reads as a
+     generic compliance strip; a capped-width sheet reads as the
+     system's own object, same idea as .receipt/.toast). Built by
+     composing .card.is-elevated's surface (border, shadow-md,
+     radius, surface bg) rather than restating it — this rule
+     only adds what a card doesn't already have: fixed placement,
+     safe-area spacing off the viewport edge, a capped width so
+     it reads as a note rather than a wall, and the grain clip.
+
+     Renders `hidden` in the markup until the consent script (see
+     Site.astro) decides to show it. Unhiding restarts the
+     animation below with no JS-added class needed — the same
+     technique .tab_panel uses ("unhiding restarts the animation").
+     If a visitor already answered, the script never removes
+     `hidden`, so the sheet never renders or animates at all.
+
+     Reuses .toast's own toast-in keyframe rather than inventing a
+     new one: both are fixed, JS-timed notices that arrive once and
+     are never scroll-triggered. motion-fade-up/-in intentionally
+     don't fit here — that pair is wired to the [data-reveal]
+     IntersectionObserver, and a fixed element already sitting
+     inside the viewport would fire that observer immediately
+     instead of waiting for the script's own delay. ── */
+  .consent {
+    position: fixed;
+    right: var(--spacing-global);
+    bottom: var(--spacing-global);
+    z-index: 60;
+    max-width: 23rem;
+    overflow: hidden;
+    animation: toast-in var(--duration-normal) var(--ease-out-expo);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .consent {
+      animation: none;
+    }
+  }
+
+  /* ── switch — a slider stamp, square like everything else
+     here. The ink block slides; the track takes the
+     highlight when the answer is yes. Not an OS pill. ── */
+  .field_switch {
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    font-size: var(--text-small);
+    cursor: pointer;
+  }
+  .field_switch input {
+    appearance: none;
+    position: relative;
+    width: 2.05em;
+    height: 1.15em;
+    margin: 0;
+    flex: none;
+    border: 0.125em solid var(--m-ink);
+    border-radius: var(--radius-xs);
+    background: var(--m-paper);
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--ease-out-expo);
+  }
+  .field_switch input::before {
+    content: '';
+    position: absolute;
+    top: 0.09em;
+    left: 0.09em;
+    width: 0.62em;
+    height: 0.72em;
+    background: var(--m-ink);
+    border-radius: 0.08em;
+    transition: transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .field_switch input:checked {
+    background: var(--m-accent);
+  }
+  .field_switch input:checked::before {
+    transform: translateX(0.98em);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .field_switch input,
+    .field_switch input::before {
+      transition: none;
+    }
+  }
+
+  /* ── file — the browser gives nothing, so the trigger is
+     a drawn button and the chosen file reads back as a
+     marked answer. The input itself hides but keeps focus,
+     which the trigger wears as the two-ink mark. ── */
+  .field_file {
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+    flex-wrap: wrap;
+  }
+  .field_file input {
+    position: absolute;
+    width: 0.0625rem;
+    height: 0.0625rem;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .field_file input:focus-visible + .button {
+    outline: 0.125rem solid var(--m-focus);
+    outline-offset: 0.125rem;
+    box-shadow: 0 0 0 0.125rem var(--m-accent);
+  }
+  .field_file_name {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--m-ink-muted);
+  }
+  .field_file.is-filled .field_file_name {
+    color: var(--m-on-accent);
+    background: color-mix(in oklab, var(--m-accent) 45%, var(--m-surface));
+    padding: 0.2em 0.5em;
+    border-radius: var(--radius-xs);
+  }
+
+  /* ── stepper — plus and minus drawn as ink boxes flanking
+     a mono count. Hover inverts like the secondary button;
+     the browser's spinners are gone. ── */
+  .field_stepper {
+    display: flex;
+    align-items: stretch;
+    gap: 0.375rem;
+  }
+  .field_stepper .field_input {
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    font-family: var(--font-mono);
+    -moz-appearance: textfield;
+  }
+  .field_stepper .field_input::-webkit-outer-spin-button,
+  .field_stepper .field_input::-webkit-inner-spin-button {
+    appearance: none;
+    margin: 0;
+  }
+  .stepper_button {
+    width: 2.7em;
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 500;
+    color: var(--m-ink);
+    background: transparent;
+    border: 0.125rem solid var(--m-ink);
+    border-radius: var(--radius-xs);
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease-out-expo),
+      color var(--duration-fast) var(--ease-out-expo);
+  }
+  .stepper_button:hover {
+    background: var(--m-ink);
+    color: var(--m-paper);
+  }
+
+  /* ── range — a wash track the highlighter has filled up
+     to the answer; the thumb is a square ink block. The
+     fill rides --range-fill, set by the controller. ── */
+  .field_range input {
+    appearance: none;
+    width: 100%;
+    height: 1.2em;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+  .field_range input::-webkit-slider-runnable-track {
+    height: 0.5em;
+    border-radius: var(--radius-xs);
+    background:
+      linear-gradient(var(--m-accent), var(--m-accent)) 0 0 / var(--range-fill, 50%) 100% no-repeat,
+      color-mix(in oklab, var(--m-ink) 8%, var(--m-surface));
+  }
+  .field_range input::-webkit-slider-thumb {
+    appearance: none;
+    width: 1em;
+    height: 1em;
+    margin-top: -0.25em;
+    background: var(--m-ink);
+    border: none;
+    border-radius: var(--radius-xs);
+  }
+  .field_range input::-moz-range-track {
+    height: 0.5em;
+    border-radius: var(--radius-xs);
+    background: color-mix(in oklab, var(--m-ink) 8%, var(--m-surface));
+  }
+  .field_range input::-moz-range-progress {
+    height: 0.5em;
+    border-radius: var(--radius-xs);
+    background: var(--m-accent);
+  }
+  .field_range input::-moz-range-thumb {
+    width: 1em;
+    height: 1em;
+    background: var(--m-ink);
+    border: none;
+    border-radius: var(--radius-xs);
+  }
+
+  /* ── search — a field with its tool in hand: the glass
+     sits in the stroke, the clear X appears once there is
+     something to clear. ── */
+  .field_search {
+    position: relative;
+  }
+  .field_search .field_input {
+    padding-left: 2.5em;
+  }
+  .field_search.is-filled .field_input {
+    padding-right: 2.5em;
+  }
+  .field_search_icon {
+    position: absolute;
+    left: 0.85em;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.1em;
+    height: 1.1em;
+    color: var(--m-ink-muted);
+    pointer-events: none;
+  }
+  .field_search:focus-within .field_search_icon {
+    color: var(--m-on-accent);
+  }
+  .field_search_clear {
+    position: absolute;
+    right: 0.55em;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+    width: 1.7em;
+    height: 1.7em;
+    padding: 0.3em;
+    background: none;
+    border: none;
+    border-radius: var(--radius-xs);
+    color: inherit;
+    cursor: pointer;
+  }
+  .field_search.is-filled .field_search_clear {
+    display: grid;
+    place-items: center;
+  }
+  .field_search_clear .icon {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ── field group — related questions ruled together;
+     the legend is the group's label, resting on the line. ── */
+  .field_group {
+    border: 0.0625rem solid var(--m-line);
+    border-radius: var(--radius-xs);
+    padding: var(--spacing-small) var(--spacing-medium) var(--spacing-medium);
+    margin: 0;
+    min-width: 0;
+  }
+  .field_group legend {
+    padding: 0 0.4em;
+    margin-left: -0.4em;
+  }
+
+  /* ── button is-loading — the sanctioned loop. An ink rule
+     sweeps the base of the face until the answer comes back:
+     it is information, not decoration, the one motion in the
+     system allowed to repeat. ── */
+  .button.is-loading {
+    pointer-events: none;
+  }
+  .button.is-loading::after {
+    background:
+      linear-gradient(var(--m-ink), var(--m-ink)) -40% 100% / 35% 0.15em no-repeat,
+      var(--btn-surface);
+    animation: btn-progress 1.1s var(--ease-in-out-smooth) infinite;
+  }
+  @keyframes btn-progress {
+    from {
+      background-position: -40% 100%, 0 0;
+    }
+    to {
+      background-position: 140% 100%, 0 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .button.is-loading::after {
+      animation: none;
+      background-position: 50% 100%, 0 0;
+    }
+  }
+
+  /* ── quote — a pull from a real mouth. No giant quotation
+     marks, no gray italic slab: the line that matters is
+     highlighted the way a reader marks the sentence that
+     made them call, and the human gets the spot color. ── */
+  .quote {
+    margin: 0;
+  }
+  .quote_text {
+    font-size: var(--text-body-lg);
+    line-height: var(--text-body-lg--line-height);
+    max-width: var(--container-measure-sm, 56ch);
+  }
+  .quote_attr {
+    margin-top: var(--spacing-small);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--m-ink-muted);
+  }
+
+  /* ── del — the proofreader's kill: a word struck from the
+     vocabulary. The word drops to muted ink and a full-ink pen
+     line is drawn through it, overshooting the word slightly and
+     tilted a hair off level, the same off-grid tilt family as
+     the tape: a hand never strikes a word perfectly straight.
+     The browser's default line-through is suppressed on purpose;
+     it is glyph-colored and hairline, an edit in passing, where
+     this must read as a verdict. (The disabled field's corner-to-
+     corner diagonal was tried here first: across a word-sized box
+     that geometry lands nearly horizontal and dissolves into the
+     glyphs.) A drawn ::after, so a del must stay a single word
+     per element: an absolutely-placed stroke cannot follow a line
+     wrap. nowrap enforces that contract — without it a hyphenated
+     word ("award-winning") breaks at its own hyphen on narrow
+     screens and the stroke collapses into a stray fragment. ── */
+  del {
+    position: relative;
+    text-decoration: none;
+    white-space: nowrap;
+    color: var(--m-ink-muted);
+    padding-inline: 0.12em;
+  }
+  del::after {
+    content: '';
+    position: absolute;
+    left: -0.08em;
+    right: -0.08em;
+    top: calc(50% - 0.05em);
+    height: 0.11em;
+    background: var(--m-ink);
+    transform: rotate(-2deg);
+  }
+
+  /* ── figure — pictures sit on a mat: surface, hairline,
+     a sliver of breathing room. The caption is the archive
+     voice. is-plain drops the mat for full-bleed uses. ── */
+  .figure {
+    margin: 0;
+  }
+  .figure_frame {
+    background: var(--m-surface);
+    border: 0.0625rem solid var(--m-line);
+    border-radius: var(--radius-xs);
+    padding: 0.375rem;
+  }
+  .figure_frame img,
+  .figure_frame svg {
+    display: block;
+    width: 100%;
+    border-radius: 0.125rem;
+  }
+  .figure.is-plain .figure_frame {
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  .figure figcaption {
+    margin-top: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: var(--m-ink-muted);
+  }
+
+  /* ── stat — a big readout: the number in display ink,
+     tabular so columns of them align. Label and source
+     compose from existing pieces. ── */
+  .stat_value {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat_source {
+    margin-top: 0.35rem;
+    font-size: 0.8rem;
+    color: var(--m-ink-muted);
+  }
+
+  /* ── list — the brand MARKS every item. We do not restore
+     the preflight-stripped list-style; we hang our own marks
+     in the margin: a UL item gets a stubby HIGHLIGHTER STROKE
+     (a marker dab swiped once per line), an OL item gets a
+     HIGHLIGHTED step number. The is-check variant swaps in the
+     drawn checkmark for what is included, delivered, done.
+     Custom markers (::before, not ::marker) so the highlighter
+     can carry a background — which ::marker forbids. ── */
+  .list {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+  }
+  .list li {
+    position: relative;
+    padding-left: 1.9em;
+    margin-top: 0.5em;
+  }
+  .list li:first-child {
+    margin-top: 0;
+  }
+
+  /* UL — a small square marker in the highlighter ink, sat on
+     the first line's cap height. A drawn dot, not a dash. */
+  ul.list li::before {
+    content: '';
+    position: absolute;
+    left: 0.05em;
+    top: 0.5em;
+    width: 0.4em;
+    height: 0.4em;
+    background: var(--m-accent);
+    border-radius: 0.06em;
+  }
+
+  /* OL — a highlighted step number hung in the margin, mono
+     on the accent mark. A counter keeps wraps and start
+     values correct where the browser's numbering would. */
+  ol.list {
+    counter-reset: marker-item;
+  }
+  ol.list li {
+    counter-increment: marker-item;
+    padding-left: 2.5em;
+  }
+  ol.list li::before {
+    content: counter(marker-item);
+    position: absolute;
+    left: 0;
+    top: 0.12em;
+    min-width: 1.65em;
+    padding: 0.08em 0.32em;
+    background: var(--m-accent);
+    color: var(--m-on-accent);
+    font-family: var(--font-mono);
+    font-size: 0.78em;
+    font-weight: 600;
+    line-height: 1.35;
+    text-align: center;
+    border-radius: var(--radius-xs);
+  }
+
+  /* is-check — the drawn checkmark, overriding the stroke or
+     the number (reset content, box, and fill). */
+  .list.is-check li {
+    padding-left: 1.95em;
+  }
+  .list.is-check li::before {
+    content: '';
+    top: 0.28em;
+    left: 0;
+    min-width: 0;
+    padding: 0;
+    width: 1.05em;
+    height: 1.05em;
+    background: var(--m-ink);
+    border-radius: 0;
+    color: transparent;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6.5l2.8 2.8L10 3' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6.5l2.8 2.8L10 3' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+
+  /* ── icon_plate — a Freehand drawing on a solid accent slab:
+     the "solid gold" anchor from the training heroes' visual
+     language, systemized. The plate gives a hand-drawn icon the
+     physical weight of the tape (accent fill, grain, a slight
+     tilt off the grid) so an icon can hold a composition alone
+     instead of floating. Icon inks in on-accent; size the icon
+     inside with an em width/height as usual. One plate per
+     composition — it is a shout, not a bullet point. ── */
+  .icon_plate {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-medium);
+    background: var(--m-accent);
+    color: var(--m-on-accent);
+    border-radius: var(--radius-sm);
+    transform: rotate(-1deg);
+  }
+
+  /* ── empty — nothing here yet, said plainly on a penciled
+     sheet, with one honest line and a way forward. ── */
+  .empty {
+    background: color-mix(in oklab, var(--m-ink) 3%, var(--m-surface));
+    border: 0.0625rem solid var(--m-line);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-large);
+  }
+
+  /* ── exhibit — a small piece of paper evidence: the prop a
+     panel shows while the line beside it makes the claim. A
+     sheet of surface with the object physics the receipt and
+     the consent card established — hairline, grain child, a
+     slight tilt off the grid — sized to sit inside a panel or
+     a column. This component is only the paper; the interior
+     composes from pieces that already exist (a table, marks,
+     stamps, labels). The tilt is a static transform, so any
+     entrance motion must ride a PARENT (the tab_panel's own
+     settle, a wrapper's reveal), never this element. ── */
+  .exhibit {
+    position: relative;
+    background: var(--m-surface);
+    border: 0.0625rem solid var(--m-line);
+    border-radius: var(--radius-xs);
+    box-shadow: var(--m-shadow-sm);
+    padding: var(--spacing-medium);
+    transform: rotate(-0.75deg);
+  }
+  .exhibit_caption {
+    margin-top: var(--spacing-small);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: var(--m-ink-muted);
+  }
+
+  /* ── redact — an inline redaction: a solid ink bar where a
+     number is none of the reader's business. It COVERS real
+     placeholder text, so the bar is content-sized and a screen
+     reader still gets a value-shaped token; the marker stroke
+     is the honest way to keep a client's number private while
+     showing the document is real. Ink on any surface; on an
+     accent mark it stays ink, a verified non-text pair. ── */
+  .redact {
+    display: inline-block;
+    background: var(--m-ink);
+    color: transparent;
+    border-radius: var(--radius-xs);
+    padding-inline: 0.15em;
+    user-select: none;
+  }
+
+  /* ── table — a ledger. Mono label headers, hairline
+     rows, numbers right-aligned in mono. ── */
+  .table_wrapper {
+    overflow-x: auto;
+  }
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-small);
+  }
+  .table th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--m-ink-muted);
+    padding: 0.55em 0.9em 0.55em 0;
+    border-bottom: 0.0625rem solid var(--m-line);
+  }
+  .table td {
+    padding: 0.7em 0.9em 0.7em 0;
+    border-bottom: 0.0625rem solid var(--m-line-subtle);
+  }
+  .table .is-numeric {
+    text-align: right;
+    font-family: var(--font-mono);
+  }
+
+  /* ── tape — a statement band. Display voice, uppercase, on a
+     solid highlighter slab: the brand's loudest mark, so it is
+     used sparingly, one moment per page. It runs the full width
+     of the viewport, not the content column — warning tape does
+     not stop at the margin, it crosses the whole room. It also
+     carries a slight skew off the grid — the single deliberate
+     rule-break in a system that is otherwise square everywhere.
+     Size comes from the text-* utility the caller applies
+     (text-h2, text-h3), never hardcoded here. is-reverse tips
+     the opposite way, so a stacked run of tapes reads like torn
+     strips, not a grid — and the top/bottom edges are genuinely
+     torn: an irregular clip-path zigzag, hand-ripped rather than
+     printed. (An earlier version tried a diagonal hazard-stripe
+     print instead; at these sizes the stripe's own 45deg angle
+     compositing against the tape's rotation produced visible
+     seams no amount of tuning fully cleaned up. A clip-path is a
+     single fixed vector cut, nothing for the compositor to seam
+     against, and "torn strips" was already the brand's own name
+     for this.) is-ink flips the slab to ink on paper for the
+     rare band that must not compete with a yellow surface
+     behind it. A .grain-overlay child (see the shared per-surface
+     grain component below) gives the slab paper texture. ── */
+  .tape {
+    position: relative;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-transform: uppercase;
+    text-align: center;
+    /* A quoted word ("IMPRESSIONS.") has no internal space to
+       wrap at. Without this, a long enough quoted or hyphenated
+       word silently overflows the padding and gets clipped by
+       overflow:hidden at narrow widths — found on mobile, where
+       it cut the closing quote mark clean off. overflow-wrap is
+       the safety net that stops the clip. hyphens stays manual on
+       purpose: hyphens:auto's dictionary will hyphenate any word
+       that improves a line's fit, not just ones that must break —
+       it started splitting "EXPERTS" too. A copy-level &shy; marks
+       the one word that actually needs a break point; every other
+       word wraps whole. */
+    overflow-wrap: break-word;
+    hyphens: manual;
+    color: var(--m-on-accent);
+    background: var(--m-accent);
+    padding-block: 0.45em;
+    padding-inline: var(--spacing-global);
+    border-radius: var(--radius-xs);
+    overflow: hidden;
+    transform: rotate(-1.5deg);
+    /* An irregular torn edge, top and bottom: fine paper-fiber
+       teeth, not a cartoon sawtooth — max depth stays under a
+       tenth of an em regardless of type size. Hand-torn, not a
+       repeating pattern, so each point is a different depth. */
+    clip-path: polygon(
+      0% 0.02em, 9% 0.07em, 17% 0.01em, 24% 0.09em, 33% 0.03em,
+      41% 0.1em, 50% 0.04em, 58% 0.08em, 67% 0.01em, 75% 0.09em,
+      84% 0.03em, 92% 0.08em, 100% 0.02em,
+      100% calc(100% - 0.03em), 91% calc(100% - 0.09em), 83% calc(100% - 0.02em),
+      74% calc(100% - 0.1em), 66% calc(100% - 0.04em), 57% calc(100% - 0.11em),
+      49% calc(100% - 0.04em), 40% calc(100% - 0.08em), 32% calc(100% - 0.01em),
+      23% calc(100% - 0.09em), 15% calc(100% - 0.02em), 8% calc(100% - 0.08em),
+      0% calc(100% - 0.03em)
+    );
+  }
+  .tape.is-reverse {
+    transform: rotate(1.25deg);
+  }
+  .tape.is-ink {
+    background: var(--m-ink);
+    color: var(--m-paper);
+  }
+
+  /* ── tape-group — THE container for stacked tapes, the same
+     role button-group plays for buttons. Tapes are never loose
+     siblings. Motion belongs on a wrapper around each tape, not
+     the tape itself — the tape already carries a static rotate,
+     and the motion utilities animate transform too.
+
+     Breaks out to the true viewport edges regardless of how
+     deep it sits inside padding-global/container-large: the
+     classic width:100vw + negative margin escape, safe here
+     because html and .page-wrapper already clip overflow-x. ── */
+  .tape-group {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-large);
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+  }
+
+  /* ── band — a full-bleed ink or accent surface for a page's
+     loudest moment (a creed, a closing pitch). Composes with
+     section_layout, which already owns the background slot;
+     band just fills it with a flat, untinted color. ── */
+  .band.is-ink {
+    background: var(--m-ink);
+    color: var(--m-paper);
+  }
+  .band.is-accent {
+    background: var(--m-accent);
+    color: var(--m-on-accent);
+  }
+  /* .label.is-kicker's muted-ink color is calibrated against
+     paper, not against an ink or accent band; inside a band it
+     inherits the band's own text color instead, so it stays
+     AA-safe automatically as the band's tokens flip per mode
+     (same ratio as the already-verified ink-on-paper / on-accent-
+     on-accent pairs, just read in reverse). */
+  .band.is-ink .label.is-kicker,
+  .band.is-accent .label.is-kicker {
+    color: inherit;
+  }
+  /* del was tuned for paper (muted ink word, full-ink stroke);
+     on .band.is-ink both go nearly invisible. Unlike the kicker
+     above this cannot just inherit — the struck word still
+     carries information, so it needs its own text-safe value: a
+     muted paper for the word, full paper for the stroke, the
+     same on-band logic in reverse. 62% is a starting point, not a
+     verified one — a live AA check of muted-paper-on-ink is still
+     owed per design.md's §18 (text needs 4.5:1; this is not
+     decorative). */
+  .band.is-ink del {
+    color: color-mix(in oklab, var(--m-paper) 62%, transparent);
+  }
+  .band.is-ink del::after {
+    background: var(--m-paper);
+  }
+  /* ol.list step markers are accent-bg / on-accent-ink; on an
+     accent band that is identical to the band's own background,
+     so the marker vanishes. Invert to ink/paper there, the same
+     move .tape.is-ink makes for tapes on a loud surface. */
+  .band.is-accent ol.list li::before {
+    background: var(--m-ink);
+    color: var(--m-paper);
+  }
+
+  /* ── ledger — a ruled list of rows (icon, title, blurb,
+     trailing arrow), the pattern a services list or a menu list
+     both need. The top and bottom rules here are the design.md-
+     sanctioned exception to the no-dividers rule: a line may
+     rule a ledger's entries, it just may not divide unrelated
+     content. Hover sweeps the highlighter across the whole row
+     from the left, flipping every child to on-accent ink, and
+     nudges the arrow toward the corner it is pointing at. ── */
+  .ledger {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 0.0625rem solid var(--m-line);
+  }
+  .ledger_row {
+    border-bottom: 0.0625rem solid var(--m-line);
+  }
+  .ledger_link {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--spacing-large);
+    padding: var(--spacing-medium) var(--spacing-xsmall);
+    text-decoration: none;
+    color: inherit;
+    background-image: linear-gradient(var(--m-accent), var(--m-accent));
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    background-position: 0 0;
+    transition: background-size var(--duration-normal) var(--ease-out-expo);
+  }
+  .ledger_link:hover {
+    background-size: 100% 100%;
+  }
+  .ledger_link:hover .ledger_title,
+  .ledger_link:hover .ledger_body,
+  .ledger_link:hover .ledger_icon,
+  .ledger_link:hover .ledger_arrow {
+    color: var(--m-on-accent);
+  }
+  .ledger_icon {
+    width: var(--spacing-large);
+    height: var(--spacing-large);
+    color: var(--m-ink);
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+  .ledger_text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-tiny);
+    min-width: 0;
+  }
+  .ledger_title {
+    color: var(--m-ink);
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+  .ledger_body {
+    max-width: var(--container-measure-md, 62ch);
+    transition: color var(--duration-fast) var(--ease-out-expo);
+  }
+  .ledger_arrow {
+    width: var(--spacing-medium);
+    height: var(--spacing-medium);
+    color: var(--m-ink-muted);
+    transition:
+      color var(--duration-fast) var(--ease-out-expo),
+      transform var(--duration-normal) var(--ease-out-expo);
+  }
+  .ledger_link:hover .ledger_arrow {
+    transform: translate(0.15em, -0.15em);
+  }
+
+  /* ── receipt — a strip of thermal paper: the system's mono
+     register made physical. Business line, itemized rows, a
+     verdict total, one voice end to end. Torn on the BOTTOM
+     edge only (the top is a straight machine cut, the way a
+     ticket tears off a roll) via clip-path, the exact technique
+     .tape uses and for the same reason: mask-image composites a
+     visible seam wherever it meets a rotation, diagnosed live on
+     the tape; a clip-path is one fixed vector cut, nothing for
+     the compositor to seam against. .receipt_leader is a real
+     dotted BORDER between a row's name and its value, never
+     typed periods, so a screen reader reads "monthly retainer,
+     paid," never a string of dots. .receipt_rule is the
+     design.md-sanctioned exception to the no-dividers rule, the
+     same one .ledger's top/bottom rules use: it rules this
+     component's own entries, it never divides unrelated content.
+     Elevation is earned here, not decorative: a receipt is a
+     physical object lying on the page, so the shadow is the
+     plain --m-shadow-md, never tinted. ── */
+  .receipt_frame {
+    position: relative;
+    overflow: hidden;
+    /* Padding cancelled by an equal negative margin: the frame's
+       footprint in normal block flow is unchanged, but its own
+       overflow:hidden edge now sits clear of .receipt's own
+       box-shadow, so the elevation this component earns isn't
+       guillotined by the very wrapper that has to clip the feed
+       animation. Same escape-hatch idea as .tape-group's
+       negative-margin viewport breakout, scaled down here for a
+       shadow instead of a viewport edge. Also reserves the
+       receipt's full height in normal flow (transform never
+       affects box height), so printing causes zero CLS.
+       Sized to --spacing-small (1rem), not -medium: this margin
+       is a grid item inside .receipts_grid, and a grid item's
+       negative margin shifts it within its own track rather than
+       cancelling out against a sibling the way it does in block
+       flow — it visibly eats into column-gap on the side it faces.
+       -small is tuned to just clear --m-shadow-md's actual reach
+       (a 12px blur, no horizontal offset) so the leak into the
+       gap stays as small as the shadow requires, not an arbitrary
+       rung bigger. The two-column .receipts_grid gap is sized on
+       --split-gap-large already accounting for this leak. */
+    margin: calc(var(--spacing-small) * -1);
+    padding: var(--spacing-small);
+    /* The tilt lives HERE, not on .receipt: .receipt already
+       carries the feed animation's translateY, and a transform
+       animation on the same element would stomp a static rotate
+       — the same reason .tape's motion sits on a wrapper, never
+       the tape itself. */
+    transform: rotate(1.25deg);
+  }
+  .receipt {
+    position: relative;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.7;
+    font-variant-numeric: tabular-nums;
+    text-transform: uppercase;
+    color: var(--m-ink);
+    background: var(--m-surface);
+    border: 0.0625rem solid var(--m-line);
+    border-radius: var(--radius-xs);
+    box-shadow: var(--m-shadow-md);
+    padding: var(--spacing-medium) var(--spacing-medium) var(--spacing-large);
+    /* Fine, irregular paper-fiber teeth on the bottom edge only,
+       hand-torn rather than a repeating pattern — every point a
+       different depth, all under 0.35em regardless of type size.
+       The top stays two flat corners: a receipt's head is a
+       straight cut, only the tear-off end is ragged. */
+    clip-path: polygon(
+      0% 0%, 100% 0%, 100% calc(100% - 0.18em),
+      93% calc(100% - 0.3em), 86% calc(100% - 0.09em), 79% calc(100% - 0.26em),
+      72% calc(100% - 0.05em), 65% calc(100% - 0.32em), 58% calc(100% - 0.14em),
+      51% calc(100% - 0.28em), 44% calc(100% - 0.07em), 37% calc(100% - 0.24em),
+      30% calc(100% - 0.11em), 23% calc(100% - 0.31em), 16% calc(100% - 0.06em),
+      9% calc(100% - 0.22em), 2% calc(100% - 0.15em), 0% calc(100% - 0.2em)
+    );
+  }
+  .receipt_head {
+    text-align: center;
+  }
+  .receipt_head > * + * {
+    margin-top: 0.15em;
+  }
+  .receipt_row,
+  .receipt_total {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5em;
+  }
+  .receipt_total {
+    font-weight: 600;
+  }
+  .receipt_leader {
+    flex: 1;
+    margin-bottom: 0.2em;
+    border-bottom: 0.09em dotted var(--m-line-strong);
+  }
+  .receipt_rule {
+    margin-block: 0.5em;
+    border-bottom: 0.0625rem dashed var(--m-line-strong);
+  }
+  .receipt_foot {
+    text-align: center;
+  }
+
+  /* ── receipt print — one shot, then rest. A thermal printer
+     feeds paper in visible line steps, so the easing is a
+     steps() stutter, never a curve: that mechanical stagger is
+     the whole wow. Paused by default and released only once an
+     ancestor .receipt_frame picks up .is-revealed from the
+     page's [data-reveal] IntersectionObserver (see index.astro)
+     — the same html.js gate that system already uses, so a
+     receipt dropped into any page wires up for free the moment
+     its frame carries data-reveal. Without JS, html.js never
+     matches, so no animation is ever attached and the receipt
+     simply rests fully printed: progressive enhancement, never
+     a stuck loading state. It plays once: IntersectionObserver
+     unobserves after the first hit, so .is-revealed is added
+     exactly once and nothing here has an infinite iteration
+     count to loop on. ── */
+  @keyframes receipt-feed {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  html.js .receipt_frame .receipt {
+    animation: receipt-feed 1400ms steps(22, end) both;
+    animation-play-state: paused;
+  }
+  html.js .receipt_frame.is-revealed .receipt {
+    animation-play-state: running;
+  }
+
+  /* Each line "prints" as its strip of paper clears the mouth: a
+     near-instant opacity swap (1ms, steps(1, end)) held off by
+     --m-delay, the same stagger custom property .motion-fade-up
+     uses elsewhere in this file — set it inline per line
+     (--m-delay: 200ms, spaced roughly 1400ms / line count apart)
+     so text appears exactly as its line of paper comes into
+     view. */
+  @keyframes receipt-print {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  html.js .receipt_frame .receipt_head,
+  html.js .receipt_frame .receipt_row,
+  html.js .receipt_frame .receipt_total,
+  html.js .receipt_frame .receipt_foot {
+    opacity: 0;
+    animation: receipt-print 1ms steps(1, end) both;
+    animation-delay: var(--m-delay, 0ms);
+    animation-play-state: paused;
+  }
+  html.js .receipt_frame.is-revealed .receipt_head,
+  html.js .receipt_frame.is-revealed .receipt_row,
+  html.js .receipt_frame.is-revealed .receipt_total,
+  html.js .receipt_frame.is-revealed .receipt_foot {
+    animation-play-state: running;
+  }
+  /* The blanket reduced-motion clamp near the bottom of this file
+     (*, *::before, *::after { animation-duration: 0.01ms
+     !important }) already forces both animations above to
+     resolve in under a millisecond the moment .is-revealed
+     lands, so nothing here is strictly required for that rule to
+     hold. An explicit override still ships, matching every other
+     motion component in this file (.acc, .dropdown, .menu,
+     .tab_panel, .dialog, .toast): removing the animation
+     outright, rather than trusting a near-zero duration, is the
+     house's stated practice and avoids a stray intermediate
+     steps() frame ever painting. */
+  @media (prefers-reduced-motion: reduce) {
+    html.js .receipt_frame .receipt,
+    html.js .receipt_frame .receipt_head,
+    html.js .receipt_frame .receipt_row,
+    html.js .receipt_frame .receipt_total,
+    html.js .receipt_frame .receipt_foot {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* ── footer — logo, nav links, one label line. Space
+     separates the pieces; nothing rules between them, the
+     footer is chrome, not a ledger. Wraps to a stacked column
+     under the nav breakpoint, the label line dropping to its
+     own row. ── */
+  .footer {
+    padding-block: var(--spacing-xlarge) var(--spacing-large);
+  }
+  .footer_inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-medium);
+  }
+  .footer_nav {
+    display: flex;
+    gap: var(--spacing-tiny);
+  }
+  .footer_line {
+    flex-basis: 100%;
+    margin-top: var(--spacing-medium);
+  }
+  @media (min-width: 60rem) {
+    .footer_line {
+      flex-basis: auto;
+      margin-top: 0;
+    }
+  }
+
+  /* ══════════════════════════════════════════════════
+     PROMOTED PAGE EXCEPTIONS — formerly page-scoped
+     <style> rules, relocated here during the React
+     conversion: Astro's scoped styles cannot reach
+     markup rendered by React components, and the
+     structure contract already mandated promotion.
+     Each keeps its original page comment.
+     ══════════════════════════════════════════════════ */
+
+  /* ── home (#problem) — the kicker centers over the
+     full-bleed tape mass: container-large is itself centered
+     on the page, so text-align:center here lands on the same
+     horizontal center the 100vw tape-group centers on, no
+     breakout needed. ── */
+  .problem_kicker {
+    text-align: center;
+    margin-bottom: var(--spacing-large);
+  }
+
+  /* ── quote (#quote) — .quote_card: no reusable "form step"
+     primitive exists in the system yet, and every length below
+     is a spacing token. Steps get more breathing room than a
+     default .card (which is tuned for small specimens), since
+     each one carries a full set of fields. Grow into a
+     /components specimen if a second multi-step flow needs
+     this shape. ── */
+  .quote_card {
+    padding: var(--spacing-xlarge);
+  }
+  @media (max-width: 30rem) {
+    .quote_card {
+      padding: var(--spacing-large);
+    }
+  }
+
+  /* ── quote (#quote) — .quote_honeypot: the standard
+     visually-hidden-but-DOM-present technique (clip a 1x1 box
+     instead of display:none, so the field still has a real,
+     computable box for a bot that inspects layout, while a
+     sighted visitor never sees it). Serves the same role as
+     Tailwind's sr-only; written out because the honeypot's
+     correctness matters more than avoiding one small rule. ── */
+  .quote_honeypot {
+    position: absolute;
+    width: 0.0625rem;
+    height: 0.0625rem;
+    padding: 0;
+    margin: -0.0625rem;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   LEGACY TOKEN BRIDGE — pre-Marker components resolve
+   against these until they migrate to system classes.
+   Accent note: yellow never carries text on paper, so
+   the old text-grade accent maps to ACCENT INK — deep
+   warm gold in light, the true yellow in dark (where
+   it passes AA). Old teal/amber/rust map to the
+   semantic hues on the brand wheel.
+   ══════════════════════════════════════════════════ */
+:root {
+  --color-bg: var(--m-paper);
+  --color-surface: var(--m-surface);
+  --color-text: var(--m-ink);
+  --color-text-muted: var(--m-ink-muted);
+  --color-text-subtle: var(--m-ink-muted);
+  --color-accent: var(--m-ink-accent);
+  --color-accent-teal: var(--m-info);
+  --color-accent-amber: var(--m-warning);
+  --color-accent-rust: var(--m-error);
+  --color-error: var(--m-error);
+  --color-success: var(--m-success);
+  --color-name-start: var(--m-ink);
+  --color-name-end: var(--m-ink);
+  --color-kinetic: var(--m-ink);
+  --color-selection-bg: var(--m-accent);
+  --color-selection-text: var(--m-on-accent);
+  --hero-bg: var(--m-paper);
+  --hero-vignette: transparent;
+  --grain-opacity: var(--m-grain-opacity);
+  --border-subtle: 0.0625rem solid var(--m-line);
+  --border-accent: 0.0625rem solid var(--m-line-strong);
+
+  --text-xs: var(--text-tiny);
+  --text-sm: var(--text-small);
+  --text-base: var(--text-body);
+  --text-md: var(--text-body-md);
+  --text-lg: var(--text-body-lg);
+  --text-xl: var(--text-h4);
+  --text-2xl: var(--text-h3);
+  --text-3xl: var(--text-h2);
+  --text-4xl: var(--text-h1);
+  --tracking-tight: -0.025em;
   --tracking-normal: 0;
-  --tracking-wide:   0.18em;
-
-  /* — Weights — */
-  --weight-light:   300;
+  --tracking-wide: 0.18em;
+  --weight-light: 300;
   --weight-regular: 400;
-  --weight-medium:  500;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
 
-  /* — Radius — */
-  --radius-sm:   3px;     /* tiny chips, shimmer pills */
-  --radius-md:   4px;     /* Card default, small panels */
-  --radius-lg:   8px;     /* dashboard panels, lead-teasers */
-  --radius-xl:   14px;    /* cookie banner card, hero panels */
-  --radius-full: 9999px;  /* pill tabs, dots, circular icons */
-
-  /* — Spacing — */
-  --space-section:     clamp(8rem, 20vh, 14rem);
-  --space-page-top:    clamp(8rem, 18vh, 12rem);
+  --space-section: var(--spacing-section-lg);
+  --space-page-top: clamp(8rem, 18vh, 12rem);
   --space-page-bottom: clamp(4rem, 10vh, 8rem);
-  --space-block:       clamp(3rem, 6vw, 5rem);
-  --space-block-lg:    clamp(4rem, 8vw, 6rem);
-  --space-element:     clamp(1.5rem, 3vw, 2.5rem);
-  --space-card:        clamp(1.5rem, 3vw, 2rem);
-  --space-page-x:      clamp(1.5rem, 5vw, 3.5rem);
+  --space-block: var(--spacing-section-sm);
+  --space-block-lg: var(--spacing-section-md);
+  --space-element: clamp(1.5rem, 3vw, 2.5rem);
+  --space-card: clamp(1.5rem, 3vw, 2rem);
+  --space-page-x: var(--spacing-global);
 }
 
-/* ==============================
-   DARK THEME (default)
-   ============================== */
-:root,
-[data-theme="dark"] {
-  --color-bg: #0a0a08;                  /* near-neutral dark, no warm undertone */
-  --color-surface: #1d1814;             /* confident elevation gap (5 OKLCH steps) */
-  --color-text: #ede8df;
-  --color-text-muted: #a09488;          /* 6.16:1 AA on bg */
-  --color-text-subtle: #8a7d6e;         /* ~4.85:1 AA, hierarchy preserved vs muted */
-  --color-accent: #c4a47c;
-  --color-accent-teal: oklch(58% 0.075 175);   /* warmer teal — joins the warm system */
-  --color-accent-amber: oklch(75.5% 0.162 71.4);
-  --color-accent-rust: oklch(62% 0.155 38);    /* lifted to amber luminance band */
-  --color-name-start: #f0ebe2;
-  --color-name-end: #c4a47c;            /* match accent — gradient does real work now */
-  --color-kinetic: #ede8df;
-  --color-selection-bg: #c4a47c;
-  --color-selection-text: #0a0a08;
-  --grain-opacity: 0.06;
-  --hero-bg: #0a0a08;
-  --hero-vignette: rgba(0, 0, 0, 0);
-  /* Dark mode: real layered drop shadows. High alpha + wide blur so they
-     register on a near-black background — but pure black, no accent tint,
-     no glow. Combined with --color-surface (clearly lighter than --color-bg)
-     for genuine elevation. */
-  --shadow-sm:
-    0 2px 4px rgba(0, 0, 0, 0.55),
-    0 4px 10px rgba(0, 0, 0, 0.4);
-  --shadow-md:
-    0 4px 8px rgba(0, 0, 0, 0.5),
-    0 10px 20px rgba(0, 0, 0, 0.55),
-    0 20px 40px rgba(0, 0, 0, 0.4);
-  --shadow-lg:
-    0 6px 12px rgba(0, 0, 0, 0.5),
-    0 16px 32px rgba(0, 0, 0, 0.6),
-    0 40px 72px rgba(0, 0, 0, 0.5),
-    0 72px 120px rgba(0, 0, 0, 0.35);
-  --color-error: #d96666;               /* real warning red — interrupts, doesn't pair */
-  --color-success: #7cc49b;
+@media (max-width: 640px) {
+  :root {
+    --space-section: clamp(4.5rem, 12vh, 8rem);
+    --space-page-top: clamp(5rem, 12vh, 8rem);
+    --space-page-bottom: clamp(2.5rem, 6vh, 4rem);
+    --space-block: clamp(2rem, 5vw, 3rem);
+    --space-block-lg: clamp(2.5rem, 6vw, 4rem);
+  }
 }
 
-/* ==============================
-   LIGHT THEME
-   ============================== */
-[data-theme="light"] {
-  --color-bg: #efe7d6;                  /* less yellow, more ivory */
-  --color-surface: #f7eee0;             /* lighter than bg — paper on paper, elevation reads correctly */
-  --color-text: #2a2018;
-  --color-text-muted: #6d5c48;          /* 5.29:1 AA on bg */
-  --color-text-subtle: #7a6a52;         /* ~4.6:1 — squeaks past AA, meaningful hierarchy gap */
-  --color-accent: #946028;              /* ~4.6:1 — gold-ish, AA pass */
-  --color-accent-teal: oklch(48% 0.10 218);
-  --color-accent-amber: oklch(50% 0.154 54);
-  --color-accent-rust: oklch(55% 0.16 32);
-  --color-name-start: #2a2018;
-  --color-name-end: #5a4530;
-  --color-kinetic: #3a2e20;
-  --color-selection-bg: #946028;
-  --color-selection-text: #efe7d6;
-  --grain-opacity: 0.10;
-  --hero-bg: #ece3d0;
-  --hero-vignette: rgba(70, 55, 28, 0.08);
-  /* Light mode: layered warm shadows.
-     Three+ layers per step, low alpha per layer, negative spread on the outer
-     layers so the falloff is soft. Hue is warm brown (28°) at modest
-     saturation so shadows pick up palette warmth rather than reading gray. */
-  --shadow-sm:
-    0 1px 1px 0 hsl(28 35% 22% / 0.035),
-    0 2px 4px -1px hsl(28 35% 22% / 0.04);
-  --shadow-md:
-    0 1px 2px 0 hsl(28 35% 22% / 0.025),
-    0 4px 8px -2px hsl(28 35% 22% / 0.045),
-    0 12px 20px -6px hsl(28 35% 22% / 0.05);
-  --shadow-lg:
-    0 2px 4px 0 hsl(28 35% 22% / 0.025),
-    0 8px 16px -4px hsl(28 35% 22% / 0.04),
-    0 24px 36px -12px hsl(28 35% 22% / 0.05),
-    0 48px 72px -24px hsl(28 35% 22% / 0.045);
-  --color-error: #b03838;               /* real warning red, not terracotta */
-  --color-success: #266740;              /* deeper, family-cohesive, AA pass */
-}
-
-html {
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  font-family: 'DM Sans', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-  /* Smooth crossfade when data-theme changes — only fires on subsequent
-     property updates (the inline pre-paint script sets data-theme before
-     first paint so there's no initial flash). */
-  transition:
-    background-color 300ms var(--ease-out-expo),
-    color 300ms var(--ease-out-expo);
-}
-
-/* ==============================
-   HEADINGS — NEVER ITALIC
-   Global enforcement. Overrides any component CSS that may try to italicize a
-   heading or a heading-styled element. Also disables browser-synthesized
-   italic, in case any rule slips through.
-   ============================== */
-h1, h2, h3, h4, h5, h6,
-.heading {
-  font-style: normal !important;
-  font-synthesis-style: none;
-}
-
-h1 em, h1 i, h2 em, h2 i, h3 em, h3 i,
-h4 em, h4 i, h5 em, h5 i, h6 em, h6 i,
-.heading em, .heading i {
-  font-style: normal;
-}
-
+/* ══════════════════════════════════════════════════
+   SITE BEHAVIORS — ported intact from the old sheet.
+   ══════════════════════════════════════════════════ */
 body {
   min-height: 100dvh;
 }
 
-/* ==============================
-   HIDE NATIVE SCROLLBAR (desktop only — custom ScrollProgress replaces it)
-   ============================== */
-@media (pointer: fine) and (min-width: 769px) {
-  html {
-    scrollbar-width: none;
-  }
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-::selection {
-  background-color: var(--color-selection-bg);
-  color: var(--color-selection-text);
-}
-
-/* Light mode: grain overlays use multiply (overlay produces nothing on cream surfaces) */
-[data-theme="light"] .grain-overlay {
-  mix-blend-mode: multiply;
-}
-
-/* ==============================
-   MOBILE SPACING OVERRIDES
-   ============================== */
-@media (max-width: 640px) {
-  :root {
-    --space-section:     clamp(4.5rem, 12vh, 8rem);
-    --space-page-top:    clamp(5rem, 12vh, 8rem);
-    --space-page-bottom: clamp(2.5rem, 6vh, 4rem);
-    --space-block:       clamp(2rem, 5vw, 3rem);
-    --space-block-lg:    clamp(2.5rem, 6vw, 4rem);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-delay: 0ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* ==============================
-   ANIMATION FALLBACK — reveal content if JS animations fail
-   Elements start with inline opacity:0 for entrance animations.
-   This guarantees visibility after 1.5s even if motion lib fails.
-   ============================== */
-@keyframes fallback-reveal {
-  to { opacity: 1; transform: none; width: auto; }
-}
-
-[style*="opacity: 0"],
-[style*="width: 0"] {
-  animation: fallback-reveal 0s forwards;
-  animation-delay: 0.8s;
-}
-
-/* ==============================
-   SCROLL REVEAL UTILITY
-   Single source of truth for fade-in-on-scroll across the site.
-
-   Usage:
-     <div class="reveal">…</div>                 ← simple fade-up
-     <div class="reveal" style="--reveal-i:0">  ← staggered (use 0, 1, 2…)
-     <div class="reveal" style="--reveal-i:1">
-     <div class="reveal" style="--reveal-i:2">
-
-   A single global IntersectionObserver in Layout.astro adds `.is-visible`
-   when each element enters view. Animation tokens come from the design
-   system (--duration-slow + --ease-out-expo). Stagger delay = 60ms × i.
-
-   Without JS or before js-ready, content stays fully visible — the
-   initial-hidden state is gated on html.js-ready.
-   ============================== */
-html.js-ready .reveal {
-  opacity: 0;
-  transform: translateY(14px);
-  transition:
-    opacity var(--duration-slow) var(--ease-out-expo),
-    transform var(--duration-slow) var(--ease-out-expo);
-  transition-delay: calc(var(--reveal-i, 0) * 60ms);
-  will-change: opacity, transform;
-}
-
-html.js-ready .reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html.js-ready .reveal {
-    transition-duration: 1ms;
-    transition-delay: 0ms;
-    transform: none;
-  }
-}
-
-/* ==============================
-   GLOBAL FOCUS & INTERACTION
-   ============================== */
-*:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 3px;
-  border-radius: 2px;
-}
-
-*:focus:not(:focus-visible) {
-  outline: none;
-}
-
-button:active:not(:disabled),
-[role="button"]:active:not(:disabled),
-a:active[class*="cta"],
-a:active[class*="btn"],
-a:active[class*="email"] {
-  transform: scale(0.98);
-}
-
-/* ==============================
-   GRAIN OVERLAY — shared film-grain texture for elevated surfaces
-   ============================== */
+/* Legacy per-surface grain (components that carry their own) */
 .grain-overlay {
   position: absolute;
   inset: 0;
@@ -326,22 +3684,211 @@ a:active[class*="email"] {
   mix-blend-mode: overlay;
   pointer-events: none;
 }
+[data-theme='light'] .grain-overlay,
+:root:not([data-theme='dark']) .grain-overlay {
+  mix-blend-mode: multiply;
+}
+/* .tape carries its own grain, louder than the page-wide
+   default: 0.07 is tuned to sit under the whole page's pale
+   paper without being noticed, and multiplied at that strength
+   against a saturated, solid accent fill it is invisible — a
+   loud surface needs a louder grain to actually read as paper.
+   Bigger flecks too, since a single tape line is far smaller
+   than the 10rem tile the page-wide grain was sized for. Must
+   live here, unlayered, next to the base rule: an @layer'd
+   declaration can never win against this unlayered one, no
+   matter its specificity. */
+.tape .grain-overlay {
+  opacity: 0.32;
+  background-size: 5rem 5rem;
+}
+/* A .grain-overlay child gives a .highlight the same paper texture
+   as the tape, with the same loud tuning: both are saturated accent
+   surfaces where the page-wide 0.07 multiply is invisible. Only for
+   single-line highlights — an absolutely positioned overlay cannot
+   follow box-decoration-break clone across line fragments. */
+.highlight:has(> .grain-overlay) {
+  position: relative;
+}
+.highlight .grain-overlay {
+  opacity: 0.32;
+  background-size: 5rem 5rem;
+}
+/* .receipt is a small pale surface, the opposite tuning problem
+   from .tape's saturated slab: barely any grain is needed before
+   it reads as ink-on-paper rather than a flat swatch, and the
+   default 10rem tile is far too coarse for a strip this size.
+   Same unlayered requirement as .tape's override above, and for
+   the same reason: an @layer'd declaration can never win against
+   this unlayered one, no matter its specificity. */
+.receipt .grain-overlay {
+  opacity: 0.16;
+  background-size: 4rem 4rem;
+}
+/* .consent is the same tuning problem as .receipt above: a small
+   pale card, not a saturated slab, so it needs the same lighter
+   opacity and finer tile as the receipt strip rather than the
+   page-wide default sized for a full viewport. Same unlayered
+   requirement, same reason: an @layer'd declaration can never
+   win against this unlayered one, no matter its specificity. */
+.consent .grain-overlay {
+  opacity: 0.16;
+  background-size: 4rem 4rem;
+}
+/* .exhibit is the same small-pale-surface tuning as .receipt and
+   .consent above; same unlayered requirement, same reason. */
+.exhibit .grain-overlay {
+  opacity: 0.16;
+  background-size: 4rem 4rem;
+}
+/* .icon_plate is a saturated accent slab like the tape, so it
+   takes the tape's louder grain, not the pale-surface tuning.
+   Same unlayered requirement, same reason. */
+.icon_plate .grain-overlay {
+  opacity: 0.32;
+  background-size: 5rem 5rem;
+}
+/* The navbar's grain belongs to its SCROLLED state only: at the
+   top of the page the header is a plain band of the page's own
+   paper, and only the detached slip is a distinct object with
+   its own texture. Rides opacity so the appearance transitions
+   with the rest of the detach; inherits the slip's rounding so
+   the texture never squares past the corners (no overflow:hidden
+   here — it would clip the nav buttons' focus marks). Unlayered,
+   same reason as every override above. */
+.navbar_inner .grain-overlay {
+  opacity: 0;
+  border-radius: inherit;
+  background-size: 4rem 4rem;
+  transition: opacity var(--duration-normal) var(--ease-out-expo);
+}
+.navbar.is-stuck .navbar_inner .grain-overlay {
+  opacity: 0.16;
+}
 
-/* ==============================
-   VIEW TRANSITIONS — crossfade (old stays visible until new is ready)
-   ============================== */
+/* [data-reveal] gate — the current scroll-reveal system, driven
+   by the inline IntersectionObserver script in Site.astro (see
+   src/layouts/Site.astro). Distinct from the legacy .reveal
+   utility below (that one waits on Layout.astro, which no longer
+   exists). Elements carrying data-reveal sit invisible until the
+   observer adds .is-revealed, at which point a motion-* class
+   (e.g. motion-fade-up, motion-slide-in) animates them in once.
+   MUST live here, not in a component's own <style> block: Astro
+   scopes a component's <style> to only the elements ITS OWN
+   template renders, but data-reveal elements live in whatever
+   page is slotted into Site.astro and carry THAT page's scope
+   stamp, not the layout's — a scoped rule here would silently
+   never match them, leaving everything stuck at opacity: 0. */
+html.js [data-reveal]:not(.is-revealed) { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-reveal]:not(.is-revealed) { opacity: 1; }
+}
+
+/* Animation fallback — reveal content if JS animations fail */
+@keyframes fallback-reveal {
+  to { opacity: 1; transform: none; width: auto; }
+}
+[style*='opacity: 0'],
+[style*='width: 0'] {
+  animation: fallback-reveal 0s forwards;
+  animation-delay: 0.8s;
+}
+
+/* Scroll reveal utility — the global IntersectionObserver in
+   Layout.astro adds .is-visible; stagger via --reveal-i. */
+html.js-ready .reveal {
+  opacity: 0;
+  transform: translateY(0.875rem);
+  transition:
+    opacity var(--duration-slow) var(--ease-out-expo),
+    transform var(--duration-slow) var(--ease-out-expo);
+  transition-delay: calc(var(--reveal-i, 0) * 60ms);
+  will-change: opacity, transform;
+}
+html.js-ready .reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  html.js-ready .reveal {
+    transition-duration: 1ms;
+    transition-delay: 0ms;
+    transform: none;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Legacy press feedback for pre-Marker CTAs */
+button:active:not(:disabled),
+[role='button']:active:not(:disabled),
+a:active[class*='cta'],
+a:active[class*='btn'],
+a:active[class*='email'] {
+  transform: scale(0.98);
+}
+
+/* View transitions — crossfade */
 ::view-transition-old(root) {
   animation: none;
   opacity: 1;
   mix-blend-mode: normal;
 }
-
 ::view-transition-new(root) {
-  animation: vt-enter 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: vt-enter 150ms var(--ease-out-expo);
   mix-blend-mode: normal;
 }
-
 @keyframes vt-enter {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* ══════════════════════════════════════════════════
+   DOCUMENT CHROME — scroll behavior + scrollbars.
+   The scrollbar is an ink bar in the margin, not
+   browser chrome. Thumbs hold >=3:1 vs their tracks.
+   ══════════════════════════════════════════════════ */
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+html {
+  scrollbar-color: oklch(59.7% 0.027 99.4) oklch(93.3% 0.016 95.2);
+}
+html[data-theme='dark'] {
+  scrollbar-color: oklch(51.4% 0.029 99.9) oklch(20.3% 0.01 107.2);
+}
+::-webkit-scrollbar {
+  width: 0.625rem;
+  height: 0.625rem;
+}
+html::-webkit-scrollbar-track {
+  background: oklch(93.3% 0.016 95.2);
+}
+html::-webkit-scrollbar-thumb {
+  background: oklch(59.7% 0.027 99.4);
+  border-radius: 0.3125rem;
+  border: 0.125rem solid oklch(93.3% 0.016 95.2);
+}
+html::-webkit-scrollbar-thumb:hover {
+  background: oklch(51.5% 0.026 99);
+}
+html[data-theme='dark']::-webkit-scrollbar-track {
+  background: oklch(20.3% 0.01 107.2);
+}
+html[data-theme='dark']::-webkit-scrollbar-thumb {
+  background: oklch(51.4% 0.029 99.9);
+  border-radius: 0.3125rem;
+  border: 0.125rem solid oklch(20.3% 0.01 107.2);
+}
+html[data-theme='dark']::-webkit-scrollbar-thumb:hover {
+  background: oklch(57.6% 0.033 100.9);
 }

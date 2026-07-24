@@ -1,6 +1,8 @@
 import { describe, test, expect } from 'bun:test';
 import {
   VISUAL_TERMS,
+  VISUAL_TERMS_SEO,
+  visualTermsFor,
   escapeHtml,
   emphasize,
   headlineHtml,
@@ -10,6 +12,9 @@ import {
   countVisualTerms,
   showcaseTitleOf,
   categoriesTitleOf,
+  pitchStatementHtml,
+  audienceHeadOf,
+  audienceItemsOf,
   type HeroSlideInput,
 } from './training-landing';
 
@@ -201,6 +206,27 @@ describe('title fallbacks', () => {
   });
 });
 
+describe('pitch section copy', () => {
+  test('pitchStatementHtml emphasizes the CMS value or falls back', () => {
+    expect(pitchStatementHtml('Plain words, *no jargon*.')).toBe(
+      'Plain words, <em>no jargon</em>.'
+    );
+    expect(pitchStatementHtml('')).toContain('<em>This one doesn');
+    expect(pitchStatementHtml(null)).toContain('<em>This one doesn');
+  });
+  test('audienceHeadOf returns the CMS value or a default', () => {
+    expect(audienceHeadOf('For SEO owners')).toBe('For SEO owners');
+    expect(audienceHeadOf('')).toBe(
+      'For anyone who ends up in the room without the vocabulary.'
+    );
+  });
+  test('audienceItemsOf filters blanks and falls back when empty', () => {
+    expect(audienceItemsOf(['A', '', '  ', 'B'])).toEqual(['A', 'B']);
+    expect(audienceItemsOf([])).toHaveLength(3);
+    expect(audienceItemsOf(null)).toHaveLength(3);
+  });
+});
+
 describe('VISUAL_TERMS canonical set', () => {
   test('contains the advertising showcase specimens', () => {
     for (const t of ['Storyboard', 'Geo-Targeting', 'A/B Test']) {
@@ -210,6 +236,36 @@ describe('VISUAL_TERMS canonical set', () => {
   test('does not contain arbitrary non-advertising terms', () => {
     expect(VISUAL_TERMS.has('Crawl Budget')).toBe(false);
     expect(VISUAL_TERMS.has('')).toBe(false);
+  });
+});
+
+describe('visualTermsFor (per-asset visual sets)', () => {
+  test('returns the SEO set for the seo-word-list slug', () => {
+    expect(visualTermsFor('seo-word-list')).toBe(VISUAL_TERMS_SEO);
+  });
+  test('falls back to the advertising set for any other slug', () => {
+    expect(visualTermsFor('advertising-word-list')).toBe(VISUAL_TERMS);
+    expect(visualTermsFor(undefined)).toBe(VISUAL_TERMS);
+  });
+  test('the shared term name "Click-Through Rate (CTR)" lives in both sets', () => {
+    // Each list ships its own CTR visual; the dispatch is scoped by slug so
+    // they never cross-render. Guards against a regression that would let the
+    // advertising CTR visual leak onto the SEO list.
+    expect(VISUAL_TERMS.has('Click-Through Rate (CTR)')).toBe(true);
+    expect(VISUAL_TERMS_SEO.has('Click-Through Rate (CTR)')).toBe(true);
+  });
+});
+
+describe('resolveShowcase with the SEO set', () => {
+  test('keeps SEO specimens and rejects advertising-only ones', () => {
+    const r = resolveShowcase(
+      'Topic Cluster',
+      ['Backlink (Inbound Link)', 'Storyboard'],
+      VISUAL_TERMS_SEO
+    );
+    expect(r.leadTerm).toBe('Topic Cluster');
+    expect(r.pairTerms).toEqual(['Backlink (Inbound Link)']);
+    expect(r.show).toBe(true);
   });
 });
 

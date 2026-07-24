@@ -25,7 +25,7 @@ export default function ContactConfirmation({
 const heading: React.CSSProperties = {
   fontSize: '20px',
   fontWeight: 400,
-  color: '#ede8df',
+  color: '#efece0',
   lineHeight: '1.4',
   margin: '0 0 14px 0',
 };
@@ -33,13 +33,13 @@ const heading: React.CSSProperties = {
 const body: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '1.7',
-  color: '#a09488',
+  color: '#a3a08e',
   margin: '0 0 14px 0',
 };
 
 const signoff: React.CSSProperties = {
   fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
   fontSize: '15px',
-  color: '#c4a47c',
+  color: '#f5e33c',
   margin: '0',
 };

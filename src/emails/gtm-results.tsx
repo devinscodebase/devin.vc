@@ -235,16 +235,16 @@ export default function GtmResultsEmail({
 
 // ── Colors ──
 const colors = {
-  bg: '#0a0a08',
-  bgElevated: '#1a1612',
-  text: '#ede8df',
-  textMuted: '#a09488',
-  textDim: '#6d5c48',
-  accent: '#c4a47c',
-  teal: '#5a8b85',
-  rust: '#c87045',
-  amber: '#dba85b',
-  border: '#1e1a14',
+  bg: '#131310',
+  bgElevated: '#201f18',
+  text: '#efece0',
+  textMuted: '#a3a08e',
+  textDim: '#5d5b4e',
+  accent: '#f5e33c',
+  teal: '#42c3c9',
+  rust: '#fd7562',
+  amber: '#ed9d44',
+  border: '#201f18',
 };
 
 const badge: React.CSSProperties = {
@@ -254,7 +254,7 @@ const badge: React.CSSProperties = {
   letterSpacing: '0.15em',
   textTransform: 'uppercase' as const,
   color: colors.teal,
-  backgroundColor: '#142222',
+  backgroundColor: '#182422',
   padding: '4px 10px',
   borderRadius: '4px',
   margin: '0 0 14px 0',

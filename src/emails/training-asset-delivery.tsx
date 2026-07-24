@@ -87,12 +87,12 @@ export default function TrainingAssetDelivery({
 }
 
 // ─── Site palette (matches src/styles/global.css) ───
-const COLOR_TEXT = '#ede8df';
-const COLOR_MUTED = '#a09488';
-const COLOR_DIM = '#6d5c48';
-const COLOR_BG_ELEVATED = '#1a1612';
-const COLOR_ACCENT = '#c4a47c';
-const COLOR_ACCENT_TEAL = '#5a8b85';
+const COLOR_TEXT = '#efece0';
+const COLOR_MUTED = '#a3a08e';
+const COLOR_DIM = '#5d5b4e';
+const COLOR_BG_ELEVATED = '#201f18';
+const COLOR_ACCENT = '#f5e33c';
+const COLOR_ACCENT_TEAL = '#42c3c9';
 
 const eyebrow: React.CSSProperties = {
   fontSize: '10px',
@@ -148,7 +148,7 @@ const btnContainer: React.CSSProperties = {
 const button: React.CSSProperties = {
   display: 'inline-block',
   backgroundColor: COLOR_ACCENT,
-  color: '#0a0a08',
+  color: '#131310',
   padding: '16px 28px',
   borderRadius: '6px',
   fontSize: '14px',
@@ -173,7 +173,7 @@ const inlineLink: React.CSSProperties = {
 };
 
 const divider: React.CSSProperties = {
-  borderColor: '#1e1a14',
+  borderColor: '#201f18',
   borderWidth: '1px 0 0 0',
   margin: '28px 0 22px 0',
 };

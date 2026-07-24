@@ -47,7 +47,7 @@ export default function BookingConfirmation({
 const heading: React.CSSProperties = {
   fontSize: '20px',
   fontWeight: 400,
-  color: '#ede8df',
+  color: '#efece0',
   lineHeight: '1.4',
   margin: '0 0 14px 0',
 };
@@ -55,29 +55,29 @@ const heading: React.CSSProperties = {
 const body: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '1.7',
-  color: '#a09488',
+  color: '#a3a08e',
   margin: '0 0 16px 0',
 };
 
 const card: React.CSSProperties = {
-  backgroundColor: '#1a1612',
+  backgroundColor: '#201f18',
   borderRadius: '10px',
   padding: '18px 20px',
-  border: '1px solid #1e1a14',
+  border: '1px solid #201f18',
   margin: '0 0 16px 0',
 };
 
 const slotText: React.CSSProperties = {
   fontSize: '15px',
   fontWeight: 500,
-  color: '#ede8df',
+  color: '#efece0',
   margin: '0',
   lineHeight: '1.3',
 };
 
 const tzText: React.CSSProperties = {
   fontSize: '12px',
-  color: '#a09488',
+  color: '#a3a08e',
   margin: '2px 0 0 0',
 };
 
@@ -90,9 +90,9 @@ const ctaButton: React.CSSProperties = {
   fontSize: '13px',
   fontWeight: 500,
   fontFamily: "'DM Sans', sans-serif",
-  color: '#c4a47c',
+  color: '#f5e33c',
   textDecoration: 'none',
-  border: '1px solid #c4a47c',
+  border: '1px solid #f5e33c',
   borderRadius: '8px',
   padding: '10px 22px',
 };
@@ -100,6 +100,6 @@ const ctaButton: React.CSSProperties = {
 const signoff: React.CSSProperties = {
   fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
   fontSize: '15px',
-  color: '#c4a47c',
+  color: '#f5e33c',
   margin: '0',
 };

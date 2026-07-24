@@ -11,3 +11,7 @@ export function getResend() {
 }
 
 export const SENDER = 'Devin Alexander <me@send.devin.vc>';
+
+// New sending domain for the /quote feature only. Every other already-shipped
+// feature keeps using SENDER (send.devin.vc) — do not repoint them here.
+export const QUOTE_SENDER = 'Devin Alexander <me@mail.devin.vc>';

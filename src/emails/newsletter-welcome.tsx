@@ -76,7 +76,7 @@ export default function NewsletterWelcome({
 const heading: React.CSSProperties = {
   fontSize: '20px',
   fontWeight: 400,
-  color: '#ede8df',
+  color: '#efece0',
   lineHeight: '1.4',
   margin: '0 0 14px 0',
 };
@@ -84,7 +84,7 @@ const heading: React.CSSProperties = {
 const body: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '1.7',
-  color: '#a09488',
+  color: '#a3a08e',
   margin: '0 0 14px 0',
 };
 
@@ -93,8 +93,8 @@ const btnContainer: React.CSSProperties = {
 };
 
 const button: React.CSSProperties = {
-  backgroundColor: '#c4a47c',
-  color: '#0a0a08',
+  backgroundColor: '#f5e33c',
+  color: '#131310',
   padding: '14px 32px',
   borderRadius: '8px',
   fontSize: '14px',
@@ -104,7 +104,7 @@ const button: React.CSSProperties = {
 };
 
 const divider: React.CSSProperties = {
-  borderColor: '#1e1a14',
+  borderColor: '#201f18',
   borderWidth: '1px 0 0 0',
   margin: '0 0 20px 0',
 };
@@ -114,7 +114,7 @@ const whatToExpect: React.CSSProperties = {
   fontWeight: 500,
   letterSpacing: '0.15em',
   textTransform: 'uppercase' as const,
-  color: '#6d5c48',
+  color: '#5d5b4e',
   margin: '0 0 12px 0',
 };
 
@@ -126,7 +126,7 @@ const bulletCell: React.CSSProperties = {
 
 const bulletDot: React.CSSProperties = {
   fontSize: '6px',
-  color: '#c4a47c',
+  color: '#f5e33c',
   margin: '0',
   lineHeight: '1.7',
 };
@@ -134,12 +134,12 @@ const bulletDot: React.CSSProperties = {
 const bulletText: React.CSSProperties = {
   fontSize: '13px',
   lineHeight: '1.7',
-  color: '#a09488',
+  color: '#a3a08e',
   margin: '0 0 6px 0',
 };
 
 const muted: React.CSSProperties = {
   fontSize: '12px',
-  color: '#6d5c48',
+  color: '#5d5b4e',
   margin: '18px 0 0 0',
 };

@@ -37,6 +37,40 @@ export const VISUAL_TERMS: ReadonlySet<string> = new Set([
   'Headline', 'Call to Action (CTA)', 'Social Proof',
 ]);
 
+// Visual term set for the SEO Word List. Kept separate from the advertising
+// set because term names can collide across lists ("Click-Through Rate (CTR)"
+// exists in both) and each list ships its own, context-specific visual. The
+// per-asset dispatch in TermVisual.astro reads the matching set via
+// `visualTermsFor`.
+export const VISUAL_TERMS_SEO: ReadonlySet<string> = new Set([
+  // Fundamentals
+  'SERP (Search Engine Results Page)', 'Crawler (Bot, Spider)', 'Indexing', 'AI Overview (SGE)',
+  // On-page
+  'Title Tag', 'H1', 'URL Slug', 'Alt Text', 'Internal Link', 'Anchor Text',
+  // Technical
+  'Sitemap (XML Sitemap)', 'Robots.txt', 'Canonical Tag', '301 Redirect',
+  'Core Web Vitals', 'Mobile-First Indexing', 'Schema Markup (Structured Data)',
+  // Keywords & intent
+  'Long-Tail Keyword', 'Search Intent', 'Keyword Difficulty', 'Keyword Cannibalization',
+  // Content
+  'Topic Cluster', 'E-E-A-T', 'Thin Content',
+  // Links
+  'Backlink (Inbound Link)', 'Referring Domain', 'Domain Authority (DA)', 'Dofollow Link',
+  // Local
+  'Local Pack (Map Pack)', 'NAP (Name, Address, Phone)',
+  // SERP features
+  'Featured Snippet (Position Zero)', 'People Also Ask (PAA)', 'Knowledge Panel', 'Click-Through Rate (CTR)',
+  // Measurement
+  'Impressions', 'Pogo-Sticking',
+  // Black hat
+  'White Hat SEO', 'Keyword Stuffing', 'Cloaking',
+]);
+
+/** Returns the visual-term set for a given asset slug (advertising is the default). */
+export function visualTermsFor(slug: string | null | undefined): ReadonlySet<string> {
+  return slug === 'seo-word-list' ? VISUAL_TERMS_SEO : VISUAL_TERMS;
+}
+
 export type HeroSlideInput = { visual: string; term: string; note: string };
 export type ResolvedHeroSlide<T> = { Visual: T; term: string; note: string };
 
@@ -113,3 +147,39 @@ export const categoriesTitleOf = (
   categoriesTitle: string | null | undefined,
   groupCount: number
 ): string => categoriesTitle || `Browse all ${groupCount} categories`;
+
+/* ── Pitch section copy ──────────────────────────────────────────────────
+   The "why this exists" statement and the "who this is for" audience were
+   originally hardcoded with advertising-flavored copy that bled onto every
+   list. They're now CMS fields with the original advertising text as the
+   fallback, so each asset can speak to its own reader. `*phrase*` -> accent
+   <em>; the audience head/items are plain text. */
+
+const DEFAULT_PITCH_STATEMENT =
+  "Most glossaries explain a word using three more words you don't know either. *This one doesn't.*";
+
+const DEFAULT_AUDIENCE_HEAD =
+  'For anyone who ends up in the room without the vocabulary.';
+
+const DEFAULT_AUDIENCE_ITEMS = [
+  'The founder approving the budget',
+  'The designer handed a brief',
+  'Anyone who nodded along, then looked it up after',
+];
+
+/** Pitch "why this exists" statement HTML, with accent emphasis. */
+export const pitchStatementHtml = (
+  pitchStatement?: string | null
+): string => emphasize(pitchStatement || DEFAULT_PITCH_STATEMENT);
+
+/** "Who this is for" heading, with the advertising default as fallback. */
+export const audienceHeadOf = (audienceHead?: string | null): string =>
+  audienceHead || DEFAULT_AUDIENCE_HEAD;
+
+/** "Who this is for" list items, with the advertising default as fallback. */
+export const audienceItemsOf = (
+  audienceItems?: (string | null | undefined)[] | null
+): string[] => {
+  const items = (audienceItems ?? []).map((s) => (s ?? '').trim()).filter(Boolean);
+  return items.length > 0 ? items : DEFAULT_AUDIENCE_ITEMS;
+};

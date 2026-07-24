@@ -77,8 +77,8 @@ const badge: React.CSSProperties = {
   fontWeight: 500,
   letterSpacing: '0.15em',
   textTransform: 'uppercase' as const,
-  color: '#c4a47c',
-  backgroundColor: '#1e1810',
+  color: '#f5e33c',
+  backgroundColor: '#201f18',
   padding: '4px 10px',
   borderRadius: '4px',
   margin: '0 0 14px 0',
@@ -87,16 +87,16 @@ const badge: React.CSSProperties = {
 const heading: React.CSSProperties = {
   fontSize: '20px',
   fontWeight: 400,
-  color: '#ede8df',
+  color: '#efece0',
   lineHeight: '1.4',
   margin: '0 0 20px 0',
 };
 
 const card: React.CSSProperties = {
-  backgroundColor: '#1a1612',
+  backgroundColor: '#201f18',
   borderRadius: '10px',
   padding: '20px',
-  border: '1px solid #1e1a14',
+  border: '1px solid #201f18',
 };
 
 const detailLabel: React.CSSProperties = {
@@ -104,31 +104,31 @@ const detailLabel: React.CSSProperties = {
   fontWeight: 500,
   letterSpacing: '0.15em',
   textTransform: 'uppercase' as const,
-  color: '#6d5c48',
+  color: '#5d5b4e',
   margin: '0 0 4px 0',
 };
 
 const detailValue: React.CSSProperties = {
   fontSize: '14px',
   lineHeight: '1.5',
-  color: '#ede8df',
+  color: '#efece0',
   margin: '0',
 };
 
 const detailMeta: React.CSSProperties = {
   fontSize: '12px',
-  color: '#a09488',
+  color: '#a3a08e',
   margin: '2px 0 0 0',
 };
 
 const rowDivider: React.CSSProperties = {
-  borderColor: '#1e1a14',
+  borderColor: '#201f18',
   borderWidth: '1px 0 0 0',
   margin: '14px 0',
 };
 
 const hint: React.CSSProperties = {
   fontSize: '12px',
-  color: '#6d5c48',
+  color: '#5d5b4e',
   margin: '18px 0 0 0',
 };

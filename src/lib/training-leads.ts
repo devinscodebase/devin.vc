@@ -273,7 +273,7 @@ export const gateCookieOptions = (slug: string) => ({
    render the advertising list's copy/visuals, so they're hidden from the
    index and their landing/form/words routes until that's fixed. Add slugs
    back here (or delete this gate) once each asset has its own content. */
-export const ENABLED_TRAINING_SLUGS = new Set(['advertising-word-list']);
+export const ENABLED_TRAINING_SLUGS = new Set(['advertising-word-list', 'seo-word-list']);
 
 export const isTrainingAssetEnabled = (slug: string | undefined) =>
   !!slug && ENABLED_TRAINING_SLUGS.has(slug);

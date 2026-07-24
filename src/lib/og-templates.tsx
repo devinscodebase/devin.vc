@@ -3,15 +3,15 @@ import React from 'react';
 // Design tokens — hex equivalents of the live dark-mode CSS tokens.
 // Satori requires concrete colors (no CSS custom properties).
 const colors = {
-  bg: '#0a0a08',           // --color-bg
-  surface: '#1a1612',      // --color-surface
-  text: '#ede8df',         // --color-text
-  muted: '#a09488',        // --color-text-muted
-  subtle: '#8a7d6e',       // --color-text-subtle
-  accent: '#c4a47c',       // --color-accent (warm gold)
-  teal: '#5a8b85',         // --color-accent-teal — desaturated teal for warm palette
-  amber: '#dba85b',        // --color-accent-amber
-  rust: '#c87045',         // --color-accent-rust — lifted to match amber band
+  bg: '#131310',           // --color-bg
+  surface: '#201f18',      // --color-surface
+  text: '#efece0',         // --color-text
+  muted: '#a3a08e',        // --color-text-muted
+  subtle: '#a3a08e',       // --color-text-subtle
+  accent: '#f5e33c',       // --color-accent (warm gold)
+  teal: '#42c3c9',         // --color-accent-teal — desaturated teal for warm palette
+  amber: '#ed9d44',        // --color-accent-amber
+  rust: '#fd7562',         // --color-accent-rust — lifted to match amber band
 };
 
 const fonts = {

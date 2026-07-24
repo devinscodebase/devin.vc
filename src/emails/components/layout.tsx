@@ -112,15 +112,15 @@ export function Layout({ preview, children, unsubscribeUrl, minimal }: LayoutPro
 
 // ── Colors — hex equivalents of the live dark-mode CSS tokens ──
 const colors = {
-  bg: '#0a0a08',           // --color-bg
-  surface: '#1a1612',      // --color-surface
-  text: '#ede8df',         // --color-text
-  textMuted: '#a09488',    // --color-text-muted
-  textSubtle: '#8a7d6e',   // --color-text-subtle
-  accent: '#c4a47c',       // --color-accent
-  accentTeal: '#5a8b85',   // --color-accent-teal (warmer hue, joins warm system)
-  border: '#2a2018',
-  borderSubtle: '#1e1a14',
+  bg: '#131310',           // --color-bg
+  surface: '#201f18',      // --color-surface
+  text: '#efece0',         // --color-text
+  textMuted: '#a3a08e',    // --color-text-muted
+  textSubtle: '#a3a08e',   // --color-text-subtle
+  accent: '#f5e33c',       // --color-accent
+  accentTeal: '#42c3c9',   // --color-accent-teal (warmer hue, joins warm system)
+  border: '#1b1a14',
+  borderSubtle: '#201f18',
 };
 
 // Email clients can't reliably load web fonts. System sans stack ensures the

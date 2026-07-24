@@ -1,66 +1,17 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.svelte';
-import About from '../components/About.svelte';
-import Gallery from '../components/Gallery.astro';
-import Timeline from '../components/Timeline.svelte';
-import Now from '../components/Now.svelte';
-import Toolkit from '../components/Toolkit.svelte';
-import Projects from '../components/Projects.svelte';
-import ToolsPreview from '../components/ToolsPreview.svelte';
-import Proof from '../components/Proof.svelte';
-import Journal from '../components/Journal.svelte';
-import Contact from '../components/Contact.svelte';
-import { sanityClient } from '../lib/sanity';
+// ────────────────────────────────────────────────────────────────
+// / — HOME. Nav and hero only; the rest of the page gets built
+// section by section from here.
+// ────────────────────────────────────────────────────────────────
+import Site from '../layouts/Site.astro';
 
-const latestPosts = await sanityClient.fetch(`
-  *[_type == "journal"] | order(date desc) [0...3] {
-    title,
-    "slug": slug.current,
-    description,
-    tag,
-    date,
-    featured
-  }
-`);
-
-const testimonials = await sanityClient.fetch(`
-  *[_type == "testimonial"] | order(order asc) {
-    quote, name, role, company
-  }
-`);
-
-const featuredProjects = await sanityClient.fetch(`
-  *[_type == "project" && featured == true] | order(order asc) {
-    name, url, category, tags, accent,
-    "screenshotUrl": screenshot.asset->url
-  }
-`);
-
-const tools = await sanityClient.fetch(`
-  *[_type == "tool"] | order(order asc) {
-    name, category, order, description,
-    "logoUrl": logo.asset->url
-  }
-`);
+import HomeHero from '../components/HomeHero';
+import HomeProblem from '../components/HomeProblem';
+import HomeWeGetIt from '../components/HomeWeGetIt';
 ---
 
-<Layout
-  title="Devin Alexander — Marketing, Operations, Design & Development"
-  description="A decade of executive leadership across marketing, ops, design, and development. Open to consulting projects."
-  image="/og/default.png"
->
-  <main>
-    <Hero client:load />
-    <About client:visible={{rootMargin: "200px"}} />
-    <Gallery />
-    <Timeline client:visible={{rootMargin: "200px"}} />
-    <Now client:visible={{rootMargin: "200px"}} />
-    <Toolkit client:visible={{rootMargin: "200px"}} tools={tools} />
-    <Projects client:visible={{rootMargin: "200px"}} projects={featuredProjects} />
-    <ToolsPreview client:visible={{rootMargin: "200px"}} />
-    <Proof client:visible={{rootMargin: "200px"}} testimonials={testimonials} />
-    <Journal client:visible={{rootMargin: "200px"}} posts={latestPosts} />
-    <Contact client:visible={{rootMargin: "200px"}} />
-  </main>
-</Layout>
+<Site title="Devin Alexander · Human-made marketing" description="A human-made marketing agency for owners who are done paying agencies to guess.">
+  <HomeHero />
+  <HomeProblem />
+  <HomeWeGetIt client:visible />
+</Site>
