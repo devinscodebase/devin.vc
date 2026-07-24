@@ -2,22 +2,18 @@
 // ────────────────────────────────────────────────────────────────
 // /quote — the site's entire funnel. The static section head is
 // server-rendered here; everything inside the flow area is the
-// QuoteFlow island (client:load — the flow IS the page and the
-// Turnstile widget must mount promptly). Three steps; contact
-// info is collected once, in step 3, right before the price is
-// revealed — never before. See src/components/QuoteFlow.tsx for
-// the full behavior contract.
+// QuoteFlow island (client:load — the flow IS the page). Three
+// steps; contact info is collected once, in step 3, right before
+// the price is revealed, never before. See
+// src/components/QuoteFlow.tsx for the full behavior contract.
 //
-// Turnstile loads in explicit-render mode: api.js is told to call
-// window.onQuoteTurnstileLoad when it finishes loading, and the
-// island renders the widget from that callback (or directly, if
-// the script beat hydration and window.turnstile already exists).
-// The no-op stub below is defined BEFORE the script tag so the
-// callback can never be undefined when api.js fires it, whichever
-// side wins the race.
+// No siteKey is passed: Turnstile was removed with the rest of the
+// server layer, and QuoteFlow no-ops its widget handshake without
+// one. Pricing is computed client-side from src/lib/pricing.ts, so
+// the flow still renders and calculates. Submission has no endpoint
+// until the new data layer exists.
 // ────────────────────────────────────────────────────────────────
 import Site from '../layouts/Site.astro';
-import { TURNSTILE_SITE_KEY } from 'astro:env/client';
 
 import QuoteFlow from '../components/QuoteFlow';
 ---
@@ -37,19 +33,10 @@ import QuoteFlow from '../components/QuoteFlow';
           </div>
 
           <div class="section_body">
-            <QuoteFlow client:load siteKey={TURNSTILE_SITE_KEY} />
+            <QuoteFlow client:load />
           </div>
         </div>
       </div>
     </div>
   </section>
-
-  <script is:inline>
-    /* Turnstile explicit-render handshake stub. QuoteFlow
-       overwrites this during hydration; if api.js loads first it
-       calls this no-op and the island finds window.turnstile
-       already defined instead. */
-    window.onQuoteTurnstileLoad = function () {};
-  </script>
-  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onQuoteTurnstileLoad" async defer></script>
 </Site>

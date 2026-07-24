@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig, envField } from 'astro/config';
+import { defineConfig } from 'astro/config';
 
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
@@ -10,15 +10,8 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://www.devin.vc',
 
-  env: {
-    schema: {
-      RESEND_API_KEY: envField.string({ context: 'server', access: 'secret' }),
-      CAL_API_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
-      CAL_EVENT_TYPE_ID: envField.string({ context: 'server', access: 'secret', optional: true }),
-      TURNSTILE_SECRET_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
-      TURNSTILE_SITE_KEY: envField.string({ context: 'client', access: 'public', optional: true }),
-    },
-  },
+  // No env schema: there is no server layer yet. Declare secrets here
+  // as they are reintroduced.
 
   integrations: [
     react(),
