@@ -12,6 +12,22 @@ export default function ThemeSwitch() {
 
   useEffect(() => {
     setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
+
+    const query = window.matchMedia('(prefers-color-scheme: dark)');
+    const followSystem = (event: MediaQueryListEvent) => {
+      let stored: string | null = null;
+      try {
+        stored = localStorage.getItem(STORAGE_KEY);
+      } catch {
+        stored = null;
+      }
+      if (stored === 'dark' || stored === 'light') return;
+      const next: Theme = event.matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      setTheme(next);
+    };
+    query.addEventListener('change', followSystem);
+    return () => query.removeEventListener('change', followSystem);
   }, []);
 
   function toggle() {

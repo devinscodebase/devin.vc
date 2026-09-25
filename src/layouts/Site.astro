@@ -59,9 +59,12 @@ const avatar = await getAvatar();
     <link rel="preload" href="/fonts/DMSans-Variable-Latin.woff2" as="font" type="font/woff2" crossorigin />
     <script is:inline>
       (function () {
-        var theme = 'light';
-        try { if (localStorage.getItem('devin-vc-theme') === 'dark') theme = 'dark'; }
+        var stored = null;
+        try { stored = localStorage.getItem('devin-vc-theme'); }
         catch (e) {}
+        var theme = stored === 'dark' || stored === 'light'
+          ? stored
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', theme);
       })();
     </script>

@@ -25,9 +25,9 @@ export default function HomeWaitlist() {
         <h1 className="text-h3 sm:text-h2 md:text-h1 motion-fade-up focus-visible:outline-none focus-visible:shadow-none" ref={headingRef} tabIndex={-1}>
           You're on the list.
         </h1>
-        <p className="section_lead text-h4 font-body font-normal tracking-normal leading-normal max-w-sm mx-auto motion-fade-up" style={{ '--m-delay': '120ms' } as CSSProperties}>
+        <p className="section_lead text-body-lg md:text-h4 font-body font-normal tracking-normal leading-normal text-balance max-w-sm mx-auto motion-fade-up" style={{ '--m-delay': '120ms' } as CSSProperties}>
           A confirmation is on its way to{' '}
-          <em className="highlight is-swept is-revealed" style={{ '--m-delay': '520ms' } as CSSProperties}>{email}</em>.
+          <em className="highlight is-swept is-revealed [overflow-wrap:anywhere]" style={{ '--m-delay': '520ms' } as CSSProperties}>{email}</em>.
           {' '}You'll be first to know when the course opens.
         </p>
       </div>
