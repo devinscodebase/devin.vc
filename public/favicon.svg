@@ -1,14 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <defs>
-    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#5ba3a3"/>
-      <stop offset="50%" stop-color="#c4a47c"/>
-      <stop offset="100%" stop-color="#d4a24a"/>
-    </linearGradient>
-  </defs>
-  <rect width="128" height="128" rx="16" fill="#0a0a08"/>
-  <!-- Gradient accent bar -->
-  <rect x="24" y="98" width="80" height="3" rx="1.5" fill="url(#bar)"/>
-  <!-- Serif "D" letterform -->
-  <text x="64" y="84" text-anchor="middle" font-family="'Instrument Serif', 'Georgia', serif" font-size="82" font-weight="400" fill="#ede8df" letter-spacing="-2">D</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="6" fill="#ecd427"/><path fill="#1b1a14" transform="translate(8.23 53.00) scale(0.05185 -0.05185)" d="M89.333984375 0V810H400.2216796875Q532.2216796875 810 628.0272216796875 761.1944580078125Q723.832763671875 712.388916015625 775.6383056640625 621.388916015625Q827.44384765625 530.388916015625 827.44384765625 405Q827.44384765625 280.611083984375 775.1383056640625 189.611083984375Q722.832763671875 98.611083984375 627.0272216796875 49.3055419921875Q531.2216796875 0 400.2216796875 0ZM241.5537109375 129.66455078125H400.2216796875Q532.833740234375 129.66455078125 603.445556640625 204.0816650390625Q674.057373046875 278.498779296875 674.057373046875 405Q674.057373046875 532.501220703125 603.6400146484375 606.4183349609375Q533.22265625 680.33544921875 400.2216796875 680.33544921875H241.5537109375Z"/></svg>
