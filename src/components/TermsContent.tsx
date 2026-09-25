@@ -1,93 +1,79 @@
-// ────────────────────────────────────────────────────────────────
-// TermsContent.tsx — the /terms page body, rendered through
-// LegalShell. Server-rendered static component: no hooks, no
-// state, no client: directive. Page rationale, preserved from the
-// .astro page this copy was moved from verbatim:
-//
-// /terms — plain-language terms of service. Payment/ownership/
-// cancellation language matches what's already shipped elsewhere
-// on the site verbatim (the /quote result screen's terms line, the
-// "Do I own my accounts?" and "Am I locked into a contract?" FAQ
-// answers on the home page) so nothing here contradicts a promise
-// already made on a page a visitor may have already read. First
-// draft in Devin's own voice, not reviewed by a lawyer.
-// ────────────────────────────────────────────────────────────────
 import LegalShell from './LegalShell';
 
-const updated = 'July 2026';
+const effective = 'September 24, 2026';
 
 export default function TermsContent() {
   return (
-    <LegalShell
-      id="terms"
-      kicker="Terms"
-      title="The terms behind working together."
-      lead={
-        <>
-          Last updated {updated}. The same plain terms quoted on the
-          instant quote page, written out in full here.
-        </>
-      }
-    >
-      <h2 className="text-h4">What's being sold</h2>
-      <p className="text-body text-ink-muted">
-        Website design, funnel building, email marketing, digital
-        advertising, and brand design, as described on this site and
-        priced through the{' '}
-        <a className="text-link" href="/quote">instant quote</a> tool.
-        Work outside that scope is quoted separately before it starts.
+    <LegalShell id="terms" title="Terms of Use" lead={<>Effective {effective}</>}>
+      <h2 className="text-h4">1. Acceptance</h2>
+      <p className="text-body">
+        These terms govern your use of devin.vc, operated by Devin
+        Alexander ("we", "us"). By using the website, you agree to
+        them. If you do not agree, do not use the website.
       </p>
 
-      <h2 className="text-h4">Quotes and pricing</h2>
-      <p className="text-body text-ink-muted">
-        A number from the instant quote tool is good for 30 days. It's
-        built from the services and business details you give it, so a
-        different selection gives a different number. Custom scope
-        gets a custom number, agreed before work starts.
+      <h2 className="text-h4">2. The waitlist</h2>
+      <p className="text-body">
+        Joining the waitlist is free and creates no obligation to buy.
+        You must use an email address you own. You may leave the
+        waitlist at any time by unsubscribing or emailing us.
       </p>
 
-      <h2 className="text-h4">Payment</h2>
-      <p className="text-body text-ink-muted">
-        Project work (website design, funnel building, brand design) is
-        half down to start, half at delivery. Ongoing work (email
-        marketing, digital advertising) is billed monthly, in advance.
-        No long contract either way.
+      <h2 className="text-h4">3. Educational content</h2>
+      <p className="text-body">
+        The content on this website is general marketing education. It
+        is not professional advice for your business. We do not
+        guarantee any result from using it, and you are responsible for
+        your own decisions.
       </p>
 
-      <h2 className="text-h4">Cancellation</h2>
-      <p className="text-body text-ink-muted">
-        Ongoing monthly work can be cancelled anytime with 30 days'
-        notice. Project work already in progress is billed for the
-        portion completed if it's cancelled partway through.
+      <h2 className="text-h4">4. Course purchases</h2>
+      <p className="text-body">
+        The course is not yet available for purchase. Pricing, access,
+        and refund terms will be published before sales open and will
+        apply to each purchase.
       </p>
 
-      <h2 className="text-h4">What you own</h2>
-      <p className="text-body text-ink-muted">
-        Everything delivered is yours: the domain, the accounts, the
-        analytics, the code, the creative files. If you leave,
-        everything goes with you, the same day you ask for it.
+      <h2 className="text-h4">5. Intellectual property</h2>
+      <p className="text-body">
+        All content on this website, including text, design, images,
+        and course material, is owned by Devin Alexander. You may quote
+        short excerpts with a link to the source. Any other copying,
+        distribution, or commercial use requires our written
+        permission.
       </p>
 
-      <h2 className="text-h4">What I don't promise</h2>
-      <p className="text-body text-ink-muted">
-        I don't guarantee a specific result, revenue number, or
-        ranking, because nobody honestly can. I do promise the work
-        described on this site gets made by hand, on the timeline we
-        agree to, and that a miss gets explained and fixed rather than
-        blamed on something else.
+      <h2 className="text-h4">6. Acceptable use</h2>
+      <p className="text-body">
+        You may not submit another person's email address, create
+        signups by automated means, scrape the website, or interfere
+        with its operation.
       </p>
 
-      <h2 className="text-h4">Changes to these terms</h2>
-      <p className="text-body text-ink-muted">
-        If these terms change, this page changes with them, and the
-        date at the top updates. Work already underway is covered by
-        the terms in place when it started.
+      <h2 className="text-h4">7. Disclaimer</h2>
+      <p className="text-body">
+        The website is provided "as is" and "as available", without
+        warranties of any kind.
       </p>
 
-      <h2 className="text-h4">Questions</h2>
-      <p className="text-body text-ink-muted">
-        Email <a className="text-link" href="mailto:me@devin.vc">me@devin.vc</a>.
-        Real answer, from me, not a form.
+      <h2 className="text-h4">8. Limitation of liability</h2>
+      <p className="text-body">
+        To the extent permitted by law, we are not liable for any
+        indirect, incidental, or consequential damages arising from
+        your use of the website or its unavailability.
+      </p>
+
+      <h2 className="text-h4">9. Changes</h2>
+      <p className="text-body">
+        We may update these terms. The effective date at the top shows
+        when they last changed. Continued use of the website after a
+        change means you accept the updated terms.
+      </p>
+
+      <h2 className="text-h4">10. Contact</h2>
+      <p className="text-body">
+        Questions about these terms go to{' '}
+        <a className="text-link" href="mailto:me@devin.vc">me@devin.vc</a>.
       </p>
     </LegalShell>
   );

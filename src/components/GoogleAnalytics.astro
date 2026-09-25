@@ -1,0 +1,27 @@
+---
+const measurementId = 'G-96GHESGXMQ';
+---
+<script is:inline define:vars={{ measurementId }}>
+  (function () {
+    var loaded = false;
+    var loadGoogleAnalytics = function () {
+      if (loaded) return;
+      loaded = true;
+
+      var script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
+      document.head.appendChild(script);
+
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', measurementId);
+    };
+
+    if (window.devinVcConsent && window.devinVcConsent.hasConsent()) loadGoogleAnalytics();
+    window.addEventListener('devin-vc-consent-changed', function (event) {
+      if (event.detail === 'accepted') loadGoogleAnalytics();
+    });
+  })();
+</script>

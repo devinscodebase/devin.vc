@@ -1,22 +1,12 @@
 ---
-// ────────────────────────────────────────────────────────────────
-// /components/navbar — the chosen navbar in a real page context.
-// Since the React conversion this page renders the SHIPPED
-// artifacts — <Navbar> + <MobileMenu> from src/components/ — not a
-// hand-copied specimen, so it can never drift from production.
-// Consequence, accepted: the nav items are the production list
-// (Services/About) and the old is-active link demo is gone; the
-// is-active state stays documented in /components' navigation
-// section. This page is a standalone document (no Site.astro), so
-// it carries its own copy of the 4-line is-stuck scroll toggle —
-// the only piece of the layout bootstrap it needs.
-// ────────────────────────────────────────────────────────────────
 import '../../styles/global.css';
 import Navbar from '../../components/Navbar';
 import MobileMenu from '../../components/MobileMenu';
 import iconArrowRight from '../../icons/freehand/arrow-right.svg?raw';
----
+import { getAvatar } from '../../lib/avatar';
 
+const avatar = await getAvatar();
+---
 <!doctype html>
 <html lang="en">
   <head>
@@ -31,12 +21,10 @@ import iconArrowRight from '../../icons/freehand/arrow-right.svg?raw';
     <div class="page-wrapper">
       <a class="skip_link" href="#main">Skip to content</a>
 
-      <!-- ── Navbar (the shipped components) ─────────── -->
-      <Navbar>
-        <MobileMenu client:load />
+      <Navbar avatar={avatar}>
+        <MobileMenu client:load avatar={avatar} />
       </Navbar>
 
-      <!-- ── Page (context) ─────────────────────────── -->
       <main id="main">
         <section class="section_layout" id="work">
           <div class="padding-global">
@@ -52,7 +40,7 @@ import iconArrowRight from '../../icons/freehand/arrow-right.svg?raw';
                 </div>
                 <div class="section_body">
                   <div class="button-group">
-                    <a class="button is-hero" href="/quote">Get an instant quote</a>
+                    <a class="button is-hero" href="/">Join the waitlist</a>
                     <a class="button is-hero is-secondary" href="#work">
                       See the work <span class="icon" aria-hidden="true" set:html={iconArrowRight} />
                     </a>
@@ -102,9 +90,6 @@ import iconArrowRight from '../../icons/freehand/arrow-right.svg?raw';
 
     <script is:inline>
       (function () {
-        /* Navbar tightens once the page leaves the top — same 4
-           lines as Site.astro's bootstrap; this standalone page
-           doesn't render through the layout. */
         var navbar = document.getElementById('navbar');
         var onScroll = function () { navbar.classList.toggle('is-stuck', window.scrollY > 8); };
         window.addEventListener('scroll', onScroll, { passive: true });

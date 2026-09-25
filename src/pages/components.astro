@@ -1,22 +1,4 @@
 ---
-// ────────────────────────────────────────────────────────────────
-// /components — DESIGN SYSTEM SOURCE OF TRUTH (noindex, unlisted)
-//
-// Every component of the Marker system is designed here first and
-// shipped to production after. The system lives in
-// src/styles/global.css: Tailwind v4 generates the utilities from
-// Marker variables (variable combos), and Client-First supplies
-// the naming discipline. The system is site-wide via global.css —
-// production global.css is untouched until parts graduate.
-//
-// Sections:
-//   1 · Conventions      2 · Type scale     3 · Paragraphs
-//   4 · Colors           04 · Spacing        6 · Buttons & links
-//   7 · Forms            8 · Alerts         9 · Cards & elevation
-//   10 · Tables           11 · Motion         12 · Selection & scrollbar
-//   13 · Icons    14 · Navigation    15 · Disclosure    16 · Overlays
-//   17 · Content  18 · Contrast, measured live
-// ────────────────────────────────────────────────────────────────
 import '../styles/global.css';
 
 import iconArrowRight from '../icons/freehand/arrow-right.svg?raw';
@@ -45,6 +27,9 @@ import iconInfo from '../icons/freehand/info.svg?raw';
 import iconThemeSun from '../icons/freehand/theme-sun.svg?raw';
 import iconThemeMoon from '../icons/freehand/theme-moon.svg?raw';
 import iconLogoMeteor from '../icons/freehand/logo-meteor.svg?raw';
+import iconTarget from '../icons/freehand/target.svg?raw';
+import iconHandshake from '../icons/freehand/handshake.svg?raw';
+import imgWorkshop from '../assets/gallery/workshop.jpg';
 
 const icons = [
   { name: 'arrow-right', svg: iconArrowRight },
@@ -109,8 +94,6 @@ const inkSwatches = [
   { cls: 'bg-block', name: 'block', v: '--m-block' },
 ];
 
-// Class names are complete literals on purpose: Tailwind only
-// generates classes it can see whole in the source.
 const semantics = [
   { name: 'error', chip: 'bg-error', tintChip: 'bg-error-tint', text: 'text-error', sample: 'Corrected.' },
   { name: 'success', chip: 'bg-success', tintChip: 'bg-success-tint', text: 'text-success', sample: 'Approved.' },
@@ -120,8 +103,6 @@ const semantics = [
 
 const lineScale = ['line-subtle', 'line', 'line-strong'];
 
-// Bars are sized by real generated utilities (w-*, max-w-*),
-// written as complete literals so Tailwind's scanner sees them.
 const spacingSizes = [
   ['tiny', '0.25rem', 'w-tiny'],
   ['xxsmall', '0.5rem', 'w-xxsmall'],
@@ -158,7 +139,6 @@ const ledger = [
   { move: 'Close', deliverable: 'Sales assets', owner: 'Studio', cost: '3,600' },
 ];
 ---
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -172,7 +152,6 @@ const ledger = [
   <body>
     <div id="cp" class="page-wrapper">
       <a class="skip_link" href="#main">Skip to the components</a>
-      <!-- ── Masthead ───────────────────────────────── -->
       <header class="mast_wrapper px-global">
         <div class="mast_id">
           <a class="logo" href="#main"><span class="logo_mark" aria-hidden="true" set:html={iconLogoMeteor} />Devin Alexander</a>
@@ -207,7 +186,6 @@ const ledger = [
       </header>
 
       <main id="main" class="main-wrapper">
-        <!-- ── Intro ──────────────────────────────────── -->
         <header class="section_layout is-intro">
           <div class="padding-global">
             <div class="container-large">
@@ -226,7 +204,6 @@ const ledger = [
           </div>
         </header>
 
-        <!-- ═══════ PART ONE · FOUNDATIONS ═══════ -->
         <header class="section_layout is-part">
           <div class="padding-global">
             <div class="container-large">
@@ -243,7 +220,6 @@ const ledger = [
           </div>
         </header>
 
-        <!-- ── 1 · Principles ────────────────────────── -->
         <section class="section_layout" id="principles">
           <div class="padding-global">
             <div class="container-large">
@@ -271,7 +247,6 @@ const ledger = [
           </div>
         </section>
 
-        <!-- ── 2 · Colors ────────────────────────────── -->
         <section class="section_layout" id="colors">
           <div class="padding-global">
             <div class="container-large">
@@ -344,7 +319,6 @@ const ledger = [
           </div>
         </section>
 
-        <!-- ── 3 · Type scale ────────────────────────── -->
         <section class="section_layout" id="type">
           <div class="padding-global">
             <div class="container-large">
@@ -360,6 +334,14 @@ const ledger = [
                   </p>
               </div>
               <div class="section_body">
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">text-display</span>
+                      <span class="spec_info">56→176, 11vw between · 600 · lh 0.92 · ls -0.03em · the front-page voice above h1, viewport-relative the way award-page heroes run (measured 176-327px in the wild) · one use per page, and only on a page's opening statement</span>
+                    </div>
+                    <p class="text-display font-display">Ink reads.</p>
+                  </div>
+
                   <div class="spec_row">
                     <div class="spec_meta">
                       <span class="spec_tag">h1 · text-h1</span>
@@ -421,7 +403,6 @@ const ledger = [
           </div>
         </section>
 
-        <!-- ── 4 · Paragraphs ────────────────────────── -->
         <section class="section_layout" id="paragraphs">
           <div class="padding-global">
             <div class="container-large">
@@ -480,7 +461,6 @@ const ledger = [
           </div>
         </section>
 
-        <!-- ── 5 · Spacing & containers ──────────────── -->
         <section class="section_layout" id="spacing">
           <div class="padding-global">
             <div class="container-large">
@@ -533,7 +513,6 @@ const ledger = [
           </div>
         </section>
 
-        <!-- ── 6 · Motion ────────────────────────────── -->
         <section class="section_layout" id="motion">
           <div class="padding-global">
             <div class="container-large">
@@ -607,7 +586,6 @@ const ledger = [
           </div>
         </section>
 
-        <!-- ── 7 · Icons ─────────────────────────────── -->
         <section class="section_layout" id="icons">
           <div class="padding-global">
             <div class="container-large">
@@ -655,6 +633,23 @@ const ledger = [
                     </div>
                   </div>
 
+                  <h3 class="text-h5 mt-xlarge mb-small">Inside display type</h3>
+                  <p class="text-small text-ink-muted max-w-measure-md mb-medium">
+                    is-inline, for an icon set inside running display copy.
+                    The default 1.25em is calibrated for body text, whose line
+                    box is about 1.5em; display type runs a 1.05 line-height,
+                    so there a default icon is taller than its own line box and
+                    forces the paragraph's leading open unevenly. Measured at
+                    text-h2: line gaps went from one uniform step to
+                    95 / 87 / 88 / 87 / 88px. is-inline is 0.8em, which fits
+                    the line box and sits near the cap height.
+                  </p>
+                  <p class="text-h3 font-display max-w-measure-md">
+                    Set with <span class="icon is-inline" set:html={iconCalendar} /> the
+                    default, then <span class="icon" set:html={iconCalendar} /> without
+                    is-inline.
+                  </p>
+
                   <h3 class="text-h5 mt-xlarge mb-small">In use</h3>
                   <div class="demo_row">
                     <button class="button" type="button">
@@ -676,7 +671,6 @@ const ledger = [
           </div>
         </section>
 
-        <!-- ═══════ PART TWO · COMPONENTS ═══════ -->
         <header class="section_layout is-part">
           <div class="padding-global">
             <div class="container-large">
@@ -693,7 +687,6 @@ const ledger = [
           </div>
         </header>
 
-        <!-- ── 8 · Buttons & links ───────────────────── -->
         <section class="section_layout" id="buttons">
           <div class="padding-global">
             <div class="container-large">
@@ -818,7 +811,6 @@ const ledger = [
           </div>
         </section>
 
-        <!-- ── 9 · Forms ─────────────────────────────── -->
         <section class="section_layout" id="forms">
           <div class="padding-global">
             <div class="container-large">
@@ -1089,13 +1081,43 @@ const ledger = [
                       <p class="text-tiny text-ink-muted">A person reads this, not a chatbot, and it does not sign you up for anything.</p>
                     </div>
                   </form>
+
+                  <h3 class="text-h5 mt-xxlarge mb-small">Composed: the signup</h3>
+                  <p class="text-small text-ink-muted max-w-measure-md mb-large">
+                    One email field with its button beside it, for a waitlist
+                    or a newsletter. The field grows, the button keeps its
+                    width, and the pair stacks when the row runs out.
+                    is-hero sets the field in the hero button's type, so the
+                    two are one height in a hero.
+                  </p>
+
+                  <form class="signup" novalidate onsubmit="return false">
+                    <div class="field">
+                      <label class="label" for="su-email">Email</label>
+                      <div class="field_control">
+                        <span class="field_icon" aria-hidden="true" set:html={iconEmailUnread} />
+                        <input class="field_input" id="su-email" type="email" placeholder="you@company.com" autocomplete="email" />
+                      </div>
+                    </div>
+                    <button class="button" type="submit">Join the waitlist</button>
+                  </form>
+
+                  <form class="signup is-hero mt-xlarge" novalidate onsubmit="return false">
+                    <div class="field">
+                      <label class="label" for="su-email-hero">Email</label>
+                      <div class="field_control">
+                        <span class="field_icon" aria-hidden="true" set:html={iconEmailUnread} />
+                        <input class="field_input" id="su-email-hero" type="email" placeholder="you@company.com" autocomplete="email" />
+                      </div>
+                    </div>
+                    <button class="button is-hero" type="submit">Join the waitlist</button>
+                  </form>
               </div>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- ── 10 · Navigation ────────────────────────── -->
         <section class="section_layout" id="navigation">
           <div class="padding-global">
             <div class="container-large">
@@ -1209,7 +1231,6 @@ const ledger = [
           </div>
         </section>
 
-        <!-- ── 11 · Disclosure ────────────────────────── -->
         <section class="section_layout" id="disclosure">
           <div class="padding-global">
             <div class="container-large">
@@ -1271,6 +1292,45 @@ const ledger = [
                             is drawn. Partners join for the parts outside our
                             wheelhouse, and you always know who they are.
                           </p>
+                        </div>
+                      </details>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">acc is-display + acc_readout</span>
+                      <span class="spec_info">the ledger at display scale: entry titles in the h3 voice, a mono acc_readout sitting on the rule (a price or a term, checkable, never a tagline) · the body's measure cap lifts because the fold carries a .spread and needs the full row · summary wraps on narrow viewports so the title never crushes · same controller, same physics, no new motion</span>
+                    </div>
+                    <div class="acc is-display">
+                      <details class="acc_item">
+                        <summary class="acc_summary">
+                          Marketing Execution
+                          <span class="acc_readout">from $900/mo</span>
+                          <span class="icon" set:html={iconChevronDown} />
+                        </summary>
+                        <div class="acc_body">
+                          <article class="spread">
+                            <div class="spread_copy">
+                              <p class="text-body max-w-measure-sm">Brand, website, email and advertising. We build them, run them, and report what each one earned.</p>
+                              <p class="spread_fact">Brand $4,200 · Website $6,800 · Email $900/mo · Ads $1,200/mo</p>
+                            </div>
+                            <figure class="figure spread_object">
+                              <div class="figure_frame">
+                                <img src={imgWorkshop.src} alt="" loading="lazy" />
+                              </div>
+                            </figure>
+                          </article>
+                        </div>
+                      </details>
+                      <details class="acc_item">
+                        <summary class="acc_summary">
+                          Sales Enablement
+                          <span class="acc_readout">billed monthly</span>
+                          <span class="icon" set:html={iconChevronDown} />
+                        </summary>
+                        <div class="acc_body">
+                          <p class="text-body max-w-measure-sm">Your sales team keeps selling. We work alongside them.</p>
                         </div>
                       </details>
                     </div>
@@ -1441,7 +1501,6 @@ const ledger = [
           </div>
         </section>
 
-        <!-- ── 12 · Overlays ──────────────────────────── -->
         <section class="section_layout" id="overlays">
           <div class="padding-global">
             <div class="container-large">
@@ -1550,7 +1609,6 @@ const ledger = [
           </div>
         </section>
 
-        <!-- ── 13 · Alerts ────────────────────────────── -->
         <section class="section_layout" id="alerts">
           <div class="padding-global">
             <div class="container-large">
@@ -1578,7 +1636,128 @@ const ledger = [
           </div>
         </section>
 
-        <!-- ── 14 · Cards & elevation ─────────────────── -->
+        <section class="section_layout" id="bands">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="padding-section-medium">
+                <div class="section_head">
+                  <p class="eyebrow">Bands</p>
+                  <p class="section_lead text-small text-ink-muted max-w-measure-md">
+                    A full-bleed flat surface for a page's loudest moment: a
+                    creed, a closing pitch. Composes with section_layout, which
+                    owns the background slot. Flat and untinted, always, and
+                    never more than one on a page. is-swept makes the accent
+                    band arrive as a single highlighter stroke instead of being
+                    there from first paint.
+                  </p>
+                </div>
+                <div class="section_body">
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">section · band is-accent</span>
+                      <span class="spec_info">the accent field · on-accent ink throughout · the one place yellow stops being a mark and becomes a surface, so it is spent once per page</span>
+                    </div>
+                    <div class="band is-accent" style="padding: var(--spacing-large);">
+                      <p class="text-h4 font-display">Yellow marks the page.</p>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">section · band is-ink</span>
+                      <span class="spec_info">the ink field · paper text · del gets its own text-safe values here, since the paper-tuned strike goes invisible on ink · accent text uses text-on-ink-accent, NEVER text-ink-accent: --m-ink-accent is calibrated against the page ground and this band inverts it, so there it resolves to plain ink and vanishes · --m-on-ink-accent is the mirror, the accent in light (~12:1 on the dark band) and the band's own paper ink in dark (where the band is light and yellow would sit near 1.3:1) · the same concession --m-ink-accent makes on paper, one ground further in</span>
+                    </div>
+                    <div class="band is-ink" style="padding: var(--spacing-large);">
+                      <p class="text-h4 font-display">
+                        Ink reads the page, <span class="text-on-ink-accent">yellow still marks it</span>.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">section · band is-ink is-stamped</span>
+                      <span class="spec_info">makes contact, never slides: a moving edge crossing the page is a wipe and reads as a progress bar · no progressive fill anywhere, because a half-covered ground leaves the type ink-on-ink or paper-on-paper somewhere on every line, and a hard cut has no such frame · the slab overshoots on scaleY and settles (--duration-fast), the type absorbs it 60ms behind (--duration-normal) · scaleY only, a uniform scale on a full-bleed band opens a horizontal scrollbar · carries data-reveal and opts out of that attribute's opacity gate, unlayered · plays once · reduced motion keeps the colours, drops the impact</span>
+                    </div>
+                    <div class="band is-ink is-stamped" data-reveal style="padding: var(--spacing-large);">
+                      <p class="text-h4 font-display">The ink lands once, then rests.</p>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">section_layout is-full</span>
+                      <span class="spec_info">the section claims a whole screen, for a band carrying ONE statement · min-height 100svh, never height: short or narrow viewports must be able to push it taller rather than clip the copy · svh not dvh and not vh, so the band is sized once with the mobile chrome expanded and never relayouts the type mid-scroll under the reader's thumb · align-content centres the single row · the inner padding-section-* stays and becomes the floor once the viewport is shorter than the copy needs · specimen below is the real height, not a reduction</span>
+                    </div>
+                    <div class="section_layout is-full band is-ink" style="padding: var(--spacing-large);">
+                      <p class="text-h3 font-display text-center">One statement, one screen.</p>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">band is-ink · card, section_lead</span>
+                      <span class="spec_info">a card on an ink band is a DRAWN box, not a pasted sheet: .card's surface fill is calibrated against the page ground and lands as a pale slab reading like a sticker, so the fill drops and the border does the work (hard rule 2 allows a line that draws a component's box) · borders and the lead are mixed from --m-paper, never from --m-line or --m-ink-muted, because every one of those is derived from --m-ink and vanishes on ink · the band already sets color:--m-paper, so paper IS this surface's ink and one mix holds in both modes with no dark: variant · border 40% measured 3.47:1 against the band ground (non-text floor 3:1), lead 72% measured 8.32:1 and card body 15.16:1 (text floor 4.5:1) · measure a semi-transparent value by compositing it onto the real ground and reading the pixel, because un-premultiplying recovers the source colour with its alpha discarded and every mix then reports a passing 15.2:1</span>
+                    </div>
+                    <div class="band is-ink" style="padding: var(--spacing-large);">
+                      <div class="section_head">
+                        <h4 class="text-h5">Three services.</h4>
+                        <p class="section_lead text-small">The lead keeps its step down from the heading without going dark on dark.</p>
+                      </div>
+                      <div class="section_body card-grid">
+                        <div class="card">
+                          <div class="card_head">
+                            <span class="icon" aria-hidden="true" set:html={iconTarget} />
+                            <p class="text-h6 font-display">Drawn, not filled</p>
+                          </div>
+                          <p class="text-small">The border carries the box.</p>
+                        </div>
+                        <div class="card">
+                          <div class="card_head">
+                            <span class="icon" aria-hidden="true" set:html={iconPen} />
+                            <p class="text-h6 font-display">Equal heights</p>
+                          </div>
+                          <p class="text-small">card-grid is grid, so a longer blurb never leaves the row ragged along the bottom.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">card-grid · card_head</span>
+                      <span class="spec_info">THE container for a row of cards, the role button-group plays for buttons and tape-group for tapes · cards are never loose siblings · auto-fit + minmax(18rem, 1fr), never repeat(3, 1fr): the card count is the page's business and the track reflows 3 → 2 → 1 with no breakpoint in this file · grid not flex, so cards in a row share a height whatever the blurb runs to · card_head stacks the icon ABOVE the title, because at .icon's 1.25em an inline mark competes with the title's weight and a card is scanned top-down</span>
+                    </div>
+                    <div class="card-grid">
+                      <div class="card">
+                        <div class="card_head">
+                          <span class="icon" aria-hidden="true" set:html={iconHandshake} />
+                          <p class="text-h6 font-display">On paper</p>
+                        </div>
+                        <p class="text-small text-ink-muted">The same grid and card on the page ground, where the surface fill is correct and stays.</p>
+                      </div>
+                      <div class="card">
+                        <div class="card_head">
+                          <span class="icon" aria-hidden="true" set:html={iconTarget} />
+                          <p class="text-h6 font-display">Reflows itself</p>
+                        </div>
+                        <p class="text-small text-ink-muted">Narrow the window and the tracks drop to two, then one.</p>
+                      </div>
+                      <div class="card">
+                        <div class="card_head">
+                          <span class="icon" aria-hidden="true" set:html={iconPen} />
+                          <p class="text-h6 font-display">Same height</p>
+                        </div>
+                        <p class="text-small text-ink-muted">Short blurb.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section class="section_layout" id="cards">
           <div class="padding-global">
             <div class="container-large">
@@ -1659,7 +1838,6 @@ const ledger = [
           </div>
         </section>
 
-        <!-- ── 15 · Content ───────────────────────────── -->
         <section class="section_layout" id="content">
           <div class="padding-global">
             <div class="container-large">
@@ -1737,6 +1915,77 @@ const ledger = [
                       </div>
                       <figcaption>Layout study, two inks · Keller Supply rebrand, 2026</figcaption>
                     </figure>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">div · photo_panels + a · photo_panel</span>
+                      <span class="spec_info">a photograph claimed as a panel, the figure's full-bleed cousin · the scrim is content, not chrome: the ground under the ink is always the photo's wash, never the page, so scrim and ink are authored once in oklch and never flip with [data-theme] · --photo-ink is the light-mode paper value, fixed, one value carries both modes · one a owns the whole surface · from 64rem the panels stand in a row and the hovered or focused panel widens while its siblings yield and the scrim deepens; width is the only animated property, never transition-all · the folded description is the island's motion, not CSS: motion/react on --ease-out-expo, opacity leading and the body trailing a beat · below 64rem the description stands open and nothing moves · specimen is the real height, not a reduction</span>
+                    </div>
+                    <div class="photo_panels">
+                      <a href="#content" class="photo_panel">
+                        <div class="photo_panel_media" aria-hidden="true">
+                          <img src={imgWorkshop.src} alt="" loading="lazy" />
+                          <div class="photo_panel_scrim"></div>
+                        </div>
+                        <div class="photo_panel_body">
+                          <p class="text-h4 font-display">Marketing Strategy</p>
+                          <p class="text-body mt-small">We work out who actually buys, why they buy, and whether the market wants what you sell.</p>
+                          <p class="mt-medium"><span class="text-link">Get your price <span class="icon" aria-hidden="true" set:html={iconArrowRight} /></span></p>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">div · spread_stack + article · spread</span>
+                      <span class="spec_info">an editorial unit: copy standing beside ONE object (a figure, a stat, a photo on its mat) · spread_stack owns the rhythm between spreads, spread owns its two columns · below 64rem one column, the object follows its copy; from 64rem the columns sit on --split-gap-large and is-flipped moves the object left, so a stack alternates like a bound magazine · spread_fact is the ledger voice inside a spread: mono meta that FOLLOWS the copy as a checkable readout (prices, terms) and never precedes a heading · its color mixes from currentColor so one rule reads as muted ink on paper and muted paper on an ink band (72%, the band lead's measured value) · on band is-ink the figure mat drops its fill and the border draws it, the card's logic one rule up · motion recipe: the copy cell reveals, its object trails 90ms behind (layered inertia), and a highlight is-swept inside the copy carries its own data-reveal so the hand marks the key line only when the reader reaches it</span>
+                    </div>
+                    <div class="band is-ink" style="padding: var(--spacing-large);">
+                      <div class="spread_stack">
+                        <article class="spread">
+                          <div class="spread_copy">
+                            <h4 class="text-h5">Marketing Execution</h4>
+                            <p class="text-body max-w-measure-sm">Brand, website, email and advertising. We build them, run them, and <em class="highlight">report what each one earned in revenue</em> every month.</p>
+                            <p class="spread_fact">Brand $4,200 · Website $6,800 · Email $900/mo · Ads $1,200/mo</p>
+                            <p><a class="text-link" href="#content">Get your price <span class="icon" aria-hidden="true" set:html={iconArrowRight} /></a></p>
+                          </div>
+                          <figure class="figure spread_object">
+                            <div class="figure_frame">
+                              <img src={imgWorkshop.src} alt="" loading="lazy" />
+                            </div>
+                          </figure>
+                        </article>
+                        <article class="spread is-flipped">
+                          <div class="spread_copy">
+                            <h4 class="text-h5">Sales Enablement</h4>
+                            <p class="text-body max-w-measure-sm">Your sales team keeps selling. <em class="highlight">The best prospects hear from us before your team calls.</em></p>
+                            <p class="spread_fact">Billed monthly · cancel with 30 days&rsquo; notice</p>
+                            <p><a class="text-link" href="#content">Get your price <span class="icon" aria-hidden="true" set:html={iconArrowRight} /></a></p>
+                          </div>
+                          <figure class="figure spread_object">
+                            <div class="figure_frame">
+                              <img src={imgWorkshop.src} alt="" loading="lazy" />
+                            </div>
+                          </figure>
+                        </article>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">div · folio</span>
+                      <span class="spec_info">the front page: a full-viewport opening on twelve columns · the lead stands high right on a narrow measure, the display line lands at the bottom edge, the mono deck sits under it · from 64rem column ONE stays empty, the skinny column: whitespace as its own grid track, never padding · bottom-aligned, not centered, the 1fr first row is the roaming whitespace · one folio per page, and text-display is only spent here · specimen is the real height, not a reduction</span>
+                    </div>
+                    <div class="folio">
+                      <p class="folio_lead text-body-md max-w-measure-sm">The lead paragraph stands high on the page, off the axis, on a reading measure.</p>
+                      <p class="folio_display text-display font-display">Yellow marks.</p>
+                      <div class="folio_deck">
+                        <p class="label">Prices are published · quotes are instant</p>
+                      </div>
+                    </div>
                   </div>
 
                   <div class="spec_row">
@@ -1951,7 +2200,6 @@ const ledger = [
           </div>
         </section>
 
-        <!-- ── 16 · Tables ────────────────────────────── -->
         <section class="section_layout" id="tables">
           <div class="padding-global">
             <div class="container-large">
@@ -1993,7 +2241,6 @@ const ledger = [
           </div>
         </section>
 
-        <!-- ═══════ PART THREE · PROOF ═══════ -->
         <header class="section_layout is-part">
           <div class="padding-global">
             <div class="container-large">
@@ -2010,7 +2257,6 @@ const ledger = [
           </div>
         </header>
 
-        <!-- ── 17 · Selection & scrollbar ─────────────── -->
         <section class="section_layout" id="selection">
           <div class="padding-global">
             <div class="container-large">
@@ -2042,7 +2288,6 @@ const ledger = [
           </div>
         </section>
 
-        <!-- ── 18 · Contrast, measured live ───────────── -->
         <section class="section_layout" id="contrast">
           <div class="padding-global">
             <div class="container-large">
@@ -2064,7 +2309,6 @@ const ledger = [
         </section>
       </main>
 
-      <!-- ── Menu overlay (demo) ────────────────────── -->
       <div class="menu_overlay" id="siteMenu" role="dialog" aria-modal="true" aria-label="Site menu">
         <div class="menu_head">
           <span class="mast_name">Devin Alexander</span>
@@ -2082,7 +2326,6 @@ const ledger = [
         <p class="label text-ink-muted mt-xlarge">Human-made, start to finish.</p>
       </div>
 
-      <!-- ── Dialog (demo) ──────────────────────────── -->
       <dialog class="dialog" id="demoDialog" aria-labelledby="demoDialogTitle">
         <div class="dialog_head">
           <h3 class="text-h5" id="demoDialogTitle">Cancel the engagement?</h3>
@@ -2100,7 +2343,6 @@ const ledger = [
         </div>
       </dialog>
 
-      <!-- ── Toast rack ─────────────────────────────── -->
       <div class="toast_rack" id="toastRack" aria-live="polite"></div>
 
       <footer class="foot_wrapper px-global">
@@ -2111,17 +2353,7 @@ const ledger = [
       </footer>
     </div>
 
-    <style>
-      /* ══════════════════════════════════════════════════
-         PAGE COMPONENTS — Client-First folder_element
-         naming; every value from Marker variables.
-         ══════════════════════════════════════════════════ */
-
-      /* mast_ — the page masthead. Sticky so the mode toggle
-         and wayfinding stay reachable down a long reference
-         page; opaque paper covers the content sliding under
-         it, no divider needed. */
-      .mast_wrapper {
+    <style>      .mast_wrapper {
         position: sticky;
         top: 0;
         z-index: 40;
@@ -2140,9 +2372,6 @@ const ledger = [
         min-width: 0;
       }
 
-      /* principles_ — the system's rules, set as an editorial
-         grid of titled statements. No numbers: the title is the
-         handle, the body is the reason. */
       .principles_grid {
         list-style: none;
         margin: 0;
@@ -2161,8 +2390,6 @@ const ledger = [
         position: relative;
         padding-left: 0.9rem;
       }
-      /* A short highlighter tick keys each rule — the mark that
-         carries meaning, not an index. */
       .principle_title::before {
         content: '';
         position: absolute;
@@ -2177,7 +2404,6 @@ const ledger = [
         line-height: 1.55;
       }
 
-      /* spec_ — specimen rows */
       .spec_row {
         display: grid;
         grid-template-columns: 16rem 1fr;
@@ -2208,7 +2434,6 @@ const ledger = [
         line-height: 1.5;
       }
 
-      /* demo_ — inline demo rows */
       .demo_row {
         display: flex;
         flex-wrap: wrap;
@@ -2216,7 +2441,6 @@ const ledger = [
         gap: 0.75rem;
       }
 
-      /* icons_ — the Freehand specimen grid */
       .icons_grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
@@ -2251,7 +2475,6 @@ const ledger = [
         gap: 0.4em;
       }
 
-      /* swatch_ — color tiles */
       .swatch_grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
@@ -2296,7 +2519,6 @@ const ledger = [
         white-space: nowrap;
       }
 
-      /* bar_ — spacing and container rulers */
       .bar_row {
         display: grid;
         grid-template-columns: 8rem 1fr auto;
@@ -2326,7 +2548,6 @@ const ledger = [
         white-space: nowrap;
       }
 
-      /* form_ — the forms demo grid */
       .form_grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -2337,14 +2558,12 @@ const ledger = [
         grid-column: 1 / -1;
       }
 
-      /* alerts_ — the alerts demo grid */
       .alerts_grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 0.75rem;
       }
 
-      /* cards_ / tiles_ — card and elevation grids */
       .cards_grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -2360,7 +2579,6 @@ const ledger = [
         gap: 1rem;
       }
 
-      /* motion_ — easing demo */
       .motion_row {
         display: grid;
         grid-template-columns: 11rem 1fr auto;
@@ -2412,7 +2630,6 @@ const ledger = [
         }
       }
 
-      /* motion_card — the entrance-pattern specimens */
       .motion_cards {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
@@ -2446,7 +2663,6 @@ const ledger = [
         color: var(--m-ink-muted);
       }
 
-      /* scroll_ — scrollbar demo pane */
       .scroll_pane {
         height: 10rem;
         max-width: var(--container-sm);
@@ -2464,9 +2680,6 @@ const ledger = [
         white-space: nowrap;
       }
 
-      /* aa_ — the live contrast audit. The table itself is the
-         system .table component (rendered in JS); only the
-         swatch + verdict chips below are specimen-specific. */
       .aa-sample {
         display: inline-flex;
         align-items: center;
@@ -2493,7 +2706,6 @@ const ledger = [
         color: var(--m-error);
       }
 
-      /* foot_ — the page footer */
       .foot_wrapper {
         padding-top: var(--spacing-medium);
         padding-bottom: var(--spacing-xlarge);
@@ -2505,7 +2717,6 @@ const ledger = [
         gap: 1rem;
       }
 
-      /* ── Responsive ── */
       @media (max-width: 50rem) {
         .spec_row {
           grid-template-columns: 1fr;
@@ -2542,9 +2753,6 @@ const ledger = [
       (function () {
         var cp = document.getElementById('cp');
 
-        /* ── Color resolution: read a variable from the rendered
-           page, normalize through canvas (handles color-mix),
-           return [r, g, b, a]. ── */
         var probe = document.createElement('span');
         probe.style.display = 'none';
         cp.appendChild(probe);
@@ -2604,8 +2812,6 @@ const ledger = [
           return (hi + 0.05) / (lo + 0.05);
         }
 
-        /* ── 03: live swatch values — translucent tokens (the
-           line scale) display their alpha honestly. ── */
         function oklchCssAlpha(c) {
           var s = oklchCss(c);
           if (c[3] < 0.995) {
@@ -2619,7 +2825,6 @@ const ledger = [
           });
         }
 
-        /* ── 12: live AA audit ── */
         var PAIRS = [
           ['Ink on paper', '--m-ink', '--m-paper', 4.5],
           ['Muted ink on paper', '--m-ink-muted', '--m-paper', 4.5],
@@ -2637,9 +2842,6 @@ const ledger = [
 
         function renderAA() {
           if (!aaBox) return;
-          // innerHTML is safe here: every interpolated value is either a
-          // hardcoded literal from PAIRS or a number produced by
-          // canvas/contrast math. No user or remote input reaches this.
           var rows = PAIRS.map(function (pair) {
             var bg = resolveVar(pair[2]);
             var fg = blend(resolveVar(pair[1]), bg);
@@ -2659,7 +2861,6 @@ const ledger = [
             '</tr></thead><tbody>' + rows + '</tbody></table></div>';
         }
 
-        /* ── 10: motion demo — plays once, replay on demand ── */
         var stage = document.getElementById('motionStage');
         var motionCards = document.getElementById('motionCards');
         var motionClasses = ['motion-fade-up', 'motion-fade-in', 'motion-slide-in'];
@@ -2670,8 +2871,6 @@ const ledger = [
             stage.classList.add('is-playing');
           }
           if (motionCards) {
-            /* Re-trigger the entrance animations by stripping the
-               utility, forcing reflow, then re-applying it. */
             var chips = motionCards.querySelectorAll('.motion_chip');
             chips.forEach(function (chip, idx) {
               var cls = motionClasses[idx % motionClasses.length];
@@ -2686,9 +2885,6 @@ const ledger = [
         var playBtn = document.getElementById('motionPlay');
         if (playBtn) playBtn.addEventListener('click', playMotion);
 
-        /* ── dropdown — listbox pattern, keyboard-complete.
-           Focus stays on the trigger; aria-activedescendant
-           tracks the marker-swept option. ── */
         document.querySelectorAll('.dropdown').forEach(function (dd, ddIndex) {
           var trigger = dd.querySelector('.dropdown_trigger');
           var panel = dd.querySelector('.dropdown_panel');
@@ -2786,9 +2982,6 @@ const ledger = [
           });
         });
 
-        /* ── theme-switch — the marker slides to the chosen
-           side; the root data-theme is the single source of
-           truth, so CSS drives the slab and the active ink. ── */
         var themeSwitch = document.querySelector('.theme-switch');
         function setTheme(mode) {
           document.documentElement.setAttribute('data-theme', mode);
@@ -2802,7 +2995,6 @@ const ledger = [
           var btn = e.target.closest('[data-theme-choice]');
           if (btn) setTheme(btn.dataset.themeChoice);
         });
-        /* Arrow keys move between the two radios, as a radiogroup should. */
         themeSwitch.addEventListener('keydown', function (e) {
           if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
           e.preventDefault();
@@ -2811,7 +3003,6 @@ const ledger = [
           themeSwitch.querySelector('[data-theme-choice="' + next + '"]').focus();
         });
 
-        /* ── tags — interactive filter tags toggle on click ── */
         document.querySelectorAll('.tag:not(.is-static)').forEach(function (tag) {
           if (tag.tagName !== 'BUTTON' && tag.tagName !== 'A') return;
           tag.addEventListener('click', function (e) {
@@ -2821,7 +3012,6 @@ const ledger = [
           });
         });
 
-        /* ── 06: the composed lead form — demo submit ── */
         var leadForm = document.getElementById('lead-form');
         if (leadForm) {
           leadForm.addEventListener('submit', function (e) {
@@ -2829,13 +3019,11 @@ const ledger = [
             if (leadForm.querySelector('.alert')) return;
             var note = document.createElement('div');
             note.className = 'alert is-success';
-            // Literal string only; no user input reaches this.
             note.innerHTML = '<strong>Approved</strong> Your message is on its way. A human reads it next.';
             leadForm.appendChild(note);
           });
         }
 
-        /* ── 14: menu overlay — open, close, Escape ── */
         var menu = document.getElementById('siteMenu');
         var menuOpen = document.getElementById('menuOpen');
         var menuClose = document.getElementById('menuClose');
@@ -2857,8 +3045,6 @@ const ledger = [
           });
         }
 
-        /* ── 15: tabs — one controller for every voice:
-           click + arrow keys, roving tabindex ── */
         document.querySelectorAll('[data-tabs]').forEach(function (root) {
           var tabs = Array.from(root.querySelectorAll('.tab'));
           var panels = Array.from(root.querySelectorAll('.tab_panel'));
@@ -2884,9 +3070,6 @@ const ledger = [
           });
         });
 
-        /* ── 15: accordion — the controller measures the row
-           and drives its height with WAAPI, both directions.
-           Reduced motion falls through to the native toggle. */
         var accReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
         document.querySelectorAll('.acc_item').forEach(function (item) {
           var summary = item.querySelector('.acc_summary');
@@ -2895,22 +3078,19 @@ const ledger = [
             if (accReduced.matches) return;
             e.preventDefault();
             var willOpen = !item.open || item.classList.contains('is-closing');
-            var startH = item.offsetHeight; // mid-flight safe: reads the animated height
+            var startH = item.offsetHeight;
             if (accAnim) accAnim.cancel();
             item.classList.add('is-animating');
             item.classList.toggle('is-closing', !willOpen);
-            item.open = true; // content must be in the tree to measure
+            item.open = true;
             var endH;
             if (willOpen) {
               endH = item.offsetHeight;
             } else {
               item.open = false;
               endH = item.offsetHeight;
-              item.open = true; // stays open so the text is visible while folding
+              item.open = true;
             }
-            // fill: forwards holds the end height until cleanup —
-            // without it the row flashes open for a frame between
-            // the animation ending and onfinish closing the item.
             var a = item.animate(
               [{ height: startH + 'px' }, { height: endH + 'px' }],
               { duration: 350, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'forwards' }
@@ -2922,13 +3102,12 @@ const ledger = [
                 item.classList.remove('is-closing');
               }
               item.classList.remove('is-animating');
-              a.cancel(); // release the fill; natural height takes over
+              a.cancel();
               if (accAnim === a) accAnim = null;
             };
           });
         });
 
-        /* ── 16: dialog ── */
         var dialog = document.getElementById('demoDialog');
         var dialogOpen = document.getElementById('dialogOpen');
         if (dialog && dialogOpen) {
@@ -2938,7 +3117,6 @@ const ledger = [
           });
         }
 
-        /* ── 16: toasts — arrive, wait, leave right ── */
         var rack = document.getElementById('toastRack');
         var toastCopy = {
           brand: '<strong>Noted</strong> Saved to the system. It ships with the next build.',
@@ -2950,7 +3128,6 @@ const ledger = [
             var kind = b.dataset.toast;
             var t = document.createElement('div');
             t.className = 'alert toast is-' + kind;
-            // Literal strings only; no user input reaches this.
             t.innerHTML = toastCopy[kind];
             rack.appendChild(t);
             setTimeout(function () {
@@ -2960,7 +3137,6 @@ const ledger = [
           });
         });
 
-        /* ── 07: file input — read the chosen name back ── */
         var fileDemo = document.getElementById('fileDemo');
         if (fileDemo) {
           var fileInput = fileDemo.querySelector('input[type="file"]');
@@ -2972,7 +3148,6 @@ const ledger = [
           });
         }
 
-        /* ── 07: stepper ── */
         var stepper = document.getElementById('stepperDemo');
         if (stepper) {
           var count = stepper.querySelector('input');
@@ -2986,7 +3161,6 @@ const ledger = [
           });
         }
 
-        /* ── 07: range — fill follows the thumb ── */
         var rangeDemo = document.getElementById('rangeDemo');
         if (rangeDemo) {
           var range = rangeDemo.querySelector('input');
@@ -3000,7 +3174,6 @@ const ledger = [
           paintRange();
         }
 
-        /* ── 07: search — clear appears with content ── */
         var searchDemo = document.getElementById('searchDemo');
         if (searchDemo) {
           var searchInput = searchDemo.querySelector('input');
@@ -3016,7 +3189,6 @@ const ledger = [
           });
         }
 
-        /* ── 07: loading button — click to watch it travel ── */
         var loadingBtn = document.getElementById('loadingDemo');
         if (loadingBtn) {
           loadingBtn.addEventListener('click', function () {

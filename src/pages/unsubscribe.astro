@@ -1,0 +1,15 @@
+---
+import Site from '../layouts/Site.astro';
+import UnsubscribePanel from '../components/UnsubscribePanel';
+---
+<Site minimal title="Unsubscribe · Devin Alexander" description="Unsubscribe from Devin Alexander's emails.">
+  <section class="section_layout">
+    <div class="padding-global">
+      <div class="container-large">
+        <div class="md:py-large">
+          <UnsubscribePanel client:load />
+        </div>
+      </div>
+    </div>
+  </section>
+</Site>

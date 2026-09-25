@@ -1,42 +1,30 @@
 ---
-// ────────────────────────────────────────────────────────────────
-// Site.astro — shared page chrome. The head boilerplate, skip
-// link, and main#main skeleton live here; the visible chrome is
-// React: Navbar.tsx and Footer.tsx are server-rendered static
-// components (no directive, zero shipped JS), MobileMenu.tsx
-// (burger + overlay) and ConsentBanner.tsx hydrate as client:idle
-// islands. MobileMenu is passed as Navbar's child so the burger
-// renders inside .navbar_actions — client: directives only exist
-// in .astro templates, and a static React parent can receive a
-// hydrated island as a slotted child. Every page renders through
-// this shell via <Site>...</Site>; the page's own sections are
-// passed as the default slot (rendered inside <main>).
-//
-// The inline scripts below are framework-neutral bootstrap, not
-// UI — hydration timing cannot replicate them without FOUC or
-// dead windows: the html.js gate, the navbar is-stuck toggle, the
-// [data-reveal] IntersectionObserver, and the synchronous
-// window.devinVcConsent global. All other markup and behavior
-// lives in the React components.
-// ────────────────────────────────────────────────────────────────
 import '../styles/global.css';
 
 import Navbar from '../components/Navbar';
 import MobileMenu from '../components/MobileMenu';
 import Footer from '../components/Footer';
 import ConsentBanner from '../components/ConsentBanner';
+import PostHog from '../components/posthog.astro';
+import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+import ThemeSwitch from '../components/ThemeSwitch';
+import { navItems } from '../config/nav';
+import { getAvatar } from '../lib/avatar';
 
 interface Props {
   title?: string;
   description?: string;
+  minimal?: boolean;
 }
 
 const {
-  title = 'Devin Alexander · Human-made marketing',
-  description = 'A human-made marketing agency for owners who are done paying agencies to guess.',
+  title = 'Devin Alexander · The marketing course',
+  description = 'A full marketing course for CEOs, owners, and marketing executives.',
+  minimal = false,
 } = Astro.props;
----
 
+const avatar = await getAvatar();
+---
 <!doctype html>
 <html lang="en">
   <head>
@@ -46,31 +34,30 @@ const {
     <meta name="description" content={description} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href="/fonts/DMSans-Variable-Latin.woff2" as="font" type="font/woff2" crossorigin />
+    <script is:inline>
+      (function () {
+        var theme = 'light';
+        try { if (localStorage.getItem('devin-vc-theme') === 'dark') theme = 'dark'; }
+        catch (e) {}
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
   </head>
   <body>
-    <div class="page-wrapper">
+    <div class:list={["page-wrapper", { "is-screen": minimal }]}>
       <a class="skip_link" href="#main">Skip to content</a>
 
-      <!-- ── Navbar + mobile menu ───────────────────────
-           The menu overlay itself is portaled to document.body by
-           MobileMenu once hydrated; only the burger renders here. -->
-      <Navbar>
-        <MobileMenu client:idle />
+      <Navbar avatar={avatar}>
+        <ThemeSwitch client:load />
+        {navItems.length > 0 && <MobileMenu client:idle avatar={avatar} />}
       </Navbar>
 
       <main id="main" class="main-wrapper">
         <slot />
       </main>
 
-      <Footer />
+      {!minimal && <Footer avatar={avatar} />}
 
-      <!-- ── Cookie consent notice ─────────────────────
-           A small sheet, not a bar; SSR'd hidden (no flash), and
-           ConsentBanner decides on mount whether to show it (see
-           the second script block below for the localStorage
-           contract). Forward-looking infrastructure only: nothing
-           on this site sets tracking cookies today (see /privacy),
-           so there is no live analytics call to gate yet. -->
       <ConsentBanner client:idle />
     </div>
 
@@ -78,53 +65,42 @@ const {
       (function () {
         document.documentElement.classList.add('js');
 
-        /* ── navbar tightens once the page leaves the top ── */
         var navbar = document.getElementById('navbar');
-        var onScroll = function () {
-          navbar.classList.toggle('is-stuck', window.scrollY > 8);
-        };
-        window.addEventListener('scroll', onScroll, { passive: true });
-        onScroll();
+        if (navbar) {
+          var onScroll = function () {
+            navbar.classList.toggle('is-stuck', window.scrollY > 8);
+          };
+          window.addEventListener('scroll', onScroll, { passive: true });
+          onScroll();
+        }
 
-        /* ── scroll reveal ── */
         var reveals = document.querySelectorAll('[data-reveal]');
         if ('IntersectionObserver' in window) {
-          var io = new IntersectionObserver(function (entries) {
+          var onHit = function (entries, obs) {
             entries.forEach(function (entry) {
               if (!entry.isIntersecting) return;
               var el = entry.target;
               el.style.setProperty('--m-delay', (el.dataset.revealDelay || '0') + 'ms');
               el.classList.add(el.dataset.revealMotion || 'motion-fade-up', 'is-revealed');
-              io.unobserve(el);
+              obs.unobserve(el);
             });
-          }, { rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
-          reveals.forEach(function (el) { io.observe(el); });
+          };
+          var io = new IntersectionObserver(onHit, { rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
+          var lineIOs = {};
+          reveals.forEach(function (el) {
+            var margin = el.dataset.revealMargin;
+            if (!margin) { io.observe(el); return; }
+            if (!lineIOs[margin]) {
+              lineIOs[margin] = new IntersectionObserver(onHit, { rootMargin: '0px 0px ' + margin + ' 0px', threshold: 0 });
+            }
+            lineIOs[margin].observe(el);
+          });
         } else {
           reveals.forEach(function (el) { el.classList.add('is-revealed'); });
         }
       })();
     </script>
 
-    <!-- ── Cookie consent global ─────────────────────────
-         Own script block, separate from the chrome script above:
-         this is site-wide feature state (localStorage), not page
-         layout behavior. The banner UI and its show/answer wiring
-         live in ConsentBanner.tsx; this script only defines the
-         global, synchronously, so gating code never races island
-         hydration and the hook exists even when the banner never
-         shows.
-
-         Contract for any future analytics code:
-           localStorage key   'devin-vc-consent'
-           values             'accepted' | 'declined'
-           Absence of a stored 'accepted' value (key never set, or
-           any other value) MUST be treated as non-consent by
-           anything that gates on this — decline-by-default.
-         window.devinVcConsent is the hook point: future code
-         checks window.devinVcConsent.hasConsent() rather than
-         reading localStorage directly. Nothing on this site reads
-         it yet — no analytics is wired today (see /privacy) — this
-         is forward-looking infrastructure only. -->
     <script is:inline>
       (function () {
         var CONSENT_KEY = 'devin-vc-consent';
@@ -139,5 +115,8 @@ const {
         };
       })();
     </script>
+
+    <PostHog />
+    <GoogleAnalytics />
   </body>
 </html>

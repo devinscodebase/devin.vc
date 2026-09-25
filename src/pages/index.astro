@@ -1,17 +1,32 @@
 ---
-// ────────────────────────────────────────────────────────────────
-// / — HOME. Nav and hero only; the rest of the page gets built
-// section by section from here.
-// ────────────────────────────────────────────────────────────────
 import Site from '../layouts/Site.astro';
 
-import HomeHero from '../components/HomeHero';
-import HomeProblem from '../components/HomeProblem';
-import HomeWeGetIt from '../components/HomeWeGetIt';
+import HomeWaitlist from '../components/HomeWaitlist';
 ---
-
-<Site title="Devin Alexander · Human-made marketing" description="A human-made marketing agency for owners who are done paying agencies to guess.">
-  <HomeHero />
-  <HomeProblem />
-  <HomeWeGetIt client:visible />
+<Site
+  minimal
+  title="Devin Alexander · The marketing course"
+  description="A full marketing course for CEOs, owners, and marketing executives. Join the waitlist and hear the day it opens."
+>
+  <section class="section_layout" id="waitlist">
+    <div class="padding-global">
+      <div class="container-large">
+        <div class="md:py-large">
+          <HomeWaitlist client:load />
+        </div>
+      </div>
+    </div>
+    <div class="padding-global">
+      <div class="container-large">
+        <div class="legal_bar">
+          <p>© 2026 Devin Alexander. All Rights Reserved.</p>
+          <nav class="legal_bar_links" aria-label="Legal">
+            <a class="text-link" href="/privacy">Privacy</a>
+            <a class="text-link" href="/cookies">Cookies</a>
+            <a class="text-link" href="/terms">Terms</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </section>
 </Site>
