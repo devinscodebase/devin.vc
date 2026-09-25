@@ -43,12 +43,12 @@ export default function HomeWaitlist() {
     >
       <div className="section_head text-center">
         <h1 className="text-h2 md:text-h1 motion-fade-up">Master the entire marketing subject.</h1>
-        <p className="section_lead text-body-lg max-w-measure-sm mx-auto motion-fade-up" style={{ '--m-delay': '90ms' } as CSSProperties}>
+        <p className="section_lead text-body-md md:text-body-lg max-w-measure-sm mx-auto motion-fade-up" style={{ '--m-delay': '90ms' } as CSSProperties}>
           Marketing training for CEOs, owners, and marketing executives. Learn the theory professional marketers work
           from, and how to apply it to your own business.
         </p>
       </div>
-      <div className="section_body motion-fade-up" style={{ '--m-delay': '180ms' } as CSSProperties}>
+      <div className="section_body mt-large md:mt-xlarge motion-fade-up" style={{ '--m-delay': '180ms' } as CSSProperties}>
         <WaitlistForm onJoined={onJoined} />
       </div>
     </div>

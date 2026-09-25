@@ -32,8 +32,8 @@ export default function ConsentBanner() {
   return (
     <div className="consent card is-elevated" role="region" aria-label="Cookie notice" hidden={hidden}>
       <span className="grain-overlay" aria-hidden="true"></span>
-      <span className="icon" style={{ width: '2em', height: '2em' }} aria-hidden="true" dangerouslySetInnerHTML={{ __html: iconCandyCookie }} />
-      <p className="text-small mt-small">
+      <span className="icon mb-small" style={{ width: '2em', height: '2em' }} aria-hidden="true" dangerouslySetInnerHTML={{ __html: iconCandyCookie }} />
+      <p className="text-small">
         We use Google Analytics and PostHog cookies to understand how this site is used. They are set only if you accept. See our <a className="text-link" href="/cookies">Cookie Policy</a>.
       </p>
       <div className="button-group mt-medium">

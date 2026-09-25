@@ -954,16 +954,17 @@
   }
   .field_check {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.6em;
     font-size: var(--text-small);
+    line-height: 1.6;
     cursor: pointer;
   }
   .field_check input {
     appearance: none;
     width: 1.15em;
     height: 1.15em;
-    margin: 0;
+    margin: 0.225em 0 0;
     flex: none;
     border: 0.125em solid var(--m-rule);
     border-radius: var(--radius-xs);
@@ -2187,6 +2188,23 @@
     overflow: hidden;
     animation: toast-in var(--duration-normal) var(--ease-out-expo);
   }
+  @media (max-width: 36rem) {
+    .consent {
+      left: var(--spacing-small);
+      right: var(--spacing-small);
+      bottom: var(--spacing-small);
+      max-width: none;
+    }
+    .consent > .icon {
+      display: none;
+    }
+    .consent .button-group {
+      flex-wrap: nowrap;
+    }
+    .consent .button-group .button {
+      flex: 1;
+    }
+  }
   @media (prefers-reduced-motion: reduce) {
     .consent {
       animation: none;
@@ -2454,11 +2472,8 @@
         'button';
     }
     .signup .button {
-      justify-self: start;
+      justify-self: stretch;
       margin-top: var(--spacing-xsmall);
-    }
-    .signup.is-centered .button {
-      justify-self: center;
     }
   }
   .signup.is-hero .field_input,
