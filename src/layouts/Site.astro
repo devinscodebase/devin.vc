@@ -15,13 +15,20 @@ interface Props {
   title?: string;
   description?: string;
   minimal?: boolean;
+  image?: string;
+  imageAlt?: string;
 }
 
 const {
   title = 'Devin Alexander · The marketing course',
   description = 'A full marketing course for CEOs, owners, and marketing executives.',
   minimal = false,
+  image = '/og.png',
+  imageAlt = 'Master the entire marketing subject. Devin Alexander, devin.vc',
 } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const imageUrl = new URL(image, Astro.site).href;
 
 const avatar = await getAvatar();
 ---
@@ -32,6 +39,20 @@ const avatar = await getAvatar();
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Devin Alexander" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" href="/favicon.png" type="image/png" sizes="96x96" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
