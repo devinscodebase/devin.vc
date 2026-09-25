@@ -26,6 +26,7 @@
   --m-line-subtle: color-mix(in oklab, var(--m-ink) 12%, transparent);
   --m-line: color-mix(in oklab, var(--m-ink) 22%, transparent);
   --m-line-strong: color-mix(in oklab, var(--m-ink) 55%, transparent);
+  --m-field-wash: color-mix(in oklab, var(--m-ink) 9%, var(--m-surface));
   --m-rule: var(--m-ink);
 
   --m-focus: var(--m-ink);
@@ -66,6 +67,7 @@
   --m-line-subtle: color-mix(in oklab, var(--m-ink-muted) 14%, transparent);
   --m-line: color-mix(in oklab, var(--m-ink-muted) 24%, transparent);
   --m-line-strong: color-mix(in oklab, var(--m-ink) 50%, transparent);
+  --m-field-wash: color-mix(in oklab, var(--m-ink) 5%, var(--m-surface));
   --m-rule: var(--m-line-strong);
 
   --m-focus: var(--m-ink);
@@ -389,6 +391,13 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-medium);
+  }
+  @media (max-width: 36rem) {
+    .legal_bar,
+    .legal_bar_links {
+      justify-content: center;
+      text-align: center;
+    }
   }
   .section_layout {
     position: relative;
@@ -793,7 +802,7 @@
     color: var(--m-on-accent);
   }
   .field_input {
-    --field-wash: color-mix(in oklab, var(--m-ink) 5%, var(--m-surface));
+    --field-wash: var(--m-field-wash);
     --field-sweep: var(--m-accent);
     width: 100%;
     font-family: var(--font-body);

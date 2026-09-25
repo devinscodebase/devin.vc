@@ -22,7 +22,7 @@ export default function HomeWaitlist() {
   if (phase === 'joined') {
     return (
       <div className="section_head text-center" role="status">
-        <h1 className="text-h2 md:text-h1 motion-fade-up focus-visible:outline-none focus-visible:shadow-none" ref={headingRef} tabIndex={-1}>
+        <h1 className="text-h3 sm:text-h2 md:text-h1 motion-fade-up focus-visible:outline-none focus-visible:shadow-none" ref={headingRef} tabIndex={-1}>
           You're on the list.
         </h1>
         <p className="section_lead text-h4 font-body font-normal tracking-normal leading-normal max-w-sm mx-auto motion-fade-up" style={{ '--m-delay': '120ms' } as CSSProperties}>
@@ -42,7 +42,7 @@ export default function HomeWaitlist() {
       }}
     >
       <div className="section_head text-center">
-        <h1 className="text-h2 md:text-h1 motion-fade-up">Master the entire marketing subject.</h1>
+        <h1 className="text-h3 sm:text-h2 md:text-h1 motion-fade-up">Master the entire marketing subject.</h1>
         <p className="section_lead text-body-md md:text-body-lg max-w-measure-sm mx-auto motion-fade-up" style={{ '--m-delay': '90ms' } as CSSProperties}>
           Marketing training for CEOs, owners, and marketing executives. Learn the theory professional marketers work
           from, and how to apply it to your own business.
