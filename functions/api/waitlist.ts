@@ -10,15 +10,12 @@ interface Env {
   POSTHOG_PROJECT_TOKEN?: string;
   RESEND_API_KEY?: string;
   UNSUBSCRIBE_SECRET?: string;
-  WAITLIST_FROM?: string;
 }
 
 interface Context {
   request: Request;
   env: Env;
 }
-
-const REPLY_TO = 'me@devin.vc';
 
 const RESEND_SEGMENT_ID = '2902dfb8-0e9c-4275-99f8-35162074b39e';
 const RESEND_TOPIC_ID = 'a2bf8218-7970-448b-b4c0-6402f89728fb';
@@ -94,11 +91,9 @@ export async function onRequestPost({ request, env }: Context): Promise<Response
     },
   };
 
-  const { RESEND_API_KEY, WAITLIST_FROM } = env;
+  const { RESEND_API_KEY } = env;
   if (RESEND_API_KEY) {
     deps.addContact = (email) => syncContact(RESEND_API_KEY, email);
-  }
-  if (RESEND_API_KEY && WAITLIST_FROM) {
     deps.sendConfirmation = async (email) => {
       const origin = new URL(request.url).origin;
       const variables: Record<string, string> = { SUBSCRIBER_EMAIL: email };
@@ -112,9 +107,7 @@ export async function onRequestPost({ request, env }: Context): Promise<Response
         };
       }
       const response = await resend(RESEND_API_KEY, 'POST', '/emails', {
-        from: WAITLIST_FROM,
         to: [email],
-        reply_to: REPLY_TO,
         template: { id: CONFIRMATION_TEMPLATE_ID, variables },
         ...(headers ? { headers } : {}),
       });
