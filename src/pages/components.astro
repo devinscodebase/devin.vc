@@ -29,6 +29,9 @@ import iconThemeMoon from '../icons/freehand/theme-moon.svg?raw';
 import iconLogoMeteor from '../icons/freehand/logo-meteor.svg?raw';
 import iconTarget from '../icons/freehand/target.svg?raw';
 import iconHandshake from '../icons/freehand/handshake.svg?raw';
+import IntroReel from '../components/IntroReel';
+import iconResearch from '../icons/freehand/research.svg?raw';
+import iconFunnel from '../icons/freehand/funnel.svg?raw';
 import imgWorkshop from '../assets/gallery/workshop.jpg';
 
 const icons = [
@@ -1527,6 +1530,37 @@ const ledger = [
                     </div>
                     <div class="demo_row">
                       <button class="button is-secondary" type="button" id="dialogOpen">Cancel the engagement</button>
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">reel · theater · player</span>
+                      <span class="spec_info">poster stamp opens into a paper theater · the frame grows from the stamp · plays once, ends on watch again + join</span>
+                    </div>
+                    <div class="demo_row">
+                      <IntroReel client:visible />
+                    </div>
+                  </div>
+
+                  <div class="spec_row">
+                    <div class="spec_meta">
+                      <span class="spec_tag">cover · cover.is-accent · scatter</span>
+                      <span class="spec_info">course cover, sized by its container (cqi) · badge top right, title bottom left, one highlighted word · scatter places covers behind the hero at three depths: near sharp with shadow-lg, mid blur 1px, far blur 3px at 55%</span>
+                    </div>
+                    <div class="demo_row" style="gap: 2rem;">
+                      <div style="container-type: inline-size; width: 16rem;">
+                        <div class="cover">
+                          <p class="cover_title">Market <em class="highlight">research.</em></p>
+                          <span class="cover_badge"><span class="icon" set:html={iconResearch} /></span>
+                        </div>
+                      </div>
+                      <div style="container-type: inline-size; width: 16rem;">
+                        <div class="cover is-accent">
+                          <p class="cover_title"><em class="highlight">Funnels.</em></p>
+                          <span class="cover_badge"><span class="icon" set:html={iconFunnel} /></span>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
