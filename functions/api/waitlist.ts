@@ -5,6 +5,7 @@ import { unsubscribeQuery } from '../../src/lib/unsubscribe';
 import { joinWaitlist, type WaitlistDeps } from '../../src/lib/waitlist';
 
 interface Env {
+  ADMIN_INGEST_KEY?: string;
   DATABASE_URL?: string;
   POSTHOG_HOST?: string;
   POSTHOG_PROJECT_TOKEN?: string;
@@ -15,6 +16,7 @@ interface Env {
 interface Context {
   request: Request;
   env: Env;
+  waitUntil: (promise: Promise<unknown>) => void;
 }
 
 const RESEND_SEGMENT_ID = '2902dfb8-0e9c-4275-99f8-35162074b39e';
@@ -49,6 +51,27 @@ async function syncContact(apiKey: string, email: string): Promise<void> {
   ]);
   if (!topics.ok) throw await failure('topic opt-in', topics);
 }
+const ADMIN_INGEST_URL = 'https://admin.devin.vc/api/ingest/opt-in';
+
+async function recordLead(key: string, request: Request, id: string, email: string): Promise<void> {
+  const origin = new URL(request.url).origin;
+  const referer = request.headers.get('Referer');
+  const pageUrl = referer && referer.startsWith(origin) ? referer : `${origin}/`;
+  const response = await fetch(ADMIN_INGEST_URL, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      form: 'devin-vc-waitlist',
+      formName: 'Waitlist',
+      site: 'devin.vc',
+      email,
+      pageUrl,
+      sourceId: `waitlist:${id}`,
+    }),
+  });
+  if (!response.ok) throw new Error(`admin ingest ${response.status}: ${await response.text()}`);
+}
+
 const CONFIRMATION_TEMPLATE_ID = '172c476d-22c1-4049-a414-b62962174f7b';
 
 function json(status: number, body: unknown): Response {
@@ -58,7 +81,7 @@ function json(status: number, body: unknown): Response {
   });
 }
 
-export async function onRequestPost({ request, env }: Context): Promise<Response> {
+export async function onRequestPost({ request, env, waitUntil }: Context): Promise<Response> {
   if (!env.DATABASE_URL) {
     console.error('waitlist: DATABASE_URL is not set');
     return json(503, { ok: false, error: 'unavailable' });
@@ -75,6 +98,7 @@ export async function onRequestPost({ request, env }: Context): Promise<Response
   const sql = neon(env.DATABASE_URL);
   let capturedError: unknown;
   let isNewSignup = false;
+  let signupId: string | undefined;
   const deps: WaitlistDeps = {
     insert: async (email) => {
       const rows = await sql`
@@ -83,6 +107,7 @@ export async function onRequestPost({ request, env }: Context): Promise<Response
         RETURNING id
       `;
       isNewSignup = rows.length > 0;
+      signupId = isNewSignup ? String(rows[0].id) : undefined;
       return isNewSignup;
     },
     log: (message, error) => {
@@ -116,6 +141,16 @@ export async function onRequestPost({ request, env }: Context): Promise<Response
   }
 
   const result = await joinWaitlist(body, deps);
+
+  const { ADMIN_INGEST_KEY } = env;
+  const signupEmail = (body as { email?: unknown }).email;
+  if (ADMIN_INGEST_KEY && signupId && result.body.ok && typeof signupEmail === 'string') {
+    waitUntil(
+      recordLead(ADMIN_INGEST_KEY, request, signupId, signupEmail.trim().toLowerCase()).catch((error) =>
+        console.error('waitlist: admin ingest failed', error),
+      ),
+    );
+  }
 
   const analyticsConsent = request.headers.get('X-PostHog-Consent') === 'accepted';
   if (analyticsConsent && env.POSTHOG_PROJECT_TOKEN && env.POSTHOG_HOST) {
